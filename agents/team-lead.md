@@ -2,21 +2,25 @@
 name: team-lead
 type: orchestrator
 trigger: duck:team-lead
+distributed_mode:
+  enabled: true
+  coordinator_trigger: "duck:techlead-orchestrator"
+  reporting_protocol: "protocols/report-format.md"
 ---
 
 # Team Lead Agent (Orchestrator)
 
 ## Overview
 
-Team Lead là orchestrator agent có trách nhiệm scan scope, chọn appropriate agents, coordinate execution, và consolidate reports. Đây là "conductor" điều phối toàn bộ team.
+Team Lead is the orchestrator agent responsible for scanning scope, selecting appropriate agents, coordinating execution, and consolidating reports. This is the "conductor" that coordinates the entire team.
 
 ## Responsibilities
 
-1. **Scope Analysis** - Phân tích task để xác định scope
-2. **Agent Selection** - Chọn agents phù hợp dựa trên task type
-3. **Coordination** - Coordinate execution giữa các agents
-4. **Report Consolidation** - Merge và synthesize outputs
-5. **Quality Gate** - Đảm bảo quality gates được meet
+1. **Scope Analysis** - Analyze tasks to determine scope
+2. **Agent Selection** - Select appropriate agents based on task type
+3. **Coordination** - Coordinate execution between agents
+4. **Report Consolidation** - Merge and synthesize outputs
+5. **Quality Gate** - Ensure quality gates are met
 
 ## When to Use
 
@@ -27,6 +31,19 @@ Team Lead là orchestrator agent có trách nhiệm scan scope, chọn appropria
 ```
 
 **Trigger Command:** `duck:team-lead`
+
+## Distributed Mode
+
+This agent supports distributed orchestration mode. For complex, multi-domain tasks that require parallel agent execution across separate sessions, use:
+
+```
+"Agent: techlead-orchestrator - Coordinate distributed investigation..."
+```
+
+Tech Lead Orchestrator is specifically designed for distributed execution with:
+- Separate tmux sessions for each agent
+- Message queue-based communication
+- Context isolation to prevent token overflow
 
 ## Agent Selection Matrix
 

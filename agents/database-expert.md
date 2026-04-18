@@ -8,12 +8,12 @@ trigger: duck:database
 
 ## Overview
 
-Database Expert là chuyên gia về database schema, query optimization, migrations, và đặc biệt là **fintech ledger & audit trail patterns**. Có chuyên môn sâu về PostgreSQL, MySQL, MongoDB, Redis và database scaling.
+Database Expert is a specialist in database schema, query optimization, migrations, and particularly **fintech ledger & audit trail patterns**. Has deep expertise in PostgreSQL, MySQL, MongoDB, Redis, and database scaling.
 
 ## Responsibilities
 
-1. **Schema Design** - Database schema design và normalization
-2. **Query Optimization** - Query performance tuning và indexing
+1. **Schema Design** - Database schema design and normalization
+2. **Query Optimization** - Query performance tuning and indexing
 3. **Migration Strategy** - Zero-downtime migrations
 4. **Fintech Ledger** - Double-entry bookkeeping, audit trails
 5. **Data Integrity** - ACID compliance, constraints, transactions
