@@ -10,29 +10,29 @@
 # Show all commands
 /          # or: em-commands
 
-# Skills
+# Skills (no prefix needed)
 /brainstorming [idea]
 /spec-driven-dev [requirement]
 /systematic-debugging [bug]
 /test-driven-dev [feature]
 
-# Agents
-/planner [task]
-/code-reviewer [PR]
-/debugger [issue]
-/security-auditor [system]
+# Agents (with em- prefix)
+/em-planner [task]
+/em-code-reviewer [PR]
+/em-debugger [issue]
+/em-security-auditor [system]
 
-# Workflows
-/new-feature [feature]
-/bug-fix [bug]
-/security-audit [system]
+# Workflows (with em- prefix)
+/em-new-feature [feature]
+/em-bug-fix [bug]
+/em-security-audit [system]
 ```
 
 ---
 
 ## 📚 Complete Command List
 
-### Skills (25 commands)
+### Skills (25 commands) - No prefix needed
 
 **Foundation (5):**
 ```bash
@@ -75,72 +75,72 @@
 /deprecation-migration   Code-as-liability
 ```
 
-### Agents (22 commands)
+### Agents (22 commands) - With `em-` prefix
 
 **Core (8):**
 ```bash
-/planner              Create plans
-/executor             Execute plans
-/code-reviewer        Review code
-/debugger             Debug issues
-/test-engineer        Test strategy
-/security-auditor     Security audit
-/ui-auditor           UI review
-/verifier             Verify delivery
+/em-planner              Create plans
+/em-executor             Execute plans
+/em-code-reviewer        Review code
+/em-debugger             Debug issues
+/em-test-engineer        Test strategy
+/em-security-auditor     Security audit
+/em-ui-auditor           UI review
+/em-verifier             Verify delivery
 ```
 
 **Specialized (14):**
 ```bash
-/architect            Architecture design
-/backend-expert       Database, API
-/frontend-expert      React, UI/UX
-/database-expert      Schema, queries
-/product-manager      Requirements
-/senior-code-reviewer 9-axis review
-/security-reviewer    OWASP + STRIDE
-/staff-engineer       Root cause analysis
-/team-lead            Team coordination
-/techlead-orchestrator Distributed investigation
-/researcher           Technical research
-/codebase-mapper       Architecture analysis
-/integration-checker  Cross-phase validation
-/performance-auditor   Benchmarking
+/em-architect            Architecture design
+/em-backend-expert       Database, API
+/em-frontend-expert      React, UI/UX
+/em-database-expert      Schema, queries
+/em-product-manager      Requirements
+/em-senior-code-reviewer 9-axis review
+/em-security-reviewer    OWASP + STRIDE
+/em-staff-engineer       Root cause analysis
+/em-team-lead            Team coordination
+/em-techlead-orchestrator Distributed investigation
+/em-researcher           Technical research
+/em-codebase-mapper       Architecture analysis
+/em-integration-checker  Cross-phase validation
+/em-performance-auditor   Benchmarking
 ```
 
-### Workflows (18 commands)
+### Workflows (18 commands) - With `em-` prefix
 
 **Primary (4):**
 ```bash
-/new-feature           Idea → Production
-/bug-fix               Fix bugs systematically
-/refactoring           Improve code quality
-/security-audit         Security assessment
+/em-new-feature           Idea → Production
+/em-bug-fix               Fix bugs systematically
+/em-refactoring           Improve code quality
+/em-security-audit         Security assessment
 ```
 
 **Support (4):**
 ```bash
-/project-setup         Initialize projects
-/documentation         Generate docs
-/deployment            Deploy features
-/retro                 Learn & improve
+/em-project-setup         Initialize projects
+/em-documentation         Generate docs
+/em-deployment            Deploy features
+/em-retro                 Learn & improve
 ```
 
 **Team (8):**
 ```bash
-/team-review           Full team review
-/architecture-review    Architecture review
-/design-review         UI/UX review
-/code-review-9axis     Deep review
-/database-review       Database review
-/product-review        Product review
-/security-review-advanced Advanced security
-/incident-response     Production incidents
+/em-team-review           Full team review
+/em-architecture-review    Architecture review
+/em-design-review         UI/UX review
+/em-code-review-9axis     Deep review
+/em-database-review       Database review
+/em-product-review        Product review
+/em-security-review-advanced Advanced security
+/em-incident-response     Production incidents
 ```
 
 **Distributed (2):**
 ```bash
-/distributed-investigation  Parallel investigation
-/distributed-development     Parallel development
+/em-distributed-investigation  Parallel investigation
+/em-distributed-development     Parallel development
 ```
 
 ---
@@ -152,22 +152,22 @@
 /brainstorming User authentication with JWT
 
 # Example 2: Planning
-/planner Create implementation plan for shopping cart
+/em-planner Create implementation plan for shopping cart
 
 # Example 3: Code Review
-/code-reviewer Review PR #123
+/em-code-reviewer Review PR #123
 
 # Example 4: Debugging
-/debugger Investigate login timeout bug
+/em-debugger Investigate login timeout bug
 
 # Example 5: Full Workflow
-/new-feature Implement user profile from idea to production
+/em-new-feature Implement user profile from idea to production
 
 # Example 6: Security Audit
-/security-audit Audit payment system
+/em-security-audit Audit payment system
 
 # Example 7: Distributed Investigation
-/distributed-investigation Investigate database performance issue
+/em-distributed-investigation Investigate database performance issue
 ```
 
 ---
@@ -203,9 +203,22 @@ To test:
 ```bash
 # Type these and press TAB
 /brainstorming
-/planner
-/new-feature
+/em-planner
+/em-new-feature
 ```
+
+---
+
+## 🎯 Naming Convention
+
+- **Skills:** No prefix - `/brainstorming`, `/spec-driven-dev`
+- **Agents:** `em-` prefix - `/em-planner`, `/em-code-reviewer`
+- **Workflows:** `em-` prefix - `/em-new-feature`, `/em-bug-fix`
+
+This makes it easy to distinguish:
+- Skills (general patterns)
+- Agents (specialized AI assistants)
+- Workflows (end-to-end processes)
 
 ---
 
