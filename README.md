@@ -67,15 +67,142 @@ em-skill/
 │   ├── quality/             # Quality assurance skills (7)
 │   ├── workflow/            # Workflow and automation skills (5)
 │   └── specialized/         # Language/framework-specific skills
-├── agents/                  # 8-12 specialized agents
-├── workflows/               # 5-8 end-to-end workflows
+├── agents/                  # 16-20 specialized agents
+├── workflows/               # 16 end-to-end workflows
+├── distributed/             # Distributed orchestration system
+│   ├── session-coordinator.sh  # High-level coordination
+│   └── session-sync.sh         # Context synchronization
+├── scripts/                 # Core orchestration scripts
+│   ├── distributed-orchestrator.sh  # Creates tmux sessions
+│   ├── session-manager.sh          # Manages sessions
+│   └── consolidate-reports.sh      # Report consolidation
+├── protocols/               # Message and report formats
+│   ├── distributed-messaging.md    # Message protocol
+│   └── report-format.md            # Report specification
+├── tests/                   # Comprehensive test suite
+│   ├── test-helpers.sh            # Shared test utilities
+│   ├── test-*.sh                  # Unit & integration tests
+│   ├── run-e2e-tests.sh           # E2E test runner
+│   └── manual-test-with-agents.md # Manual testing guide
 ├── templates/               # Reusable templates
-│   ├── spec-template.md
-│   └── plan-template.md
 ├── hooks/                   # Automation hooks
 ├── commands/                # CLI commands
+├── config/                  # Configuration files
+├── docs/                    # Documentation
+│   └── skill-systems-guide.md  # Skill system integration guide
 └── CLAUDE.md                # Main configuration
 ```
+
+> **Note:** EM-Skill includes multiple skill systems from different sources. See [Skill Systems Guide](docs/skill-systems-guide.md) for when to use each system.
+
+---
+
+## 🏗️ Architecture
+
+### Distributed Agent Orchestration System
+
+EM-Skill includes a **distributed agent orchestration system** that solves token context overflow by running agents in separate tmux sessions.
+
+#### Problem Solved
+
+When working with complex tasks requiring multiple specialist agents, token context limits become a bottleneck. Traditional approaches:
+- ❌ Run all agents sequentially (slow)
+- ❌ Truncate context (lose information)
+- ❌ Increase token limits (expensive)
+
+#### Our Solution
+
+**Parallel agent execution in isolated tmux sessions:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Claude Code Session                      │
+│                  (Token Budget: 200K)                      │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │         Tech Lead Orchestrator Agent                 │  │
+│  │         (Token Budget: 200K)                        │  │
+│  │                                                      │  │
+│  │  Task Delegation → Message Queue → Task Assignment  │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                          │                                  │
+│                          ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              Message Queue                           │  │
+│  │         (/tmp/claude-work-queue/)                    │  │
+│  │                                                      │  │
+│  │  pending/     processing/     completed/             │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                          │                                  │
+│          ┌───────────────┼───────────────┐                  │
+│          ▼               ▼               ▼                  │
+│  ┌───────────┐   ┌───────────┐   ┌───────────┐              │
+│  │  Backend  │   │ Frontend  │   │ Database  │              │
+│  │  Expert   │   │  Expert   │   │  Expert   │              │
+│  │           │   │           │   │           │              │
+│  │ 200K tok  │   │ 200K tok  │   │ 200K tok  │              │
+│  └───────────┘   └───────────┘   └───────────┘              │
+│          │               │               │                  │
+│          └───────────────┼───────────────┘                  │
+│                          ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │          Shared Reports Directory                    │  │
+│  │       (/tmp/claude-work-reports/)                    │  │
+│  │                                                      │  │
+│  │  backend/  frontend/  database/  techlead/           │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                          │                                  │
+│                          ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │         Report Consolidation                         │  │
+│  │     (Generates consolidated report)                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Architecture Components
+
+**1. Orchestration Layer**
+- `distributed-orchestrator.sh` - Creates and manages tmux sessions
+- `session-coordinator.sh` - High-level coordination logic
+- `session-sync.sh` - Context synchronization across sessions
+
+**2. Session Management**
+- `session-manager.sh` - List, kill, broadcast to sessions
+- Each agent runs in isolated tmux window
+- Shared directories for communication
+
+**3. Message Protocol**
+- `distributed-messaging.md` - Message format specification
+- YAML-based task assignments and status updates
+- Queue-based processing (pending → processing → completed)
+
+**4. Report System**
+- `report-format.md` - Standard report structure
+- `consolidate-reports.sh` - Collects and merges reports
+- YAML frontmatter with findings, recommendations, next steps
+
+**5. Communication Flow**
+
+```
+1. Orchestrator receives task
+2. Orchestrator creates task assignments
+3. Task assignments placed in queue/
+4. Specialist agents pick up tasks
+5. Agents generate reports in shared/
+6. Reports consolidated into summary
+7. Consolidated report returned to user
+```
+
+#### Benefits
+
+✅ **Parallel Execution** - Multiple agents work simultaneously
+✅ **Isolated Context** - Each agent has full 200K token budget
+✅ **No Information Loss** - Complete context preservation
+✅ **Scalable** - Add more agents without token issues
+✅ **Observable** - Full audit trail via reports
+
+---
 
 ## Skills
 
@@ -249,7 +376,11 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 - [ ] Code review is done
 - [ ] Security audit is passed
 
-## Usage Examples
+## 🚀 Usage
+
+### Standard Agent/Skill/Workflow Usage
+
+#### Using Skills
 
 ### Example 1: Building a New Feature
 
@@ -289,6 +420,159 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 # Step 4: Code review
 "Agent: code-reviewer - Review the bug fix"
 ```
+
+### Example 3: Distributed Investigation (Complex Tasks)
+
+For complex tasks requiring multiple specialist agents:
+
+```bash
+# Start distributed orchestration
+cd /path/to/em-skill
+./scripts/distributed-orchestrator.sh start
+
+# This creates a tmux session with multiple agent windows:
+# - orchestrator (Tech Lead)
+# - backend (Backend Expert)
+# - frontend (Frontend Expert)
+# - database (Database Expert)
+
+# Attach to orchestrator window
+tmux attach -t claude-work:orchestrator
+
+# Trigger investigation
+"Agent: techlead-orchestrator - Investigate authentication bug across the entire stack"
+
+# The orchestrator will:
+# 1. Analyze the task
+# 2. Delegate subtasks to specialist agents
+# 3. Collect findings from all agents
+# 4. Consolidate into a comprehensive report
+
+# View consolidated report
+cat /tmp/claude-work-reports/techlead/consolidated-report.md
+
+# Stop distributed orchestration when done
+./scripts/distributed-orchestrator.sh stop
+```
+
+### Distributed System Commands
+
+```bash
+# Start distributed orchestration
+./scripts/distributed-orchestrator.sh start
+
+# List active sessions
+./scripts/session-manager.sh list
+
+# Check queue status
+./distributed/session-coordinator.sh queue-status
+
+# Check agent status
+./distributed/session-coordinator.sh agent-status
+
+# List available reports
+./scripts/consolidate-reports.sh list
+
+# Consolidate all reports
+./scripts/consolidate-reports.sh consolidate
+
+# Broadcast message to all agent windows
+./scripts/session-manager.sh broadcast "echo 'Hello all agents'"
+
+# Stop distributed orchestration
+./scripts/distributed-orchestrator.sh stop
+```
+
+### When to Use Distributed System
+
+**Use Distributed System when:**
+- ✅ Task requires analysis across multiple domains (backend, frontend, database)
+- ✅ Task is complex and needs specialist expertise
+- ✅ You need parallel investigation for speed
+- ✅ Task context is large (approaching token limits)
+- ✅ You need comprehensive audit trail
+
+**Use Standard Agents when:**
+- ✅ Task is straightforward and single-domain
+- ✅ Quick investigation needed
+- ✅ Task doesn't require parallel processing
+- ✅ Simpler workflow preferred
+
+### Testing
+
+Run the test suite to verify system functionality:
+
+```bash
+# Run all E2E tests
+cd tests
+./run-e2e-tests.sh
+
+# Run specific test suites
+./test-distributed-orchestrator.sh
+./test-session-manager.sh
+./test-consolidate-reports.sh
+./test-messaging-protocol.sh
+./test-report-consolidation.sh
+
+# Run manual tests (follow the guide)
+cat manual-test-with-agents.md
+```
+
+---
+
+## 📚 Advanced Topics
+
+### Distributed Workflows
+
+EM-Skill includes specialized workflows for distributed execution:
+
+**1. Distributed Investigation Workflow**
+```bash
+"Workflow: distributed-investigation - Investigate authentication bug with distributed agents"
+```
+- Spawns specialist agents (backend, frontend, database)
+- Parallel investigation across codebase
+- Consolidated findings report
+
+**2. Distributed Development Workflow**
+```bash
+"Workflow: distributed-development - Implement feature with distributed team"
+```
+- Spec creation with Tech Lead
+- Parallel implementation by specialists
+- Integration and testing
+
+### Message Queue Structure
+
+```
+/tmp/claude-work-queue/
+├── pending/          # New task assignments
+├── processing/       # Currently being worked on
+└── completed/        # Finished tasks
+```
+
+### Report Directory Structure
+
+```
+/tmp/claude-work-reports/
+├── backend/          # Backend expert reports
+├── frontend/         # Frontend expert reports
+├── database/         # Database expert reports
+└── techlead/         # Consolidated reports
+```
+
+### Custom Agent Configuration
+
+To add a new specialist agent:
+
+1. Create agent file: `agents/new-specialist.md`
+2. Add window creation in `scripts/distributed-orchestrator.sh`
+3. Add directory creation in initialization
+4. Update message protocol if needed
+
+See [Agent Template](templates/agent-invocation-template.md) for reference.
+
+---
 
 ## Source Repositories
 
