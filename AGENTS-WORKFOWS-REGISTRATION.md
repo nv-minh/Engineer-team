@@ -29,42 +29,42 @@
 ### Core Agents (8 agents)
 1. **planner** - Creates detailed implementation plans
    ```
-   Agent: planner - Create implementation plan for feature X
+   Agent: em-planner - Create implementation plan for feature X
    ```
 
 2. **executor** - Executes plans with atomic commits
    ```
-   Agent: executor - Execute the implementation plan
+   Agent: em-executor - Execute the implementation plan
    ```
 
 3. **code-reviewer** - 5-axis code review
    ```
-   Agent: code-reviewer - Review the changes in this PR
+   Agent: em-code-reviewer - Review the changes in this PR
    ```
 
 4. **debugger** - Systematic debugging
    ```
-   Agent: debugger - Investigate this bug systematically
+   Agent: em-debugger - Investigate this bug systematically
    ```
 
 5. **test-engineer** - Test strategy & generation
    ```
-   Agent: test-engineer - Create test strategy for X
+   Agent: em-test-engineer - Create test strategy for X
    ```
 
 6. **security-auditor** - OWASP security audit
    ```
-   Agent: security-auditor - Audit the security of X
+   Agent: em-security-auditor - Audit the security of X
    ```
 
 7. **ui-auditor** - Visual QA and design review
    ```
-   Agent: ui-auditor - Review the UI design
+   Agent: em-ui-auditor - Review the UI design
    ```
 
 8. **verifier** - Post-execution verification
    ```
-   Agent: verifier - Verify the implementation
+   Agent: em-verifier - Verify the implementation
    ```
 
 ### Specialized Agents (14 agents)
@@ -90,22 +90,22 @@
 ### Primary Workflows (4 workflows)
 1. **new-feature** - From idea to production
    ```
-   Workflow: new-feature - Implement feature X
+   Workflow: em-new-feature - Implement feature X
    ```
 
 2. **bug-fix** - Investigate and fix bugs
    ```
-   Workflow: bug-fix - Fix bug X systematically
+   Workflow: em-bug-fix - Fix bug X systematically
    ```
 
 3. **refactoring** - Improve code quality
    ```
-   Workflow: refactoring - Refactor module X
+   Workflow: em-refactoring - Refactor module X
    ```
 
 4. **security-audit** - Security assessment
    ```
-   Workflow: security-audit - Audit system X
+   Workflow: em-security-audit - Audit system X
    ```
 
 ### Support Workflows (4 workflows)
@@ -134,25 +134,25 @@
 
 ### Using Agents
 ```
-Agent: [agent-name] - [task description]
+Agent: em-[agent-name] - [task description]
 
 Examples:
-"Agent: planner - Create implementation plan for JWT authentication"
-"Agent: code-reviewer - Review the changes in PR #123"
-"Agent: debugger - Investigate the login timeout bug"
-"Agent: security-auditor - Audit the payment system"
-"Agent: frontend-expert - Review the React components"
+"Agent: em-planner - Create implementation plan for JWT authentication"
+"Agent: em-code-reviewer - Review the changes in PR #123"
+"Agent: em-debugger - Investigate the login timeout bug"
+"Agent: em-security-auditor - Audit the payment system"
+"Agent: em-frontend-expert - Review the React components"
 ```
 
 ### Using Workflows
 ```
-Workflow: [workflow-name] - [task description]
+Workflow: em-[workflow-name] - [task description]
 
 Examples:
-"Workflow: new-feature - Implement user authentication"
-"Workflow: bug-fix - Fix the database connection bug"
-"Workflow: security-audit - Audit the entire application"
-"Workflow: distributed-investigation - Investigate authentication across full stack"
+"Workflow: em-new-feature - Implement user authentication"
+"Workflow: em-bug-fix - Fix the database connection bug"
+"Workflow: em-security-audit - Audit the entire application"
+"Workflow: em-distributed-investigation - Investigate authentication across full stack"
 ```
 
 ### Distributed Mode (Advanced)
@@ -161,7 +161,7 @@ Examples:
 em-start  # or: ./scripts/distributed-orchestrator.sh start
 
 # Use distributed workflow
-"Agent: techlead-orchestrator - Investigate authentication bug"
+"Agent: em-techlead-orchestrator - Investigate authentication bug"
 # Backend, frontend, database agents work in parallel
 
 # View consolidated report
@@ -207,38 +207,38 @@ The following skills are available for use:
 
 ### For Planning
 ```
-Agent: planner - Create implementation plan
+Agent: em-planner - Create implementation plan
 Skill: writing-plans - Write comprehensive plans
-Workflow: new-feature - From idea to production
+Workflow: em-new-feature - From idea to production
 ```
 
 ### For Implementation
 ```
-Agent: executor - Execute implementation plan
+Agent: em-executor - Execute implementation plan
 Skill: test-driven-development - Implement with TDD
 Skill: incremental-implementation - Build incrementally
 ```
 
 ### For Quality
 ```
-Agent: code-reviewer - Review code changes
-Agent: security-auditor - Audit security
+Agent: em-code-reviewer - Review code changes
+Agent: em-security-auditor - Audit security
 Skill: code-review - 5-axis review framework
-Workflow: code-review-9axis - Deep review
+Workflow: em-code-review-9axis - Deep review
 ```
 
 ### For Debugging
 ```
-Agent: debugger - Investigate bugs
+Agent: em-debugger - Investigate bugs
 Skill: systematic-debugging - Root cause debugging
-Workflow: bug-fix - Fix bugs systematically
+Workflow: em-bug-fix - Fix bugs systematically
 ```
 
 ### For Complex Tasks
 ```
-Agent: techlead-orchestrator - Coordinate distributed investigation
-Workflow: distributed-investigation - Parallel investigation
-Workflow: distributed-development - Parallel development
+Agent: em-techlead-orchestrator - Coordinate distributed investigation
+Workflow: em-distributed-investigation - Parallel investigation
+Workflow: em-distributed-development - Parallel development
 ```
 
 ---
@@ -261,8 +261,8 @@ Workflow: distributed-development - Parallel development
 1. **Reload Claude Code** or start a new conversation
 2. **Test from any repository:**
    ```
-   Agent: planner - Create plan
-   Workflow: new-feature - Implement feature
+   Agent: em-planner - Create plan
+   Workflow: em-new-feature - Implement feature
    ```
 3. **Check system reminder** - all agents and workflows should be visible
 

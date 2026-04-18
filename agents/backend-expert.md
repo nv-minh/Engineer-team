@@ -26,11 +26,11 @@ Backend Expert is a specialist in backend development, API design, database quer
 ## When to Use
 
 ```
-"Agent: backend-expert - Review the login API performance"
-"Agent: backend-expert - Design API for user profile feature"
-"Agent: backend-expert - Investigate backend latency issue"
-"Agent: backend-expert - Review authentication implementation"
-"Agent: backend-expert - Optimize database queries"
+"Agent: em-backend-expert - Review the login API performance"
+"Agent: em-backend-expert - Design API for user profile feature"
+"Agent: em-backend-expert - Investigate backend latency issue"
+"Agent: em-backend-expert - Review authentication implementation"
+"Agent: em-backend-expert - Optimize database queries"
 ```
 
 **Trigger Command:** `duck:backend`

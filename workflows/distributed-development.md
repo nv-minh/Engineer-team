@@ -7,9 +7,9 @@ This workflow coordinates distributed agents across separate tmux sessions to de
 ## When to Use
 
 ```
-"Workflow: distributed-development - Develop user profile feature: BE API + FE UI"
-"Workflow: distributed-development - Implement payment flow: DB + BE + FE"
-"Workflow: distributed-development - Build notification system: multiple services"
+"Workflow: em-distributed-development - Develop user profile feature: BE API + FE UI"
+"Workflow: em-distributed-development - Implement payment flow: DB + BE + FE"
+"Workflow: em-distributed-development - Build notification system: multiple services"
 ```
 
 **Use Cases:**
@@ -28,7 +28,7 @@ This workflow coordinates distributed agents across separate tmux sessions to de
 2. **Tech Lead Orchestrator active:**
 ```bash
 # In techlead session
-"Agent: techlead-orchestrator - Coordinate distributed development..."
+"Agent: em-techlead-orchestrator - Coordinate distributed development..."
 ```
 
 ## Workflow Process
@@ -667,14 +667,14 @@ test('user profile E2E flow', async ({ page }) => {
 
 ```bash
 # In techlead session
-"Agent: code-reviewer - Review user profile feature implementation"
+"Agent: em-code-reviewer - Review user profile feature implementation"
 ```
 
 **Step 18:** Security review
 
 ```bash
 # In techlead session
-"Agent: security-reviewer - Review auth and privacy implementation"
+"Agent: em-security-reviewer - Review auth and privacy implementation"
 ```
 
 **Step 19:** Final approval
@@ -703,7 +703,7 @@ deployment_target: "staging → production"
 
 # 2. Trigger Tech Lead
 # In techlead session:
-"Agent: techlead-orchestrator - Coordinate distributed development for user profile feature: DB schema + BE API + FE UI"
+"Agent: em-techlead-orchestrator - Coordinate distributed development for user profile feature: DB schema + BE API + FE UI"
 
 # 3. Tech Lead will:
 # - Analyze requirements

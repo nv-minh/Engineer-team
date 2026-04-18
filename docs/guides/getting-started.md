@@ -54,13 +54,13 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Create implementation plan
-"Agent: planner - Create plan for user authentication feature"
+"Agent: em-planner - Create plan for user authentication feature"
 
 # Review code
-"Agent: code-reviewer - Review the authentication PR"
+"Agent: em-code-reviewer - Review the authentication PR"
 
 # Debug issues
-"Agent: debugger - Investigate the authentication failure"
+"Agent: em-debugger - Investigate the authentication failure"
 ```
 
 ### 3. Using Workflows
@@ -69,13 +69,13 @@ Run end-to-end processes:
 
 ```bash
 # New feature workflow
-"Workflow: new-feature - Implement user authentication"
+"Workflow: em-new-feature - Implement user authentication"
 
 # Bug fix workflow
-"Workflow: bug-fix - Fix the login timeout bug"
+"Workflow: em-bug-fix - Fix the login timeout bug"
 
 # Security audit
-"Workflow: security-audit - Audit authentication system"
+"Workflow: em-security-audit - Audit authentication system"
 ```
 
 ---
@@ -92,16 +92,16 @@ Run end-to-end processes:
 "Use the spec-driven-development skill to create a spec"
 
 # Step 3: Plan implementation
-"Agent: planner - Create implementation plan for user profile"
+"Agent: em-planner - Create implementation plan for user profile"
 
 # Step 4: Implement
 "Use the subagent-driven-development skill to implement the plan"
 
 # Step 5: Review
-"Agent: code-reviewer - Review the user profile implementation"
+"Agent: em-code-reviewer - Review the user profile implementation"
 
 # Step 6: Deploy
-"Workflow: deployment - Deploy user profile feature"
+"Workflow: em-deployment - Deploy user profile feature"
 ```
 
 ### Task 2: Fixing a Bug
@@ -118,20 +118,20 @@ Run end-to-end processes:
 "Use the api-testing skill to verify the fix"
 
 # Step 4: Review
-"Agent: code-reviewer - Review the bug fix"
+"Agent: em-code-reviewer - Review the bug fix"
 ```
 
 ### Task 3: Code Review
 
 ```bash
 # Standard review
-"Agent: code-reviewer - Review the changes in this PR"
+"Agent: em-code-reviewer - Review the changes in this PR"
 
 # Deep 9-axis review
-"Workflow: code-review-9axis - Deep review of authentication changes"
+"Workflow: em-code-review-9axis - Deep review of authentication changes"
 
 # Team review
-"Workflow: team-review - Full team review of critical feature"
+"Workflow: em-team-review - Full team review of critical feature"
 ```
 
 ---
@@ -148,7 +148,7 @@ For complex tasks requiring multiple specialist agents:
 tmux attach -t claude-work:orchestrator
 
 # Trigger distributed investigation
-"Agent: techlead-orchestrator - Investigate authentication across the stack"
+"Agent: em-techlead-orchestrator - Investigate authentication across the stack"
 
 # View consolidated report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md

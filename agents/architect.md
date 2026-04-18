@@ -22,10 +22,10 @@ Architect agent reviews architecture, technical design, ADR (Architecture Decisi
 ## When to Use
 
 ```
-"Agent: architect - Review the architecture for user authentication system"
-"Agent: architect - Evaluate ADR-001: Microservices decision"
-"Agent: architect - Assess if HEXAGONAL pattern fits this project"
-"Agent: architect - Review database architecture for e-commerce platform"
+"Agent: em-architect - Review the architecture for user authentication system"
+"Agent: em-architect - Evaluate ADR-001: Microservices decision"
+"Agent: em-architect - Assess if HEXAGONAL pattern fits this project"
+"Agent: em-architect - Review database architecture for e-commerce platform"
 ```
 
 **Trigger Command:** `duck:architect`

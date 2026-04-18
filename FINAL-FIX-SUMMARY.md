@@ -176,8 +176,8 @@ Claude: "Có, EM-Skill đã được cài đặt với:
 
 Bạn có thể sử dụng trực tiếp bằng cách:
 • 'Use the brainstorming skill to explore ideas'
-• 'Agent: planner - Create implementation plan'
-• 'Workflow: new-feature - Implement from idea to production'"
+• 'Agent: em-planner - Create implementation plan'
+• 'Workflow: em-new-feature - Implement from idea to production'"
 ```
 
 ### Using EM-Skill:
@@ -189,14 +189,14 @@ Bạn có thể sử dụng trực tiếp bằng cách:
 "Use the systematic-debugging skill to investigate bug"
 
 # Agents
-"Agent: planner - Create implementation plan"
-"Agent: code-reviewer - Review code changes"
-"Agent: debugger - Investigate bug systematically"
+"Agent: em-planner - Create implementation plan"
+"Agent: em-code-reviewer - Review code changes"
+"Agent: em-debugger - Investigate bug systematically"
 
 # Workflows
-"Workflow: new-feature - From idea to production"
-"Workflow: bug-fix - Fix bug systematically"
-"Workflow: security-audit - Audit security issues"
+"Workflow: em-new-feature - From idea to production"
+"Workflow: em-bug-fix - Fix bug systematically"
+"Workflow: em-security-audit - Audit security issues"
 ```
 
 ---
@@ -279,8 +279,8 @@ Should get positive response!
 ### Step 3: Use EM-Skill
 ```
 "Use the brainstorming skill to explore X"
-"Agent: planner - Create plan for X"
-"Workflow: new-feature - Implement X"
+"Agent: em-planner - Create plan for X"
+"Workflow: em-new-feature - Implement X"
 ```
 
 ---

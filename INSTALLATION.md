@@ -522,17 +522,17 @@ After successful installation:
    "Use the brainstorming skill to explore authentication"
 
    # Use an agent
-   "Agent: planner - Create plan for authentication"
+   "Agent: em-planner - Create plan for authentication"
 
    # Use a workflow
-   "Workflow: new-feature - Implement authentication"
+   "Workflow: em-new-feature - Implement authentication"
    ```
 
 4. ✅ **Try Distributed Mode**
    ```bash
    ./scripts/distributed-orchestrator.sh start
    tmux attach -t claude-work:orchestrator
-   "Agent: techlead-orchestrator - Investigate authentication bug"
+   "Agent: em-techlead-orchestrator - Investigate authentication bug"
    ```
 
 5. ✅ **Read Comprehensive Guides**

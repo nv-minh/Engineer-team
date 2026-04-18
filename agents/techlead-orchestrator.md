@@ -25,9 +25,9 @@ Tech Lead Orchestrator is the coordinator for distributed agent execution. It ma
 ## When to Use
 
 ```
-"Agent: techlead-orchestrator - Coordinate distributed investigation for login bug"
-"Agent: techlead-orchestrator - Orchestrate distributed development for user profile feature"
-"Agent: techlead-orchestrator - Lead cross-repo investigation across BE and FE"
+"Agent: em-techlead-orchestrator - Coordinate distributed investigation for login bug"
+"Agent: em-techlead-orchestrator - Orchestrate distributed development for user profile feature"
+"Agent: em-techlead-orchestrator - Lead cross-repo investigation across BE and FE"
 ```
 
 **Trigger Command:** `duck:techlead-orchestrator`

@@ -21,10 +21,10 @@ Senior Code Reviewer performs thorough code review across **9 categories** (expa
 ## When to Use
 
 ```
-"Agent: senior-code-reviewer - Review PR #123 with 9-axis analysis"
-"Agent: senior-code-reviewer - Deep review of authentication module"
-"Agent: senior-code-reviewer - Review code for production readiness"
-"Agent: senior-code-reviewer - Assess technical debt in legacy code"
+"Agent: em-senior-code-reviewer - Review PR #123 with 9-axis analysis"
+"Agent: em-senior-code-reviewer - Deep review of authentication module"
+"Agent: em-senior-code-reviewer - Review code for production readiness"
+"Agent: em-senior-code-reviewer - Assess technical debt in legacy code"
 ```
 
 **Trigger Command:** `duck:code-review`

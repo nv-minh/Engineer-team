@@ -212,16 +212,16 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 
 ### Using Agents
 ```bash
-"Agent: planner - Create implementation plan for user authentication"
-"Agent: code-reviewer - Review the changes in this PR"
-"Agent: debugger - Investigate this bug systematically"
+"Agent: em-planner - Create implementation plan for user authentication"
+"Agent: em-code-reviewer - Review the changes in this PR"
+"Agent: em-debugger - Investigate this bug systematically"
 ```
 
 ### Using Workflows
 ```bash
-"Workflow: new-feature - Take user authentication from idea to production"
-"Workflow: bug-fix - Fix the login bug systematically"
-"Workflow: security-audit - Audit the codebase for security issues"
+"Workflow: em-new-feature - Take user authentication from idea to production"
+"Workflow: em-bug-fix - Fix the login bug systematically"
+"Workflow: em-security-audit - Audit the codebase for security issues"
 ```
 
 ## 📈 Quality Metrics

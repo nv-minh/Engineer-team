@@ -153,8 +153,8 @@ Claude: "Có, EM-Skill đã được cài đặt toàn cục với:
 
 Bạn có thể sử dụng trực tiếp bằng cách:
 • 'Use the brainstorming skill to explore ideas'
-• 'Agent: planner - Create implementation plan'
-• 'Workflow: new-feature - Implement from idea to production'
+• 'Agent: em-planner - Create implementation plan'
+• 'Workflow: em-new-feature - Implement from idea to production'
 
 Xem chi tiết tại: /Users/abc/Desktop/EM-Skill/skills/SKILL-INDEX.md"
 ```
@@ -180,20 +180,20 @@ Xem chi tiết tại: /Users/abc/Desktop/EM-Skill/skills/SKILL-INDEX.md"
 
 ### Using Agents
 ```bash
-"Agent: planner - Create implementation plan for feature X"
-"Agent: executor - Execute the implementation plan"
-"Agent: code-reviewer - Review the changes in this PR"
-"Agent: debugger - Investigate this bug systematically"
-"Agent: security-auditor - Audit the security of this system"
+"Agent: em-planner - Create implementation plan for feature X"
+"Agent: em-executor - Execute the implementation plan"
+"Agent: em-code-reviewer - Review the changes in this PR"
+"Agent: em-debugger - Investigate this bug systematically"
+"Agent: em-security-auditor - Audit the security of this system"
 ```
 
 ### Using Workflows
 ```bash
-"Workflow: new-feature - Take this feature from idea to production"
-"Workflow: bug-fix - Fix this bug systematically"
-"Workflow: refactoring - Improve code quality safely"
-"Workflow: security-audit - Audit the codebase for security issues"
-"Workflow: distributed-investigation - Investigate across full stack"
+"Workflow: em-new-feature - Take this feature from idea to production"
+"Workflow: em-bug-fix - Fix this bug systematically"
+"Workflow: em-refactoring - Improve code quality safely"
+"Workflow: em-security-audit - Audit the codebase for security issues"
+"Workflow: em-distributed-investigation - Investigate across full stack"
 ```
 
 ---
@@ -289,8 +289,8 @@ ls /Users/abc/Desktop/EM-Skill/skills/SKILL-INDEX.md
 ```bash
 # Invoke skills/agents/workflows as needed
 "Use the brainstorming skill to explore X"
-"Agent: planner - Create plan for X"
-"Workflow: new-feature - Implement X"
+"Agent: em-planner - Create plan for X"
+"Workflow: em-new-feature - Implement X"
 ```
 
 ---

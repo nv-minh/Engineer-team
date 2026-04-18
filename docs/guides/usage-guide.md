@@ -113,32 +113,32 @@ Agents are specialized AI assistants that handle specific types of tasks. Each a
 
 #### 1. Planner Agent
 **Purpose:** Create detailed implementation plans
-**Usage:** `Agent: planner - Create implementation plan for feature X`
+**Usage:** `Agent: em-planner - Create implementation plan for feature X`
 **Best for:** Breaking down complex features
 
 #### 2. Executor Agent
 **Purpose:** Execute plans with atomic commits
-**Usage:** `Agent: executor - Implement the authentication plan`
+**Usage:** `Agent: em-executor - Implement the authentication plan`
 **Best for:** Implementation with version control
 
 #### 3. Code-Reviewer Agent
 **Purpose:** 5-axis code review
-**Usage:** `Agent: code-reviewer - Review the changes in this PR`
+**Usage:** `Agent: em-code-reviewer - Review the changes in this PR`
 **Best for:** Quality assurance
 
 #### 4. Debugger Agent
 **Purpose:** Systematic debugging
-**Usage:** `Agent: debugger - Investigate this bug systematically`
+**Usage:** `Agent: em-debugger - Investigate this bug systematically`
 **Best for:** Root cause analysis
 
 #### 5. Test-Engineer Agent
 **Purpose:** Test strategy and generation
-**Usage:** `Agent: test-engineer - Create test strategy for authentication`
+**Usage:** `Agent: em-test-engineer - Create test strategy for authentication`
 **Best for:** Test planning
 
 #### 6. Security-Auditor Agent
 **Purpose:** OWASP security assessment
-**Usage:** `Agent: security-auditor - Audit the authentication system`
+**Usage:** `Agent: em-security-auditor - Audit the authentication system`
 **Best for:** Security reviews
 
 #### 7. UI-Auditor Agent
@@ -183,12 +183,12 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Basic pattern
-"Agent: [agent-name] - [task description]"
+"Agent: em-[agent-name] - [task description]"
 
 # Examples
-"Agent: planner - Create implementation plan for user authentication"
-"Agent: code-reviewer - Review the authentication PR"
-"Agent: debugger - Investigate the login failure"
+"Agent: em-planner - Create implementation plan for user authentication"
+"Agent: em-code-reviewer - Review the authentication PR"
+"Agent: em-debugger - Investigate the login failure"
 ```
 
 ### Agent Interaction Patterns
@@ -196,18 +196,18 @@ Dispatch agents for specialized tasks:
 #### Sequential Agent Usage
 ```bash
 # Use multiple agents in sequence
-"Agent: planner - Plan the feature"
+"Agent: em-planner - Plan the feature"
 ↓
-"Agent: executor - Implement the plan"
+"Agent: em-executor - Implement the plan"
 ↓
-"Agent: code-reviewer - Review the implementation"
+"Agent: em-code-reviewer - Review the implementation"
 ```
 
 #### Parallel Agent Usage (Distributed Mode)
 ```bash
 # Use multiple agents simultaneously
 ./scripts/distributed-orchestrator.sh start
-"Agent: techlead-orchestrator - Investigate authentication"
+"Agent: em-techlead-orchestrator - Investigate authentication"
 # Backend, frontend, database agents work in parallel
 ```
 
@@ -295,12 +295,12 @@ Production incident handling
 
 ```bash
 # Basic pattern
-"Workflow: [workflow-name] - [task description]"
+"Workflow: em-[workflow-name] - [task description]"
 
 # Examples
-"Workflow: new-feature - Implement user authentication"
-"Workflow: bug-fix - Fix the login timeout bug"
-"Workflow: security-audit - Audit the payment system"
+"Workflow: em-new-feature - Implement user authentication"
+"Workflow: em-bug-fix - Fix the login timeout bug"
+"Workflow: em-security-audit - Audit the payment system"
 ```
 
 ---
@@ -340,7 +340,7 @@ Distributed mode runs multiple specialist agents in parallel in isolated tmux se
 tmux attach -t claude-work:orchestrator
 
 # Trigger investigation
-"Agent: techlead-orchestrator - Investigate authentication bug"
+"Agent: em-techlead-orchestrator - Investigate authentication bug"
 
 # The orchestrator will:
 # 1. Analyze the task
@@ -397,10 +397,10 @@ ls /tmp/claude-work-reports/database/
 "Use the brainstorming skill to explore feature ideas"
 
 # Specialized task → Use agent
-"Agent: code-reviewer - Review this PR"
+"Agent: em-code-reviewer - Review this PR"
 
 # Complex process → Use workflow
-"Workflow: new-feature - Build and ship the feature"
+"Workflow: em-new-feature - Build and ship the feature"
 
 # Multi-domain task → Use distributed mode
 ./scripts/distributed-orchestrator.sh start
@@ -410,20 +410,20 @@ ls /tmp/claude-work-reports/database/
 
 ```bash
 # ❌ Too vague
-"Agent: planner - Plan something"
+"Agent: em-planner - Plan something"
 
 # ✅ Specific and clear
-"Agent: planner - Create implementation plan for JWT-based user authentication with refresh tokens, including database schema, API endpoints, and frontend components"
+"Agent: em-planner - Create implementation plan for JWT-based user authentication with refresh tokens, including database schema, API endpoints, and frontend components"
 ```
 
 ### 3. Provide Context
 
 ```bash
 # ❌ No context
-"Agent: debugger - Fix this bug"
+"Agent: em-debugger - Fix this bug"
 
 # ✅ With context
-"Agent: debugger - Investigate login timeout bug. Started occurring after deployment 2 hours ago. Error: 'Connection timeout after 30s'. Affects 10% of login attempts. Backend logs show database query timeouts."
+"Agent: em-debugger - Investigate login timeout bug. Started occurring after deployment 2 hours ago. Error: 'Connection timeout after 30s'. Affects 10% of login attempts. Backend logs show database query timeouts."
 ```
 
 ### 4. Follow Iron Laws
@@ -443,7 +443,7 @@ ls /tmp/claude-work-reports/database/
 
 ```bash
 # Always review agent outputs
-"Agent: code-reviewer - Review the implementation"
+"Agent: em-code-reviewer - Review the implementation"
 
 # Iterate based on feedback
 # Make improvements
@@ -464,20 +464,20 @@ ls /tmp/claude-work-reports/database/
 "Use the spec-driven-development skill to create a spec for JWT authentication"
 
 # Step 3: Plan implementation
-"Agent: planner - Create implementation plan for JWT auth"
+"Agent: em-planner - Create implementation plan for JWT auth"
 
 # Step 4: Implement
-"Agent: executor - Implement the authentication plan"
+"Agent: em-executor - Implement the authentication plan"
 
 # Step 5: Test
-"Agent: test-engineer - Create test strategy for authentication"
+"Agent: em-test-engineer - Create test strategy for authentication"
 
 # Step 6: Review
-"Agent: code-reviewer - Review authentication implementation"
-"Agent: security-auditor - Audit authentication security"
+"Agent: em-code-reviewer - Review authentication implementation"
+"Agent: em-security-auditor - Audit authentication security"
 
 # Step 7: Deploy
-"Workflow: deployment - Deploy authentication feature"
+"Workflow: em-deployment - Deploy authentication feature"
 ```
 
 ### Example 2: Debugging Production Issue
@@ -489,7 +489,7 @@ ls /tmp/claude-work-reports/database/
 # Step 2: Deep dive with distributed mode
 ./scripts/distributed-orchestrator.sh start
 tmux attach -t claude-work:orchestrator
-"Agent: techlead-orchestrator - Investigate login timeout across entire stack"
+"Agent: em-techlead-orchestrator - Investigate login timeout across entire stack"
 
 # Step 3: Review findings
 cat /tmp/claude-work-reports/techlead/consolidated-report.md
@@ -498,29 +498,29 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 "Use the test-driven-development skill to fix the database connection pool issue"
 
 # Step 5: Verify fix
-"Agent: test-engineer - Verify the login timeout fix"
+"Agent: em-test-engineer - Verify the login timeout fix"
 
 # Step 6: Postmortem
-"Workflow: incident-response - Create postmortem for login timeout incident"
+"Workflow: em-incident-response - Create postmortem for login timeout incident"
 ```
 
 ### Example 3: Performance Optimization
 
 ```bash
 # Step 1: Analyze performance
-"Agent: performance-auditor - Benchmark the API endpoints"
+"Agent: em-performance-auditor - Benchmark the API endpoints"
 
 # Step 2: Identify bottlenecks
 "Use the performance-optimization skill to analyze the benchmark results"
 
 # Step 3: Plan optimizations
-"Agent: planner - Create optimization plan based on bottlenecks"
+"Agent: em-planner - Create optimization plan based on bottlenecks"
 
 # Step 4: Implement optimizations
-"Agent: executor - Implement the performance optimizations"
+"Agent: em-executor - Implement the performance optimizations"
 
 # Step 5: Verify improvements
-"Agent: performance-auditor - Re-benchmark after optimizations"
+"Agent: em-performance-auditor - Re-benchmark after optimizations"
 
 # Step 6: Document
 "Use the documentation skill to document the performance improvements"
@@ -624,7 +624,7 @@ Create custom workflows:
 cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 # Modify for your needs
-# Test with: "Workflow: my-custom-workflow - test task"
+# Test with: "Workflow: em-my-custom-workflow - test task"
 ```
 
 ### Integration with CI/CD
@@ -638,7 +638,7 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 - name: Security Audit
   run: |
-    "Agent: security-auditor - Audit before deployment"
+    "Agent: em-security-auditor - Audit before deployment"
 ```
 
 ---

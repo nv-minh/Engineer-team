@@ -86,10 +86,10 @@ Result: ALL TESTS PASSED ✅
 claude "Use the brainstorming skill to explore feature ideas"
 
 # Using Agents
-claude "Agent: planner - Create implementation plan"
+claude "Agent: em-planner - Create implementation plan"
 
 # Using Workflows
-claude "Workflow: new-feature - Implement user authentication"
+claude "Workflow: em-new-feature - Implement user authentication"
 ```
 
 ### Option 2: Helper Functions
@@ -146,10 +146,10 @@ cd /Users/abc/Desktop/EM-Skill
 claude "Use the brainstorming skill to explore authentication"
 
 # Test an agent
-claude "Agent: planner - Create plan for my current project"
+claude "Agent: em-planner - Create plan for my current project"
 
 # Test a workflow
-claude "Workflow: bug-fix - Fix the login bug"
+claude "Workflow: em-bug-fix - Fix the login bug"
 ```
 
 ### 2. Try Distributed Mode
@@ -163,7 +163,7 @@ cd /Users/abc/Desktop/EM-Skill
 tmux attach -t claude-work:orchestrator
 
 # Trigger investigation
-claude "Agent: techlead-orchestrator - Investigate authentication"
+claude "Agent: em-techlead-orchestrator - Investigate authentication"
 
 # View report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md

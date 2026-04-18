@@ -38,8 +38,8 @@ Claude: "Có, EM-Skill đã được cài đặt toàn cục với:
 
 Bạn có thể sử dụng trực tiếp bằng cách:
 - 'Use the brainstorming skill to explore ideas'
-- 'Agent: planner - Create implementation plan'
-- 'Workflow: new-feature - Implement from idea to production'
+- 'Agent: em-planner - Create implementation plan'
+- 'Workflow: em-new-feature - Implement from idea to production'
 "
 ```
 
@@ -52,14 +52,14 @@ Bạn có thể sử dụng trực tiếp bằng cách:
 "Use the systematic-debugging skill to investigate this bug"
 
 # Sử dụng Agents
-"Agent: planner - Create implementation plan for feature X"
-"Agent: code-reviewer - Review the changes in this PR"
-"Agent: debugger - Investigate this bug systematically"
+"Agent: em-planner - Create implementation plan for feature X"
+"Agent: em-code-reviewer - Review the changes in this PR"
+"Agent: em-debugger - Investigate this bug systematically"
 
 # Sử dụng Workflows
-"Workflow: new-feature - Take this feature from idea to production"
-"Workflow: bug-fix - Fix this bug systematically"
-"Workflow: security-audit - Audit the codebase for security issues"
+"Workflow: em-new-feature - Take this feature from idea to production"
+"Workflow: em-bug-fix - Fix this bug systematically"
+"Workflow: em-security-audit - Audit the codebase for security issues"
 ```
 
 ---
@@ -136,7 +136,7 @@ em-test     # Run E2E tests
 em-start  # Start distributed orchestration
 
 # Sau đó trong Claude:
-"Agent: techlead-orchestrator - Investigate bug này qua toàn bộ stack"
+"Agent: em-techlead-orchestrator - Investigate bug này qua toàn bộ stack"
 
 # Backend, Frontend, Database agents sẽ work in parallel
 em-stop   # Stop distributed mode
@@ -151,7 +151,7 @@ em-stop   # Stop distributed mode
 Foundation:      brainstorming, spec-driven-development, systematic-debugging
 Development:     test-driven-development, frontend-patterns, backend-patterns
 Quality:         code-review, security-audit, performance-optimization
-Workflow:        git-workflow, ci-cd-automation, documentation
+Workflow: em-       git-workflow, ci-cd-automation, documentation
 ```
 
 ### Agents (16 total)
@@ -215,8 +215,8 @@ em-test  # Verify tests still pass
 
 Chỉ cần hỏi Claude về:
 - Skills: "Use the [skill-name] skill to [task]"
-- Agents: "Agent: [agent-name] - [task]"
-- Workflows: "Workflow: [workflow-name] - [task]"
+- Agents: "Agent: em-[agent-name] - [task]"
+- Workflows: "Workflow: em-[workflow-name] - [task]"
 
 Claude sẽ tự động tìm và sử dụng resources từ EM-Skill!
 

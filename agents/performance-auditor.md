@@ -22,11 +22,11 @@ The Performance Auditor agent conducts comprehensive performance analysis, creat
 ## When to Use
 
 ```
-"Agent: performance-auditor - Benchmark the API endpoints"
-"Agent: performance-auditor - Analyze database query performance"
-"Agent: performance-auditor - Find performance bottlenecks"
-"Agent: performance-auditor - Assess scalability of this service"
-"Agent: performance-auditor - Create performance baseline"
+"Agent: em-performance-auditor - Benchmark the API endpoints"
+"Agent: em-performance-auditor - Analyze database query performance"
+"Agent: em-performance-auditor - Find performance bottlenecks"
+"Agent: em-performance-auditor - Assess scalability of this service"
+"Agent: em-performance-auditor - Create performance baseline"
 ```
 
 **Trigger Command:** `duck:performance-auditor`

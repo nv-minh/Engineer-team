@@ -172,8 +172,8 @@ EM-Skill works with Claude Code CLI out of the box. Simply invoke skills, agents
 ```bash
 # Example invocations
 "Use the brainstorming skill to explore authentication"
-"Agent: planner - Create plan for user auth"
-"Workflow: new-feature - Implement authentication"
+"Agent: em-planner - Create plan for user auth"
+"Workflow: em-new-feature - Implement authentication"
 ```
 
 ### Verification Checklist
@@ -291,26 +291,26 @@ Get started with EM-Skill in 5 minutes!
 
 ```bash
 # Create an implementation plan
-"Agent: planner - Create implementation plan for user authentication feature"
+"Agent: em-planner - Create implementation plan for user authentication feature"
 
 # Review your code
-"Agent: code-reviewer - Review the changes in this PR"
+"Agent: em-code-reviewer - Review the changes in this PR"
 
 # Debug issues
-"Agent: debugger - Investigate this login bug systematically"
+"Agent: em-debugger - Investigate this login bug systematically"
 ```
 
 #### 3. Run Workflows (2 minutes)
 
 ```bash
 # Build a new feature from idea to production
-"Workflow: new-feature - Take user authentication from idea to production"
+"Workflow: em-new-feature - Take user authentication from idea to production"
 
 # Fix bugs systematically
-"Workflow: bug-fix - Fix the login timeout bug"
+"Workflow: em-bug-fix - Fix the login timeout bug"
 
 # Audit security
-"Workflow: security-audit - Audit the authentication system"
+"Workflow: em-security-audit - Audit the authentication system"
 ```
 
 ### Try Distributed Mode
@@ -325,7 +325,7 @@ For complex tasks requiring multiple specialist agents:
 tmux attach -t claude-work:orchestrator
 
 # 3. Trigger distributed investigation
-"Agent: techlead-orchestrator - Investigate authentication bug across entire stack"
+"Agent: em-techlead-orchestrator - Investigate authentication bug across entire stack"
 
 # 4. View consolidated report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md
@@ -382,13 +382,13 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Use planner agent
-"Agent: planner - Create implementation plan for user authentication feature"
+"Agent: em-planner - Create implementation plan for user authentication feature"
 
 # Use code-reviewer agent
-"Agent: code-reviewer - Review the changes in this PR"
+"Agent: em-code-reviewer - Review the changes in this PR"
 
 # Use debugger agent
-"Agent: debugger - Investigate this bug systematically"
+"Agent: em-debugger - Investigate this bug systematically"
 ```
 
 ### Using Workflows
@@ -397,13 +397,13 @@ Run end-to-end workflows:
 
 ```bash
 # New feature workflow
-"Workflow: new-feature - Take user authentication from idea to production"
+"Workflow: em-new-feature - Take user authentication from idea to production"
 
 # Bug fix workflow
-"Workflow: bug-fix - Fix the login bug systematically"
+"Workflow: em-bug-fix - Fix the login bug systematically"
 
 # Security audit workflow
-"Workflow: security-audit - Audit the codebase for security issues"
+"Workflow: em-security-audit - Audit the codebase for security issues"
 ```
 
 ## Project Structure
@@ -747,10 +747,10 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 "Use the subagent-driven-development skill to implement the plan"
 
 # Step 5: Review the code
-"Agent: code-reviewer - Review the authentication implementation"
+"Agent: em-code-reviewer - Review the authentication implementation"
 
 # Step 6: Deploy
-"Workflow: deployment - Deploy the authentication feature"
+"Workflow: em-deployment - Deploy the authentication feature"
 ```
 
 ### Example 2: Fixing a Bug
@@ -767,7 +767,7 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 "Use the api-testing skill to verify the login endpoint works"
 
 # Step 4: Code review
-"Agent: code-reviewer - Review the bug fix"
+"Agent: em-code-reviewer - Review the bug fix"
 ```
 
 ### Example 3: Distributed Investigation (Complex Tasks)
@@ -789,7 +789,7 @@ cd /path/to/em-skill
 tmux attach -t claude-work:orchestrator
 
 # Trigger investigation
-"Agent: techlead-orchestrator - Investigate authentication bug across the entire stack"
+"Agent: em-techlead-orchestrator - Investigate authentication bug across the entire stack"
 
 # The orchestrator will:
 # 1. Analyze the task
@@ -877,7 +877,7 @@ EM-Skill includes specialized workflows for distributed execution:
 
 **1. Distributed Investigation Workflow**
 ```bash
-"Workflow: distributed-investigation - Investigate authentication bug with distributed agents"
+"Workflow: em-distributed-investigation - Investigate authentication bug with distributed agents"
 ```
 - Spawns specialist agents (backend, frontend, database)
 - Parallel investigation across codebase
@@ -885,7 +885,7 @@ EM-Skill includes specialized workflows for distributed execution:
 
 **2. Distributed Development Workflow**
 ```bash
-"Workflow: distributed-development - Implement feature with distributed team"
+"Workflow: em-distributed-development - Implement feature with distributed team"
 ```
 - Spec creation with Tech Lead
 - Parallel implementation by specialists

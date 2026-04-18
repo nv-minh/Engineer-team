@@ -289,7 +289,7 @@ timeline:
 
 ```bash
 # Start bug fix workflow
-"Workflow: bug-fix - User profile shows duplicate entries"
+"Workflow: em-bug-fix - User profile shows duplicate entries"
 
 # This will trigger:
 # 1. Debugger - Investigate symptoms

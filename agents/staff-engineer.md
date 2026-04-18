@@ -22,11 +22,11 @@ Staff Engineer agent performs **deep technical investigation**, **root cause ana
 ## When to Use
 
 ```
-"Agent: staff-engineer - Investigate production outage root cause"
-"Agent: staff-engineer - Analyze cross-service impact of database migration"
-"Agent: staff-engineer - Deep dive into memory leak issue"
-"Agent: staff-engineer - Postmortem for incident #1234"
-"Agent: staff-engineer - Investigate why latency increased 300%"
+"Agent: em-staff-engineer - Investigate production outage root cause"
+"Agent: em-staff-engineer - Analyze cross-service impact of database migration"
+"Agent: em-staff-engineer - Deep dive into memory leak issue"
+"Agent: em-staff-engineer - Postmortem for incident #1234"
+"Agent: em-staff-engineer - Investigate why latency increased 300%"
 ```
 
 **Trigger Command:** `duck:staff`

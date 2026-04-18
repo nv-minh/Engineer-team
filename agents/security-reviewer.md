@@ -22,11 +22,11 @@ Security Reviewer agent performs comprehensive security assessment using **OWASP
 ## When to Use
 
 ```
-"Agent: security-reviewer - Perform OWASP assessment on payment system"
-"Agent: security-reviewer - STRIDE threat modeling for API"
-"Agent: security-reviewer - Security review of authentication flow"
-"Agent: security-reviewer - Assess security of database layer"
-"Agent: security-reviewer - Review deployment security"
+"Agent: em-security-reviewer - Perform OWASP assessment on payment system"
+"Agent: em-security-reviewer - STRIDE threat modeling for API"
+"Agent: em-security-reviewer - Security review of authentication flow"
+"Agent: em-security-reviewer - Assess security of database layer"
+"Agent: em-security-reviewer - Review deployment security"
 ```
 
 **Trigger Command:** `duck:security`

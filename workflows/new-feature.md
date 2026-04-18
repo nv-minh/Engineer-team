@@ -290,7 +290,7 @@ timeline:
 
 ```bash
 # Start new feature workflow
-"Workflow: new-feature - Implement user authentication with OAuth2"
+"Workflow: em-new-feature - Implement user authentication with OAuth2"
 
 # This will trigger:
 # 1. Brainstorming skill - Explore OAuth2 options

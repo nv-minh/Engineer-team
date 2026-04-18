@@ -11,10 +11,10 @@
 "Use the brainstorming skill to explore this idea"
 
 # Use an agent
-"Agent: planner - Create implementation plan"
+"Agent: em-planner - Create implementation plan"
 
 # Use a workflow
-"Workflow: new-feature - Implement from idea to production"
+"Workflow: em-new-feature - Implement from idea to production"
 ```
 
 ---
@@ -61,7 +61,7 @@ For complex multi-domain tasks:
 
 ```bash
 em-start  # Start distributed orchestration
-"Agent: techlead-orchestrator - Investigate across full stack"
+"Agent: em-techlead-orchestrator - Investigate across full stack"
 em-stop   # Stop distributed mode
 ```
 

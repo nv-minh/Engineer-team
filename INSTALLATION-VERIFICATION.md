@@ -176,23 +176,23 @@ EM-Skill is now fully installed and ready to use! You can:
 
 ### Use Agents
 ```bash
-"Agent: planner - Create implementation plan"
-"Agent: code-reviewer - Review my changes"
-"Agent: debugger - Investigate this bug"
+"Agent: em-planner - Create implementation plan"
+"Agent: em-code-reviewer - Review my changes"
+"Agent: em-debugger - Investigate this bug"
 ```
 
 ### Use Workflows
 ```bash
-"Workflow: new-feature - Take feature from idea to production"
-"Workflow: bug-fix - Fix this bug systematically"
-"Workflow: security-audit - Audit for security issues"
+"Workflow: em-new-feature - Take feature from idea to production"
+"Workflow: em-bug-fix - Fix this bug systematically"
+"Workflow: em-security-audit - Audit for security issues"
 ```
 
 ### Use Distributed Mode
 ```bash
 em-start                    # Start distributed mode
 tmux attach -t claude-work  # Attach to orchestrator
-"Agent: techlead-orchestrator - Investigate across full stack"
+"Agent: em-techlead-orchestrator - Investigate across full stack"
 em-stop                     # Stop distributed mode
 ```
 

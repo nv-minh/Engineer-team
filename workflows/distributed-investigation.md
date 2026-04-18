@@ -7,9 +7,9 @@ This workflow coordinates distributed agents across separate tmux sessions to in
 ## When to Use
 
 ```
-"Workflow: distributed-investigation - Investigate login bug across BE and FE"
-"Workflow: distributed-investigation - Debug payment failure across multiple services"
-"Workflow: distributed-investigation - Root cause analysis for performance degradation"
+"Workflow: em-distributed-investigation - Investigate login bug across BE and FE"
+"Workflow: em-distributed-investigation - Debug payment failure across multiple services"
+"Workflow: em-distributed-investigation - Root cause analysis for performance degradation"
 ```
 
 **Use Cases:**
@@ -28,7 +28,7 @@ This workflow coordinates distributed agents across separate tmux sessions to in
 2. **Tech Lead Orchestrator active:**
 ```bash
 # In techlead session
-"Agent: techlead-orchestrator - Coordinate distributed investigation..."
+"Agent: em-techlead-orchestrator - Coordinate distributed investigation..."
 ```
 
 ## Workflow Process
@@ -520,7 +520,7 @@ verification:
 
 # 2. Trigger Tech Lead
 # In techlead session:
-"Agent: techlead-orchestrator - Coordinate distributed investigation for login bug: Users cannot login after password reset"
+"Agent: em-techlead-orchestrator - Coordinate distributed investigation for login bug: Users cannot login after password reset"
 
 # 3. Tech Lead will:
 # - Analyze bug

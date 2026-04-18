@@ -22,11 +22,11 @@ Product Manager agent reviews specifications from a business perspective, perfor
 ## When to Use
 
 ```
-"Agent: product-manager - Review spec for new payment feature"
-"Agent: product-manager - Perform GAP analysis for checkout flow"
-"Agent: product-manager - Validate acceptance criteria for user onboarding"
-"Agent: product-manager - Assess business impact of new feature request"
-"Agent: product-manager - Review product roadmap for Q2"
+"Agent: em-product-manager - Review spec for new payment feature"
+"Agent: em-product-manager - Perform GAP analysis for checkout flow"
+"Agent: em-product-manager - Validate acceptance criteria for user onboarding"
+"Agent: em-product-manager - Assess business impact of new feature request"
+"Agent: em-product-manager - Review product roadmap for Q2"
 ```
 
 **Trigger Command:** `duck:product`

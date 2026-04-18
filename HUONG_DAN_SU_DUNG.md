@@ -40,14 +40,14 @@
 "Use the brainstorming skill to explore feature ideas"
 
 # 2. Using Agents  
-"Agent: planner - Create implementation plan for authentication"
+"Agent: em-planner - Create implementation plan for authentication"
 
 # 3. Using Workflows
-"Workflow: new-feature - Implement user authentication"
+"Workflow: em-new-feature - Implement user authentication"
 
 # 4. Distributed Mode
 ./scripts/distributed-orchestrator.sh start
-"Agent: techlead-orchestrator - Investigate authentication bug"
+"Agent: em-techlead-orchestrator - Investigate authentication bug"
 ```
 
 ### Tiếng Việt
@@ -57,14 +57,14 @@
 "Sử dụng brainstorming skill để khám phá ý tưởng feature"
 
 # 2. Sử dụng Agents
-"Agent: planner - Tạo kế hoạch triển khai cho authentication"
+"Agent: em-planner - Tạo kế hoạch triển khai cho authentication"
 
 # 3. Sử dụng Workflows
-"Workflow: new-feature - Triển khai user authentication"
+"Workflow: em-new-feature - Triển khai user authentication"
 
 # 4. Chế độ Phân tán
 ./scripts/distributed-orchestrator.sh start
-"Agent: techlead-orchestrator - Điều tra bug authentication"
+"Agent: em-techlead-orchestrator - Điều tra bug authentication"
 ```
 
 ---

@@ -22,11 +22,11 @@ The Integration Checker agent validates cross-phase integration points, verifies
 ## When to Use
 
 ```
-"Agent: integration-checker - Verify E2E flows across all phases"
-"Agent: integration-checker - Check integration points between phases"
-"Agent: integration-checker - Validate data flows from frontend to backend"
-"Agent: integration-checker - Find gaps in the implementation"
-"Agent: integration-checker - Verify cross-phase consistency"
+"Agent: em-integration-checker - Verify E2E flows across all phases"
+"Agent: em-integration-checker - Check integration points between phases"
+"Agent: em-integration-checker - Validate data flows from frontend to backend"
+"Agent: em-integration-checker - Find gaps in the implementation"
+"Agent: em-integration-checker - Verify cross-phase consistency"
 ```
 
 **Trigger Command:** `duck:integration-checker`

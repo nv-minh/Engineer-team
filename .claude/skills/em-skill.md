@@ -22,10 +22,10 @@ location: local
 "Use the brainstorming skill to explore ideas"
 
 # Use an agent
-"Agent: planner - Create implementation plan"
+"Agent: em-planner - Create implementation plan"
 
 # Use a workflow
-"Workflow: new-feature - From idea to production"
+"Workflow: em-new-feature - From idea to production"
 ```
 
 ## Documentation
@@ -48,5 +48,5 @@ location: local
 
 **You can use EM-Skill right now!** Just ask:
 - "Use the brainstorming skill to explore X"
-- "Agent: planner - Create plan for X"
-- "Workflow: new-feature - Implement X"
+- "Agent: em-planner - Create plan for X"
+- "Workflow: em-new-feature - Implement X"

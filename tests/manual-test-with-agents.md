@@ -55,7 +55,7 @@ This guide provides step-by-step instructions for manually testing the distribut
 
 2. **In the tmux session, trigger the Tech Lead Orchestrator agent:**
    ```
-   Agent: techlead-orchestrator - Investigate authentication bug in login flow
+   Agent: em-techlead-orchestrator - Investigate authentication bug in login flow
    ```
 
 3. **Observe the agent behavior:**

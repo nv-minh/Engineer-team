@@ -25,9 +25,9 @@ Team Lead is the orchestrator agent responsible for scanning scope, selecting ap
 ## When to Use
 
 ```
-"Agent: team-lead - Orchestrate team review for this feature"
-"Agent: team-lead - Coordinate cross-functional review"
-"Agent: team-lead - Lead architecture review"
+"Agent: em-team-lead - Orchestrate team review for this feature"
+"Agent: em-team-lead - Coordinate cross-functional review"
+"Agent: em-team-lead - Lead architecture review"
 ```
 
 **Trigger Command:** `duck:team-lead`
@@ -37,7 +37,7 @@ Team Lead is the orchestrator agent responsible for scanning scope, selecting ap
 This agent supports distributed orchestration mode. For complex, multi-domain tasks that require parallel agent execution across separate sessions, use:
 
 ```
-"Agent: techlead-orchestrator - Coordinate distributed investigation..."
+"Agent: em-techlead-orchestrator - Coordinate distributed investigation..."
 ```
 
 Tech Lead Orchestrator is specifically designed for distributed execution with:

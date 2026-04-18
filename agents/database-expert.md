@@ -22,11 +22,11 @@ Database Expert is a specialist in database schema, query optimization, migratio
 ## When to Use
 
 ```
-"Agent: database-expert - Review database schema for payment system"
-"Agent: database-expert - Optimize slow queries in reporting"
-"Agent: database-expert - Design audit trail for financial transactions"
-"Agent: database-expert - Plan migration for user table"
-"Agent: database-expert - Review database scaling strategy"
+"Agent: em-database-expert - Review database schema for payment system"
+"Agent: em-database-expert - Optimize slow queries in reporting"
+"Agent: em-database-expert - Design audit trail for financial transactions"
+"Agent: em-database-expert - Plan migration for user table"
+"Agent: em-database-expert - Review database scaling strategy"
 ```
 
 **Trigger Command:** `duck:database`

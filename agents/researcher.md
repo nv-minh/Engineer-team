@@ -22,10 +22,10 @@ The Researcher agent performs deep technical exploration and research on emergin
 ## When to Use
 
 ```
-"Agent: researcher - Research the best approach for implementing real-time features"
-"Agent: researcher - Compare GraphQL vs REST for this project"
-"Agent: researcher - Research authentication patterns for microservices"
-"Agent: researcher - Investigate the latest React state management solutions"
+"Agent: em-researcher - Research the best approach for implementing real-time features"
+"Agent: em-researcher - Compare GraphQL vs REST for this project"
+"Agent: em-researcher - Research authentication patterns for microservices"
+"Agent: em-researcher - Investigate the latest React state management solutions"
 ```
 
 **Trigger Command:** `duck:researcher`

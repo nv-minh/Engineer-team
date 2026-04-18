@@ -26,11 +26,11 @@ Frontend Expert is a specialist in UI/UX and React/Next.js ecosystem with deep e
 ## When to Use
 
 ```
-"Agent: frontend-expert - Review the dashboard component performance"
-"Agent: frontend-expert - Optimize Core Web Vitals for landing page"
-"Agent: frontend-expert - Audit accessibility for checkout flow"
-"Agent: frontend-expert - Review state management architecture"
-"Agent: frontend-expert - Analyze render performance issues"
+"Agent: em-frontend-expert - Review the dashboard component performance"
+"Agent: em-frontend-expert - Optimize Core Web Vitals for landing page"
+"Agent: em-frontend-expert - Audit accessibility for checkout flow"
+"Agent: em-frontend-expert - Review state management architecture"
+"Agent: em-frontend-expert - Analyze render performance issues"
 ```
 
 **Trigger Command:** `duck:frontend`

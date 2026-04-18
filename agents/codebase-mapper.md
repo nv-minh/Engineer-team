@@ -22,11 +22,11 @@ The Codebase Mapper agent analyzes codebase architecture, documents structure, m
 ## When to Use
 
 ```
-"Agent: codebase-mapper - Analyze the architecture of this project"
-"Agent: codebase-mapper - Map dependencies between services"
-"Agent: codebase-mapper - Create architecture documentation"
-"Agent: codebase-mapper - Review code organization"
-"Agent: codebase-mapper - Document integration points"
+"Agent: em-codebase-mapper - Analyze the architecture of this project"
+"Agent: em-codebase-mapper - Map dependencies between services"
+"Agent: em-codebase-mapper - Create architecture documentation"
+"Agent: em-codebase-mapper - Review code organization"
+"Agent: em-codebase-mapper - Document integration points"
 ```
 
 **Trigger Command:** `duck:codebase-mapper`

@@ -122,10 +122,10 @@ Location: `agents/`
 
 **Usage:**
 ```
-"Agent: planner - Create implementation plan for feature X"
-"Agent: code-reviewer - Review the changes in this PR"
-"Agent: debugger - Investigate this bug systematically"
-"Agent: frontend-expert - Review the React components"
+"Agent: em-planner - Create implementation plan for feature X"
+"Agent: em-code-reviewer - Review the changes in this PR"
+"Agent: em-debugger - Investigate this bug systematically"
+"Agent: em-frontend-expert - Review the React components"
 ```
 
 ---
@@ -162,10 +162,10 @@ Location: `workflows/`
 
 **Usage:**
 ```
-"Workflow: new-feature - Take this feature from idea to production"
-"Workflow: bug-fix - Fix this bug systematically"
-"Workflow: security-audit - Audit the codebase for security issues"
-"Workflow: distributed-investigation - Investigate across full stack"
+"Workflow: em-new-feature - Take this feature from idea to production"
+"Workflow: em-bug-fix - Fix this bug systematically"
+"Workflow: em-security-audit - Audit the codebase for security issues"
+"Workflow: em-distributed-investigation - Investigate across full stack"
 ```
 
 ---
@@ -179,7 +179,7 @@ EM-Skill includes distributed orchestration for complex multi-domain tasks:
 em-start  # or: ./scripts/distributed-orchestrator.sh start
 
 # Use distributed workflow
-"Agent: techlead-orchestrator - Investigate authentication bug"
+"Agent: em-techlead-orchestrator - Investigate authentication bug"
 # Backend, frontend, database agents work in parallel
 
 # View consolidated report
@@ -217,37 +217,37 @@ em-stop  # or: ./scripts/distributed-orchestrator.sh stop
 ### For Domain Expertise
 ```bash
 # Planning
-"Agent: planner - Create plan for X"
+"Agent: em-planner - Create plan for X"
 
 # Execution
-"Agent: executor - Execute plan X"
+"Agent: em-executor - Execute plan X"
 
 # Code Review
-"Agent: code-reviewer - Review changes X"
+"Agent: em-code-reviewer - Review changes X"
 
 # Debugging
-"Agent: debugger - Debug issue X"
+"Agent: em-debugger - Debug issue X"
 
 # Security
-"Agent: security-auditor - Audit security of X"
+"Agent: em-security-auditor - Audit security of X"
 
 # Testing
-"Agent: test-engineer - Create tests for X"
+"Agent: em-test-engineer - Create tests for X"
 ```
 
 ### For Complete Workflows
 ```bash
 # New Feature
-"Workflow: new-feature - Implement feature X"
+"Workflow: em-new-feature - Implement feature X"
 
 # Bug Fix
-"Workflow: bug-fix - Fix bug X"
+"Workflow: em-bug-fix - Fix bug X"
 
 # Security Audit
-"Workflow: security-audit - Audit system X"
+"Workflow: em-security-audit - Audit system X"
 
 # Distributed Investigation
-"Workflow: distributed-investigation - Investigate X across full stack"
+"Workflow: em-distributed-investigation - Investigate X across full stack"
 ```
 
 ---
@@ -293,12 +293,12 @@ EM-Skill follows these Iron Laws from best practices:
 
 2. **Use an agent:**
    ```
-   "Agent: planner - Create implementation plan"
+   "Agent: em-planner - Create implementation plan"
    ```
 
 3. **Use a workflow:**
    ```
-   "Workflow: new-feature - Implement from idea to production"
+   "Workflow: em-new-feature - Implement from idea to production"
    ```
 
 ---
