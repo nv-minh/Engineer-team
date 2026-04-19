@@ -5,9 +5,10 @@
 ## Overview
 
 EM-Skill provides a complete toolkit for fullstack engineering with:
-- **25-30 Skills** - Reusable patterns and practices
-- **8-12 Agents** - Specialized task handlers
-- **5-8 Workflows** - End-to-end processes
+- **17 Quick Commands** - `em:*` prefix for instant access to agents & workflows
+- **25+ Skills** - Reusable patterns and practices (brainstorming, TDD, debugging, etc.)
+- **22 Agents** - Specialized task handlers (planner, backend, frontend, database, etc.)
+- **18 Workflows** - End-to-end processes (new-feature, bug-fix, security-audit, etc.)
 - **Full Features** - Browser automation, MCP integrations, memory system
 - **Distributed Mode** - Parallel agent execution for complex tasks
 
@@ -80,7 +81,31 @@ git clone https://github.com/nv-minh/agent-team.git
 cd agent-team
 ```
 
-#### 2. Verify Installation
+#### 2. Install EM:* Commands (Quick Access)
+
+**IMPORTANT:** This step installs 17 quick commands globally!
+
+```bash
+# Create global skill directories
+mkdir -p ~/.claude/skills
+
+# Copy em:* command shortcuts
+cp -r .claude/skills/em:* ~/.claude/skills/
+
+# Verify installation
+ls ~/.claude/skills/
+
+# Expected output should include:
+# em:architect/    em:backend/      em:bug-fix/      em:code-review/
+# em:database/     em:debug/        em:distributed/  em:frontend/
+# em:incident/     em:new-feature/  em:performance/  em:planner/
+# em:refactor/     em:research/     em:security/     em:team/
+# em:test/
+```
+
+These commands work from **ANY repository** once installed!
+
+#### 3. Verify Installation
 
 ```bash
 # Check if all required files exist
@@ -134,7 +159,31 @@ cd tests
 # All tests passed!
 ```
 
-#### 5. Verify Distributed Mode
+#### 6. Verify EM:* Commands
+
+```bash
+# Reload Claude Code or open new conversation
+# Then check system reminder for em:* commands
+
+# You should see all 17 commands:
+# - em:planner       - Create implementation plans
+# - em:backend       - Backend specialist
+# - em:frontend      - Frontend specialist
+# - em:database      - Database specialist
+# - em:code-review   - 5-axis code review
+# - em:debug         - Systematic debugging
+# - em:security      - OWASP security audit
+# - em:test          - Test strategy & generation
+# - em:performance   - Benchmarking & optimization
+# - em:research      - Technical research
+# - em:architect     - Architecture design
+# - em:new-feature   - Implement feature
+# - em:bug-fix       - Fix bugs
+# - em:refactor      - Improve code quality
+# - em:distributed   - Parallel investigation
+# - em:team          - Full team review
+# - em:incident      - Incident response
+```
 
 ```bash
 # Start distributed orchestration
@@ -181,11 +230,12 @@ EM-Skill works with Claude Code CLI out of the box. Simply invoke skills, agents
 After installation, verify the following:
 
 - [ ] tmux is installed (`tmux -V`)
+- [ ] EM:* commands installed (`ls ~/.claude/skills/em:*`)
+- [ ] EM:* commands visible in system reminder
 - [ ] All scripts are executable
 - [ ] E2E tests pass (8/8 tests)
 - [ ] Distributed orchestration starts successfully
 - [ ] Session manager works
-- [ ] Can invoke skills/agents/workflows
 
 ### Troubleshooting Installation
 
@@ -277,7 +327,32 @@ Get started with EM-Skill in 5 minutes!
 
 ### First Steps
 
-#### 1. Explore Skills (1 minute)
+#### 1. Use Quick Commands (1 minute)
+
+**The fastest way** - Use `em:*` commands:
+
+```bash
+# Planning
+"Use the em:planner skill to create implementation plan for user authentication"
+
+# Backend
+"Use the em:backend skill to review API performance"
+
+# Frontend
+"Use the em:frontend skill to review React components"
+
+# Full workflow
+"Use the em:new-feature skill to implement user authentication"
+```
+
+**Or use direct invocation:**
+```bash
+/em:planner Create implementation plan for user authentication
+/em:backend Review API performance
+/em:new-feature Implement user authentication
+```
+
+#### 2. Explore Core Skills (1 minute)
 
 ```bash
 # Use brainstorming to explore ideas
@@ -287,33 +362,7 @@ Get started with EM-Skill in 5 minutes!
 "Use the spec-driven-development skill to create a spec for user authentication"
 ```
 
-#### 2. Use Agents (2 minutes)
-
-```bash
-# Create an implementation plan
-"Agent: em-planner - Create implementation plan for user authentication feature"
-
-# Review your code
-"Agent: em-code-reviewer - Review the changes in this PR"
-
-# Debug issues
-"Agent: em-debugger - Investigate this login bug systematically"
-```
-
-#### 3. Run Workflows (2 minutes)
-
-```bash
-# Build a new feature from idea to production
-"Workflow: em-new-feature - Take user authentication from idea to production"
-
-# Fix bugs systematically
-"Workflow: em-bug-fix - Fix the login timeout bug"
-
-# Audit security
-"Workflow: em-security-audit - Audit the authentication system"
-```
-
-### Try Distributed Mode
+#### 3. Try Distributed Mode (3 minutes)
 
 For complex tasks requiring multiple specialist agents:
 
@@ -325,7 +374,7 @@ For complex tasks requiring multiple specialist agents:
 tmux attach -t claude-work:orchestrator
 
 # 3. Trigger distributed investigation
-"Agent: em-techlead-orchestrator - Investigate authentication bug across entire stack"
+"Use the em:distributed skill to investigate authentication bug across entire stack"
 
 # 4. View consolidated report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md
@@ -337,6 +386,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 ### Next Steps
 
 1. 📖 **Read the Guides**
+   - [EM:* Commands Guide](EM-COLON-INSTALLATION.md) - Quick commands reference
    - [Quick Start Guide](docs/guides/getting-started.md) - Detailed setup guide
    - [Comprehensive Usage (EN)](docs/guides/usage-guide.md) - Full English documentation
    - [Hướng Dẫn Sử Dụng (VI)](docs/vi/huong-dan-su-dung.md) - Tài liệu tiếng Việt
@@ -359,6 +409,67 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ---
 
+## 📖 EM:* Commands Reference
+
+### What are EM:* Commands?
+
+**EM:*** commands** are 17 quick-access shortcuts for the most commonly used agents and workflows. They work from **ANY repository** once installed.
+
+### Quick Access Commands
+
+**Agents (11 commands):**
+```bash
+/em:planner       - Create implementation plans
+/em:architect     - Architecture & technical design
+/em:backend       - Backend specialist (API, DB, performance)
+/em:frontend      - Frontend specialist (React, Next.js, UI/UX)
+/em:database      - Database specialist (schema, queries)
+/em:code-review   - 5-axis code review
+/em:debug         - Systematic debugging
+/em:security      - OWASP security audit
+/em:test          - Test strategy & generation
+/em:performance   - Benchmarking & optimization
+/em:research      - Technical research & exploration
+```
+
+**Workflows (6 commands):**
+```bash
+/em:new-feature   - Implement feature from idea to production
+/em:bug-fix       - Fix bugs systematically
+/em:refactor      - Improve code quality
+/em:distributed   - Parallel distributed investigation
+/em:team          - Full team review coordination
+/em:incident      - Production incident response
+```
+
+### Usage Examples
+
+**Method 1: Use skill syntax (Recommended)**
+```bash
+Use the em:planner skill to create implementation plan for JWT auth
+Use the em:backend skill to optimize database queries
+Use the em:new-feature skill to implement user authentication
+```
+
+**Method 2: Direct invocation**
+```bash
+/em:planner Create implementation plan for JWT auth
+/em:backend Optimize database queries
+/em:new-feature Implement user authentication
+```
+
+### When to use EM:* vs Full Commands?
+
+**Use EM:* commands for:**
+- Quick access to common tasks
+- Everyday development workflow
+- When you know which agent/workflow you need
+
+**Use full commands for:**
+- Accessing all 25+ skills
+- Using specific agents not in EM:* list
+- When you need more control
+
 ## 📖 Basic Usage
 
 ### Using Skills
@@ -376,33 +487,33 @@ Invoke skills directly by name:
 "Use the systematic-debugging skill to investigate this bug"
 ```
 
-### Using Agents
+### Using Agents (Full List)
 
 Dispatch agents for specialized tasks:
 
 ```bash
-# Use planner agent
+# Use planner agent (or /em:planner)
 "Agent: em-planner - Create implementation plan for user authentication feature"
 
-# Use code-reviewer agent
+# Use code-reviewer agent (or /em:code-review)
 "Agent: em-code-reviewer - Review the changes in this PR"
 
-# Use debugger agent
+# Use debugger agent (or /em:debug)
 "Agent: em-debugger - Investigate this bug systematically"
 ```
 
-### Using Workflows
+### Using Workflows (Full List)
 
 Run end-to-end workflows:
 
 ```bash
-# New feature workflow
+# New feature workflow (or /em:new-feature)
 "Workflow: em-new-feature - Take user authentication from idea to production"
 
-# Bug fix workflow
+# Bug fix workflow (or /em:bug-fix)
 "Workflow: em-bug-fix - Fix the login bug systematically"
 
-# Security audit workflow
+# Security audit workflow (or /em:security-audit)
 "Workflow: em-security-audit - Audit the codebase for security issues"
 ```
 
