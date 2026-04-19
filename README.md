@@ -9,6 +9,7 @@ EM-Team provides a complete toolkit for fullstack engineering with:
 **🎯 Core Features (NEW in v1.2.0):**
 - **TDD Auto-Retry Loop** - Automated test failure capture with exponential backoff
 - **Token Summarization** - Intelligent token management preventing context overflow
+- **Knowledge Persistence** - Project convention learning for consistent agent output
 - **Enhanced Distributed Mode** - Token-aware report consolidation with Haiku
 
 **📋 Quick Commands:**
@@ -106,6 +107,70 @@ Solves the distributed mode token overflow problem with Haiku-powered summarizat
 ```
 
 **Documentation:** `docs/TOKEN-SUMMARIZATION.md`
+
+---
+
+### ✨ Knowledge Persistence (NEW)
+
+**Project convention learning ensures consistent agent output across all tasks**
+
+The Codebase-Mapper Agent extracts project conventions and persists them to a knowledge base that all agents automatically consume, ensuring consistent code style, naming patterns, and architectural decisions.
+
+**Key Capabilities:**
+- 🧠 **Automatic Extraction**: Learns naming conventions, code style, architectural patterns
+- 💾 **Persistent Knowledge Base**: Stores in `.claude/knowledge/` directory
+- 🤖 **Agent Consumption**: All agents automatically load and apply conventions
+- 🎯 **Pattern Matching**: Identifies and documents recurring patterns
+- 📚 **Code Examples**: Saves representative samples for reference
+
+**What Gets Extracted:**
+- **Naming Conventions**: Files, functions, variables, classes, constants
+- **Code Style**: Indentation, line length, quotes, semicolons, patterns
+- **Architecture Patterns**: Layered, hexagonal, microservices, etc.
+- **Testing Conventions**: Test structure, naming, coverage requirements
+- **Git Conventions**: Commit format, branch naming, PR guidelines
+- **Error Handling**: Error classes, logging patterns, retry logic
+
+**Knowledge Files:**
+- `project-conventions.md` - All project naming and coding conventions
+- `coding-style.md` - Code formatting and style guidelines
+- `architecture-patterns.md` - Detected architectural patterns
+- `dependencies.md` - Dependency mapping and integration points
+- `examples/` - Representative code samples
+
+**Real-World Impact:**
+- ✅ All agents follow consistent naming conventions
+- ✅ Code style matches project patterns automatically
+- ✅ Architectural decisions are respected across agents
+- ✅ New team members benefit from learned conventions
+- ✅ Reduces "code style drift" over time
+
+**Quick Start:**
+```bash
+# Extract and persist project knowledge
+Agent: codebase-mapper - Analyze this project and save conventions
+
+# View knowledge base
+cat .claude/knowledge/project-conventions.md
+cat .claude/knowledge/coding-style.md
+
+# Update knowledge when conventions change
+Agent: codebase-mapper - Update knowledge base
+
+# Agents automatically use knowledge
+Agent: frontend-expert - Create user profile component
+# Agent automatically loads and follows project conventions
+```
+
+**Agent Integration:**
+All agents automatically load knowledge when starting tasks:
+1. Check `.claude/knowledge/` exists
+2. Load `project-conventions.md`
+3. Study code examples
+4. Apply conventions to work
+5. Validate output against patterns
+
+**Documentation:** `agents/codebase-mapper.md`, `.claude/knowledge/README.md`
 
 ---
 
