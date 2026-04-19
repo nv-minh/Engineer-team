@@ -223,7 +223,16 @@
       "Bash(./scripts/haiku-client.sh summarize-rule-based *)",
       "Bash(mv em-skill-completions-zsh.sh em-team-completions-zsh.sh)",
       "Bash(mv em-skill-completions.sh em-team-completions.sh)",
-      "Bash(mv em-skill-show.md em-team-show.md)"
+      "Bash(mv em-skill-show.md em-team-show.md)",
+      "Bash(grep '\\\\.md$')",
+      "Bash(grep '\\\\.sh$')",
+      "Bash(awk '{print $NF}')",
+      "Bash(grep -v \"^\\\\.\\\\.$\")",
+      "mcp__zread__get_repo_structure",
+      "Bash(bash .claude/commands/em-show.sh)",
+      "Bash(grep -E \"\\\\.\\(md|json|yaml\\)$\")",
+      "Bash(rm -f agents/shopify-expert.md)",
+      "Bash(rm -rf skills/specialized/)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -4,10 +4,10 @@
 
 cat << 'EOF'
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 EM-TEAM - ALL COMMANDS (65+ commands)
+🎯 EM-TEAM - ALL COMMANDS (67+ commands)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📚 SKILLS (25 commands) - Gõ trực tiếp:
+📚 SKILLS (26 commands) - Gõ trực tiếp:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /brainstorming          Explore ideas into designs
@@ -35,9 +35,10 @@ cat << 'EOF'
   /documentation          ADRs & docs
   /finishing-branch       Merge/PR decisions
   /deprecation-migration  Code-as-liability
+  /office-hours           YC validation - 6 forcing questions ⭐
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🤖 AGENTS (22 commands) - Gõ với em- prefix:
+🤖 AGENTS (24 commands) - Gõ với em- prefix:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /em-planner               Create implementation plans
@@ -62,6 +63,8 @@ cat << 'EOF'
   /em-codebase-mapper       Architecture analysis
   /em-integration-checker   Cross-phase validation
   /em-performance-auditor   Benchmarking & optimization ⭐
+  /em-learn                 Project learnings management ⭐
+  /em-autoplan              Multi-phase review pipeline ⭐
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔄 WORKFLOWS (18 commands) - Gõ với em- prefix:
@@ -101,6 +104,8 @@ cat << 'EOF'
     /em-database-expert Optimize database queries ⭐
     /em-performance-auditor Benchmark search queries ⭐
     /em-techlead-orchestrator Distributed investigation ⭐
+    /em-learn Capture project learnings ⭐
+    /em-autoplan Coordinate multi-phase reviews ⭐
     /em-code-reviewer Review PR #123
     /em-debugger Investigate bug systematically
 
