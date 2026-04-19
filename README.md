@@ -5,7 +5,10 @@
 ## Overview
 
 EM-Skill provides a complete toolkit for fullstack engineering with:
-- **17 Quick Commands** - `em:*` prefix for instant access to agents & workflows
+- **29 Quick Commands** - `em:*` and `em:wl-*` prefixes for instant access
+  - 11 agent commands (`em:planner`, `em:backend`, etc.)
+  - 6 core workflow commands (`em:new-feature`, `em:bug-fix`, etc.)
+  - 12 specialized workflow commands (`em:wl-architecture-review`, etc.)
 - **25+ Skills** - Reusable patterns and practices (brainstorming, TDD, debugging, etc.)
 - **22 Agents** - Specialized task handlers (planner, backend, frontend, database, etc.)
 - **18 Workflows** - End-to-end processes (new-feature, bug-fix, security-audit, etc.)
@@ -440,6 +443,22 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 /em:distributed   - Parallel distributed investigation
 /em:team          - Full team review coordination
 /em:incident      - Production incident response
+```
+
+**Specialized Workflows (12 commands with wl- prefix):**
+```bash
+/em:wl-architecture-review    - Architecture review (Architect + Staff)
+/em:wl-design-review           - UI/UX design review (Frontend + Product)
+/em:wl-code-review-9axis       - Deep 9-axis code review
+/em:wl-database-review         - Database schema & query review
+/em:wl-product-review          - Product/spec review (Product + Architect)
+/em:wl-security-review         - Advanced security (OWASP + STRIDE)
+/em:wl-project-setup           - Initialize new projects
+/em:wl-documentation           - Generate/update documentation
+/em:wl-deployment              - Deploy and monitor features
+/em:wl-retro                   - Retrospective and improvement
+/em:wl-distributed-dev         - Parallel distributed development
+/em:wl-security-audit          - Security audit (OWASP Top 10)
 ```
 
 ### Usage Examples
