@@ -7,21 +7,26 @@
 EM-Team provides a complete toolkit for fullstack engineering with:
 
 **🎯 Core Features (NEW in v1.2.0):**
+- **Discovery & Market Intelligence** - Complete product validation and discovery framework
+  - YC Office Hours validation with 6 forcing questions
+  - 6-stage discovery workflow (2-4 weeks)
+  - Project learnings management system
+  - Multi-phase review pipeline with auto-decisions
 - **TDD Auto-Retry Loop** - Automated test failure capture with exponential backoff
 - **Token Summarization** - Intelligent token management preventing context overflow
 - **Knowledge Persistence** - Project convention learning for consistent agent output
 - **Enhanced Distributed Mode** - Token-aware report consolidation with Haiku
 
 **📋 Quick Commands:**
-- **29 Quick Commands** - Organized by type for easy access
-  - 11 **Agent Commands** (`em:agent-*`) - Call specialist AI agents
-  - 6 **Core Workflow Commands** (`em:*`) - Everyday workflows
-  - 12 **Specialized Workflow Commands** (`em:wl-*`) - Advanced multi-agent workflows
+- **67+ Commands** - Organized by type for easy access
+  - 26 **Skills** - Reusable patterns and practices
+  - 24 **Agents** (`em:*`) - Specialized task handlers
+  - 18 **Workflows** (`em:*` & `em:wl-*`) - End-to-end processes
 
 **🔧 Development Tools:**
-- **25+ Skills** - Reusable patterns and practices (brainstorming, TDD, debugging, etc.)
-- **22 Agents** - Specialized task handlers (planner, backend, frontend, database, etc.)
-- **18 Workflows** - End-to-end processes (new-feature, bug-fix, security-audit, etc.)
+- **26 Skills** - Discovery, development, quality, workflow management
+- **24 Agents** - Market intelligence, learn, autoplan, planner, backend, frontend, database, etc.
+- **18 Workflows** - Discovery, new-feature, bug-fix, security-audit, team reviews, etc.
 
 **⚡ Advanced Features:**
 - **Distributed Mode** - Parallel agent execution for complex tasks
@@ -646,6 +651,19 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ### Usage Examples
 
+**Discovery & Market Intelligence Commands (NEW):**
+```bash
+Use the /office-hours skill to validate product ideas
+Use the /jobs-to-be-done skill to understand customer motivation
+Use the /lean-ux-canvas skill to frame business problems
+Use the /opportunity-solution-tree skill to explore solutions
+Use the /pol-probe skill to design validation experiments
+Use the /em-discovery-process skill to run complete discovery
+Use the /em-learn skill to capture project learnings
+Use the /em-autoplan skill to coordinate reviews
+Use the /em-market-intelligence skill to analyze markets
+```
+
 **Agent Commands:**
 ```bash
 Use the em:agent-planner skill to create implementation plan for JWT auth
@@ -675,69 +693,150 @@ Use the em:wl-security-review skill to conduct threat modeling
 - When you know which agent/workflow you need
 
 **Use full commands for:**
-- Accessing all 25+ skills
+- Accessing all 26 skills (including discovery skills)
 - Using specific agents not in EM:* list
+- Discovery & market intelligence tasks
 - When you need more control
 
 ## 📖 Basic Usage
 
-### Using Skills
+### Discovery & Market Intelligence (NEW in v1.2.0)
+
+Validate product ideas and run discovery before building:
+
+```bash
+# Validate product idea with YC framework
+/office-hours I have an idea for a AI-powered code reviewer for startups
+# → 6 forcing questions, scoring system, go/no-go decision
+
+# Run complete discovery workflow
+/em-discovery-process We need to improve our checkout conversion rate
+# → 6 stages: Frame → Research → Synthesize → Solutions → Decide (2-4 weeks)
+
+# Capture project learnings
+/em-learn We just completed a major refactoring project
+# → Patterns, pitfalls, preferences, architecture decisions
+
+# Coordinate multi-phase reviews
+/em-autoplan Coordinate reviews for our new authentication feature
+# → CEO, Design, Engineering, DX reviews with auto-decision framework
+
+# Market analysis
+/em-market-intelligence Analyze the CRM market for SMB
+# → Market sizing, competitive analysis, opportunity detection
+```
+
+### Using Skills (Foundation & Development)
 
 Invoke skills directly by name:
 
 ```bash
-# Use brainstorming skill
-"Use the brainstorming skill to explore this feature idea"
+# Discovery Skills
+/jobs-to-be-done Understand customer motivation for our product
+/lean-ux-canvas Frame this business problem properly
+/opportunity-solution-tree Explore solution options for this problem
+/pol-probe Design a lightweight validation experiment
 
-# Use spec-driven-development skill
-"Use the spec-driven-development skill to create a spec for user authentication"
-
-# Use systematic-debugging skill
-"Use the systematic-debugging skill to investigate this bug"
+# Development Skills
+/brainstorming Explore ideas for this feature idea
+/spec-driven-development Create a spec for user authentication
+/systematic-debugging Investigate this bug systematically
+/test-driven-development Implement this feature with TDD
+/frontend-patterns Refactor these React components
+/backend-patterns Optimize this API endpoint
+/security-hardening Apply OWASP Top 10 security
+/code-simplification Reduce complexity in this code
 ```
 
-### Using Agents (Full List)
+### Using Agents
 
 Dispatch agents for specialized tasks:
 
 ```bash
-# Use planner agent (or /em:planner)
-"Agent: em-planner - Create implementation plan for user authentication feature"
+# Discovery & Learning Agents
+/em-market-intelligence Analyze market opportunity
+/em-learn Capture project learnings
+/em-autoplan Coordinate multi-phase reviews
 
-# Use code-reviewer agent (or /em:code-review)
-"Agent: em-code-reviewer - Review the changes in this PR"
+# Core Development Agents
+/em-planner Create implementation plan for user authentication feature
+/em-executor Execute plan with atomic commits
+/em-code-reviewer Review the changes in this PR
+/em-debugger Investigate this bug systematically
+/em-test-engineer Generate test strategy for this feature
+/em-security-auditor Audit this code for security issues
 
-# Use debugger agent (or /em:debug)
-"Agent: em-debugger - Investigate this bug systematically"
+# Expert Agents
+/em-backend-expert Review API performance and optimize queries
+/em-frontend-expert Review React components and UI/UX
+/em-database-expert Optimize database schema and queries
+/em-architect Design architecture for this system
+/em-product-manager Gather requirements for this feature
 ```
 
-### Using Workflows (Full List)
+### Using Workflows
 
 Run end-to-end workflows:
 
 ```bash
-# New feature workflow (or /em:new-feature)
-"Workflow: em-new-feature - Take user authentication from idea to production"
+# Discovery & Feature Workflows
+/em-discovery-process Take this problem through complete discovery
+/em-new-feature Take user authentication from idea to production
+/em-market-driven-feature Launch this market-driven feature
 
-# Bug fix workflow (or /em:bug-fix)
-"Workflow: em-bug-fix - Fix the login bug systematically"
+# Core Workflows
+/em-bug-fix Fix the login bug systematically
+/em-refactor Improve code quality in this module
+/em-security-audit Audit the codebase for security issues
 
-# Security audit workflow (or /em:security-audit)
-"Workflow: em-security-audit - Audit the codebase for security issues"
+# Team Review Workflows
+/em-team-review Coordinate full team review
+/em-architecture-review Architecture review with team
+/em-design-review UI/UX design review
+/em-code-review-9axis Deep 9-axis code review
+/em-distributed-investigation Parallel investigation across services
 ```
 
 ## Project Structure
 
 ```
 em-team/
-├── skills/                  # 25-30 skills organized by category
-│   ├── foundation/          # Core foundational skills (5)
-│   ├── development/         # Development workflow skills (8)
+├── skills/                  # 26 skills organized by category
+│   ├── foundation/          # Core foundational skills (8)
+│   │   ├── brainstorming.md
+│   │   ├── jobs-to-be-done.md (NEW)
+│   │   ├── pol-probe.md (NEW)
+│   │   └── office-hours.md (NEW)
+│   ├── development/         # Development workflow skills (13)
+│   │   ├── lean-ux-canvas.md (NEW)
+│   │   ├── opportunity-solution-tree.md (NEW)
+│   │   ├── spec-driven-development.md
+│   │   ├── test-driven-development.md
+│   │   └── frontend-patterns.md
 │   ├── quality/             # Quality assurance skills (7)
+│   │   ├── code-review.md
+│   │   ├── security-audit.md
+│   │   └── e2e-testing.md
 │   ├── workflow/            # Workflow and automation skills (5)
+│   │   ├── git-workflow.md
+│   │   └── ci-cd-automation.md
 │   └── specialized/         # Language/framework-specific skills
-├── agents/                  # 16-20 specialized agents
-├── workflows/               # 16 end-to-end workflows
+├── agents/                  # 24 specialized agents
+│   ├── market-intelligence.md (NEW)
+│   ├── learn.md (NEW)
+│   ├── autoplan.md (NEW)
+│   ├── planner.md
+│   ├── executor.md
+│   ├── code-reviewer.md
+│   ├── backend-expert.md
+│   └── frontend-expert.md
+├── workflows/               # 18 end-to-end workflows
+│   ├── discovery-process.md (NEW)
+│   ├── new-feature.md (v2.0 - Enhanced)
+│   ├── market-driven-feature.md (NEW)
+│   ├── bug-fix.md
+│   ├── team-review.md
+│   └── architecture-review.md
 ├── distributed/             # Distributed orchestration system
 │   ├── session-coordinator.sh  # High-level coordination
 │   └── session-sync.sh         # Context synchronization

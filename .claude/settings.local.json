@@ -232,7 +232,8 @@
       "Bash(bash .claude/commands/em-show.sh)",
       "Bash(grep -E \"\\\\.\\(md|json|yaml\\)$\")",
       "Bash(rm -f agents/shopify-expert.md)",
-      "Bash(rm -rf skills/specialized/)"
+      "Bash(rm -rf skills/specialized/)",
+      "Bash(git push *)"
     ]
   },
   "enableAllProjectMcpServers": true,
