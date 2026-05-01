@@ -1,6 +1,18 @@
 ---
 name: product-review
 description: Product/spec review with Product Manager and Architect agents
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:product"
+  - "duck:architect"
+skills_used:
+  - "spec-driven-development"
+  - "brainstorming"
+  - "writing-plans"
+  - "api-interface-design"
+estimated_time: "2-4 hours"
 ---
 
 # Product Review Workflow
@@ -17,6 +29,64 @@ The Product Review workflow validates specifications, requirements, and business
 - Market fit assessment
 - Business impact analysis
 - Acceptance criteria review
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Gather specifications, user stories, and market context |
+| PLAN | Business Requirements Review (Stage 1) |
+| BUILD | Refine requirements and user stories based on review |
+| VERIFY | Technical Feasibility Review (Stage 2) |
+| REVIEW | Consolidated Product Assessment (Stage 3) |
+| SHIP | Go/No-Go decision, refined spec delivered |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Specification documents provided
+- [ ] User stories compiled
+- [ ] Requirements documented
+- [ ] Market context gathered
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Requirements validated
+- [ ] GAP analysis completed
+- [ ] Acceptance criteria reviewed
+- [ ] Market fit assessed
+- [ ] Business value confirmed
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Refined user stories created
+- [ ] Acceptance criteria updated
+- [ ] Business requirements finalized
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Technical feasibility confirmed
+- [ ] Options identified
+- [ ] Architecture impact assessed
+- [ ] Effort estimated
+- [ ] Risks identified
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Findings merged and aligned
+- [ ] Requirements prioritized
+- [ ] Recommendations actionable
+- [ ] Go/No-Go decision made
+- [ ] Scorecard completed
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

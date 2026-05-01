@@ -1,6 +1,23 @@
 ---
 name: api-interface-design
 description: Design API interfaces contracts-first. Use when creating new APIs, adding endpoints, or defining service boundaries.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["api design", "contract-first", "endpoint", "interface definition"]
+intent: "Enforce a contracts-first mindset so every API is born with clear types, validation, and documentation before a single line of logic is written."
+scenarios:
+  - "Designing a new RESTful user management API with consistent error responses"
+  - "Defining service boundaries between a payment microservice and an order service"
+  - "Adding validation schemas and contract tests for an existing products endpoint"
+best_for: "new APIs, endpoint design, service boundaries, contract testing"
+estimated_time: "25-45 min"
+anti_patterns:
+  - "Writing controller logic before defining request and response types"
+  - "Using inconsistent naming conventions across different endpoints"
+  - "Returning raw error messages without a structured error response format"
+related_skills: ["backend-patterns", "security-hardening", "test-driven-development"]
 ---
 
 # API Interface Design
@@ -406,6 +423,14 @@ interface ErrorResponse {
 | Wrong HTTP methods | Breaking semantics | Use correct methods |
 | No validation | Invalid data | Validate all inputs |
 | Poor error responses | Hard to debug | Consistent error format |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** API interface design teaches you that a well-defined contract eliminates ambiguity between teams and makes implementation almost mechanical.
+
+1. **Types are the first draft of documentation:** When you define request and response types before writing logic, you are forced to think through edge cases, optional fields, and error states up front. The types become a spec that humans and compilers can both read.
+2. **Validate at the boundary, not deep inside:** Input validation belongs at the API gateway, not scattered through service layers. A Zod schema at the entry point catches bad data before it contaminates your domain.
+3. **Consistency is a feature:** When every endpoint uses the same response envelope, error format, and naming convention, consumers spend zero time guessing how to parse your API. Pick one convention and enforce it everywhere.
 
 ## Verification
 

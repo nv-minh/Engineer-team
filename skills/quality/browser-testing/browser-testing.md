@@ -1,6 +1,23 @@
 ---
 name: browser-testing
 description: Browser testing using DevTools and headless browsers. Use when testing web applications, debugging frontend issues, or verifying user interactions.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["browser test", "playwright", "devtools", "frontend debug"]
+intent: "Validate real user experience by automating browser interactions and catching rendering bugs that unit tests cannot detect."
+scenarios:
+  - "Automating a login flow test that verifies redirect, cookie behavior, and error messages"
+  - "Testing responsive layout across mobile, tablet, and desktop viewports"
+  - "Capturing screenshots on test failure to debug a CSS regression in production"
+best_for: "frontend QA, cross-browser testing, responsive testing, visual debugging, user interaction verification"
+estimated_time: "15-30 min"
+anti_patterns:
+  - "Using brittle CSS selectors that break whenever a developer changes a class name"
+  - "Using fixed sleep waits instead of waiting for elements or network idle"
+  - "Testing internal implementation state instead of user-visible behavior"
+related_skills: ["e2e-testing", "frontend-patterns", "performance-optimization"]
 ---
 
 # Browser Testing
@@ -325,6 +342,14 @@ for (const browserType of browsers) {
   });
 }
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Browser tests simulate real users -- think like a user, test like a user, and never trust that the frontend works until you see it rendered.
+
+1. **Test What Users See, Not What the Code Does:** A user does not care about component state or store values. They care that the button is visible, the form submits, and the error message appears. Assert on visible behavior.
+2. **Use Stable Selectors or Regret It Later:** Data attributes (`data-testid`) are your contract between test and UI. CSS classes change during redesigns, IDs change during refactors, but `data-testid` changes only when the element is removed.
+3. **Screenshots Are Your Safety Net:** Always capture screenshots on failure. A screenshot tells you in one second what a stack trace takes five minutes to diagnose. Enable tracing for complex flaky-test investigations.
 
 ## Common Mistakes
 

@@ -1,6 +1,23 @@
 ---
 name: backend-patterns
 description: Backend development patterns for APIs, databases, and services. Use when building API endpoints, database queries, authentication, or business logic.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["backend", "api endpoint", "database query", "service layer"]
+intent: "Provide battle-tested structural patterns so backend code stays maintainable, testable, and secure as the codebase grows."
+scenarios:
+  - "Building a transactional fund transfer endpoint with rollback guarantees"
+  - "Implementing a repository pattern to decouple data access from business logic"
+  - "Adding JWT-based authentication with role-based access control to an Express API"
+best_for: "API design, database patterns, auth, caching, error handling"
+estimated_time: "25-45 min"
+anti_patterns:
+  - "Putting SQL queries directly inside route handlers instead of using the repository pattern"
+  - "God controllers that mix validation, business logic, and data access in one function"
+  - "Skipping transactions for multi-step database operations that must succeed or fail together"
+related_skills: ["api-interface-design", "security-hardening", "code-review"]
 ---
 
 # Backend Patterns
@@ -520,6 +537,14 @@ class CachedUserService {
 | Hardcoded secrets | Security risk | Use environment variables |
 | No validation | Invalid data and errors | Validate all inputs |
 | Mixed concerns | Hard to maintain | Separate layers |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Backend patterns teach you that separation of concerns and consistent error handling are what keep a server codebase maintainable beyond the first sprint.
+
+1. **The repository pattern buys you testability:** When data access lives behind an interface, you can swap PostgreSQL for an in-memory stub in tests and reason about business logic without a database running. This alone justifies the extra file.
+2. **Transactions are non-negotiable for multi-step writes:** If two database changes must both succeed or both fail, wrap them in a transaction. Period. Partial data corruption is far harder to fix than a rolled-back request.
+3. **Custom error classes turn chaos into structure:** Throwing generic Error objects means every caller guesses what went wrong. A typed hierarchy (ValidationError, NotFoundError, ConflictError) lets handlers respond correctly and logs carry the context you need to debug at 3 AM.
 
 ## Verification
 

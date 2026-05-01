@@ -1,6 +1,23 @@
 ---
 name: source-driven-development
 description: Code using official documentation and authoritative sources. Use when implementing features with new libraries, APIs, or frameworks.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["official docs", "source-first", "documentation", "authoritative"]
+intent: "Eliminate hallucinated or outdated API usage by always grounding implementation in official, version-verified documentation."
+scenarios:
+  - "Implementing file uploads with Multer by reading the official GitHub README before coding"
+  - "Migrating from an outdated Stack Overflow answer to the current Express body-parser API"
+  - "Using MCP Context7 to fetch TanStack Query docs and avoiding AI-hallucinated options"
+best_for: "new libraries, API integrations, framework adoption, version verification"
+estimated_time: "20-35 min"
+anti_patterns:
+  - "Trusting AI-generated API calls without cross-referencing official documentation"
+  - "Copy-pasting Stack Overflow snippets without checking the library version or deprecation status"
+  - "Using a library feature without saving documentation links for future maintainers"
+related_skills: ["api-interface-design", "context-engineering", "test-driven-development"]
 ---
 
 # Source-Driven Development
@@ -278,6 +295,14 @@ export const authOptions: NextAuthOptions = {
 | "Stack Overflow is faster" | Stack Overflow answers may be outdated or wrong. |
 | "I've used this before" | APIs change. Verify current documentation. |
 | "The tutorial looks good" | Tutorials may be outdated. Use official docs. |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Source-driven development teaches you to distrust your first instinct and verify against authoritative documentation, because outdated or hallucinated APIs silently break production.
+
+1. **Official docs beat every other source:** Stack Overflow answers age fast, blog posts get abandoned, and AI training data has a cutoff date. When the official docs say the API changed, they are right. Adjust your code accordingly.
+2. **Version pin, then verify:** Knowing you are on Next.js 14 vs 15 changes which APIs are available and which are deprecated. Always check the docs for your exact version before trusting any example.
+3. **Document your sources in the code:** A comment linking to the official docs page you used makes the code auditable and helps the next developer verify whether the approach is still current six months from now.
 
 ## Red Flags
 

@@ -1,6 +1,23 @@
 ---
 name: e2e-testing
 description: End-to-end testing for complete user workflows. Use when testing critical user paths, verifying integration, or ensuring system reliability.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["e2e test", "end-to-end", "playwright", "user flow test"]
+intent: "Catch integration failures and broken user journeys that unit tests and API tests can never reveal."
+scenarios:
+  - "Testing the full user registration-to-verification-to-login flow across frontend and backend"
+  - "Verifying a shopping cart checkout flow that spans product listing, cart, payment, and confirmation"
+  - "Validating that a deployed staging environment handles CRUD operations end-to-end before promoting to production"
+best_for: "critical path testing, integration verification, regression prevention, CI/CD validation"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Writing too many E2E tests for every minor UI variation instead of focusing on critical paths"
+  - "Using fixed sleep waits that make tests slow and flaky across different environments"
+  - "Letting tests share state so a failure in one test cascades into failures in others"
+related_skills: ["browser-testing", "api-testing", "ci-cd-automation"]
 ---
 
 # End-to-End Testing
@@ -367,6 +384,14 @@ jobs:
           name: playwright-report
           path: playwright-report/
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** E2E tests are your safety net for the most valuable user journeys -- write fewer tests that cover more ground, not more tests that cover less.
+
+1. **Protect Critical Paths, Not Every Pixel:** E2E tests are expensive to run and maintain. Invest them in the workflows that generate revenue or prevent catastrophic failure, not in verifying that every button has the right shade of blue.
+2. **Page Objects Turn Fragility Into Maintainability:** When the UI changes, you should update one page object, not twenty test files. The Page Object Model is not optional for a healthy E2E suite; it is essential.
+3. **Isolation Is Non-Negotiable:** Every test must create its own data, run its own setup, and clean up after itself. A test that depends on another test's leftovers is a test that will fail unpredictably in CI.
 
 ## Common Mistakes
 

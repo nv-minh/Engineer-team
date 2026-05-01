@@ -1,6 +1,23 @@
 ---
 name: subagent-driven-development
 description: Use fresh subagent for each task to maintain context quality. Use when working on complex features, needing isolation between tasks, or when context is getting large.
+version: "2.0.0"
+category: "development"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["subagent", "fresh context", "task isolation", "parallel execution"]
+intent: "Prevent context-window degradation by dispatching focused subagents so quality stays high across every task."
+scenarios:
+  - "Building a multi-module authentication system where each module needs isolated attention"
+  - "Parallelizing independent feature work across a user dashboard and settings page"
+  - "Orchestrating a complex migration where each step must be reviewed before the next begins"
+best_for: "complex features, large codebases, parallel tasks, context management"
+estimated_time: "30-45 min"
+anti_patterns:
+  - "Dumping the entire spec and codebase into every subagent prompt"
+  - "Skipping the two-stage review and letting subagent output merge unchecked"
+  - "Running tasks sequentially when they have no dependencies on each other"
+related_skills: ["incremental-implementation", "writing-plans", "code-review"]
 ---
 
 # Subagent-Driven Development
@@ -320,6 +337,14 @@ const task2Input = {
 | Sequential when parallel possible | Slower execution | Identify independent tasks |
 | Poor handoff | Subagent confused | Clear handoff contracts |
 | Skipping checkpoints | Errors propagate | Review after each task |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Subagent-driven development teaches you to treat every task as a self-contained assignment with clear inputs, outputs, and quality gates.
+
+1. **Context is a scarce resource:** A subagent that receives the entire codebase will produce worse results than one that gets exactly what it needs. Curate context like a senior engineer curates a task brief -- relevant, minimal, sufficient.
+2. **Review is not optional:** The two-stage review (self-review plus orchestrator review) is what separates subagent-driven development from blind delegation. If you skip review, errors compound across tasks.
+3. **Handoff contracts create trust:** When Task 1 declares its exports and Task 2 declares its imports, you catch integration mismatches before they become runtime bugs. Treat handoff contracts like API contracts between services.
 
 ## Verification
 

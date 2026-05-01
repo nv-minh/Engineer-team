@@ -1,3 +1,24 @@
+---
+name: distributed-investigation
+description: Coordinate distributed agents across tmux sessions for multi-domain bug investigation and root cause analysis
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - "techlead-orchestrator"
+  - "backend-expert"
+  - "frontend-expert"
+  - "database-expert"
+  - "staff-engineer"
+  - "security-reviewer"
+skills_used:
+  - "systematic-debugging"
+  - "performance-optimization"
+  - "security-audit"
+  - "documentation"
+estimated_time: "2-6 hours"
+---
+
 # Distributed Investigation Workflow
 
 ## Overview
@@ -30,6 +51,62 @@ This workflow coordinates distributed agents across separate tmux sessions to in
 # In techlead session
 "Agent: em-techlead-orchestrator - Coordinate distributed investigation..."
 ```
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Initial Analysis (Phase 1) |
+| PLAN | Task Delegation (Phase 2) |
+| BUILD | Distributed Investigation (Phase 3) |
+| VERIFY | Cross-Agent Coordination (Phase 4) + Report Collection (Phase 5) |
+| REVIEW | Consolidation (Phase 6) |
+| SHIP | Action & Resolution (Phase 7) |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Bug report received and analyzed
+- [ ] Scope determined (affected domains)
+- [ ] Severity assessed
+- [ ] Agent selection completed
+- [ ] Investigation plan created
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Tasks delegated to agent sessions
+- [ ] Execution strategy determined (parallel/sequential/hybrid)
+- [ ] Expected outputs defined per agent
+- [ ] Agent sessions confirmed active
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] All agents completed investigation
+- [ ] Individual agent reports submitted
+- [ ] Status updates received from all sessions
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Cross-agent findings correlated
+- [ ] Root cause identified
+- [ ] Fix recommendations validated
+- [ ] Cross-agent dependencies mapped
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Consolidated report generated
+- [ ] Action items assigned with owners and deadlines
+- [ ] Fix verification confirmed
+- [ ] User informed of findings
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Process
 
@@ -105,53 +182,97 @@ investigation_plan:
 
 ---
 
-### Phase 2: Task Delegation
+### Phase 2: Task Delegation (AUTOMATED)
 
-**Step 4:** Tech Lead creates task assignments for each agent
+**Step 4:** Tech Lead calls auto-delegation script
 
-```yaml
-# Example task assignment for Backend Expert
-message_type: task_assignment
-timestamp: "2026-04-19T10:00:00Z"
-from: techlead
-to: backend
-task_id: "TASK-2026-001-BE"
-
-task:
-  title: "Investigate login API latency issue"
-  description: |
-    Users reporting slow login times (>2s). Backend login endpoint
-    /api/auth/login is slow. Investigate and identify root cause.
-
-  priority: critical
-  scope:
-    in_scope: "Login endpoint /api/auth/login"
-    out_of_scope: "Frontend login form"
-
-  context:
-    - "backend/api/auth/login.js"
-    - "logs/production-2026-04-19.log"
-    - "47 user complaints in last 24h"
-
-  expected_output:
-    format: report
-    location: "/tmp/claude-work-reports/backend/login-latency-20260419.md"
-    deadline: "2026-04-19T11:00:00Z"
-```
-
-**Step 5:** Write task assignments to message queue
+**CRITICAL:** Instead of manually creating YAML files or notifying sessions, use the automated delegation script:
 
 ```bash
-# Tech Lead writes to queue
-cat > /tmp/claude-work-queue/to-backend/TASK-001-BE.yaml << 'EOF'
-[task assignment YAML]
-EOF
-
-# Notify Backend session
-tmux send-keys -t claude-work:backend "echo '[New task: TASK-001-BE]'" C-m
+bash scripts/auto-delegate.sh \
+  "[task description]" \
+  "[comma-separated agents]" \
+  [priority]
 ```
 
-**Repeat for each agent**
+**Example:**
+```bash
+# Tech Lead delegates investigation to all three domains
+bash scripts/auto-delegate.sh \
+  "Investigate login API latency issue. Users reporting slow login times (>2s)." \
+  "backend,frontend,database" \
+  "critical"
+```
+
+**What happens automatically:**
+1. Script generates unique task ID (e.g., `TASK-20260419-143022`)
+2. Script creates task assignment YAMLs for each agent
+3. Script writes tasks to `/tmp/claude-work-queue/to-{agent}/`
+4. Script notifies agent sessions via tmux
+5. Agent sessions' queue monitors detect tasks
+6. Queue monitors auto-trigger appropriate agents
+7. Script monitors progress for completion
+
+**Example Output:**
+```
+[INFO] Auto-Delegation for EM-Team Distributed Orchestration
+[INFO] ════════════════════════════════════════════════════════════════
+
+[INFO] Validating prerequisites...
+[SUCCESS] Prerequisites validated
+[SUCCESS] Task ID: TASK-20260419-143022
+
+[INFO] Creating task assignments...
+[INFO] Creating assignment for backend...
+[SUCCESS] Task assignment created: /tmp/claude-work-queue/to-backend/TASK-20260419-143022.yaml
+[INFO] Creating assignment for frontend...
+[SUCCESS] Task assignment created: /tmp/claude-work-queue/to-frontend/TASK-20260419-143022.yaml
+[INFO] Creating assignment for database...
+[SUCCESS] Task assignment created: /tmp/claude-work-queue/to-database/TASK-20260419-143022.yaml
+
+[INFO] Notifying agent sessions...
+[SUCCESS] Notified backend session
+[SUCCESS] Notified frontend session
+[SUCCESS] Notified database session
+
+[SUCCESS] Task delegation complete!
+[INFO] Task ID: TASK-20260419-143022
+[INFO] Agents: backend frontend database
+[INFO] Description: Investigate login API latency issue...
+
+[INFO] Monitoring progress for TASK-20260419-143022...
+[INFO] Tracking 3 agents: backend frontend database
+[INFO] Progress: 0/3 agents complete (0m elapsed)
+[INFO] Progress: 1/3 agents complete (15m elapsed)
+[INFO] Progress: 2/3 agents complete (28m elapsed)
+[SUCCESS] All 3 agents completed!
+[INFO] Triggering consolidation...
+[SUCCESS] Consolidation complete!
+[SUCCESS] 📊 Consolidated Report: /tmp/claude-work-reports/techlead/TASK-20260419-143022-consolidated.md
+```
+
+**Step 5:** Tech Lead waits for completion
+
+The auto-delegate.sh script handles everything automatically:
+- Monitors `/tmp/claude-work-queue/to-techlead/` for status updates
+- Tracks completion state (in_progress/completed/failed)
+- Detects when all agents finish
+- Triggers consolidation phase
+- Notifies Tech Lead when complete
+
+**No manual intervention required during investigation!**
+
+**Optional: Check queue monitor status**
+```bash
+# Verify queue monitors are running
+./distributed/session-queue-monitor.sh status
+
+# Output should show:
+# Queue Monitor Status:
+#   ✅ backend: Running (PID: 12345)
+#   ✅ frontend: Running (PID: 12346)
+#   ✅ database: Running (PID: 12347)
+```
 
 ---
 

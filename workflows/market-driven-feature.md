@@ -1,6 +1,23 @@
 ---
 name: market-driven-feature
 description: Complete workflow from market discovery to production for market-driven features (integrates market-intelligence, brainstorming, product-manager, architect, planner)
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - "market-intelligence"
+  - "product-manager"
+  - "architect"
+  - "planner"
+  - "executor"
+  - "code-reviewer"
+skills_used:
+  - "brainstorming"
+  - "spec-driven-development"
+  - "writing-plans"
+  - "incremental-implementation"
+  - "code-review"
+estimated_time: "2-5 weeks"
 ---
 
 # Market-Driven Feature Workflow
@@ -44,6 +61,64 @@ A comprehensive workflow that starts with market discovery and validation before
 - Technical optimizations
 - Time-critical fixes
 - Features with no competition
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Market Discovery (Phase 1) |
+| PLAN | Solution Design (Phase 2) + Validation (Phase 3) |
+| BUILD | Business Case (Phase 4) + Spec (Phase 5) + Plan (Phase 6) |
+| VERIFY | Build execution with quality gates (Phase 7) |
+| REVIEW | Verify against market goals and spec coverage (Phase 8) |
+| SHIP | Deploy to production with go-to-market plan (Phase 9) |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Market size quantified with assumptions
+- [ ] Competitive landscape mapped
+- [ ] Customer segments identified
+- [ ] Market opportunity scored
+- [ ] Go/no-go decision on market viability
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Solution concepts aligned with market needs
+- [ ] Value proposition compelling
+- [ ] Competitive differentiation clear
+- [ ] Customer needs validated through interviews
+- [ ] Feature prioritization data-driven
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Financial projections complete
+- [ ] ROI meets or exceeds hurdle rate
+- [ ] Spec covers all standard areas with market insights
+- [ ] Implementation plan with go-to-market milestones
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] All tasks completed
+- [ ] Tests passing
+- [ ] Code reviewed
+- [ ] Market differentiation requirements met
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Spec coverage 100%
+- [ ] Quality gates passed
+- [ ] Business metrics baseline established
+- [ ] Go-to-market readiness confirmed
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Phases
 

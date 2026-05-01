@@ -1,6 +1,23 @@
 ---
 name: documentation
 description: Documentation for code, APIs, and architecture. Use when documenting features, writing API docs, or creating ADRs.
+version: "2.0.0"
+category: "workflow"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["document", "API docs", "ADR", "README"]
+intent: "Ensure that every piece of knowledge needed to understand, use, and maintain the codebase is captured clearly and kept current."
+scenarios:
+  - "Writing Architecture Decision Records to capture why the team chose PostgreSQL over MongoDB"
+  - "Generating OpenAPI documentation for a new set of REST endpoints before frontend integration"
+  - "Updating the project README and onboarding guide after a major dependency migration"
+best_for: "API documentation, ADRs, README generation, inline code documentation, onboarding guides"
+estimated_time: "15-30 min"
+anti_patterns:
+  - "Writing documentation once and never updating it as the code evolves"
+  - "Documenting what the code does line-by-line instead of explaining why it does it"
+  - "Skipping edge cases and error handling in API docs, leaving consumers to discover them by surprise"
+related_skills: ["code-review", "api-interface-design", "finishing-branch"]
 ---
 
 # Documentation
@@ -527,6 +544,14 @@ export class UserService {
   }
 }
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Good documentation does not repeat the code -- it explains the decisions, constraints, and intent that the code cannot express on its own.
+
+1. **Document Why, Not What:** The code already shows what it does. Documentation adds value by explaining why a design choice was made, what constraints shaped it, and what alternatives were rejected. ADRs are your strongest tool here.
+2. **Examples Beat Descriptions:** A three-line code example teaches more than a paragraph of prose. Always include usage examples in API docs, and make them copy-pasteable so developers can try them immediately.
+3. **Treat Documentation Like Code:** It has a lifecycle. It needs review, updates when the code changes, and deletion when it becomes misleading. Stale documentation is worse than no documentation because it actively misleads.
 
 ## Common Mistakes
 

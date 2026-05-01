@@ -1,6 +1,23 @@
 ---
 name: code-review
 description: Comprehensive 5-axis code review framework. Use when reviewing pull requests, before merging code, or when ensuring code quality.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["code review", "pull request", "merge", "quality gate"]
+intent: "Elevate code quality through systematic multi-axis evaluation that catches defects and teaches better practices simultaneously."
+scenarios:
+  - "Reviewing a team member's pull request before merging to main"
+  - "Auditing a legacy module for security vulnerabilities and architectural decay"
+  - "Providing constructive feedback on a junior developer's first feature contribution"
+best_for: "PR reviews, pre-merge quality gates, team code standards enforcement, mentorship through feedback"
+estimated_time: "15-30 min"
+anti_patterns:
+  - "Nitpicking style instead of substance while missing real bugs"
+  - "Rubber-stamping approvals without actually reading the code"
+  - "Giving vague feedback like 'this is bad' without explaining why or suggesting alternatives"
+related_skills: ["code-simplification", "security-audit", "security-hardening"]
 ---
 
 # Code Review
@@ -376,6 +393,14 @@ Also, consider adding a test case for this scenario."
 ### Additional Notes
 [Any other feedback or suggestions]
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** A great code review teaches the author something new, not just catches bugs.
+
+1. **Lead with Questions, Not Commands:** Ask "What happens when this receives null?" instead of stating "This will crash on null." Questions invite thinking; commands invite resentment.
+2. **Review the Architecture Before the Semicolons:** If the overall approach is wrong, detailed style feedback is wasted effort. Evaluate correctness and architecture first, then readability and performance.
+3. **Every Comment Should Leave the Code Better:** Either the code improves from your suggestion, or the author's understanding improves from your explanation. If neither happens, the comment was noise.
 
 ## Common Review Anti-Patterns
 

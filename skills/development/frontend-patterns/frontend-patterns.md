@@ -1,6 +1,23 @@
 ---
 name: frontend-patterns
 description: Frontend development patterns for React, Next.js, Vue, and other modern frameworks. Use when building UI components, managing state, handling forms, or implementing user interactions.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["frontend", "component", "state management", "ui patterns"]
+intent: "Establish component composition and state management discipline so frontends remain predictable and performant at scale."
+scenarios:
+  - "Building a user profile page with composable components and proper state lifting"
+  - "Implementing optimistic updates for a like button with rollback on error"
+  - "Adding code splitting and virtual scrolling to a large product listing page"
+best_for: "component design, state management, data fetching, performance, forms"
+estimated_time: "20-40 min"
+anti_patterns:
+  - "Building monolithic components that mix UI rendering with business logic"
+  - "Prop drilling through five or more component layers instead of using context or state management"
+  - "Treating server state like client state and managing API data with plain useState"
+related_skills: ["api-interface-design", "incremental-implementation", "performance-optimization"]
 ---
 
 # Frontend Patterns
@@ -475,6 +492,14 @@ function IconButton({ icon, label, onClick }: IconButtonProps) {
 | Duplication | Code repeated across components | Extract custom hooks |
 | Mixed concerns | UI and business logic together | Separate presentation and logic |
 | No TypeScript | Runtime errors, poor IDE support | Use TypeScript for type safety |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Frontend patterns teach you that composable, single-responsibility components and explicit state boundaries prevent the tangled spaghetti that kills large UI codebases.
+
+1. **Composition over inheritance, always:** A UserProfile composed of UserAvatar, UserName, and UserEmail is easier to test, reorder, and reuse than a single monolithic component. If a component does more than one visual thing, split it.
+2. **Server state and client state are different species:** API responses, pagination cursors, and cache timestamps belong in React Query or SWR -- not in useState. Treating them the same leads to stale data, duplicate fetches, and impossible-to-debug synchronization bugs.
+3. **Performance is a user experience problem, not a technical flex:** Code split routes, memoize expensive lists, virtual-scroll long data sets. But do it where users feel the pain, not everywhere. Measure first, optimize second.
 
 ## Verification
 

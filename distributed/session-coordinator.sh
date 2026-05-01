@@ -209,16 +209,17 @@ show_agent_status() {
         return 1
     fi
 
-    # Define agents and their windows
-    declare -A agents=(
-        ["techlead"]="Tech Lead Coordinator"
-        ["backend"]="Backend Expert"
-        ["frontend"]="Frontend Expert"
-        ["database"]="Database Expert"
+    # List of agents with their display names
+    local agents=(
+        "techlead:Tech Lead Coordinator"
+        "backend:Backend Expert"
+        "frontend:Frontend Expert"
+        "database:Database Expert"
     )
 
-    for agent in "${!agents[@]}"; do
-        local role="${agents[$agent]}"
+    for agent_info in "${agents[@]}"; do
+        local agent="${agent_info%%:*}"
+        local role="${agent_info#*:}"
         local window_name="$agent"
 
         # Check if window exists
@@ -453,6 +454,133 @@ run_loop() {
 }
 
 ################################################################################
+# Start queue monitors in all agent sessions
+################################################################################
+
+start_monitors() {
+    log_info "Starting queue monitors in all agent sessions..."
+
+    local agents=("backend" "frontend" "database")
+    local started=0
+
+    for agent in "${agents[@]}"; do
+        # Check if agent window exists
+        if ! tmux list-windows -t "$SESSION_NAME" -F "#{window_name}" 2>/dev/null | grep -q "^${agent}$"; then
+            log_warning "Agent session '$agent' not found"
+            continue
+        fi
+
+        # Check if monitor is already running
+        local monitor_pid_file="/tmp/claude-work-queue/monitor-${agent}.pid"
+        if [[ -f "$monitor_pid_file" ]]; then
+            local existing_pid=$(cat "$monitor_pid_file")
+            if ps -p "$existing_pid" > /dev/null 2>&1; then
+                log_warning "Queue monitor already running for $agent (PID: $existing_pid)"
+                continue
+            else
+                log_warning "Stale PID file for $agent, removing..."
+                rm -f "$monitor_pid_file"
+            fi
+        fi
+
+        # Start monitor in agent session
+        log_info "Starting monitor for $agent..."
+        tmux send-keys -t "$SESSION_NAME:$agent" "bash $(pwd)/distributed/session-queue-monitor.sh $agent &" C-m
+
+        ((started++))
+    done
+
+    if [[ $started -gt 0 ]]; then
+        log_success "Started $started queue monitor(s)"
+        echo ""
+        log_info "Monitor status will be available in a few seconds"
+        log_info "Check with: $0 monitor-status"
+    else
+        log_warning "No monitors started"
+    fi
+}
+
+################################################################################
+# Stop queue monitors in all agent sessions
+################################################################################
+
+stop_monitors() {
+    log_info "Stopping queue monitors in all agent sessions..."
+
+    local agents=("backend" "frontend" "database")
+    local stopped=0
+
+    for agent in "${agents[@]}"; do
+        local monitor_pid_file="/tmp/claude-work-queue/monitor-${agent}.pid"
+
+        if [[ ! -f "$monitor_pid_file" ]]; then
+            log_debug "No monitor running for $agent"
+            continue
+        fi
+
+        local monitor_pid=$(cat "$monitor_pid_file")
+
+        if ! ps -p "$monitor_pid" > /dev/null 2>&1; then
+            log_warning "Stale PID file for $agent"
+            rm -f "$monitor_pid_file"
+            continue
+        fi
+
+        # Stop the monitor
+        log_info "Stopping monitor for $agent (PID: $monitor_pid)..."
+        kill "$monitor_pid" 2>/dev/null || true
+        rm -f "$monitor_pid_file"
+
+        ((stopped++))
+    done
+
+    if [[ $stopped -gt 0 ]]; then
+        log_success "Stopped $stopped queue monitor(s)"
+    else
+        log_info "No monitors were running"
+    fi
+}
+
+################################################################################
+# Show queue monitor status
+################################################################################
+
+show_monitor_status() {
+    log_info "Queue Monitor Status"
+    echo ""
+
+    local agents=("backend" "frontend" "database")
+    local running=0
+
+    for agent in "${agents[@]}"; do
+        local monitor_pid_file="/tmp/claude-work-queue/monitor-${agent}.pid"
+
+        if [[ -f "$monitor_pid_file" ]]; then
+            local monitor_pid=$(cat "$monitor_pid_file")
+
+            if ps -p "$monitor_pid" > /dev/null 2>&1; then
+                echo "  ✅ $agent: Running (PID: $monitor_pid)"
+                ((running++))
+            else
+                echo "  ❌ $agent: Stale PID file"
+            fi
+        else
+            echo "  ❌ $agent: Not running"
+        fi
+    done
+
+    echo ""
+    if [[ $running -eq ${#agents[@]} ]]; then
+        log_success "All monitors running"
+    elif [[ $running -gt 0 ]]; then
+        log_warning "Some monitors not running"
+    else
+        log_warning "No monitors running"
+        log_info "Start monitors with: $0 start-monitors"
+    fi
+}
+
+################################################################################
 # Show help
 ################################################################################
 
@@ -471,6 +599,9 @@ Commands:
     create-plan [file]              Create coordination plan template
     dashboard                       Show coordination dashboard
     loop [seconds]                  Run coordination loop (default: 30s)
+    start-monitors                  Start queue monitors in all agent sessions
+    stop-monitors                   Stop queue monitors in all agent sessions
+    monitor-status                  Show queue monitor status
     help                            Show this help message
 
 Examples:
@@ -481,6 +612,9 @@ Examples:
     $0 create-plan                     # Create coordination plan
     $0 dashboard                       # Show dashboard
     $0 loop 60                        # Run loop with 60s refresh
+    $0 start-monitors                  # Start all queue monitors
+    $0 stop-monitors                   # Stop all queue monitors
+    $0 monitor-status                  # Show monitor status
 
 Session Name: $SESSION_NAME
 Shared Directory: $SHARED_DIR
@@ -520,6 +654,15 @@ main() {
             ;;
         loop)
             run_loop "${2:-30}"
+            ;;
+        start-monitors)
+            start_monitors
+            ;;
+        stop-monitors)
+            stop_monitors
+            ;;
+        monitor-status)
+            show_monitor_status
             ;;
         help|--help|-h)
             show_help

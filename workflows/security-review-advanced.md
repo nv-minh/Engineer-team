@@ -1,6 +1,18 @@
 ---
 name: security-review-advanced
 description: Advanced security review with Security Reviewer and Staff Engineer agents (OWASP + STRIDE)
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:security"
+  - "duck:staff"
+skills_used:
+  - "security-audit"
+  - "security-hardening"
+  - "code-review"
+  - "systematic-debugging"
+estimated_time: "4-8 hours"
 ---
 
 # Security Review (Advanced) Workflow
@@ -8,6 +20,60 @@ description: Advanced security review with Security Reviewer and Staff Engineer 
 ## Overview
 
 The Security Review (Advanced) workflow provides comprehensive security assessment combining OWASP Top 10 evaluation with STRIDE threat modeling.
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Gather code artifacts, architecture diagrams, compliance requirements |
+| PLAN | OWASP Assessment (Stage 1) |
+| BUILD | STRIDE Threat Modeling (Stage 2) |
+| VERIFY | Deep Investigation (Stage 3) |
+| REVIEW | Consolidation (Stage 4) |
+| SHIP | Security report delivered, blocking issues resolved |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Code artifacts identified
+- [ ] Architecture diagrams reviewed
+- [ ] Infrastructure config gathered
+- [ ] Compliance requirements defined
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] All OWASP Top 10 categories reviewed
+- [ ] Findings classified by severity
+- [ ] Blocking issues flagged
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] STRIDE threat model completed
+- [ ] Threats identified for each component
+- [ ] Mitigations defined
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Cross-service impact analyzed
+- [ ] Dependencies assessed
+- [ ] Infrastructure evaluated
+- [ ] Supply chain reviewed
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] All findings consolidated
+- [ ] Security scorecard completed
+- [ ] Severity classification applied
+- [ ] Decision documented (BLOCKED/CONDITIONAL/APPROVED)
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Modular Components
 

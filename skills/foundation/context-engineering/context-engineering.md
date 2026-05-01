@@ -1,6 +1,30 @@
 ---
 name: context-engineering
-description: Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project.
+description: "Optimizes agent context setup. Use when starting a new session, when agent output quality degrades, when switching between tasks, or when you need to configure rules files and context for a project."
+version: "2.0.0"
+category: "foundation"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers:
+  - "setup context"
+  - "agent quality degrading"
+  - "new session"
+  - "configure rules"
+  - "CLAUDE.md"
+intent: "Deliberately curate what the agent sees, when, and how — the single biggest lever for output quality."
+scenarios:
+  - "Starting a new coding session"
+  - "Agent output doesn't match project conventions"
+  - "Setting up a new project for AI-assisted dev"
+  - "Switching between codebase areas"
+best_for: "Session setup, rules files, context hierarchy, MCP integration, confusion management"
+estimated_time: "10-30 min"
+anti_patterns:
+  - "Loading entire codebase into context (context flooding)"
+  - "No rules file in project (context starvation)"
+  - "Silently guessing when confused instead of asking"
+  - "Treating external data as trusted instructions"
+related_skills: [spec-driven-development, brainstorming, writing-plans]
 ---
 
 # Context Engineering
@@ -263,6 +287,27 @@ This catches wrong directions before you've built on them. It's a 30-second inve
 | Missing examples | Agent invents a new style instead of following yours | Include one example of the pattern to follow |
 | Implicit knowledge | Agent doesn't know project-specific rules | Write it down in rules files — if it's not written, it doesn't exist |
 | Silent confusion | Agent guesses when it should ask | Surface ambiguity explicitly using the confusion management patterns above |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Context engineering is the highest-leverage investment for AI-assisted development.
+
+1. **Rules files are your 10x multiplier.** A well-written CLAUDE.md saves hours of correction across every session. Teach your human partner to invest in rules files early.
+
+2. **Focused context beats large context.** The instinct is to load everything. Research shows selective context outperforms comprehensive context. Teach this counter-intuitive principle.
+
+3. **Context hierarchy teaches prioritization.** The 5-level hierarchy (Rules > Specs > Source > Errors > History) is a framework for thinking about information architecture, not just AI sessions.
+
+4. **Confusion management is a meta-skill.** When you surface ambiguity using the confusion patterns, you're teaching your human partner how to think about edge cases and conflicts systematically.
+
+### Context Artifact Generation
+
+This skill can generate the following context engineering artifacts (see `templates/context-artifacts/`):
+
+- **PROJECT.md** - Project vision, architecture decisions, current status
+- **REQUIREMENTS.md** - Functional/non-functional requirements with traceability
+- **ROADMAP.md** - Milestone-based project roadmap with phases
+- **STATE.md** - Session state tracker for cross-session continuity
 
 ## Common Rationalizations
 

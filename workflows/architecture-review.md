@@ -1,6 +1,18 @@
 ---
 name: architecture-review
 description: Architecture review with Architect and Staff Engineer agents
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - architect
+  - staff-engineer
+skills_used:
+  - code-review
+  - documentation
+  - performance-optimization
+  - writing-plans
+estimated_time: "2-4 hours (standard) / 1-2 days (comprehensive)"
 ---
 
 # Architecture Review Workflow
@@ -17,6 +29,62 @@ The Architecture Review workflow provides deep technical assessment of architect
 - Architecture Decision Record (ADR) review
 - Scalability assessment
 - Integration design
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| Architecture Analysis (Stage 1) | DEFINE + PLAN | Architect identifies patterns, assesses principles, reviews design |
+| Deep Technical Review (Stage 2) | BUILD + VERIFY | Staff Engineer analyzes cross-service impact, dependencies, risks |
+| Consolidated Assessment (Stage 3) | REVIEW + SHIP | Merge findings, prioritize recommendations, create roadmap |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Architectural pattern identified
+- [ ] Principles assessed
+- [ ] Design reviewed
+- [ ] Scalability evaluated
+- [ ] Scorecard completed
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Architecture review findings documented
+- [ ] Pattern assessment complete
+- [ ] Scalability concerns identified
+- [ ] Integration points mapped
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Cross-service impact analyzed
+- [ ] Dependencies mapped
+- [ ] Performance implications assessed
+- [ ] Risks identified
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Findings merged
+- [ ] Risks prioritized
+- [ ] Recommendations actionable
+- [ ] Roadmap defined
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Consolidated report complete
+- [ ] Decision made (APPROVED/CONDITIONAL/REJECTED)
+- [ ] Recommendations categorized (immediate/short-term/long-term)
+- [ ] Scorecard finalized
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

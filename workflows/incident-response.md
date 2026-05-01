@@ -1,6 +1,18 @@
 ---
 name: incident-response
 description: Production incident handling with Staff Engineer and Security Reviewer agents
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:staff"
+  - "duck:security"
+skills_used:
+  - "systematic-debugging"
+  - "security-audit"
+  - "performance-optimization"
+  - "documentation"
+estimated_time: "2-8 hours"
 ---
 
 # Incident Response Workflow
@@ -8,6 +20,60 @@ description: Production incident handling with Staff Engineer and Security Revie
 ## Overview
 
 The Incident Response workflow provides systematic production incident handling, combining the Staff Engineer's root cause analysis expertise with the Security Reviewer's security investigation capabilities.
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Initial Assessment & Triage (Stage 1) |
+| PLAN | Security Investigation (Stage 2) + Root Cause Analysis (Stage 3) |
+| BUILD | Resolution & Verification (Stage 5) |
+| VERIFY | Cross-Service Impact Analysis (Stage 4) |
+| REVIEW | Postmortem & Prevention (Stage 6) |
+| SHIP | Incident resolved, postmortem published |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Incident report received
+- [ ] Severity assessed accurately (P0-P3)
+- [ ] Scope identified (affected services, users)
+- [ ] Initial data gathered (alerts, monitoring)
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Root cause identified via 5 Whys or Fishbone
+- [ ] Timeline reconstructed
+- [ ] Security investigation completed (if applicable)
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Fix implemented
+- [ ] Temporary workarounds applied (if needed)
+- [ ] Verification confirmed
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Cross-service impact analyzed
+- [ ] Dependency health verified
+- [ ] No regressions detected
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Blameless postmortem completed
+- [ ] Action items created with owners and dates
+- [ ] Lessons learned documented
+- [ ] Prevention measures defined
+- [ ] Follow-up scheduled
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Modular Components
 

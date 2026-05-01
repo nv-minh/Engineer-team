@@ -1,6 +1,30 @@
 ---
 name: spec-driven-development
-description: Creates structured specifications before writing code. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea.
+description: "Creates structured specifications before writing code. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea."
+version: "2.0.0"
+category: "foundation"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers:
+  - "write spec"
+  - "create specification"
+  - "new feature"
+  - "requirements unclear"
+  - "define what to build"
+intent: "Force clarity before code. The spec is the shared source of truth that defines what, why, and how we know it's done."
+scenarios:
+  - "Starting a new project or feature"
+  - "Requirements are ambiguous or incomplete"
+  - "Making architectural decisions"
+  - "Task touches multiple files or modules"
+best_for: "New projects, new features, architecture decisions, requirement clarification"
+estimated_time: "30-60 min"
+anti_patterns:
+  - "Writing code without any written requirements"
+  - "Treating spec as documentation instead of specification"
+  - "Skipping spec because 'it's obvious'"
+  - "Spec with vague success criteria"
+related_skills: [brainstorming, writing-plans, context-engineering, test-driven-development]
 ---
 
 # Spec-Driven Development
@@ -180,6 +204,18 @@ The spec is a living document, not a one-time artifact:
 | "The spec will slow us down" | A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours. |
 | "Requirements will change anyway" | That's why the spec is a living document. An outdated spec is still better than no spec. |
 | "The user knows what they want" | Even clear requests have implicit assumptions. The spec surfaces those assumptions. |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Every spec teaches the importance of clarity before code.
+
+1. **Specs force clarity.** Writing a spec isn't bureaucracy — it's thinking. Teach your human partner that the act of writing a spec often reveals requirements they hadn't considered.
+
+2. **Assumptions are the enemy.** Surface them explicitly. Teaching someone to list their assumptions is one of the highest-value debugging skills — it catches misunderstandings before they become code.
+
+3. **Success criteria must be testable.** "Make it faster" is a wish, not a requirement. "Dashboard LCP < 2.5s" is a spec. Teach the habit of quantifying success.
+
+4. **Living docs, not tombstones.** A spec that's written once and never updated is documentation. A spec that evolves with decisions is a source of truth. Teach the difference.
 
 ## Red Flags
 

@@ -1,6 +1,23 @@
 ---
 name: security-audit
 description: Security audit for vulnerability assessment. Use when deploying to production, after major changes, or regularly for security maintenance.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["security audit", "vulnerability", "OWASP", "penetration test"]
+intent: "Systematically discover and remediate security vulnerabilities before attackers do, using structured OWASP-based assessment."
+scenarios:
+  - "Running a pre-deployment security audit on a new authentication service before it goes to production"
+  - "Investigating a reported XSS vulnerability and scanning the entire application for similar patterns"
+  - "Performing a quarterly security review covering dependency updates, header configuration, and access control"
+best_for: "pre-deployment security checks, OWASP Top 10 assessment, dependency vulnerability scanning, compliance audits"
+estimated_time: "30-45 min"
+anti_patterns:
+  - "Running only automated tools without manually reviewing authentication and authorization logic"
+  - "Auditing once at launch but never revisiting as new dependencies and endpoints are added"
+  - "Finding vulnerabilities but not creating a prioritized remediation plan with owners and deadlines"
+related_skills: ["security-common", "security-hardening", "code-review"]
 ---
 
 # Security Audit
@@ -401,6 +418,14 @@ async function generateSecurityAuditReport(): Promise<SecurityAuditReport> {
 - After major code changes
 - After security incidents
 - After dependency updates
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Security audits are not about finding every possible flaw -- they are about finding the flaws that matter most and fixing them before anyone else does.
+
+1. **Think Like an Attacker, Report Like an Engineer:** Approach the system with adversarial curiosity (what can I break, what can I access) but deliver findings with clear severity ratings, reproducible steps, and concrete fix recommendations.
+2. **Automated Scans Catch the Obvious, Manual Review Catches the Dangerous:** Run npm audit and Snyk first to clear the low-hanging fruit, then manually walk through authentication flows, access control, and data handling where the real vulnerabilities hide.
+3. **Security Is a Continuous Practice, Not a One-Time Event:** A clean audit today means nothing if a vulnerable dependency is introduced tomorrow. Integrate security checks into CI/CD and schedule regular re-audits.
 
 ## Common Vulnerabilities
 

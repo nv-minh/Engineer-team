@@ -1,6 +1,23 @@
 ---
 name: ci-cd-automation
 description: CI/CD automation with quality gates and feature flags. Use when automating deployments, ensuring code quality, or managing releases.
+version: "2.0.0"
+category: "workflow"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["CI/CD", "pipeline", "deploy", "feature flags"]
+intent: "Automate the path from commit to production so that quality is enforced by the pipeline, not by human memory."
+scenarios:
+  - "Setting up a GitHub Actions CI pipeline that runs linting, tests, coverage checks, and security audits on every pull request"
+  - "Implementing a canary deployment strategy that routes 10% of traffic to the new version and auto-rolls back on errors"
+  - "Adding feature flags to progressively roll out a new checkout flow to users by percentage"
+best_for: "CI pipeline setup, deployment automation, quality gates, feature flag management, rollback strategies"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Skipping quality gates to make the pipeline faster, letting bugs reach production"
+  - "Deploying without a rollback plan and scrambling when something breaks at 2 AM"
+  - "Hardcoding secrets in pipeline configuration instead of using secret management"
+related_skills: ["git-workflow", "e2e-testing", "security-audit"]
 ---
 
 # CI/CD Automation
@@ -398,6 +415,14 @@ async function deployWithRollback(environment: string): Promise<void> {
     echo "${{ secrets.DEPLOY_KEY }}" | ssh-add -
     rsync -avz --delete ./ user@server:/app
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** A CI/CD pipeline is your team's most reliable reviewer -- it never skips steps, never gets tired, and never says 'it works on my machine.'
+
+1. **Quality Gates Are Non-Negotiable:** If the pipeline says 'fail,' the code does not ship. Coverage thresholds, lint rules, and security audits exist because human reviewers miss things. Respect the gate or remove it deliberately -- never bypass it.
+2. **Deploy Incrementally, Observe Constantly:** Push to 1% of traffic, watch for errors, then expand. A canary deployment that catches a 1% error rate in the first five minutes saves you from a 100% outage later. Always have a one-command rollback ready.
+3. **Feature Flags Buy You Time and Safety:** Instead of a risky big-bang release, wrap new features in flags. Roll them out to internal users first, then a small percentage of real users, then everyone. If something breaks, flip the flag off in seconds, not hours.
 
 ## Common Mistakes
 

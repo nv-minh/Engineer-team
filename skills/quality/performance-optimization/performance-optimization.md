@@ -1,6 +1,23 @@
 ---
 name: performance-optimization
 description: Performance optimization using measure-first approach. Use when applications are slow, when optimizing rendering, or when improving load times.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["performance", "slow", "optimize", "web vitals"]
+intent: "Deliver measurable, user-perceptible speed improvements driven by data rather than guesswork."
+scenarios:
+  - "Diagnosing why a dashboard page takes 8 seconds to load and reducing it to under 2 seconds"
+  - "Improving Core Web Vitals scores on a landing page to meet Google's 'good' thresholds"
+  - "Eliminating janky scroll performance in a long product list by implementing virtual scrolling"
+best_for: "page load optimization, rendering performance, Core Web Vitals improvement, memory leak detection"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Optimizing code without measuring first -- guessing at bottlenecks wastes time on non-issues"
+  - "Micro-optimizing a function that runs once while ignoring a query that runs 1000 times per page load"
+  - "Making code harder to read for a negligible performance gain that no user will notice"
+related_skills: ["code-simplification", "browser-testing", "e2e-testing"]
 ---
 
 # Performance Optimization
@@ -366,6 +383,14 @@ trackPerformance('user_login', () => {
   performLogin();
 });
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Performance work without measurement is storytelling -- always measure first, optimize second, and verify third.
+
+1. **Measure Before You Touch Anything:** Establish a baseline before changing a single line. If you cannot quantify how slow something is, you cannot prove your fix made it faster. Numbers, not feelings.
+2. **Chase the Biggest Bottleneck First:** One slow database query or one unoptimized image often accounts for 80% of the delay. Find that one thing before you spend time memoizing functions that already run in microseconds.
+3. **Perceived Performance Is Real Performance:** A skeleton screen that loads in 100ms feels faster than a blank white page that loads content in 300ms. Optimize what the user experiences, not just what the profiler reports.
 
 ## Common Anti-Patterns
 

@@ -1,6 +1,18 @@
 ---
 name: code-review-9axis
 description: Deep code review using 9-axis framework with Senior Code Reviewer and Security Reviewer
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:code-review"
+  - "duck:security"
+skills_used:
+  - "code-review"
+  - "security-audit"
+  - "performance-optimization"
+  - "code-simplification"
+estimated_time: "2-6 hours"
 ---
 
 # Code Review (9-Axis) Workflow
@@ -16,6 +28,61 @@ The Code Review (9-Axis) workflow provides comprehensive code quality assessment
 - Technical debt assessment
 - Production readiness evaluation
 - Legacy code modernization planning
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Gather code diff, PR context, and review scope |
+| PLAN | 9-Axis Code Review framework setup (Stage 1) |
+| BUILD | Deep analysis across all 9 axes |
+| VERIFY | Security Vulnerability Assessment (Stage 2) |
+| REVIEW | Consolidated Code Quality Report (Stage 3) |
+| SHIP | Decision documented, findings communicated |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Code diff / PR identified
+- [ ] Commit history reviewed
+- [ ] Review scope defined
+- [ ] Related tickets/docs gathered
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] All 9 axes reviewed
+- [ ] Findings classified by severity
+- [ ] Scores calculated for each axis
+- [ ] Overall score determined
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Each axis analysis documented
+- [ ] Issues catalogued with severity
+- [ ] Actionable feedback provided
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] OWASP categories assessed
+- [ ] Vulnerabilities identified
+- [ ] Severity classification applied
+- [ ] Blocking issues flagged
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] All findings merged and prioritized
+- [ ] Recommendations actionable
+- [ ] Decision justified (APPROVED/CONDITIONAL/REJECTED)
+- [ ] Scorecard completed
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

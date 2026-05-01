@@ -1,6 +1,24 @@
 ---
 name: team-review
 description: Full team review orchestrated by Team Lead agent
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - team-lead
+  - product-manager
+  - architect
+  - database-expert
+  - frontend-expert
+  - senior-code-reviewer
+  - security-reviewer
+  - staff-engineer
+skills_used:
+  - code-review
+  - security-audit
+  - documentation
+  - performance-optimization
+estimated_time: "4-8 hours (standard) / 1-2 days (comprehensive)"
 ---
 
 # Team Review Workflow
@@ -16,6 +34,65 @@ The Team Review workflow orchestrates a comprehensive cross-functional review in
 - Cross-functional impact analysis
 - Pre-merge reviews for significant changes
 - Post-incident reviews
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| Scope Analysis (Stage 1) | DEFINE | Analyze task scope, identify agents, define review scope |
+| Business Validation (Stage 2) | DEFINE | Product Manager reviews specs, performs GAP analysis |
+| Architecture Review (Stage 3) | PLAN | Architect reviews technical design and patterns |
+| Specialized Reviews (Stage 4) | BUILD | Parallel database, frontend, and code reviews |
+| Security Review (Stage 5) | VERIFY | OWASP assessment, STRIDE modeling, blocking authority |
+| Deep Investigation (Stage 6) | VERIFY | Staff Engineer root cause and cross-service analysis |
+| Consolidation (Stage 7) | REVIEW + SHIP | Team Lead consolidates findings, makes decision |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Scope clearly defined
+- [ ] Risk level assessed
+- [ ] Required agents identified
+- [ ] Business value validated
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Architecture principles validated
+- [ ] Pattern appropriateness confirmed
+- [ ] Scalability assessed
+- [ ] Integration points reviewed
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Specialized reviews completed (applicable ones)
+- [ ] All 9 axes reviewed (if code review applicable)
+- [ ] UI/UX reviewed (if frontend applicable)
+- [ ] Schema design validated (if database applicable)
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] OWASP assessment complete
+- [ ] STRIDE modeling done
+- [ ] Blocking issues identified
+- [ ] Security scorecard complete
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] All reports collected
+- [ ] Findings consolidated
+- [ ] Decision made (APPROVED/CONDITIONAL/REJECTED)
+- [ ] Next steps defined and actionable
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

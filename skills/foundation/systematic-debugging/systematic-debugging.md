@@ -1,6 +1,33 @@
 ---
 name: systematic-debugging
-description: Systematic root-cause debugging using scientific method. Use when tests fail, builds break, behavior doesn't match expectations, or you encounter any unexpected error.
+description: "Systematic root-cause debugging using scientific method. Use when tests fail, builds break, behavior doesn't match expectations, or you encounter any unexpected error."
+version: "2.0.0"
+category: "foundation"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers:
+  - "debug"
+  - "test fails"
+  - "build breaks"
+  - "bug fix"
+  - "investigate error"
+  - "unexpected behavior"
+  - "something broke"
+intent: "Find and fix root causes systematically, never guess. The Iron Law: NO FIXES WITHOUT ROOT CAUSE."
+scenarios:
+  - "Tests fail after a code change"
+  - "Build breaks unexpectedly"
+  - "Runtime behavior doesn't match expectations"
+  - "Production incident investigation"
+  - "Something worked before and stopped working"
+best_for: "Bug investigation, test failure triage, build failure diagnosis, production incident response"
+estimated_time: "15-90 min"
+anti_patterns:
+  - "Guessing at fixes without reproducing the bug"
+  - "Fixing symptoms instead of root causes"
+  - "Skipping failing tests instead of fixing them"
+  - "Making multiple unrelated changes while debugging"
+related_skills: [test-driven-development, writing-plans, context-engineering]
 ---
 
 # Systematic Debugging
@@ -281,6 +308,18 @@ function renderChart(data: ChartData[]) {
 | "It works on my machine" | Environments differ. Check CI, check config, check dependencies. |
 | "I'll fix it in the next commit" | Fix it now. The next commit will introduce new bugs on top of this one. |
 | "This is a flaky test, ignore it" | Flaky tests mask real bugs. Fix the flakiness or understand why it's intermittent. |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Every debugging session is a teaching opportunity about how systems fail.
+
+1. **The Iron Law teaches discipline.** "No fixes without root cause" is the most important debugging principle. Teach your human partner that symptom fixes create recurring bugs and technical debt.
+
+2. **Scientific method applies to code.** Hypothesis → Test → Conclude. This isn't just for debugging — it's a general engineering thinking framework. Every debugging session reinforces it.
+
+3. **Bisection is a superpower.** `git bisect` finds the exact commit that introduced a bug in O(log n) time. Teach this technique early — it saves hours of manual investigation.
+
+4. **Non-reproducible bugs teach resilience.** When a bug can't be reproduced, the systematic approach (timing? environment? state?) teaches how to think about complex systems.
 
 ## Red Flags
 

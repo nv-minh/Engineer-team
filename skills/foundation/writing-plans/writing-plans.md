@@ -1,6 +1,30 @@
 ---
 name: writing-plans
-description: Write comprehensive implementation plans before touching code. Use when you have a spec or requirements for a multi-step task.
+description: "Write comprehensive implementation plans before touching code. Use when you have a spec or requirements for a multi-step task."
+version: "2.0.0"
+category: "foundation"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers:
+  - "write plan"
+  - "create implementation plan"
+  - "break down tasks"
+  - "how to implement"
+  - "task breakdown"
+intent: "Bridge spec to code with detailed, bite-sized tasks that a zero-context engineer could execute. No placeholders, no ambiguity."
+scenarios:
+  - "After brainstorming/design approval"
+  - "Spec approved, ready for implementation"
+  - "Multi-step task with dependencies"
+  - "Breaking down a feature into implementable units"
+best_for: "Implementation planning, task decomposition, TDD task structure, execution handoff"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Including placeholders like TODO or TBD"
+  - "Vague steps without code examples"
+  - "Missing file paths or incorrect references"
+  - "Skipping TDD cycle in task steps"
+related_skills: [brainstorming, spec-driven-development, subagent-driven-development, incremental-implementation]
 ---
 
 # Writing Plans
@@ -160,6 +184,18 @@ After saving the plan, offer execution choice:
 | "I'll figure it out as I go" | Without a plan, you'll make inconsistent decisions and miss requirements. |
 | "The spec is clear enough" | Even clear specs need implementation details. The plan bridges spec to code. |
 | "Plans change anyway" | Yes, but updating a plan is faster than reworking code. Plans are living documents. |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Every plan teaches decomposition and disciplined execution.
+
+1. **Bite-sized tasks teach estimation.** Breaking a feature into 2-5 minute steps develops the ability to estimate work accurately. This is one of the most valuable engineering skills.
+
+2. **No placeholders is a quality standard.** Teaching that every step must have actual code, actual file paths, and actual commands sets a bar for completeness that prevents ambiguity.
+
+3. **TDD in every task builds the habit.** When every task follows RED-GREEN-REFACTOR, the discipline becomes automatic. Plans are where the habit is reinforced.
+
+4. **Self-review teaches critical thinking.** The plan self-review (spec coverage, placeholder scan, type consistency) is a meta-cognitive exercise that improves planning quality over time.
 
 ## Red Flags
 

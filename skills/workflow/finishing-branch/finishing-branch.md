@@ -1,6 +1,23 @@
 ---
 name: finishing-branch
 description: Complete branch workflow with PR creation and merge decisions. Use when completing feature work, preparing for merge, or cleaning up branches.
+version: "2.0.0"
+category: "workflow"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["finish branch", "pull request", "merge", "PR review"]
+intent: "Ensure every branch is thoroughly reviewed, tested, and documented before it becomes part of the main codebase."
+scenarios:
+  - "Preparing a feature branch for merge by running all quality checks, writing a PR description, and requesting reviews"
+  - "Choosing between merge commit, squash-and-merge, or rebase-and-merge based on the branch history"
+  - "Cleaning up merged branches and updating the changelog and documentation after a successful merge"
+best_for: "PR creation, merge preparation, branch cleanup, post-merge documentation"
+estimated_time: "15-30 min"
+anti_patterns:
+  - "Merging without running tests or waiting for CI just to ship faster"
+  - "Writing a one-line PR description that forces reviewers to read every commit to understand the change"
+  - "Leaving merged branches to accumulate in the remote repository"
+related_skills: ["git-workflow", "code-review", "documentation"]
 ---
 
 # Finishing Branch
@@ -419,6 +436,14 @@ npm run build
 # Communicate with team about work in progress
 # Use different files for different features
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** The finish line is where quality is enforced -- a branch is not done until it is tested, reviewed, documented, and safely merged.
+
+1. **Your PR Description Is Your Sales Pitch:** A reviewer decides in the first 30 seconds whether to engage deeply or rubber-stamp. A clear summary, a structured change list, and testing evidence earn you a thorough review.
+2. **Self-Review Before You Request Review:** Read your own diff before asking someone else to. You will catch typos, leftover debug statements, and logic errors that you missed while writing the code. It shows respect for your reviewers' time.
+3. **Merge Strategy Is a Team Decision, Not a Personal Preference:** Squash for clean history on small features. Merge commit for preserving branch context on large collaborations. Rebase for maintaining linear history. Choose deliberately based on the branch, not habit.
 
 ## Common Mistakes
 

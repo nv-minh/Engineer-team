@@ -1,6 +1,19 @@
 ---
 name: bug-fix
 description: Systematic bug fixing workflow from investigation to resolution
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - debugger
+  - executor
+  - verifier
+skills_used:
+  - systematic-debugging
+  - test-driven-development
+  - code-review
+  - git-workflow
+estimated_time: "2-4 hours (simple) / 1-2 days (complex)"
 ---
 
 # Bug Fix Workflow
@@ -16,6 +29,62 @@ The bug fix workflow follows a systematic approach to investigating and fixing b
 - Investigating failures
 - Addressing crashes
 - Solving errors
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| INVESTIGATE (Stage 1) | DEFINE | Gather symptoms, reproduce bug, collect evidence |
+| ANALYZE (Stage 2) | DEFINE | Narrow down location, examine code/data flow |
+| HYPOTHESIZE (Stage 3) | PLAN | Form and test hypotheses, confirm root cause |
+| FIX (Stage 4) | BUILD | Write failing test, implement fix, atomic commit |
+| VERIFY (Stage 5) | VERIFY | Verify fix, check side effects, run regression tests |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Bug is reproducible
+- [ ] Symptoms documented
+- [ ] Evidence collected
+- [ ] Failure point identified
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Root cause found
+- [ ] Hypothesis tested and confirmed
+- [ ] Fix approach decided
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Test fails before fix
+- [ ] Test passes after fix
+- [ ] Regression test added
+- [ ] All tests still pass
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Original bug resolved
+- [ ] No regressions
+- [ ] Edge cases covered
+- [ ] Tests pass
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Root cause documented
+- [ ] Fix addresses root cause
+- [ ] Code reviewed
+- [ ] Bug marked as resolved
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

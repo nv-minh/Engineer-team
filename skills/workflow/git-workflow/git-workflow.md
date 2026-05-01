@@ -1,6 +1,23 @@
 ---
 name: git-workflow
 description: Git workflow with atomic commits and clean history. Use when committing code, managing branches, or maintaining project history.
+version: "2.0.0"
+category: "workflow"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["git commit", "branch", "merge", "atomic commit"]
+intent: "Create a clean, understandable project history where every commit is a self-contained unit that can be reviewed, understood, and reverted independently."
+scenarios:
+  - "Committing a feature implementation as a series of focused atomic commits instead of one giant dump"
+  - "Creating a feature branch, making incremental commits, and preparing for a clean pull request"
+  - "Resolving merge conflicts systematically after rebasing a long-lived feature branch onto main"
+best_for: "commit management, branching strategy, merge conflict resolution, history cleanup"
+estimated_time: "10-20 min"
+anti_patterns:
+  - "Committing unrelated changes together with a vague message like 'updates' or 'work in progress'"
+  - "Pushing directly to main without a branch, review, or CI check"
+  - "Ignoring merge conflicts or force-pushing to shared branches"
+related_skills: ["finishing-branch", "ci-cd-automation", "code-review"]
 ---
 
 # Git Workflow
@@ -327,6 +344,14 @@ if [ $(git rev-parse HEAD) != $(git rev-parse origin/main) ]; then
   exit 1
 fi
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Every commit tells a story -- make sure yours tells a story that your future self and your teammates can read and understand.
+
+1. **Atomic Commits Are Your Undo Button:** If a commit does more than one thing, you cannot revert just the broken part without also reververting the working parts. One commit, one logical change, always.
+2. **The Commit Message Is the First Line of Documentation:** Six months from now, someone will run `git blame` on your code. That commit message is the only context they will have. Make it count with a clear subject, scope, and body.
+3. **Branches Are Cheap, Broken Main Is Expensive:** Never commit directly to main. Feature branches cost nothing to create and give you a safe space to experiment, test, and get feedback before merging.
 
 ## Common Mistakes
 

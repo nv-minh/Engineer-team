@@ -2,6 +2,22 @@
 name: security-common
 category: quality
 description: Common security patterns, OWASP Top 10 reference, and vulnerability detection guidelines for all reviewer agents
+version: "2.0.0"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["security reference", "OWASP Top 10", "vulnerability pattern", "security checklist"]
+intent: "Provide a single source of truth for security knowledge so all agents apply consistent, up-to-date vulnerability detection."
+scenarios:
+  - "A code-reviewer agent referencing this skill to check for SQL injection patterns in a pull request"
+  - "A security-auditor agent using the OWASP checklist to systematically evaluate a new API gateway"
+  - "An architect agent consulting this skill during design review to ensure access control is properly planned"
+best_for: "security knowledge lookup, OWASP reference, vulnerability pattern matching, reviewer agent support"
+estimated_time: "15 min"
+anti_patterns:
+  - "Duplicating security checks in every agent instead of referencing this centralized knowledge base"
+  - "Using outdated OWASP references that miss newer vulnerability categories like SSRF"
+  - "Checking items off a list without understanding the underlying attack vectors"
+related_skills: ["security-audit", "security-hardening", "code-review"]
 ---
 
 # Security Common Knowledge Base
@@ -407,6 +423,14 @@ This includes:
 ```
 
 ---
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Security knowledge must be consistent across every reviewer -- one agent missing a vulnerability pattern is one vulnerability that ships to production.
+
+1. **Reference, Don't Duplicate:** When a reviewer agent needs security checks, it should point here rather than copy-pasting checklists. Duplication creates drift; a single source of truth keeps all agents aligned.
+2. **Know the Attack Vector, Not Just the Fix:** Memorizing "use parameterized queries" is not enough. Understanding that SQL injection works by tricking the database interpreter through unsanitized input helps you spot variations you have never seen before.
+3. **Every OWASP Category Maps to a Detection Pattern:** For each of the Top 10, this skill provides concrete detection checks. Use them as a starting point, not an exhaustive list. Real-world attack surfaces evolve faster than standards documents.
 
 ## Verification
 

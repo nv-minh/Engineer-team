@@ -1,6 +1,23 @@
 ---
 name: new-feature
 description: Complete workflow from idea to production for new features (ENHANCED with optional market validation)
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - planner
+  - executor
+  - verifier
+  - code-reviewer
+  - market-intelligence
+skills_used:
+  - brainstorming
+  - spec-driven-development
+  - writing-plans
+  - test-driven-development
+  - code-review
+  - git-workflow
+estimated_time: "1-3 days (simple) / 2-3 weeks (complex with market validation)"
 ---
 
 # New Feature Workflow
@@ -19,6 +36,66 @@ The new feature workflow takes a feature from initial idea through to production
 - Creating new capabilities
 - Entering new markets
 - Strategic feature planning
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| BRAINSTORM (Stage 1) | DEFINE | Explore ideas, clarify requirements, design approach |
+| MARKET VALIDATION (Stage 1.5) | DEFINE | Optional market research and competitive analysis |
+| SPEC (Stage 2) | DEFINE | Write structured specification with requirements |
+| PLAN (Stage 3) | PLAN | Break into tasks, estimate effort, map dependencies |
+| BUILD (Stage 4) | BUILD | Execute tasks with TDD and atomic commits |
+| VERIFY (Stage 5) | VERIFY | Test acceptance criteria, integration testing |
+| SHIP (Stage 6) | REVIEW + SHIP | Code review, PR, merge, deploy, monitor |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Design approved by user
+- [ ] Design document written
+- [ ] Technical approach decided
+- [ ] Market validated OR strategically justified (if Stage 1.5 completed)
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] All requirements have tasks
+- [ ] No placeholders in plan
+- [ ] Acceptance criteria defined
+- [ ] Verification steps specified
+- [ ] Market factors considered (if Stage 1.5 completed)
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Tasks completed
+- [ ] Tests passing
+- [ ] Code reviewed
+- [ ] Build succeeds
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Spec coverage 100%
+- [ ] Quality gates pass
+- [ ] Acceptance criteria met
+- [ ] Integration tests pass
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Code review approved
+- [ ] PR merged
+- [ ] Deployed successfully
+- [ ] Monitoring OK
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

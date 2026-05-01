@@ -1,6 +1,23 @@
 ---
 name: test-driven-development
 description: Test-Driven Development (TDD) using RED-GREEN-REFACTOR cycle. Use when writing any production code, adding new features, or fixing bugs.
+version: "2.0.0"
+category: "development"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["tdd", "red-green-refactor", "write tests first", "failing test"]
+intent: "Instill the discipline of writing tests before production code so every line of code is justified by a requirement."
+scenarios:
+  - "Adding a new user registration endpoint and needing to validate all input fields"
+  - "Fixing a pricing calculation bug by first writing a regression test that reproduces it"
+  - "Refactoring a payment service module while ensuring existing behavior stays green"
+best_for: "new features, bug fixes, refactoring, regression prevention"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Writing production code first and retrofitting tests afterward"
+  - "Skipping the REFACTOR phase and leaving hard-coded values in place"
+  - "Testing implementation details instead of observable behavior"
+related_skills: ["code-review", "systematic-debugging", "spec-driven-development"]
 ---
 
 # Test-Driven Development
@@ -289,6 +306,14 @@ it('should throw error for invalid input', () => {
 | "This is too simple to test" | Simple code breaks too. Tests prevent regressions. |
 | "Tests take too long" | Tests save debugging time. They're an investment, not a cost. |
 | "I know this works" | You might know it works now. Will you know in 6 months? |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** TDD teaches you to think in terms of desired behavior before implementation, making every line of code intentional and verified.
+
+1. **The failing test is the spec:** If you cannot write a failing test that describes what you want, you do not yet understand the requirement. Stop and clarify before coding.
+2. **Small steps compound fast:** A RED-GREEN-REFACTOR cycle that takes two minutes beats a thirty-minute coding binge every time. Tiny steps keep the feedback loop tight and mistakes cheap to fix.
+3. **Refactor with green safety:** The REFACTOR phase only works because the tests are green. If you skip it, you accumulate hard-coded hacks. If you refactor without tests, you break things silently. Green tests are your safety net -- use it.
 
 ## Red Flags
 

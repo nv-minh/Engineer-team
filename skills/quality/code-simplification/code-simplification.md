@@ -1,6 +1,23 @@
 ---
 name: code-simplification
 description: Reduce code complexity and improve maintainability. Use when code is hard to understand, has high cyclomatic complexity, or needs refactoring.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["complex code", "refactor", "simplify", "cyclomatic complexity"]
+intent: "Transform tangled code into clear, maintainable logic that any developer can read and extend with confidence."
+scenarios:
+  - "Refactoring a 200-line god function into focused, testable helper functions"
+  - "Reducing deep nesting in payment processing logic using guard clauses"
+  - "Eliminating duplicated validation code across multiple API endpoints"
+best_for: "reducing cyclomatic complexity, refactoring legacy code, eliminating duplication, improving readability"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Simplifying code so aggressively that edge cases and error handling are removed"
+  - "Extracting functions prematurely before understanding the full logic flow"
+  - "Introducing clever abstractions that make code shorter but harder to understand"
+related_skills: ["code-review", "systematic-debugging", "frontend-patterns"]
 ---
 
 # Code Simplification
@@ -445,6 +462,14 @@ After simplifying code:
 - [ ] Duplication is eliminated
 - [ ] Complexity is manageable
 - [ ] Tests still pass
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Simpler code is not just shorter code -- it is code that the next developer can understand in one reading.
+
+1. **Simplify Before You Abstract:** The first response to complexity should be reducing it directly (guard clauses, early returns, extracting functions). Only reach for design patterns when simple restructuring is not enough.
+2. **Name Things to Reveal Intent:** If you need a comment to explain what a variable or function does, the name is wrong. A well-named function makes its purpose obvious at every call site.
+3. **Measure Complexity Before and After:** Use cyclomatic complexity as a guide. If your refactoring does not reduce the complexity score while keeping all tests green, it is rearrangement, not simplification.
 
 ## Common Anti-Patterns
 

@@ -1,6 +1,18 @@
 ---
 name: database-review
 description: Database schema & query review with Database Expert and Architect agents
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:database"
+  - "duck:architect"
+skills_used:
+  - "backend-patterns"
+  - "code-review"
+  - "performance-optimization"
+  - "database-migrations"
+estimated_time: "2-4 hours"
 ---
 
 # Database Review Workflow
@@ -17,6 +29,63 @@ The Database Review workflow provides comprehensive assessment of database schem
 - Data architecture review
 - Fintech ledger & audit trail design
 - Database scaling strategy
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Identify schema, queries, and migration scope |
+| PLAN | Database Schema & Query Review (Stage 1) |
+| BUILD | Implement schema changes and query optimizations |
+| VERIFY | Data Architecture Review (Stage 2) |
+| REVIEW | Consolidated Database Assessment (Stage 3) |
+| SHIP | Migration plan approved and deployed |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Schema definition (DDL) provided
+- [ ] Query lists compiled
+- [ ] Migration scripts identified
+- [ ] Performance requirements defined
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Schema design reviewed (normalization, naming, types)
+- [ ] Query performance assessed
+- [ ] Indexing strategy evaluated
+- [ ] Migration plan reviewed
+- [ ] Data integrity verified
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Schema changes implemented
+- [ ] Query optimizations applied
+- [ ] Indexes created
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Data architecture assessed in system context
+- [ ] Integration points reviewed
+- [ ] Data flow evaluated
+- [ ] Scalability assessed
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Findings merged and prioritized
+- [ ] Bottlenecks identified
+- [ ] Recommendations actionable
+- [ ] Migration plan validated
+- [ ] Scorecard completed
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

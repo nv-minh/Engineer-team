@@ -233,7 +233,18 @@
       "Bash(grep -E \"\\\\.\\(md|json|yaml\\)$\")",
       "Bash(rm -f agents/shopify-expert.md)",
       "Bash(rm -rf skills/specialized/)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(bash *)",
+      "Bash(zsh -n ~/.zshrc)",
+      "Bash(grep *)",
+      "Bash(~/.local/bin/em-distributed stop *)",
+      "Bash(~/.local/bin/em-distributed status *)",
+      "mcp__zai-mcp-server__analyze_image",
+      "Bash(cp /Users/abc/Desktop/EM-Skill/em-distributed /Users/abc/Documents/pinnacle/pinnacle-backend/)",
+      "Bash(cp /Users/abc/Desktop/EM-Skill/em-distributed /Users/abc/Documents/pinnacle/pinnacle-web/)",
+      "Bash(./em-distributed help *)",
+      "Bash(./em-distributed status *)",
+      "Bash(tmux list-sessions *)"
     ]
   },
   "enableAllProjectMcpServers": true,

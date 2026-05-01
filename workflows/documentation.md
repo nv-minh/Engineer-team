@@ -1,6 +1,16 @@
 ---
 name: documentation
 description: Documentation generation and update workflow
+version: "2.0.0"
+category: "support"
+origin: "agent-skills"
+agents_used:
+  - executor
+skills_used:
+  - documentation
+  - code-review
+  - api-interface-design
+estimated_time: "4-8 hours (simple) / 1-2 days (complex)"
 ---
 
 # Documentation Workflow
@@ -16,6 +26,63 @@ The documentation workflow generates, updates, and maintains project documentati
 - Creating API references
 - Writing architecture docs
 - Documenting features
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| ANALYZE (Stage 1) | DEFINE | Define documentation scope, analyze codebase, clarify requirements |
+| GENERATE (Stage 2) | PLAN + BUILD | Write API docs, architecture docs, user guides, examples |
+| REVIEW (Stage 3) | VERIFY | Review for accuracy, test examples, verify code snippets work |
+| UPDATE (Stage 4) | REVIEW | Fix issues, update examples, improve clarity |
+| PUBLISH (Stage 5) | SHIP | Deploy documentation, verify links, notify team, archive old docs |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Scope defined
+- [ ] Code analyzed
+- [ ] Requirements clear
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] API docs structure planned
+- [ ] Architecture sections outlined
+- [ ] Examples identified
+- [ ] Diagrams sketched
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] API docs complete
+- [ ] Architecture documented
+- [ ] Examples working
+- [ ] Diagrams accurate
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Documentation accurate
+- [ ] Examples tested
+- [ ] Code snippets work
+- [ ] No errors found
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Issues fixed
+- [ ] Links working
+- [ ] Clarity improved
+- [ ] Documentation deployed
+- [ ] Team notified
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

@@ -1,6 +1,23 @@
 ---
 name: api-testing
 description: API testing for integration and contract verification. Use when testing API endpoints, verifying integrations, or ensuring API contracts.
+version: "2.0.0"
+category: "quality"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["api test", "endpoint test", "contract test", "integration test"]
+intent: "Verify that APIs behave correctly under all conditions by testing contracts, error handling, and authentication boundaries."
+scenarios:
+  - "Writing contract tests for a new REST endpoint before frontend integration begins"
+  - "Testing authentication and authorization on protected admin API routes"
+  - "Validating rate limiting and error response schemas across the user service API"
+best_for: "endpoint testing, contract validation, auth testing, error handling verification, rate limiting tests"
+estimated_time: "15-30 min"
+anti_patterns:
+  - "Testing only the happy path and ignoring error responses and edge cases"
+  - "Letting tests depend on execution order or shared mutable state"
+  - "Hardcoding test data that causes conflicts when tests run in parallel"
+related_skills: ["e2e-testing", "security-audit", "api-interface-design"]
 ---
 
 # API Testing
@@ -526,6 +543,14 @@ afterEach(async () => {
   await cleanupTestDatabase();
 });
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** API tests are your contract with every client that consumes your service -- write them as if the next consumer is a team you have never met.
+
+1. **Test the Contract, Not the Implementation:** Your API tests should verify what the endpoint promises (status codes, response shapes, headers) not how it works internally. Implementation tests break on refactors; contract tests do not.
+2. **Make Each Test Independent and Repeatable:** If a test only passes when it runs in a specific order, it is hiding bugs. Use setup and teardown to guarantee a clean state for every test.
+3. **Error Paths Are First-Class Citizens:** Most production incidents come from untested error conditions. Spend equal time crafting test cases for 400, 401, 403, 404, and 500 responses as you do for the 200 happy path.
 
 ## Common Mistakes
 

@@ -1,6 +1,23 @@
 ---
 name: deprecation-migration
 description: Code-as-liability mindset with deprecation and migration strategies. Use when phasing out old code, migrating to new systems, or managing technical debt.
+version: "2.0.0"
+category: "workflow"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["deprecation", "migration", "technical debt", "refactor legacy"]
+intent: "Systematically reduce code liability by planning, executing, and communicating the removal or replacement of deprecated systems."
+scenarios:
+  - "Migrating from session-based authentication to JWT with a gradual rollout using feature flags"
+  - "Deprecating a legacy API version while maintaining backward compatibility for existing consumers"
+  - "Identifying and removing dead code from a codebase that has accumulated unused modules over three years"
+best_for: "legacy code removal, library migration, API versioning, technical debt reduction, dependency upgrades"
+estimated_time: "20-45 min"
+anti_patterns:
+  - "Removing deprecated code without a migration period or communication, breaking downstream consumers"
+  - "Marking code as deprecated but never actually removing it, creating a permanent maintenance burden"
+  - "Rewriting from scratch instead of using incremental migration patterns like strangler fig"
+related_skills: ["code-simplification", "documentation", "ci-cd-automation"]
 ---
 
 # Deprecation and Migration
@@ -506,6 +523,14 @@ describe('Migration: oldFunction to newFunction', () => {
   });
 });
 ```
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Code is a liability -- every line you remove is a line you never have to debug, test, or explain again.
+
+1. **Deprecation Is a Conversation, Not a Decision:** Marking something deprecated is the start of a communication process, not the end. Provide a migration guide, a timeline, and a clear replacement. Give consumers time and a path forward.
+2. **Migrate Incrementally, Never Rewrite Wholesale:** The strangler fig pattern works because each small migration is independently testable and revertable. A big-bang rewrite is a bet-the-company risk. Replace one route, one module, one endpoint at a time.
+3. **Dead Code Should Terrify You:** Code that no one uses, no one tests, and no one understands is a time bomb. It still gets dependencies updated under it, still gets accidentally imported, and still confuses new developers. Find it and remove it ruthlessly.
 
 ## Common Mistakes
 

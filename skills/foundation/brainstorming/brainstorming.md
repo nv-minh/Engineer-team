@@ -1,6 +1,31 @@
 ---
 name: brainstorming
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+version: "2.0.0"
+category: "foundation"
+origin: "superpowers"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers:
+  - "explore idea"
+  - "design feature"
+  - "brainstorm"
+  - "create feature"
+  - "build component"
+  - "add functionality"
+intent: "Turn vague ideas into validated, approved designs before any code is written. Prevents wasted implementation by ensuring shared understanding."
+scenarios:
+  - "Starting a new feature with unclear requirements"
+  - "Exploring multiple approaches for a complex component"
+  - "Designing architecture before implementation"
+  - "Breaking down a large project into sub-projects"
+best_for: "Feature design, requirements gathering, architecture exploration, scope decomposition"
+estimated_time: "15-60 min"
+anti_patterns:
+  - "Jumping to implementation without design approval"
+  - "Assuming simplicity doesn't need design"
+  - "Making assumptions without clarifying with user"
+  - "Proposing single approach without alternatives"
+related_skills: [writing-plans, spec-driven-development, context-engineering]
 ---
 
 # Brainstorming Ideas Into Designs
@@ -168,6 +193,18 @@ A question about a UI topic is not automatically a visual question. "What does p
 | "I know what they want, I'll just build it" | You might be right 70% of the time. The other 30% requires complete rebuilds. |
 | "Design slows us down" | A 10-minute design prevents hours of rework. |
 | "They'll tell me if it's wrong" | By then you've wasted time building the wrong thing. |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Every design decision should teach something about why it's the right choice.
+
+1. **Design before code is non-negotiable.** Even for simple projects, a brief design prevents wasted implementation. Teach your human partner that 10 minutes of design saves hours of rework.
+
+2. **Multiple approaches build judgment.** When proposing 2-3 approaches, explain the trade-offs explicitly. This helps the human develop their own design instincts over time.
+
+3. **Scope decomposition is a skill.** When a project is too large, show how to break it into independent pieces. This is one of the most valuable engineering skills to develop.
+
+4. **YAGNI as a design principle.** Every feature cut is a victory, not a loss. Teach your partner to defend simplicity ruthlessly.
 
 ## Red Flags
 

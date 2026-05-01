@@ -1,8 +1,33 @@
+---
+name: distributed-development
+description: Coordinate distributed agents across tmux sessions for multi-domain feature development
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - "techlead-orchestrator"
+  - "database-expert"
+  - "backend-expert"
+  - "frontend-expert"
+  - "code-reviewer"
+  - "security-reviewer"
+skills_used:
+  - "spec-driven-development"
+  - "writing-plans"
+  - "incremental-implementation"
+  - "code-review"
+  - "security-audit"
+  - "e2e-testing"
+estimated_time: "7-14 hours"
+---
+
 # Distributed Development Workflow
 
 ## Overview
 
 This workflow coordinates distributed agents across separate tmux sessions to develop features that span multiple domains (backend API + frontend UI + database schema).
+
+**⚠️ CRITICAL:** Tech Lead Orchestrator MUST delegate all implementation work to agent sessions. See [Delegation Protocol](../protocols/delegation-protocol.md)
 
 ## When to Use
 
@@ -31,9 +56,72 @@ This workflow coordinates distributed agents across separate tmux sessions to de
 "Agent: em-techlead-orchestrator - Coordinate distributed development..."
 ```
 
+3. **All agent sessions ready:**
+```bash
+# Verify sessions exist
+tmux list-windows -t claude-work
+# Should show: techlead, backend, frontend, database
+```
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Requirements Analysis & Task Breakdown (Phase 1) |
+| PLAN | Design & Contract (Phase 3) |
+| BUILD | Backend API Development + Frontend UI Development (Phase 3-4) |
+| VERIFY | Integration & Testing (Phase 5) |
+| REVIEW | Consolidation & Handoff + Code Review + Security Review (Phase 6-7) |
+| SHIP | Approval & Merge (Phase 7) |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Feature requirements analyzed
+- [ ] Scope determined (backend, frontend, database)
+- [ ] Agent selection completed
+- [ ] Development plan created
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Database schema designed and reviewed
+- [ ] API contract defined
+- [ ] Frontend components specified
+- [ ] Execution strategy determined (sequential/parallel)
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Backend API implemented
+- [ ] Frontend UI implemented
+- [ ] Database migrations created
+- [ ] All agent reports submitted
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Integration tests passing
+- [ ] E2E tests passing
+- [ ] API contract verified
+- [ ] Cross-agent dependencies validated
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Code review approved
+- [ ] Security review approved
+- [ ] Consolidated report generated
+- [ ] Documentation complete
+PASS → proceed to SHIP | FAIL → return to BUILD
+
 ## Workflow Process
 
-### Phase 1: Requirements Analysis
+### Phase 1: Requirements Analysis & Task Breakdown
 
 **Step 1:** Receive feature requirements from user
 
@@ -62,6 +150,8 @@ feature_analysis:
     - if_complex: "architect"
     - if_user_facing: "product-manager"
 ```
+
+**⚠️ IMPORTANT:** Tech Lead ONLY analyzes and plans. NO implementation at this stage!
 
 **Step 3:** Create development plan
 
@@ -120,11 +210,65 @@ development_plan:
     - from: "frontend-expert"
       format: "code"
       location: "/frontend/components/UserProfile.tsx"
+
+  delegation_protocol: "protocols/delegation-protocol.md"  # ⚠️ CRITICAL
 ```
 
 ---
 
-### Phase 2: Design & Contract
+### Phase 2: Delegate Tasks to Agent Sessions ⚠️ CRITICAL
+
+**⚠️ TECH LEAD DELEGATION MANDATE:**
+
+At this phase, Tech Lead MUST delegate ALL implementation work to appropriate agent sessions. **TECH LEAD MUST NOT IMPLEMENT ANYTHING!**
+
+See full protocol: [Delegation Protocol](../protocols/delegation-protocol.md)
+
+**Step 1:** Assign tasks to sessions
+
+For each agent in development plan, send task assignment:
+
+```bash
+# Example: Assign task to backend session
+tmux send-keys -t claude-work:backend "Agent: em-backend-expert Implement user profile CRUD API" C-m
+
+# Example: Assign task to database session
+tmux send-keys -t claude-work:database "Agent: em-database-expert Design user profile schema" C-m
+
+# Example: Assign task to frontend session
+tmux send-keys -t claude-work:frontend "Agent: em-frontend-expert Implement user profile UI" C-m
+```
+
+**Step 2:** Monitor delegation
+
+```bash
+# Check if agents are working
+tmux list-windows -t claude-work
+
+# Monitor progress from each session
+# Check for status updates in /tmp/claude-work-queue/to-techlead/
+
+# Verify agents are working (not Tech Lead!)
+```
+
+**Step 3:** Wait for agent reports
+
+DO NOT proceed until agents complete their work and submit reports to:
+- `/tmp/claude-work-reports/database/`
+- `/tmp/claude-work-reports/backend/`
+- `/tmp/claude-work-reports/frontend/`
+
+**⚠️ VIOLATION WARNING:**
+
+If you find yourself writing code or implementing:
+→ **STOP!** This is agent work, not Tech Lead work
+→ Delegate to appropriate session
+→ Wait for their report
+→ Then consolidate findings
+
+---
+
+### Phase 3: Design & Contract
 
 **Step 4:** Database Expert designs schema
 

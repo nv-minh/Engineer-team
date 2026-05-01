@@ -1,6 +1,18 @@
 ---
 name: deployment
 description: Deployment workflow with testing, monitoring, and rollback
+version: "2.0.0"
+category: "support"
+origin: "agent-skills"
+agents_used:
+  - executor
+  - verifier
+skills_used:
+  - ci-cd-automation
+  - code-review
+  - performance-optimization
+  - documentation
+estimated_time: "3-8 hours"
 ---
 
 # Deployment Workflow
@@ -16,6 +28,65 @@ The deployment workflow manages safe, tested deployments with monitoring and rol
 - Rolling out features
 - Emergency deployments
 - Infrastructure updates
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| PREP (Stage 1) | DEFINE + PLAN | Run tests, verify build, create tag, backup |
+| DEPLOY (Stage 2) | BUILD | Execute deployment strategy (blue-green, canary, rolling) |
+| TEST (Stage 3) | VERIFY | Run smoke tests, check critical paths, verify error rates |
+| MONITOR (Stage 4) | REVIEW | Monitor metrics, check error rates, verify performance |
+| FINALIZE (Stage 5) | SHIP | Update documentation, notify team, record deployment |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Tests pass
+- [ ] Build succeeds
+- [ ] Tag created
+- [ ] Backup complete
+- [ ] Deployment strategy selected
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Deployment steps documented
+- [ ] Rollback plan ready
+- [ ] Monitoring configured
+- [ ] Stakeholders notified
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Staging tests pass
+- [ ] Deployment successful
+- [ ] Smoke tests pass
+- [ ] Traffic shifted (if applicable)
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Smoke tests pass
+- [ ] Critical paths work
+- [ ] Error rates acceptable
+- [ ] Performance acceptable
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Metrics normal
+- [ ] Error rates low
+- [ ] No critical errors
+- [ ] Documentation updated
+- [ ] Team notified
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

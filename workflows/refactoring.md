@@ -1,6 +1,21 @@
 ---
 name: refactoring
 description: Code refactoring workflow for improving quality and maintainability
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
+agents_used:
+  - code-reviewer
+  - planner
+  - executor
+  - verifier
+skills_used:
+  - code-review
+  - code-simplification
+  - test-driven-development
+  - writing-plans
+  - git-workflow
+estimated_time: "4-8 hours (simple) / 1-3 days (complex)"
 ---
 
 # Refactoring Workflow
@@ -16,6 +31,61 @@ The refactoring workflow improves code quality while maintaining functionality. 
 - Eliminating technical debt
 - Enhancing maintainability
 - Optimizing performance
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| ANALYZE (Stage 1) | DEFINE | Identify code smells, collect metrics, set priorities |
+| PLAN (Stage 2) | PLAN | Define tasks, plan tests, ensure no functionality changes |
+| REFACTOR (Stage 3) | BUILD | Execute refactoring with tests passing throughout |
+| VERIFY (Stage 4) | VERIFY | Confirm functionality preserved, quality improved |
+| UPDATE (Stage 5) | REVIEW + SHIP | Update documentation, commit changes, track debt reduction |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Code smells identified
+- [ ] Metrics collected
+- [ ] Priorities set
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Tasks defined
+- [ ] Tests planned
+- [ ] No functionality changes planned
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Tests pass
+- [ ] Functionality unchanged
+- [ ] Quality improved
+- [ ] Complexity reduced
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Functionality preserved
+- [ ] Quality improved
+- [ ] Complexity reduced
+- [ ] No regressions
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Documentation updated
+- [ ] Tests updated
+- [ ] Changes committed
+- [ ] Debt tracked
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

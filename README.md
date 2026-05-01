@@ -1090,6 +1090,87 @@ Distributed Mode:
 24. **finishing-branch** - Merge/PR decisions
 25. **deprecation-migration** - Code-as-liability mindset
 
+### Communication Skills
+
+26. **style-switcher** - 13 personality styles + 3 density modes (unified control)
+
+## Communication Styles (NEW)
+
+EM-Team includes a unified communication control system with 13 personality styles and 3 density modes. Personality (tone) and density (verbosity) are independent axes.
+
+### Personality Styles
+
+**Productivity:**
+| Style | Description | Token Savings |
+|---|---|---|
+| 🪖 Tactical | Direct, no preamble. `[problem] → [cause] → [fix]` | 65-75% |
+| 🪨 Raw | Fragments, no filler, no articles | 65-75% |
+| 🔍 Reality Check | Honest evaluation: works → risk → verdict | 60-70% |
+| 📋 git log | Imperative verbs, 72 chars max per line | 50-65% |
+| ❓ Socratic | Asks questions, never gives answers directly | 50-70% |
+| 📌 BLUF | Bottom Line Up Front: conclusion first | 20-35% |
+
+**Fun:**
+| Style | Description | Token Impact |
+|---|---|---|
+| 🧙 Inverted | Yoda-style inverted syntax | ~same |
+| 🏴‍☠️ Dramatic | Pirate nautical metaphors | +5-15% |
+| 💾 80s Hacker | 80s terminal, all caps, STATUS: labels | +5-15% |
+| 👨 Dad Joke | Technical explanation + terrible pun | +10-20% |
+
+**Deep Understanding:**
+| Style | Description | Token Impact |
+|---|---|---|
+| 🦆 Rubber Duck | Zero jargon, one concept at a time | 0-+20% |
+| 🔬 Teacher | Feynman technique, explain to a 12-year-old | +20-40% |
+| 🧱 First Principles | Break to fundamentals, no assumptions | +20-30% |
+
+### Density Modes
+
+| Mode | Trigger | Output |
+|---|---|---|
+| **STANDARD** | `/standard` | Full reports with coaching, before/after code |
+| **COMPACT** | `/compact` | Bullet points, code fixes only, no coaching |
+| **TERSE** | `/terse` | Single-line status, diffs only |
+
+### Usage
+
+```bash
+# Show personality menu (13 styles + 3 density modes)
+/style
+
+# Switch personality directly
+/style tactical        # Direct, no-nonsense debugging
+/style teacher         # Feynman technique explanations
+/style reality-check   # Honest evaluation of your idea
+
+# Switch density independently
+/compact               # Bullet-point output
+/terse                 # Single-line status
+/standard              # Full detailed reports
+
+# Combine personality + density
+# (set each independently, they don't affect each other)
+/style raw             # Set personality to Raw
+/compact               # Set density to COMPACT
+
+# Terminal CLI modifier (strip all markdown)
+/style tactical + terminal CLI
+```
+
+### When to Use Which Style
+
+| Scenario | Personality | Density |
+|---|---|---|
+| Debugging CI failure | Tactical | TERSE |
+| Teaching a junior | Teacher | STANDARD |
+| Rapid coding session | Raw | COMPACT |
+| Evaluating feature idea | Reality Check | STANDARD |
+| Architecture decision | First Principles | COMPACT |
+| Quick code review | BLUF | COMPACT |
+
+---
+
 ## Agents
 
 ### Core Agents (8 agents)
@@ -1578,10 +1659,18 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: **1.2.0** (Major Feature Release)
-Last updated: 2026-04-19
+Current version: **2.0.0** (Major Architecture Upgrade)
+Last updated: 2026-05-01
 
-**🎉 New in v1.2.0:**
+**🎉 New in v2.0.0:**
+- ✨ **Communication Styles** - 13 personality styles + 3 density modes with `/style` command
+- 🏗️ **Foundation Infrastructure** - Preambles, protocols, templates, references
+- ✨ **New Skills** - TypeScript, Python, Go, Rust pattern skills
+- ✨ **New Agents** - Design reviewer, DevEx reviewer, Iron Law enforcer
+- ✨ **6-Phase Lifecycle** - All workflows follow DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
+- ✨ **Enriched Frontmatter** - All skills/agents upgraded with YAML metadata
+
+**Previous (v1.2.0):**
 - ✨ **TDD Auto-Retry Loop** - Automated test failure capture with exponential backoff
 - ✨ **Token Summarization** - Intelligent token management preventing context overflow
 - 🏗️ **Enhanced Distributed Mode** - Token-aware report consolidation
@@ -1689,9 +1778,9 @@ em-team/
 
 ### Version Information
 
-- **Current Version:** 1.1.0
-- **Last Updated:** 2026-04-19
-- **Status:** Production Ready ✅
+- **Current Version:** 2.0.0
+- **Last Updated:** 2026-05-01
+- **Status:** Production Ready
 - **License:** MIT
 
 ### Links

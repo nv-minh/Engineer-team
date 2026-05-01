@@ -11,19 +11,32 @@ EM-Team is a comprehensive system of agents, skills, and workflows for fullstack
 - **gstack** (28 skills) - Team-in-a-box, velocity multiplier, browser-in-CLI
 - **superpowers** (16 skills) - Iron Laws, subagent-driven development, systematic debugging
 
+## Builder Ethos
+
+All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`):
+
+1. **Boil the Lake** — Do the complete thing. Completeness is cheap with AI.
+2. **Search Before Building** — Check what exists before inventing something new.
+3. **User Sovereignty** — AI recommends. The human decides. Always.
+4. **Iron Laws** — Non-negotiable: TDD, root cause debugging, spec-before-code, review-before-merge.
+5. **Always Be Coaching (ABC)** — Every interaction should teach something.
+
 ## Project Structure
 
 ```
 em-team/
-├── skills/              # ~25-30 skills
-│   ├── foundation/      # Core foundational skills
-│   ├── development/     # Development workflow skills
-│   ├── quality/         # Quality assurance skills
-│   ├── workflow/        # Workflow and automation skills
-│   └── specialized/     # Language/framework-specific skills
-├── agents/              # ~16-20 specialized agents (8 core + 8 specialized)
-├── workflows/           # ~16 end-to-end workflows (8 primary + 8 team)
-├── templates/           # Reusable templates
+├── skills/              # 29+ skills
+│   ├── foundation/      # 5 core foundational skills
+│   ├── development/     # 12 development skills (including language patterns)
+│   ├── quality/         # 8 quality assurance skills
+│   └── workflow/        # 5 workflow and automation skills
+├── agents/              # 28 specialized agents (8 core + 12 specialized + 8 additional)
+├── workflows/           # 23 end-to-end workflows (4 primary + 4 support + 8 team + 2 distributed + 5 new)
+├── templates/           # Reusable templates + context artifacts
+│   └── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+├── preambles/           # Shared initialization (ethos, skill preamble, agent preamble)
+├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging)
+├── references/          # Shared reference docs (security, testing, code-quality, API, verification)
 ├── hooks/              # Automation hooks
 ├── commands/           # CLI commands
 └── CLAUDE.md           # Main configuration (this file)
@@ -38,45 +51,51 @@ em-team/
 4. **writing-plans** - Break work into bite-sized tasks
 5. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (8 skills)
+### Development Skills (12 skills)
 6. **test-driven-development** - TDD RED-GREEN-REFACTOR
 7. **frontend-patterns** - React/Next.js/Vue patterns
 8. **backend-patterns** - API/Database patterns
 9. **incremental-implementation** - Vertical slice development
-10. **subagent-driven-development** - Fresh context per task
+10. **subagent-driven-development** - Fresh context per task + two-stage review
 11. **source-driven-development** - Code from official docs
 12. **api-interface-design** - Contract-first APIs
 13. **security-hardening** - OWASP Top 10 security
+14. **typescript-patterns** - TypeScript type system, async, React/Next.js TS patterns
+15. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
+16. **go-patterns** - Error handling, concurrency, interfaces, testing
+17. **rust-patterns** - Ownership, traits, async tokio, smart pointers
 
-### Quality Skills (7 skills)
-14. **code-review** - 5-axis review framework
-15. **code-simplification** - Reduce complexity
-16. **browser-testing** - DevTools MCP integration
-17. **performance-optimization** - Measure-first optimization
-18. **e2e-testing** - Playwright patterns
-19. **security-audit** - Vulnerability assessment
-20. **api-testing** - Integration testing
+### Quality Skills (8 skills)
+18. **code-review** - 5-axis review framework
+19. **code-simplification** - Reduce complexity
+20. **browser-testing** - DevTools MCP integration
+21. **performance-optimization** - Measure-first optimization
+22. **e2e-testing** - Playwright patterns
+23. **security-audit** - Vulnerability assessment
+24. **api-testing** - Integration testing
+25. **security-common** - OWASP reference and security checklist
 
 ### Workflow Skills (5 skills)
-21. **git-workflow** - Atomic commits
-22. **ci-cd-automation** - Feature flags, quality gates
-23. **documentation** - ADRs, API docs
-24. **finishing-branch** - Merge/PR decisions
-25. **deprecation-migration** - Code-as-liability mindset
+26. **git-workflow** - Atomic commits
+27. **ci-cd-automation** - Feature flags, quality gates
+28. **documentation** - ADRs, API docs
+29. **finishing-branch** - Merge/PR decisions
+30. **deprecation-migration** - Code-as-liability mindset
+31. **style-switcher** - Unified personality styles (13) and density modes (3)
 
-### Specialized Skills (Language/Framework)
-26. **typescript-patterns** / **python-patterns** / **go-patterns**
-27. **react-patterns** / **nextjs-patterns** / **vue-patterns**
-28. **nodejs-patterns** / **django-patterns** / **nestjs-patterns**
-29. **database-migrations** - Schema versioning
-30. **using-git-worktrees** - Isolated workspaces
+### Additional Skills
+31. **jobs-to-be-done** - JTBD framework for understanding user needs
+32. **lean-ux-canvas** - Lean UX hypothesis testing
+33. **opportunity-solution-tree** - Product opportunity mapping
+34. **pol-probe** - Product opportunity probe
+35. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
 ### Core Agents (8 agents)
 1. **planner** - Create detailed implementation plans
 2. **executor** - Execute with atomic commits
-3. **code-reviewer** - 5-axis code review
+3. **code-reviewer** - 5-axis code review (two-stage: spec compliance then quality)
 4. **debugger** - Systematic debugging
 5. **test-engineer** - Test strategy & generation
 6. **security-auditor** - OWASP assessment
@@ -99,6 +118,15 @@ em-team/
 19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `duck:security`)
 20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `duck:staff`)
 
+### New Agents (v2.0.0)
+21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `duck:market`)
+22. **learn** - Knowledge management and cross-session learning
+23. **autoplan** - Multi-phase review pipeline orchestrator
+24. **techlead-orchestrator** - Distributed team coordination
+25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `duck:design`)
+26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `duck:devex`)
+27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `duck:laws`)
+
 ## Workflow Categories
 
 ### Primary Workflows
@@ -112,6 +140,11 @@ em-team/
 6. **documentation** - Generate and update docs
 7. **deployment** - Deploy and monitor
 8. **retro** - Learn and improve
+9. **ship-workflow** - Version bump, changelog, PR creation
+10. **canary-monitoring** - Post-deploy health monitoring
+
+### Master Workflow
+11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
 
 ### Team Workflows (8 workflows)
 9. **team-review** - Full team review orchestrated by Team Lead
@@ -129,8 +162,10 @@ From agent-skills and superpowers:
 
 1. **TDD Iron Law**: NO PRODUCTION CODE WITHOUT FAILING TEST
 2. **Debugging Iron Law**: NO FIXES WITHOUT ROOT CAUSE
-3. **Skill Iron Law**: ALL SKILLS MUST HAVE FAILING TESTS
-4. **Spec Iron Law**: NO CODE WITHOUT SPEC (for features)
+3. **Spec Iron Law**: NO CODE WITHOUT SPEC (for features)
+4. **Review Iron Law**: NO MERGE WITHOUT REVIEW
+
+Enforced by: `agents/iron-law-enforcer.md`
 
 ## Development Lifecycle
 
@@ -184,11 +219,13 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 
 ## Code Conventions
 
-- All skills use YAML frontmatter
-- Skills follow standard format: Overview, When to Use, Process, Rationalizations, Red Flags, Verification
-- Agents have completion markers and handoff contracts
-- Workflows have verification steps
+- All skills use enriched YAML frontmatter (name, description, version, category, origin, triggers, intent, scenarios, anti_patterns, related_skills)
+- Skills follow standard format: Overview, When to Use, When NOT to Use, Anti-Patterns, Process, Coaching Notes, Verification, Related Skills
+- Agents have Role Identity, Status Protocol, Coaching Mandate, completion markers, and handoff contracts
+- Workflows follow 6-phase lifecycle (DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP) with verification gates
 - Templates are reusable and versioned
+- All communication follows `protocols/writing-style.md` (active voice, severity levels, executive summary first)
+- Communication personality and density controlled via `style-switcher` skill (`/style`, `/compact`, `/terse`, `/standard`)
 
 ## Usage
 
@@ -247,8 +284,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 1.1.0
-Last updated: 2026-04-19
+Current version: 2.1.0
+Last updated: 2026-05-01
+Changes: v2.1.0 — Communication styles system (13 personality styles + 3 density modes integrated from claude-comstyle)
 
 ## License
 

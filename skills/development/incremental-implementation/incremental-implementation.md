@@ -1,6 +1,23 @@
 ---
 name: incremental-implementation
 description: Build features incrementally using vertical slices. Use when implementing complex features, working with large codebases, or needing frequent feedback.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["vertical slice", "incremental", "iterate", "small batches"]
+intent: "Replace big-bang delivery with vertical slices so every increment ships working value and integration risk stays near zero."
+scenarios:
+  - "Building a login flow by first shipping the happy path, then error handling, then validation"
+  - "Delivering a todo app where each slice adds one complete user capability"
+  - "Parallelizing work across a team where each developer owns a different feature slice"
+best_for: "complex features, large codebases, parallel work, rapid feedback"
+estimated_time: "20-40 min"
+anti_patterns:
+  - "Building all database schemas, then all APIs, then all UI in horizontal layers"
+  - "Making slices so large that feedback is delayed by days instead of hours"
+  - "Shipping a slice without end-to-end tests because it is small"
+related_skills: ["subagent-driven-development", "test-driven-development", "writing-plans"]
 ---
 
 # Incremental Implementation
@@ -358,6 +375,14 @@ Change direction without wasted work:
 | Skipping tests | Regressions introduced | Test each slice completely |
 | Not committing frequently | Lost work | Commit after each slice |
 | Perfectionism | Slow progress | Ship working, iterate later |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Incremental implementation teaches you to ship working value early and often, turning big risky launches into a series of safe, observable steps.
+
+1. **Vertical slices reduce integration debt to zero:** When you build database-through-UI in one slice, integration problems surface on day one, not day thirty. Horizontal layers feel organized but hide integration bombs until the end.
+2. **The happy path is your first slice for a reason:** If the core use case does not work, error handling, loading spinners, and validation are theater. Prove the happy path works end-to-end, then enrich it slice by slice.
+3. **Every slice ships or dies:** A slice that is not committed and tested is work that can vanish at any moment. Commit after each slice, run the tests, and you always have a safe rollback point.
 
 ## Verification
 

@@ -1,6 +1,16 @@
 ---
 name: retro
 description: Engineering retrospective workflow for learning and improvement
+version: "2.0.0"
+category: "support"
+origin: "agent-skills"
+agents_used:
+  - code-reviewer
+skills_used:
+  - documentation
+  - code-review
+  - writing-plans
+estimated_time: "6-12 hours (retro) / 1-2 weeks (execute actions)"
 ---
 
 # Retro Workflow
@@ -16,6 +26,59 @@ The retro workflow conducts engineering retrospectives to learn from completed w
 - After major milestones
 - Quarterly reviews
 - Process improvement
+
+## Lifecycle
+
+```
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+```
+
+### Stage-to-Lifecycle Mapping
+
+| Workflow Stage | Lifecycle Phase | Description |
+|---|---|---|
+| COLLECT (Stage 1) | DEFINE | Gather commit metrics, quality metrics, and feedback |
+| ANALYZE (Stage 2) | DEFINE | Identify patterns, analyze trends, document findings |
+| IDENTIFY (Stage 3) | PLAN | Document successes, identify issues, prioritize improvements |
+| PLAN (Stage 4) | PLAN | Create action plan, assign owners, set timeline |
+| EXECUTE (Stage 5) | BUILD + VERIFY + SHIP | Implement improvements, update processes, track progress |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Data collected
+- [ ] Metrics gathered
+- [ ] Feedback compiled
+PASS → proceed to PLAN | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Successes documented
+- [ ] Issues identified
+- [ ] Improvements prioritized
+- [ ] Plan created
+PASS → proceed to BUILD | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Action items defined
+- [ ] Owners assigned
+- [ ] Timeline set
+PASS → proceed to VERIFY | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Actions completed
+- [ ] Processes updated
+- [ ] Team informed
+PASS → proceed to REVIEW | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Progress tracked
+- [ ] Improvements measurable
+- [ ] Team learns and improves
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

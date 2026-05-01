@@ -243,7 +243,247 @@ check_and_summarize_reports() {
 }
 
 ################################################################################
-# Consolidate reports
+# Consolidate reports for a specific task (called by auto-delegate.sh)
+################################################################################
+
+consolidate_task_reports() {
+    local task_id="$1"
+    local agents="$2"
+    local output_file="$OUTPUT_DIR/${task_id}-consolidated.md"
+
+    log_info "════════════════════════════════════════════════════════════════"
+    log_info "Consolidating reports for task: $task_id"
+    log_info "════════════════════════════════════════════════════════════════"
+    echo ""
+
+    mkdir -p "$OUTPUT_DIR"
+
+    # Collect reports for this specific task
+    local reports=()
+    local agent_array=(${agents//,/ })
+
+    for agent in "${agent_array[@]}"; do
+        local report_file="$SHARED_DIR/$agent/${task_id}-report.md"
+
+        if [[ -f "$report_file" ]]; then
+            reports+=("$agent:$report_file")
+            log_success "Found report for $agent"
+        else
+            log_warning "Report not found for $agent: $report_file"
+        fi
+    done
+
+    if [[ ${#reports[@]} -eq 0 ]]; then
+        log_error "No reports found for task $task_id"
+        return 1
+    fi
+
+    log_info "Found ${#reports[@]}/${#agent_array[@]} reports"
+    echo ""
+
+    # Create consolidated report
+    create_consolidated_report "$output_file" "$task_id" "${reports[@]}"
+
+    return 0
+}
+
+################################################################################
+# Create consolidated report content
+################################################################################
+
+create_consolidated_report() {
+    local output_file="$1"
+    local task_id="$2"
+    shift 2
+    local reports=("$@")
+
+    log_info "Creating consolidated report..."
+    echo ""
+
+    # Start building the report
+    {
+        echo "# Consolidated Distributed Investigation Report"
+        echo ""
+        echo "**Report ID:** TEAM-RPT-$(date +%Y%m%d-%H%M%S)"
+        echo "**Task ID:** $task_id"
+        echo "**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        echo "**Orchestrator:** Tech Lead (Distributed)"
+        echo "**Agents Involved:** $(echo "${reports[@]}" | sed 's/:.*//g' | tr '\n' ', ' | sed 's/,$//')"
+        echo ""
+        echo "---"
+        echo ""
+        echo "## Executive Summary"
+        echo ""
+        echo "**Overall Status:** Investigation complete"
+        echo "**Agents Responded:** ${#reports[@]}/$(echo "${reports[@]}" | wc -l | xargs)"
+        echo ""
+        echo "---"
+        echo ""
+        echo "## Agent Reports Summary"
+        echo ""
+
+        # Add each agent's summary
+        for report_spec in "${reports[@]}"; do
+            local agent="${report_spec%%:*}"
+            local report_file="${report_spec#*:}"
+
+            echo "### $agent Agent"
+            echo ""
+
+            # Extract summary from report if available
+            if grep -q "^## Summary" "$report_file"; then
+                sed -n '/^## Summary/,/^##/p' "$report_file" | head -n -1 | tail -n +2
+            elif grep -q "^## Executive Summary" "$report_file"; then
+                sed -n '/^## Executive Summary/,/^##/p' "$report_file" | head -n -1 | tail -n +2
+            else
+                echo "Report available at: \`$report_file\`"
+            fi
+
+            echo ""
+            echo "**Report:** \`$report_file\`"
+            echo ""
+            echo "---"
+            echo ""
+        done
+
+        echo "## Consolidated Findings"
+        echo ""
+        echo "### Critical Issues (Must Fix - Block Deployment)"
+        echo ""
+        echo "| Issue | Agent | Impact | Fix | Effort |"
+        echo "|-------|-------|--------|-----|--------|"
+        echo ""
+
+        # Extract critical issues from each report
+        local has_critical=false
+        for report_spec in "${reports[@]}"; do
+            local agent="${report_spec%%:*}"
+            local report_file="${report_spec#*:}"
+
+            # Try to extract critical issues
+            if grep -q "### Critical" "$report_file"; then
+                awk '/### Critical/,/### High|### Medium|### Low|##/' "$report_file" | grep '^|' | grep -v '^---' | while read -r line; do
+                    # Skip header row
+                    if [[ "$line" =~ \|.*Issue.*\| ]]; then
+                        continue
+                    fi
+
+                    # Parse table row
+                    local issue=$(echo "$line" | cut -d'|' -f2 | xargs)
+                    local impact=$(echo "$line" | cut -d'|' -f3 | xargs)
+                    local fix=$(echo "$line" | cut -d'|' -f4 | xargs)
+                    local effort=$(echo "$line" | cut -d'|' -f5 | xargs)
+
+                    if [[ -n "$issue" && "$issue" != "Issue" ]]; then
+                        echo "| $issue | $agent | $impact | $fix | ${effort:-TBD} |"
+                        has_critical=true
+                    fi
+                done
+            fi
+        done
+
+        if ! $has_critical; then
+            echo "| No critical issues found | - | - | - | - |"
+        fi
+
+        echo ""
+        echo "### High Issues (Should Fix - Block Merge)"
+        echo ""
+        echo "| Issue | Agent | Impact | Fix | Effort |"
+        echo "|-------|-------|--------|-----|--------|"
+        echo ""
+
+        # Extract high issues from each report
+        local has_high=false
+        for report_spec in "${reports[@]}"; do
+            local agent="${report_spec%%:*}"
+            local report_file="${report_spec#*:}"
+
+            # Try to extract high issues
+            if grep -q "### High" "$report_file"; then
+                awk '/### High/,/### Medium|### Low|##/' "$report_file" | grep '^|' | grep -v '^---' | while read -r line; do
+                    # Skip header row
+                    if [[ "$line" =~ \|.*Issue.*\| ]]; then
+                        continue
+                    fi
+
+                    local issue=$(echo "$line" | cut -d'|' -f2 | xargs)
+                    local impact=$(echo "$line" | cut -d'|' -f3 | xargs)
+                    local fix=$(echo "$line" | cut -d'|' -f4 | xargs)
+                    local effort=$(echo "$line" | cut -d'|' -f5 | xargs)
+
+                    if [[ -n "$issue" && "$issue" != "Issue" ]]; then
+                        echo "| $issue | $agent | $impact | $fix | ${effort:-TBD} |"
+                        has_high=true
+                    fi
+                done
+            fi
+        done
+
+        if ! $has_high; then
+            echo "| No high issues found | - | - | - | - |"
+        fi
+
+        echo ""
+        echo "## Recommendations"
+        echo ""
+
+        # Extract recommendations from each report
+        for report_spec in "${reports[@]}"; do
+            local agent="${report_spec%%:*}"
+            local report_file="${report_spec#*:}"
+
+            echo "### From $agent Agent"
+            echo ""
+
+            if grep -q "## Recommendations" "$report_file"; then
+                sed -n '/## Recommendations/,/^##/p' "$report_file" | head -n -1 | tail -n +2
+            else
+                echo "_No recommendations section found_"
+            fi
+
+            echo ""
+        done
+
+        echo ""
+        echo "---"
+        echo ""
+        echo "## Next Steps"
+        echo ""
+        echo "Based on the consolidated findings, the following actions are recommended:"
+        echo ""
+
+        # Generate action items
+        echo "1. **Review all critical issues** - Address immediately"
+        echo "2. **Address high-priority items** - Before next merge"
+        echo "3. **Implement recommended fixes** - Following agent guidance"
+        echo "4. **Verify fixes** - Re-run investigation to confirm resolution"
+        echo ""
+
+        echo ""
+        echo "---"
+        echo ""
+        echo "**Report Version:** 1.0.0"
+        echo "**Generated by:** Report Consolidator (Auto-Delegation Integration)"
+        echo "**Task ID:** $task_id"
+        echo "**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        echo "**Validation:** ✅ Consolidated"
+
+    } > "$output_file"
+
+    log_success "Consolidated report created: $output_file"
+
+    # Show report info
+    echo ""
+    log_info "Report Summary:"
+    echo "  File: $output_file"
+    echo "  Agents: ${#reports[@]}"
+    echo "  Size: $(du -h "$output_file" | cut -f1)"
+    echo ""
+}
+
+################################################################################
+# Consolidate reports (original function for backward compatibility)
 ################################################################################
 
 consolidate() {
@@ -537,6 +777,7 @@ Commands:
     list                        List available reports from all agents
     collect [agent ...]         Collect reports from specified agents (or all)
     consolidate [output]        Consolidate all reports into single report
+    consolidate-task <task_id> [agents]  Consolidate reports for specific task
     stats                       Show report statistics
     validate <report>           Validate report format
     help                        Show this help message
@@ -547,6 +788,7 @@ Examples:
     $0 collect backend frontend             # Collect from specific agents
     $0 consolidate                          # Create consolidated report
     $0 consolidate /path/to/output.md       # Create report at specific path
+    $0 consolidate-task TASK-20260419-143022 backend,frontend,database
     $0 stats                                # Show statistics
     $0 validate /tmp/claude-work-reports/backend/report.md
 
@@ -573,6 +815,14 @@ main() {
             ;;
         consolidate)
             consolidate "${2:-}"
+            ;;
+        consolidate-task)
+            # New command for auto-delegate.sh integration
+            if [[ -z "${2:-}" ]]; then
+                log_error "Usage: $0 consolidate-task <task_id> [agents]"
+                exit 1
+            fi
+            consolidate_task_reports "$2" "${3:-}"
             ;;
         stats)
             stats

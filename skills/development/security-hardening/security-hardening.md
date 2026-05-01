@@ -1,6 +1,23 @@
 ---
 name: security-hardening
 description: Security hardening following OWASP Top 10 and security best practices. Use when handling user input, authentication, authorization, or sensitive data.
+version: "2.0.0"
+category: "development"
+origin: "agent-skills"
+tools: [Read, Write, Bash, Grep, Glob]
+triggers: ["security", "owasp", "hardening", "vulnerability prevention"]
+intent: "Make security a built-in layer of every feature rather than an afterthought, covering the full OWASP Top 10 attack surface."
+scenarios:
+  - "Adding authentication with bcrypt hashing, account lockout, and secure session management"
+  - "Preventing SQL injection and XSS in a search feature by validating all inputs"
+  - "Configuring Helmet, CORS, and rate limiting before deploying a public API"
+best_for: "input validation, auth, encryption, headers, OWASP compliance"
+estimated_time: "30-45 min"
+anti_patterns:
+  - "Hardcoding secrets or API keys directly in source code"
+  - "Storing passwords in plain text or using weak hashing algorithms"
+  - "Running production with debug mode enabled or wildcard CORS origins"
+related_skills: ["security-audit", "api-interface-design", "backend-patterns"]
 ---
 
 # Security Hardening
@@ -495,6 +512,14 @@ app.get('/proxy', async (req, res) => {
 | No input validation | Injection attacks | Validate all input |
 | Missing CORS config | CSRF attacks | Configure CORS properly |
 | Debug mode in production | Information leakage | Disable debug in production |
+
+## Coaching Notes
+
+> **ABC - Always Be Coaching:** Security hardening teaches you to treat every user input as hostile and every layer as a defense opportunity -- because one gap is all an attacker needs.
+
+1. **Validate at every boundary, trust nothing:** Input from users, APIs, and even your own database should be validated at the point of entry. Defense in depth means if one check fails, the next one catches it.
+2. **Secrets belong in environment variables, never in code:** A single committed API key in a public repo can be exploited within minutes by automated scanners. If you can grep a secret in source, it is already compromised.
+3. **Rate limiting and logging are your alarm system:** Secure code prevents attacks, but rate limiting slows them down and security logging tells you they happened. Without monitoring, you are secure in theory but blind in practice.
 
 ## Verification
 

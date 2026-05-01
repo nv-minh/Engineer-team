@@ -1,10 +1,20 @@
 ---
 name: discovery-process
 description: "Complete discovery cycle from problem hypothesis to validated solution. Orchestrates problem framing, customer interviews, synthesis, and experimentation. Use for systematic exploration before committing to development. Keywords: discovery, product-discovery, customer-research, validation"
-category: Discovery
-version: 2.0.0
+version: "2.0.0"
+category: "primary"
+origin: "agent-skills"
 last_updated: 2026-04-19
 status: Production Ready
+agents_used:
+  - "product-manager"
+  - "market-intelligence"
+  - "planner"
+skills_used:
+  - "brainstorming"
+  - "spec-driven-development"
+  - "writing-plans"
+estimated_time: "3-8 weeks"
 ---
 
 ## Overview
@@ -34,6 +44,64 @@ Guide product managers through a **complete discovery cycle**—from initial pro
 - Well-understood problems (move to execution)
 - Stakeholders already committed to solution (address alignment first)
 - Tactical bug fixes or technical debt (no discovery needed)
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Frame the Problem (Stage 1) |
+| PLAN | Research Planning (Stage 2) + Conduct Research (Stage 3) |
+| BUILD | Synthesize Insights (Stage 4) + Generate & Validate Solutions (Stage 5) |
+| VERIFY | Experiment results validated against success criteria |
+| REVIEW | Decide & Document (Stage 6) |
+| SHIP | GO decision delivered, PRD written, stakeholders aligned |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] Problem hypothesis clearly stated
+- [ ] Research questions defined (3-5)
+- [ ] Success criteria established
+- [ ] Target personas identified
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Interview guide created (5-7 questions)
+- [ ] 5-10 participants recruited
+- [ ] Interviews scheduled
+- [ ] Synthesis plan defined
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] 5-10 customer interviews completed
+- [ ] Affinity mapping completed
+- [ ] Pain points prioritized (top 3-5)
+- [ ] 3 opportunities with solutions generated
+- [ ] Experiments designed and run
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] Saturation reached (same patterns across 3+ interviews)
+- [ ] Problem statement validated/refined
+- [ ] Solution validated through experiments
+- [ ] Customer feedback collected
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Go/No-Go decision made (GO/PIVOT/KILL)
+- [ ] Epic hypotheses defined (if GO)
+- [ ] PRD written (if GO)
+- [ ] Stakeholders communicated with
+- [ ] Next steps clear
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

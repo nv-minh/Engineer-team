@@ -361,10 +361,10 @@ main() {
             start_distributed
             ;;
         stop|kill)
-            kill_session "$2"
+            kill_session "${2:-$SESSION_NAME}"
             ;;
         restart)
-            kill_session "$2"
+            kill_session "${2:-$SESSION_NAME}"
             sleep 1
             start_distributed
             ;;

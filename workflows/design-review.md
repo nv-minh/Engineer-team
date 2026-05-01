@@ -1,6 +1,18 @@
 ---
 name: design-review
 description: UI/UX design review with Frontend Expert and Product Manager agents
+version: "2.0.0"
+category: "team"
+origin: "agent-skills"
+agents_used:
+  - "duck:product"
+  - "duck:frontend"
+skills_used:
+  - "frontend-patterns"
+  - "code-review"
+  - "browser-testing"
+  - "performance-optimization"
+estimated_time: "2-4 hours"
 ---
 
 # Design Review Workflow
@@ -17,6 +29,61 @@ The Design Review workflow focuses on UI/UX evaluation, combining the Frontend E
 - User flow modifications
 - Accessibility compliance review
 - Performance optimization for user interfaces
+
+## Lifecycle
+
+DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
+  (1)       (2)       (3)       (4)        (5)       (6)
+   │         │         │         │          │         │
+   ▼         ▼         ▼         ▼          ▼         ▼
+ GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+
+### Phase Mapping
+
+| Lifecycle Phase | Workflow Stage |
+|-----------------|----------------|
+| DEFINE | Product Requirements Review (Stage 1) |
+| PLAN | UI/UX Technical Review (Stage 2) |
+| BUILD | Design implementation based on review findings |
+| VERIFY | Accessibility audit, responsive design, performance checks |
+| REVIEW | Consolidated Design Assessment (Stage 3) |
+| SHIP | Approved design handed off for implementation |
+
+### Verification Gates
+
+#### Gate 1: Definition Complete
+- [ ] User stories validated with INVEST criteria
+- [ ] User flows reviewed
+- [ ] Acceptance criteria assessed
+- [ ] Business value confirmed
+PASS → proceed | FAIL → return to DEFINE
+
+#### Gate 2: Plan Complete
+- [ ] Component architecture reviewed
+- [ ] State management assessed
+- [ ] Core Web Vitals analyzed
+- [ ] Responsive design verified
+- [ ] Accessibility audit completed
+PASS → proceed | FAIL → return to PLAN
+
+#### Gate 3: Build Complete
+- [ ] Design recommendations implemented
+- [ ] Responsive layouts created
+- [ ] Accessibility standards met
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 4: Verification Complete
+- [ ] WCAG 2.1 AA compliance verified
+- [ ] Performance targets met (LCP, FID, CLS)
+- [ ] Cross-browser testing passed
+PASS → proceed | FAIL → return to BUILD
+
+#### Gate 5: Review Complete
+- [ ] Findings merged and prioritized
+- [ ] UX issues identified
+- [ ] Recommendations actionable
+- [ ] Scorecard completed
+PASS → proceed to SHIP | FAIL → return to BUILD
 
 ## Workflow Stages
 

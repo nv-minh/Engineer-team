@@ -5,6 +5,106 @@ All notable changes to EM-Team system will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-05-01
+
+### Communication Styles System
+
+Integrated `claude-comstyle` personality styles with EM-Team density modes into a unified two-axis communication system.
+
+#### Added
+- **style-switcher skill** (`skills/workflow/style-switcher/`) - Unified communication control with 13 personality styles and 3 density modes
+- **Communication Styles Reference** (`references/compact-output.md`) - Comprehensive reference for all styles, modes, and combinations
+- **Personality Styles (13):** Tactical, Raw, Reality Check, git log, Socratic, BLUF, Inverted, Dramatic, 80s Hacker, Dad Joke, Rubber Duck, Teacher, First Principles
+- **Density Modes (3):** STANDARD, COMPACT, TERSE (auto-detection for CI/CD and rapid iteration)
+- **Terminal CLI modifier** - Strip markdown for extra 20-30% token savings
+- **Vietnamese menu** - Full menu with Vietnamese descriptions for all 16 options
+
+#### Changed
+- **Renamed 5 styles** from character-based to functional names: Military→Tactical, Caveman→Raw, Yoda→Inverted, Pirate→Dramatic, Feynman→Teacher
+- **`protocols/writing-style.md`** - Renamed "Compact Output Modes" to "Communication Modes" with cross-references
+- **`preambles/agent-preamble.md`** - Renamed "Compact Mode" to "Communication Modes" with personality/density axis documentation
+- **`CLAUDE.md`** - Added style-switcher to workflow skills and code conventions
+
+#### Architecture
+- Personality (tone/voice) and density (verbosity/format) are independent axes
+- Any personality combines with any density mode
+- CRITICAL findings always get full context regardless of settings
+- Auto-detection: CI=true→TERSE, rapid iteration→COMPACT
+
+---
+
+## [2.0.0] - 2026-05-01
+
+### Major Upgrade: Synthesized Best Patterns from 6 Source Repos
+
+This release brings the best patterns from everything-claude-code, get-shit-done, gstack, Product-Manager-Skills, superpowers, and agent-skills into EM-Skill.
+
+### Foundation Infrastructure (New)
+- **preambles/ethos.md** - Builder philosophy: Boil the Lake, Search Before Building, User Sovereignty, Iron Laws, ABC Coaching
+- **preambles/skill-preamble.md** - Standard initialization protocol for all skills
+- **preambles/agent-preamble.md** - Standard behavior rules for all agents
+- **protocols/writing-style.md** - Communication standards: active voice, severity levels, report structure
+- **templates/skill-template.md** - Master template with enriched frontmatter (14 fields) and 8 standard sections
+- **templates/agent-template.md** - Master template with status protocol, role identity, coaching mandate
+- **templates/workflow-template.md** - Master template with 6-phase lifecycle and verification gates
+- **templates/context-artifacts/** - PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md templates (from GSD)
+
+### Skills Upgraded (29 skills)
+- All skills upgraded with enriched YAML frontmatter (14 fields: name, description, version, category, origin, tools, triggers, intent, scenarios, best_for, estimated_time, anti_patterns, related_skills)
+- Added "Coaching Notes" section to all skills (ABC - Always Be Coaching from Product-Manager-Skills)
+- Added "When NOT to Use" sections where missing
+- Enhanced Anti-Patterns tables
+
+### New Skills (4)
+- **typescript-patterns** - Type system, async, React/Next.js TS, utility types, generics (1033 lines)
+- **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0, testing (1224 lines)
+- **go-patterns** - Error handling, concurrency, interfaces, testing, HTTP patterns (812 lines)
+- **rust-patterns** - Ownership, traits, async tokio, smart pointers, FFI (879 lines)
+
+### Agents Upgraded (25 agents)
+- All agents upgraded with **Status Protocol** (DONE/DONE_WITH_CONCERNS/NEEDS_CONTEXT/BLOCKED) from superpowers
+- All agents upgraded with **Role Identity** (agent-specific role with behavioral principles) from superpowers
+- All agents upgraded with **Coaching Mandate (ABC)** from Product-Manager-Skills
+- All agents upgraded with **Enhanced Frontmatter** (type, version, capabilities, inputs, outputs, collaborates_with, completion_marker)
+
+### New Agents (3)
+- **design-reviewer** - Visual design review with 6-pillar UI audit and screenshot comparison (from gstack)
+- **devex-reviewer** - Developer experience audit, TTHW measurement, DX scorecard (from gstack)
+- **iron-law-enforcer** - Gate enforcement for Iron Law compliance (from superpowers)
+
+### Workflows Upgraded (20 workflows)
+- All workflows upgraded with **6-Phase Lifecycle** (DEFINE -> PLAN -> BUILD -> VERIFY -> REVIEW -> SHIP) from agent-skills
+- All workflows upgraded with **Verification Gates** between each phase from GSD
+- All workflows upgraded with **Enriched Frontmatter** (version, category, agents_used, skills_used, estimated_time)
+
+### New Workflows (3)
+- **ship-workflow** - Version bump, changelog, commit, push, create PR (from gstack)
+- **canary-monitoring** - Post-deploy health monitoring with baseline comparison (from gstack)
+- **six-phase-lifecycle** - Master lifecycle workflow that all others inherit (from agent-skills)
+
+### Documentation
+- Updated CLAUDE.md with ETHOS section, new components, updated counts
+- Updated version to 2.0.0
+
+### Patterns Adopted by Source
+
+| Pattern | Source |
+|---|---|
+| Enriched frontmatter (14 fields) | ECC, Product-Manager-Skills |
+| Status Protocol (4 states) | superpowers |
+| Role Identity + Behavior Shaping | superpowers |
+| Coaching Mandate (ABC) | Product-Manager-Skills |
+| 6-Phase Lifecycle + Gates | agent-skills, GSD |
+| ETHOS (Boil the Lake, etc.) | gstack |
+| Writing Style Protocol | gstack |
+| Context Engineering Artifacts | GSD |
+| Template-Driven Generation | gstack |
+| Preamble System | gstack |
+| Two-Stage Review | superpowers |
+| Language-Specific Patterns | ECC |
+
+---
+
 ## [1.2.0] - 2026-04-19
 
 ### Added - Discovery & Market Intelligence
