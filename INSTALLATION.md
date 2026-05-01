@@ -1,95 +1,159 @@
-# EM-Distributed Installation Guide
+# EM-Team Installation Guide
 
-**Flexible, portable installation for EM-Distributed on ANY system**
-
-Works on macOS, Linux, and any Unix-like system.
+One-command installation. Works on macOS and Linux.
 
 ---
 
-## 🚀 Quick Install (Recommended)
-
-### Method 1: Automated Installation
-
-From EM-Skill directory:
+## Quick Install
 
 ```bash
-cd /path/to/EM-Skill
-bash install-em-distributed.sh
+cd /path/to/EM-Team
+bash install.sh
 ```
 
-This will:
-- ✅ Auto-detect EM-Skill location
-- ✅ Install wrapper to ~/.local/bin/
-- ✅ Setup shell aliases in ~/.zshrc or ~/.bashrc
-- ✅ Create config file at ~/.em-skill/config
-- ✅ Verify PATH configuration
+The script handles everything:
+
+- Updates `~/.claude/config.json` — points skills/agents/workflows paths to EM-Team
+- Creates symlinks in `~/.claude/skills/em:*/SKILL.md` — skills auto-discovered by Claude Code
+- Cleans up orphaned entries from previous installs
+- Preserves existing settings (model, max_tokens, etc.)
+- Verifies installation
 
 ---
 
-## 📦 Manual Installation
+## Using EM-Team Skills
 
-### Step 1: Copy Wrapper Script
+Once installed, open **any project** in Claude Code. All EM-Team skills are available via `/` autocomplete or by name:
 
-```bash
-# Create bin directory
-mkdir -p ~/.local/bin
-
-# Copy wrapper script
-cp /path/to/EM-Skill/em-distributed-wrapper ~/.local/bin/em-distributed
-chmod +x ~/.local/bin/em-distributed
+```
+/em:quick fix typo in README          — Quick task execution
+/em:debug investigate login timeout   — Systematic debugging
+/em:code-review review auth module    — 5-axis code review
+/em:ship ship the payment feature     — Ship workflow
+/em:health check project health       — Project health check
+/em:team-lead review new feature      — Full team review orchestration
 ```
 
-### Step 2: Configure EM-Skill Location
+### Skill Categories
 
-**Option A: Environment Variable**
+| Category | Skills |
+|----------|--------|
+| **Core** | `em:quick`, `em:debug`, `em:code-review`, `em:planner`, `em:new-feature` |
+| **Specialized** | `em:architect`, `em:frontend`, `em:backend`, `em:database`, `em:security` |
+| **Quality** | `em:test`, `em:performance`, `em:refactor`, `em:bug-fix` |
+| **Team Reviews** | `em:team-lead`, `em:code-review-deep`, `em:product-review` |
+| **Workflow** | `em:ship`, `em:verify`, `em:qa`, `em:health`, `em:checkpoint` |
+
+---
+
+## What Gets Installed
+
+| Component | Source | Global Location |
+|-----------|--------|-----------------|
+| Agent/Workflow wrappers (33) | `EM-Team/.claude/skills/em-*.md` | `~/.claude/skills/em:*/SKILL.md` (symlinks) |
+| Skill wrappers (36) | `EM-Team/.claude/skills/em-skill-*.md` | `~/.claude/skills/em:skill:*/SKILL.md` (symlinks) |
+| Agents (31) | `EM-Team/agents/*.md` | Referenced via `~/.claude/config.json` |
+| Workflows (23) | `EM-Team/workflows/*.md` | Referenced via `~/.claude/config.json` |
+
+EM-Team repo is the **single source of truth**. Symlinks point back to it — update the repo, changes apply everywhere.
+
+---
+
+## Verify
+
 ```bash
-# Add to ~/.zshrc or ~/.bashrc
-export EM_SKILL_DIR=/path/to/EM-Skill
-```
+# Check symlinks (should be 69 total: 33 em:* + 36 em:skill:*)
+ls ~/.claude/skills/em:*/SKILL.md ~/.claude/skills/em:skill:*/SKILL.md 2>/dev/null | wc -l
 
-**Option B: Config File**
-```bash
-# Create config directory
-mkdir -p ~/.em-skill
+# Check no orphaned entries (should be empty)
+ls ~/.claude/skills/em-* 2>/dev/null
 
-# Create config file
-echo "EM_SKILL_DIR=/path/to/EM-Skill" > ~/.em-skill/config
-```
+# Verify paths in config
+cat ~/.claude/config.json | grep "paths" -A2
 
-### Step 3: Setup PATH
-```bash
-# Add to ~/.zshrc or ~/.bashrc
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-### Step 4: Setup Aliases
-```bash
-# Add to ~/.zshrc or ~/.bashrc
-alias em-distributed='~/.local/bin/em-distributed'
-alias em-dist='~/.local/bin/em-distributed'
-alias em-start='~/.local/bin/em-distributed start'
-alias em-be='~/.local/bin/em-distributed be'
-alias em-fe='~/.local/bin/em-distributed fe'
-```
-
-### Step 5: Reload Shell
-```bash
-source ~/.zshrc   # or source ~/.bashrc
-# or
-exec zsh          # or restart terminal
+# Open any project in Claude Code and try:
+/em:quick hello world
 ```
 
 ---
 
-## ✅ Verify Installation
+## Uninstall
+
 ```bash
-# Check wrapper is in PATH
-which em-distributed
-
-# Show help
-em-distributed help
-
-# Check config
-cat ~/.em-skill/config
+cd /path/to/EM-Team
+bash uninstall.sh
 ```
 
+Removes symlinks, orphaned entries, optional CLI wrapper, and cleans config.json. Preserves non-EM settings and other skills.
+
+---
+
+## Manual Install (if script fails)
+
+```bash
+REPO="/path/to/EM-Team"
+
+# 1. Update ~/.claude/config.json paths
+# Set skills.paths   → ["$REPO/.claude/skills"]
+# Set agents.paths   → ["$REPO/agents"]
+# Set workflows.paths → ["$REPO/workflows"]
+
+# 2. Create symlinks for each skill wrapper
+for src in $REPO/.claude/skills/em-*.md; do
+  name=$(basename "$src" .md | sed 's/^em-//')
+  dir="$HOME/.claude/skills/em:$name"
+  mkdir -p "$dir"
+  ln -sf "$src" "$dir/SKILL.md"
+done
+
+# Also symlink em-skill-* wrappers
+for src in $REPO/.claude/skills/em-skill-*.md; do
+  name=$(basename "$src" .md | sed 's/^em-skill-//')
+  dir="$HOME/.claude/skills/em:skill:$name"
+  mkdir -p "$dir"
+  ln -sf "$src" "$dir/SKILL.md"
+done
+
+# 3. Verify
+ls ~/.claude/skills/em:*/SKILL.md ~/.claude/skills/em:skill:*/SKILL.md 2>/dev/null | wc -l
+```
+
+---
+
+## Troubleshooting
+
+### "Skills not appearing in Claude Code"
+```bash
+# Restart Claude Code after install
+# Check symlinks resolve correctly
+ls -la ~/.claude/skills/em:*/SKILL.md
+
+# Verify paths in config
+cat ~/.claude/config.json | grep "paths" -A2
+```
+
+### "Broken symlinks"
+```bash
+# Reinstall fixes broken symlinks and cleans orphans automatically
+bash install.sh
+```
+
+### "Orphaned em-* entries in ~/.claude/skills/"
+```bash
+# These are flat files/symlinks from an older install — reinstall cleans them
+bash install.sh
+```
+
+### "config.json not valid JSON"
+```bash
+jq . ~/.claude/config.json
+
+# If broken, delete and reinstall
+rm ~/.claude/config.json
+bash install.sh
+```
+
+---
+
+**Last Updated:** 2026-05-01
+**Version:** 2.2.0

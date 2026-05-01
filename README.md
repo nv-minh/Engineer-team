@@ -266,125 +266,33 @@ git clone https://github.com/nv-minh/agent-team.git
 cd agent-team
 ```
 
-#### 2. Install EM:* Commands (Quick Access)
-
-**IMPORTANT:** This step installs 17 quick commands globally!
+#### 2. Install Globally (One Command)
 
 ```bash
-# Create global skill directories
-mkdir -p ~/.claude/skills
-
-# Copy em:* command shortcuts
-cp -r .claude/skills/em:* ~/.claude/skills/
-
-# Verify installation
-ls ~/.claude/skills/
-
-# Expected output should include:
-# em:architect/    em:backend/      em:bug-fix/      em:code-review/
-# em:database/     em:debug/        em:distributed/  em:frontend/
-# em:incident/     em:new-feature/  em:performance/  em:planner/
-# em:refactor/     em:research/     em:security/     em:team/
-# em:test/
+bash install.sh
 ```
 
-These commands work from **ANY repository** once installed!
+This handles everything automatically:
+- Updates `~/.claude/config.json` — points skills/agents/workflows to EM-Team
+- Creates symlinks in `~/.claude/skills/em:*` — available in any Claude Code project
+- Preserves existing settings (model, max_tokens, etc.)
 
 #### 3. Verify Installation
 
 ```bash
-# Check if all required files exist
-ls -la scripts/
-ls -la agents/
-ls -la workflows/
-ls -la distributed/
+# Check config paths
+cat ~/.claude/config.json | grep -A1 "paths"
 
-# Expected output:
-# scripts/
-# ├── distributed-orchestrator.sh
-# ├── session-manager.sh
-# └── consolidate-reports.sh
-#
-# distributed/
-# ├── session-coordinator.sh
-# └── session-sync.sh
+# Check skill symlinks
+ls ~/.claude/skills/em:* | wc -l
+
+# Open any project in Claude Code and try:
+/style-switcher
 ```
 
-#### 3. Make Scripts Executable
+To uninstall: `bash uninstall.sh`
 
-```bash
-# Make all shell scripts executable
-chmod +x scripts/*.sh
-chmod +x distributed/*.sh
-chmod +x tests/*.sh
-
-# Verify permissions
-ls -la scripts/*.sh
-# Expected: -rwxr-xr-x for all .sh files
-```
-
-#### 4. Run Tests
-
-```bash
-# Navigate to tests directory
-cd tests
-
-# Run E2E tests to verify installation
-./run-e2e-tests.sh
-
-# Expected output:
-# ==========================================
-# Distributed Orchestration E2E Tests
-# ==========================================
-# ...
-# Test Summary
-# Total Tests: 8
-# Passed: 8
-# Failed: 0
-# All tests passed!
-```
-
-#### 6. Verify EM:* Commands
-
-```bash
-# Reload Claude Code or open new conversation
-# Then check system reminder for em:* commands
-
-# You should see all 17 commands:
-# - em:planner       - Create implementation plans
-# - em:backend       - Backend specialist
-# - em:frontend      - Frontend specialist
-# - em:database      - Database specialist
-# - em:code-review   - 5-axis code review
-# - em:debug         - Systematic debugging
-# - em:security      - OWASP security audit
-# - em:test          - Test strategy & generation
-# - em:performance   - Benchmarking & optimization
-# - em:research      - Technical research
-# - em:architect     - Architecture design
-# - em:new-feature   - Implement feature
-# - em:bug-fix       - Fix bugs
-# - em:refactor      - Improve code quality
-# - em:distributed   - Parallel investigation
-# - em:team          - Full team review
-# - em:incident      - Incident response
-```
-
-```bash
-# Start distributed orchestration
-./scripts/distributed-orchestrator.sh start
-
-# Expected output:
-# [INFO] Starting distributed agent orchestration...
-# [SUCCESS] Directories initialized
-# [SUCCESS] Created session: claude-work
-
-# Check sessions
-./scripts/session-manager.sh list
-
-# Stop distributed mode
-./scripts/distributed-orchestrator.sh stop
-```
+See [INSTALLATION.md](INSTALLATION.md) for details and troubleshooting.
 
 ### Configuration
 
@@ -520,15 +428,11 @@ cd tests && ./run-e2e-tests.sh
 ### Uninstall
 
 ```bash
-# Remove repository
-rm -rf ~/agent-team
-
-# Remove environment variables from ~/.bashrc or ~/.zshrc
-# Remove lines containing EM_SKILL_HOME
-
-# Clean up temporary files
-rm -rf /tmp/claude-work-*
+cd /path/to/EM-Team
+bash uninstall.sh
 ```
+
+Removes all EM-Team symlinks and config entries. Preserves other settings and non-EM skills.
 
 ---
 
@@ -1161,12 +1065,12 @@ EM-Team includes a unified communication control system with 13 personality styl
 
 ```bash
 # Show personality menu (13 styles + 3 density modes)
-/style
+/style-switcher
 
 # Switch personality directly
-/style tactical        # Direct, no-nonsense debugging
-/style teacher         # Feynman technique explanations
-/style reality-check   # Honest evaluation of your idea
+/style-switcher tactical        # Direct, no-nonsense debugging
+/style-switcher teacher         # Feynman technique explanations
+/style-switcher reality-check   # Honest evaluation of your idea
 
 # Switch density independently
 /compact               # Bullet-point output
@@ -1175,11 +1079,11 @@ EM-Team includes a unified communication control system with 13 personality styl
 
 # Combine personality + density
 # (set each independently, they don't affect each other)
-/style raw             # Set personality to Raw
+/style-switcher raw             # Set personality to Raw
 /compact               # Set density to COMPACT
 
 # Terminal CLI modifier (strip all markdown)
-/style tactical + terminal CLI
+/style-switcher tactical + terminal CLI
 ```
 
 ### When to Use Which Style
