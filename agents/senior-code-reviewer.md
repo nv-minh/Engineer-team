@@ -26,6 +26,8 @@ collaborates_with:
   - security-reviewer
   - architect
   - staff-engineer
+related_skills:
+  - architecture-improvement
 status_protocol: standard
 completion_marker: "CODE_REVIEW_COMPLETE"
 ---

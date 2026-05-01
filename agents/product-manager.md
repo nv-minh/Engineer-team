@@ -29,6 +29,9 @@ collaborates_with:
   - frontend-expert
   - senior-code-reviewer
   - product-manager
+related_skills:
+  - prd-generator
+  - alignment-session
 status_protocol: standard
 completion_marker: "PRODUCT_REVIEW_COMPLETE"
 ---

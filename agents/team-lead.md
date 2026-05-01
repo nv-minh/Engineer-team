@@ -34,6 +34,9 @@ collaborates_with:
   - senior-code-reviewer
   - security-reviewer
   - staff-engineer
+related_skills:
+  - alignment-session
+  - plan-tune
 status_protocol: standard
 completion_marker: "TEAM_REVIEW_COMPLETE"
 ---

@@ -23,6 +23,11 @@ outputs:
 collaborates_with:
   - executor
   - code-reviewer
+related_skills:
+  - alignment-session
+  - issue-generator
+  - prd-generator
+  - writing-plans
 status_protocol: true
 completion_marker: true
 ---

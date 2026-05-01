@@ -19,6 +19,8 @@ outputs:
   review_report: "object"
   visual_diff: "object"
 collaborates_with: [frontend-expert, ui-auditor, product-manager]
+related_skills:
+  - ux-audit
 status_protocol: true
 completion_marker: "## DESIGN_REVIEWER_COMPLETE"
 ---

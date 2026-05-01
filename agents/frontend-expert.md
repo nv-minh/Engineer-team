@@ -33,6 +33,8 @@ collaborates_with:
   - architect
   - senior-code-reviewer
   - ui-auditor
+related_skills:
+  - ux-audit
 status_protocol: standard
 completion_marker: "FRONTEND_REVIEW_COMPLETE"
 ---

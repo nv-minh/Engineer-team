@@ -29,6 +29,9 @@ collaborates_with:
   - frontend-expert
   - security-reviewer
   - product-manager
+related_skills:
+  - architecture-zoom-out
+  - architecture-improvement
 status_protocol: standard
 completion_marker: "ARCHITECT_REVIEW_COMPLETE"
 ---
