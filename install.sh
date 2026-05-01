@@ -87,8 +87,14 @@ ok "config.json updated — paths → $REPO"
 # ─── Step 4: Create symlinks for skill wrappers ───
 info "Creating skill symlinks in ~/.claude/skills/ ..."
 
+# Helper: extract source path from wrapper's "## Source" section
+# Returns the backtick-enclosed path, e.g. skills/foundation/brainstorming/brainstorming.md
+extract_source_path() {
+  local wrapper="$1"
+  grep -A2 '## Source' "$wrapper" | grep -oE '`[^`]+\.md`' | head -1 | tr -d '`'
+}
+
 # Collect both em-*.md (agents/workflows) and em-skill-*.md (skills)
-# Use grep to exclude em-skill-* from em-* glob to avoid duplicates
 AGENT_FILES=($(ls "$REPO/.claude/skills/"em-*.md 2>/dev/null | grep -v 'em-skill-' || true))
 SKILL_FILES=($(ls "$REPO/.claude/skills/"em-skill-*.md 2>/dev/null || true))
 ALL_FILES=("${AGENT_FILES[@]}" "${SKILL_FILES[@]}")
@@ -98,38 +104,51 @@ if [[ ${#ALL_FILES[@]} -eq 0 ]]; then
 else
   AGENT_COUNT=0
   SKILL_COUNT=0
+  SOURCE_LINKED=0
 
   for src in "${AGENT_FILES[@]}"; do
-    basename=$(basename "$src" .md)        # em-architect
-    skill_name="${basename#em-}"            # architect
-    link_dir="$SKILLS_DIR/em:$skill_name"   # ~/.claude/skills/em:architect
-    link_file="$link_dir/SKILL.md"          # ~/.claude/skills/em:architect/SKILL.md
+    basename=$(basename "$src" .md)
+    skill_name="${basename#em-}"
+    link_dir="$SKILLS_DIR/em:$skill_name"
+    link_file="$link_dir/SKILL.md"
 
     if [[ -d "$link_dir" && ! -L "$link_dir" ]]; then
       rm -rf "$link_dir"
     fi
 
     mkdir -p "$link_dir"
+    # Agent/workflow wrappers are self-contained — symlink directly
     ln -sf "$src" "$link_file"
     AGENT_COUNT=$((AGENT_COUNT + 1))
   done
 
   for src in "${SKILL_FILES[@]}"; do
-    basename=$(basename "$src" .md)        # em-skill-brainstorming
-    skill_name="${basename#em-skill-}"      # brainstorming
-    link_dir="$SKILLS_DIR/em:skill:$skill_name"   # ~/.claude/skills/em:skill:brainstorming
-    link_file="$link_dir/SKILL.md"                 # ~/.claude/skills/em:skill:brainstorming/SKILL.md
+    basename=$(basename "$src" .md)
+    skill_name="${basename#em-skill-}"
+    link_dir="$SKILLS_DIR/em:skill:$skill_name"
+    link_file="$link_dir/SKILL.md"
 
     if [[ -d "$link_dir" && ! -L "$link_dir" ]]; then
       rm -rf "$link_dir"
     fi
 
     mkdir -p "$link_dir"
-    ln -sf "$src" "$link_file"
+
+    # Skill wrappers have a "## Source" pointing to the full content file.
+    # Resolve and symlink directly to source for maximum context.
+    relative_source=$(extract_source_path "$src")
+    if [[ -n "$relative_source" && -f "$REPO/$relative_source" ]]; then
+      ln -sf "$REPO/$relative_source" "$link_file"
+      SOURCE_LINKED=$((SOURCE_LINKED + 1))
+    else
+      # Fallback: symlink to wrapper (old behavior)
+      ln -sf "$src" "$link_file"
+    fi
     SKILL_COUNT=$((SKILL_COUNT + 1))
   done
 
   ok "Created $AGENT_COUNT agent/workflow symlinks (em:*) + $SKILL_COUNT skill symlinks (em:skill:*)"
+  ok "  $SOURCE_LINKED/$SKILL_COUNT skills linked directly to source content"
 fi
 
 # ─── Step 5: Clean up orphaned flat symlinks ───
