@@ -25,10 +25,10 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 29+ skills
-│   ├── foundation/      # 5 core foundational skills
-│   ├── development/     # 12 development skills (including language patterns)
-│   ├── quality/         # 8 quality assurance skills
+├── skills/              # 36+ skills
+│   ├── foundation/      # 6 core foundational skills
+│   ├── development/     # 16 development skills (including language patterns)
+│   ├── quality/         # 10 quality assurance skills
 │   └── workflow/        # 5 workflow and automation skills
 ├── agents/              # 28 specialized agents (8 core + 12 specialized + 8 additional)
 ├── workflows/           # 23 end-to-end workflows (4 primary + 4 support + 8 team + 2 distributed + 5 new)
@@ -44,51 +44,58 @@ em-team/
 
 ## Skill Categories
 
-### Foundation Skills (5 skills)
-1. **spec-driven-development** - Write specs before coding
-2. **brainstorming** - Explore ideas into designs
-3. **context-engineering** - Optimize agent context setup
-4. **writing-plans** - Break work into bite-sized tasks
-5. **systematic-debugging** - 4-phase debugging methodology
+### Foundation Skills (6 skills)
+1. **alignment-session** - Pre-coding human-AI alignment
+2. **spec-driven-development** - Write specs before coding
+3. **brainstorming** - Explore ideas into designs
+4. **context-engineering** - Optimize agent context setup
+5. **writing-plans** - Break work into bite-sized tasks
+6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (12 skills)
-6. **test-driven-development** - TDD RED-GREEN-REFACTOR
-7. **frontend-patterns** - React/Next.js/Vue patterns
-8. **backend-patterns** - API/Database patterns
-9. **incremental-implementation** - Vertical slice development
-10. **subagent-driven-development** - Fresh context per task + two-stage review
-11. **source-driven-development** - Code from official docs
-12. **api-interface-design** - Contract-first APIs
-13. **security-hardening** - OWASP Top 10 security
-14. **typescript-patterns** - TypeScript type system, async, React/Next.js TS patterns
-15. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
-16. **go-patterns** - Error handling, concurrency, interfaces, testing
-17. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+### Development Skills (16 skills)
+7. **test-driven-development** - TDD RED-GREEN-REFACTOR
+8. **frontend-patterns** - React/Next.js/Vue patterns
+9. **backend-patterns** - API/Database patterns
+10. **incremental-implementation** - Vertical slice development
+11. **subagent-driven-development** - Fresh context per task + two-stage review
+12. **source-driven-development** - Code from official docs
+13. **api-interface-design** - Contract-first APIs
+14. **security-hardening** - OWASP Top 10 security
+15. **typescript-patterns** - TypeScript type system, async, React/Next.js TS patterns
+16. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
+17. **go-patterns** - Error handling, concurrency, interfaces, testing
+18. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+19. **architecture-zoom-out** - Higher-level code perspective
+20. **architecture-improvement** - Systematic module deepening
+21. **issue-generator** - Plans to structured vertical-slice issues
+22. **prd-generator** - Ideas to structured PRD documents
 
-### Quality Skills (8 skills)
-18. **code-review** - 5-axis review framework
-19. **code-simplification** - Reduce complexity
-20. **browser-testing** - DevTools MCP integration
-21. **performance-optimization** - Measure-first optimization
-22. **e2e-testing** - Playwright patterns
-23. **security-audit** - Vulnerability assessment
-24. **api-testing** - Integration testing
-25. **security-common** - OWASP reference and security checklist
+### Quality Skills (10 skills)
+23. **code-review** - 5-axis review framework
+24. **code-simplification** - Reduce complexity
+25. **browser-testing** - DevTools MCP integration
+26. **performance-optimization** - Measure-first optimization
+27. **e2e-testing** - Playwright patterns
+28. **security-audit** - Vulnerability assessment
+29. **api-testing** - Integration testing
+30. **security-common** - OWASP reference and security checklist
+31. **ux-audit** - Behavioral UX audit with scored dimensions
+32. **plan-tune** - Learn and tune output preferences
 
 ### Workflow Skills (5 skills)
-26. **git-workflow** - Atomic commits
-27. **ci-cd-automation** - Feature flags, quality gates
-28. **documentation** - ADRs, API docs
-29. **finishing-branch** - Merge/PR decisions
-30. **deprecation-migration** - Code-as-liability mindset
-31. **style-switcher** - Unified personality styles (13) and density modes (3)
+33. **git-workflow** - Atomic commits
+34. **ci-cd-automation** - Feature flags, quality gates
+35. **documentation** - ADRs, API docs
+36. **finishing-branch** - Merge/PR decisions
+37. **deprecation-migration** - Code-as-liability mindset
+38. **style-switcher** - Unified personality styles (13) and density modes (3)
 
 ### Additional Skills
-31. **jobs-to-be-done** - JTBD framework for understanding user needs
-32. **lean-ux-canvas** - Lean UX hypothesis testing
-33. **opportunity-solution-tree** - Product opportunity mapping
-34. **pol-probe** - Product opportunity probe
-35. **office-hours** - YC-style brainstorming and idea validation
+39. **jobs-to-be-done** - JTBD framework for understanding user needs
+40. **lean-ux-canvas** - Lean UX hypothesis testing
+41. **opportunity-solution-tree** - Product opportunity mapping
+42. **pol-probe** - Product opportunity probe
+43. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -284,9 +291,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 2.1.0
+Current version: 2.2.0
 Last updated: 2026-05-01
-Changes: v2.1.0 — Communication styles system (13 personality styles + 3 density modes integrated from claude-comstyle)
+Changes: v2.2.0 — 7 new skills (alignment-session, architecture-zoom-out, architecture-improvement, issue-generator, prd-generator, ux-audit, plan-tune) + NestJS patterns in backend-patterns
 
 ## License
 

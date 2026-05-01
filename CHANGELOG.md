@@ -5,6 +5,32 @@ All notable changes to EM-Team system will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-01
+
+### Added
+- **alignment-session** skill — Pre-coding human-AI alignment session (from Matt Pocock's grill-me/grill-with-docs)
+- **architecture-zoom-out** skill — Higher-level code perspective for unfamiliar code areas (from Matt Pocock's zoom-out)
+- **architecture-improvement** skill — Systematic module deepening with deletion test (from Matt Pocock's improve-codebase-architecture)
+- **issue-generator** skill — Convert plans to structured vertical-slice GitHub issues (from Matt Pocock's to-issues)
+- **prd-generator** skill — Convert ideas to structured PRD documents (from Matt Pocock's to-prd)
+- **ux-audit** skill — Behavioral UX audit with 6 scored dimensions (from Gstack)
+- **plan-tune** skill — Learn and tune output preferences over time (from Gstack)
+- **NestJS patterns** section added to backend-patterns skill (from ECC)
+
+### Changed
+- Updated all command invocations to use `/em:skill:*` and `/em:agent-name` format
+- Normalized docs across VI guide, usage guide, getting-started, and README
+
+### Source Repos Reviewed
+- Product-Manager-Skills v0.78
+- Gstack v1.1.1.0
+- GSD v1.40.0-rc.4
+- ECC v2.0.0-rc.1
+- agent-skills (stable)
+- Skills/Matt Pocock (new repo, 44 skills)
+
+---
+
 ## [2.1.0] - 2026-05-01
 
 ### Communication Styles System

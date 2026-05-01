@@ -18,13 +18,13 @@ EM-Team provides a complete toolkit for fullstack engineering with:
 - **Enhanced Distributed Mode** - Token-aware report consolidation with Haiku
 
 **📋 Quick Commands:**
-- **67+ Commands** - Organized by type for easy access
+- **74+ Commands** - Organized by type for easy access
   - 26 **Skills** - Reusable patterns and practices
   - 24 **Agents** (`em:*`) - Specialized task handlers
   - 18 **Workflows** (`em:*` & `em:wl-*`) - End-to-end processes
 
 **🔧 Development Tools:**
-- **26 Skills** - Discovery, development, quality, workflow management
+- **38 Skills** - Discovery, development, quality, workflow management
 - **24 Agents** - Market intelligence, learn, autoplan, planner, backend, frontend, database, etc.
 - **18 Workflows** - Discovery, new-feature, bug-fix, security-audit, team reviews, etc.
 
@@ -976,51 +976,58 @@ Distributed Mode:
 
 ## Skills
 
-### Foundation Skills (5 skills)
+### Foundation Skills (6 skills)
 
-1. **spec-driven-development** - Write specs before coding
-2. **brainstorming** - Explore ideas into designs
-3. **context-engineering** - Optimize agent context setup
-4. **writing-plans** - Break work into bite-sized tasks
-5. **systematic-debugging** - 4-phase debugging methodology
+1. **alignment-session** - Pre-coding human-AI alignment (NEW)
+2. **spec-driven-development** - Write specs before coding
+3. **brainstorming** - Explore ideas into designs
+4. **context-engineering** - Optimize agent context setup
+5. **writing-plans** - Break work into bite-sized tasks
+6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (12 skills)
+### Development Skills (16 skills)
 
-6. **test-driven-development** - TDD RED-GREEN-REFACTOR
-7. **frontend-patterns** - React/Next.js/Vue patterns
-8. **backend-patterns** - API/Database patterns
-9. **incremental-implementation** - Vertical slice development
-10. **subagent-driven-development** - Fresh context per task
-11. **source-driven-development** - Code from official docs
-12. **api-interface-design** - Contract-first APIs
-13. **security-hardening** - OWASP Top 10 security
-14. **typescript-patterns** - Type system, async, React/Next.js TS (NEW)
-15. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy (NEW)
-16. **go-patterns** - Error handling, concurrency, interfaces, testing (NEW)
-17. **rust-patterns** - Ownership, traits, async tokio, smart pointers (NEW)
+7. **test-driven-development** - TDD RED-GREEN-REFACTOR
+8. **frontend-patterns** - React/Next.js/Vue patterns
+9. **backend-patterns** - API/Database/NestJS patterns
+10. **incremental-implementation** - Vertical slice development
+11. **subagent-driven-development** - Fresh context per task
+12. **source-driven-development** - Code from official docs
+13. **api-interface-design** - Contract-first APIs
+14. **security-hardening** - OWASP Top 10 security
+15. **typescript-patterns** - Type system, async, React/Next.js TS
+16. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy
+17. **go-patterns** - Error handling, concurrency, interfaces, testing
+18. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+19. **architecture-zoom-out** - Higher-level code perspective (NEW)
+20. **architecture-improvement** - Systematic module deepening (NEW)
+21. **issue-generator** - Plans to structured vertical-slice issues (NEW)
+22. **prd-generator** - Ideas to structured PRD documents (NEW)
 
-### Quality Skills (8 skills)
+### Quality Skills (10 skills)
 
-18. **code-review** - 5-axis review framework
-19. **code-simplification** - Reduce complexity
-20. **browser-testing** - DevTools MCP integration
-21. **performance-optimization** - Measure-first optimization
-22. **e2e-testing** - Playwright patterns
-23. **security-audit** - Vulnerability assessment
-24. **api-testing** - Integration testing
-25. **security-common** - OWASP reference and security checklist
+23. **code-review** - 5-axis review framework
+24. **code-simplification** - Reduce complexity
+25. **browser-testing** - DevTools MCP integration
+26. **performance-optimization** - Measure-first optimization
+27. **e2e-testing** - Playwright patterns
+28. **security-audit** - Vulnerability assessment
+29. **api-testing** - Integration testing
+30. **security-common** - OWASP reference and security checklist
+31. **ux-audit** - Behavioral UX audit with scored dimensions (NEW)
+32. **plan-tune** - Learn and tune output preferences (NEW)
 
 ### Workflow Skills (5 skills)
 
-21. **git-workflow** - Atomic commits
-22. **ci-cd-automation** - Feature flags, quality gates
-23. **documentation** - ADRs, API docs
-24. **finishing-branch** - Merge/PR decisions
-25. **deprecation-migration** - Code-as-liability mindset
+33. **git-workflow** - Atomic commits
+34. **ci-cd-automation** - Feature flags, quality gates
+35. **documentation** - ADRs, API docs
+36. **finishing-branch** - Merge/PR decisions
+37. **deprecation-migration** - Code-as-liability mindset
 
 ### Communication Skills
 
-26. **style-switcher** - 13 personality styles + 3 density modes (unified control)
+38. **style-switcher** - 13 personality styles + 3 density modes (unified control)
 
 ## Communication Styles (NEW)
 

@@ -32,7 +32,7 @@ EM-Team provides three main ways to accomplish tasks:
 
 ## Communication Styles
 
-EM-Team v2.1.0 includes a unified communication control system with two independent axes:
+EM-Team v2.2.0 includes a unified communication control system with two independent axes:
 
 - **Personality** (tone/voice) — 13 styles via `/em:skill:style-switcher`
 - **Density** (verbosity/format) — 3 modes via `/compact`, `/terse`, `/standard`
@@ -97,44 +97,51 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 3. **context-engineering** - Optimize agent context setup
 4. **writing-plans** - Break work into manageable tasks
 5. **systematic-debugging** - 4-phase debugging methodology
+6. **alignment-session** - Pre-coding human-AI alignment session
 
 #### Development Skills
-6. **test-driven-development** - TDD: RED-GREEN-REFACTOR
-7. **frontend-patterns** - React/Next.js/Vue best practices
-8. **backend-patterns** - API/Database patterns
-9. **incremental-implementation** - Vertical slice development
-10. **subagent-driven-development** - Fresh context per task
-11. **source-driven-development** - Code from official docs
-12. **api-interface-design** - Contract-first APIs
-13. **security-hardening** - OWASP Top 10 security
+7. **test-driven-development** - TDD: RED-GREEN-REFACTOR
+8. **frontend-patterns** - React/Next.js/Vue best practices
+9. **backend-patterns** - API/Database/NestJS patterns
+10. **incremental-implementation** - Vertical slice development
+11. **subagent-driven-development** - Fresh context per task
+12. **source-driven-development** - Code from official docs
+13. **api-interface-design** - Contract-first APIs
+14. **security-hardening** - OWASP Top 10 security
+15. **architecture-zoom-out** - Higher-level code perspective
+16. **architecture-improvement** - Systematic module deepening
+17. **issue-generator** - Plans to structured vertical-slice GitHub issues
+18. **prd-generator** - Convert ideas to structured PRD documents
 
 #### Quality Skills
-14. **code-review** - 5-axis review framework
-15. **code-simplification** - Reduce complexity
-16. **browser-testing** - DevTools MCP integration
-17. **performance-optimization** - Measure-first optimization
-18. **e2e-testing** - Playwright patterns
-19. **security-audit** - Vulnerability assessment
-20. **api-testing** - Integration testing
+19. **code-review** - 5-axis review framework
+20. **code-simplification** - Reduce complexity
+21. **browser-testing** - DevTools MCP integration
+22. **performance-optimization** - Measure-first optimization
+23. **e2e-testing** - Playwright patterns
+24. **security-audit** - Vulnerability assessment
+25. **api-testing** - Integration testing
+26. **ux-audit** - Behavioral UX audit with scored dimensions
+27. **plan-tune** - Learn and tune output preferences
 
 #### Workflow Skills
-21. **git-workflow** - Atomic commits
-22. **ci-cd-automation** - Feature flags, quality gates
-23. **documentation** - ADRs, API docs
-24. **finishing-branch** - Merge/PR decisions
-25. **deprecation-migration** - Code-as-liability mindset
+28. **git-workflow** - Atomic commits
+29. **ci-cd-automation** - Feature flags, quality gates
+30. **documentation** - ADRs, API docs
+31. **finishing-branch** - Merge/PR decisions
+32. **deprecation-migration** - Code-as-liability mindset
 
 #### Language Skills (NEW)
-26. **typescript-patterns** - TypeScript type system, async, React/Next.js TS
-27. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
-28. **go-patterns** - Error handling, concurrency, interfaces, testing
-29. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+33. **typescript-patterns** - TypeScript type system, async, React/Next.js TS
+34. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
+35. **go-patterns** - Error handling, concurrency, interfaces, testing
+36. **rust-patterns** - Ownership, traits, async tokio, smart pointers
 
 #### Communication Skills
-30. **style-switcher** - 13 personality styles + 3 density modes
+37. **style-switcher** - 13 personality styles + 3 density modes
 
 #### Additional Skills
-31. **security-common** - OWASP reference and security checklist
+38. **security-common** - OWASP reference and security checklist
 
 ### How to Use Skills
 
@@ -730,4 +737,4 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 ---
 
 **Last Updated:** 2026-05-01
-**Version:** 2.1.0
+**Version:** 2.2.0
