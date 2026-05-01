@@ -54,11 +54,11 @@ Control how Claude communicates with you:
 
 ```bash
 # Show style menu (13 personality styles + 3 density modes)
-/style
+/em:skill:style-switcher
 
 # Quick personality switching
-/style tactical        # Direct debugging
-/style teacher         # Feynman technique for explanations
+/em:skill:style-switcher tactical        # Direct debugging
+/em:skill:style-switcher teacher         # Feynman technique for explanations
 
 # Quick density switching
 /compact               # Bullet-point output

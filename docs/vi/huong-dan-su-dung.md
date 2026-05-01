@@ -57,7 +57,7 @@ em-help
 
 EM-Team v2.1.0 có hệ thống điều khiển giao tiếp thống nhất với 2 trục độc lập:
 
-- **Personality** (giọng điệu) — 13 styles chọn bằng `/style`
+- **Personality** (giọng điệu) — 13 styles chọn bằng `/em:skill:style-switcher`
 - **Density** (độ chi tiết) — 3 modes chọn bằng `/compact`, `/terse`, `/standard`
 
 ### 13 Personality Styles
@@ -99,14 +99,14 @@ EM-Team v2.1.0 có hệ thống điều khiển giao tiếp thống nhất với
 
 ```bash
 # Hiển thị menu personality (13 styles + 3 density modes)
-/style
+/em:skill:style-switcher
 
 # Chọn personality trực tiếp
-/style tactical        # Debug trực tiếp, không giải thích
-/style teacher         # Giải thích kiểu Feynman
-/style reality-check   # Đánh giá thẳng thắn idea của bạn
-/style raw             # Code nhanh, fragments
-/style bluf            # Kết luận trước, chi tiết sau
+/em:skill:style-switcher tactical        # Debug trực tiếp, không giải thích
+/em:skill:style-switcher teacher         # Giải thích kiểu Feynman
+/em:skill:style-switcher reality-check   # Đánh giá thẳng thắn idea của bạn
+/em:skill:style-switcher raw             # Code nhanh, fragments
+/em:skill:style-switcher bluf            # Kết luận trước, chi tiết sau
 
 # Chuyển density độc lập (không ảnh hưởng personality)
 /compact               # Bullet points
@@ -114,12 +114,12 @@ EM-Team v2.1.0 có hệ thống điều khiển giao tiếp thống nhất với
 /standard              # Đầy đủ
 
 # Kết hợp personality + density (mỗi cái set độc lập)
-/style raw             # Personality → Raw
+/em:skill:style-switcher raw             # Personality → Raw
 /compact               # Density → COMPACT
 # → Raw tone + bullet-point format
 
 # Terminal CLI modifier (bỏ markdown, tiết kiệm thêm 20-30% token)
-/style tactical + terminal CLI
+/em:skill:style-switcher tactical + terminal CLI
 ```
 
 ### Khi nào dùng style nào
@@ -161,7 +161,7 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 /em:workflow-name [task description]
 
 # Communication Styles
-/style [style-name]        # 13 personality styles
+/em:skill:style-switcher [style-name]   # 13 personality styles
 /compact | /terse | /standard  # 3 density modes
 ```
 
@@ -200,7 +200,7 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 /documentation          - ADRs & docs
 /finishing-branch       - Merge/PR decisions
 /deprecation-migration  - Code-as-liability
-/style                  - 13 personality + 3 density modes (MỚI)
+/style-switcher                - 13 personality + 3 density modes (MỚI)
 ```
 
 #### 🤖 Agents (31 commands) - Prefix em:

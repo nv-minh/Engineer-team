@@ -287,7 +287,7 @@ cat ~/.claude/config.json | grep -A1 "paths"
 ls ~/.claude/skills/em:* | wc -l
 
 # Open any project in Claude Code and try:
-/style-switcher
+/em:skill:style-switcher
 ```
 
 To uninstall: `bash uninstall.sh`
@@ -1065,12 +1065,12 @@ EM-Team includes a unified communication control system with 13 personality styl
 
 ```bash
 # Show personality menu (13 styles + 3 density modes)
-/style-switcher
+/em:skill:style-switcher
 
 # Switch personality directly
-/style-switcher tactical        # Direct, no-nonsense debugging
-/style-switcher teacher         # Feynman technique explanations
-/style-switcher reality-check   # Honest evaluation of your idea
+/em:skill:style-switcher tactical        # Direct, no-nonsense debugging
+/em:skill:style-switcher teacher         # Feynman technique explanations
+/em:skill:style-switcher reality-check   # Honest evaluation of your idea
 
 # Switch density independently
 /compact               # Bullet-point output
@@ -1079,11 +1079,11 @@ EM-Team includes a unified communication control system with 13 personality styl
 
 # Combine personality + density
 # (set each independently, they don't affect each other)
-/style-switcher raw             # Set personality to Raw
+/em:skill:style-switcher raw             # Set personality to Raw
 /compact               # Set density to COMPACT
 
 # Terminal CLI modifier (strip all markdown)
-/style-switcher tactical + terminal CLI
+/em:skill:style-switcher tactical + terminal CLI
 ```
 
 ### When to Use Which Style
@@ -1626,7 +1626,7 @@ Current version: **2.0.0** (Major Architecture Upgrade)
 Last updated: 2026-05-01
 
 **🎉 New in v2.0.0:**
-- ✨ **Communication Styles** - 13 personality styles + 3 density modes with `/style` command
+- ✨ **Communication Styles** - 13 personality styles + 3 density modes with `/em:skill:style-switcher` command
 - 🏗️ **Foundation Infrastructure** - Preambles, protocols, templates, references
 - ✨ **New Skills** - TypeScript, Python, Go, Rust pattern skills
 - ✨ **New Agents** - Design reviewer, DevEx reviewer, Iron Law enforcer

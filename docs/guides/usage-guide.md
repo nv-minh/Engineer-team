@@ -34,7 +34,7 @@ EM-Team provides three main ways to accomplish tasks:
 
 EM-Team v2.1.0 includes a unified communication control system with two independent axes:
 
-- **Personality** (tone/voice) — 13 styles via `/style`
+- **Personality** (tone/voice) — 13 styles via `/em:skill:style-switcher`
 - **Density** (verbosity/format) — 3 modes via `/compact`, `/terse`, `/standard`
 
 ### Personality Styles
@@ -47,12 +47,12 @@ EM-Team v2.1.0 includes a unified communication control system with two independ
 
 ```bash
 # Show personality menu (13 styles + 3 density modes)
-/style
+/em:skill:style-switcher
 
 # Set personality
-/style tactical        # Direct, no preamble
-/style teacher         # Feynman technique explanations
-/style reality-check   # Honest evaluation
+/em:skill:style-switcher tactical        # Direct, no preamble
+/em:skill:style-switcher teacher         # Feynman technique explanations
+/em:skill:style-switcher reality-check   # Honest evaluation
 
 # Set density independently
 /compact               # Bullet-point output
@@ -60,11 +60,11 @@ EM-Team v2.1.0 includes a unified communication control system with two independ
 /standard              # Full detailed reports
 
 # Combine (each set independently)
-/style raw             # Personality → Raw
+/em:skill:style-switcher raw             # Personality → Raw
 /compact               # Density → COMPACT
 
 # Terminal CLI modifier (strip markdown)
-/style tactical + terminal CLI
+/em:skill:style-switcher tactical + terminal CLI
 ```
 
 ### When to Use
