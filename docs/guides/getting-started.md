@@ -48,6 +48,23 @@ Invoke skills directly in your workflow:
 "Use the systematic-debugging skill to investigate login bug"
 ```
 
+### 1b. Communication Styles (NEW)
+
+Control how Claude communicates with you:
+
+```bash
+# Show style menu (13 personality styles + 3 density modes)
+/style
+
+# Quick personality switching
+/style tactical        # Direct debugging
+/style teacher         # Feynman technique for explanations
+
+# Quick density switching
+/compact               # Bullet-point output
+/terse                 # Single-line status
+```
+
 ### 2. Using Agents
 
 Dispatch agents for specialized tasks:
@@ -264,5 +281,5 @@ cd tests
 
 ---
 
-**Last Updated:** 2026-04-19
-**Version:** 1.0.0
+**Last Updated:** 2026-05-01
+**Version:** 2.1.0

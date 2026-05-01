@@ -7,13 +7,14 @@ Complete guide for using the EM-Team fullstack engineering system.
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Using Skills](#using-skills)
-3. [Using Agents](#using-agents)
-4. [Using Workflows](#using-workflows)
-5. [Distributed Mode](#distributed-mode)
-6. [Best Practices](#best-practices)
-7. [Examples](#examples)
-8. [Troubleshooting](#troubleshooting)
+2. [Communication Styles (NEW)](#communication-styles)
+3. [Using Skills](#using-skills)
+4. [Using Agents](#using-agents)
+5. [Using Workflows](#using-workflows)
+6. [Distributed Mode](#distributed-mode)
+7. [Best Practices](#best-practices)
+8. [Examples](#examples)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -26,6 +27,59 @@ EM-Team provides three main ways to accomplish tasks:
 | **Skills** | Reusable patterns and practices | Specific development tasks |
 | **Agents** | Specialized AI agents | Complex specialized work |
 | **Workflows** | End-to-end processes | Complete project lifecycles |
+
+---
+
+## Communication Styles
+
+EM-Team v2.1.0 includes a unified communication control system with two independent axes:
+
+- **Personality** (tone/voice) — 13 styles via `/style`
+- **Density** (verbosity/format) — 3 modes via `/compact`, `/terse`, `/standard`
+
+### Personality Styles
+
+**Productivity:** Tactical, Raw, Reality Check, git log, Socratic, BLUF
+**Fun:** Inverted, Dramatic, 80s Hacker, Dad Joke
+**Deep Understanding:** Rubber Duck, Teacher, First Principles
+
+### Usage
+
+```bash
+# Show personality menu (13 styles + 3 density modes)
+/style
+
+# Set personality
+/style tactical        # Direct, no preamble
+/style teacher         # Feynman technique explanations
+/style reality-check   # Honest evaluation
+
+# Set density independently
+/compact               # Bullet-point output
+/terse                 # Single-line status
+/standard              # Full detailed reports
+
+# Combine (each set independently)
+/style raw             # Personality → Raw
+/compact               # Density → COMPACT
+
+# Terminal CLI modifier (strip markdown)
+/style tactical + terminal CLI
+```
+
+### When to Use
+
+| Scenario | Personality | Density |
+|---|---|---|
+| Debugging CI failure | Tactical | TERSE |
+| Teaching a junior | Teacher | STANDARD |
+| Rapid coding session | Raw | COMPACT |
+| Evaluating feature idea | Reality Check | STANDARD |
+| Architecture decision | First Principles | COMPACT |
+
+**Rules:** CRITICAL findings always get full context. File paths never omitted. Personality and density are independent.
+
+See `skills/workflow/style-switcher/style-switcher.md` for complete documentation.
 
 ---
 
@@ -658,5 +712,5 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 ---
 
-**Last Updated:** 2026-04-19
-**Version:** 1.0.0
+**Last Updated:** 2026-05-01
+**Version:** 2.1.0
