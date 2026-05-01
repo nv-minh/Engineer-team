@@ -846,67 +846,86 @@ Run end-to-end workflows:
 
 ```
 em-team/
-├── skills/                  # 26 skills organized by category
-│   ├── foundation/          # Core foundational skills (8)
-│   │   ├── brainstorming.md
-│   │   ├── jobs-to-be-done.md (NEW)
-│   │   ├── pol-probe.md (NEW)
-│   │   └── office-hours.md (NEW)
-│   ├── development/         # Development workflow skills (13)
-│   │   ├── lean-ux-canvas.md (NEW)
-│   │   ├── opportunity-solution-tree.md (NEW)
-│   │   ├── spec-driven-development.md
-│   │   ├── test-driven-development.md
-│   │   └── frontend-patterns.md
-│   ├── quality/             # Quality assurance skills (7)
-│   │   ├── code-review.md
-│   │   ├── security-audit.md
-│   │   └── e2e-testing.md
-│   ├── workflow/            # Workflow and automation skills (5)
-│   │   ├── git-workflow.md
-│   │   └── ci-cd-automation.md
-│   └── specialized/         # Language/framework-specific skills
-├── agents/                  # 24 specialized agents
-│   ├── market-intelligence.md (NEW)
-│   ├── learn.md (NEW)
-│   ├── autoplan.md (NEW)
-│   ├── planner.md
-│   ├── executor.md
-│   ├── code-reviewer.md
-│   ├── backend-expert.md
-│   └── frontend-expert.md
-├── workflows/               # 18 end-to-end workflows
-│   ├── discovery-process.md (NEW)
-│   ├── new-feature.md (v2.0 - Enhanced)
-│   ├── market-driven-feature.md (NEW)
-│   ├── bug-fix.md
-│   ├── team-review.md
-│   └── architecture-review.md
-├── distributed/             # Distributed orchestration system
-│   ├── session-coordinator.sh  # High-level coordination
-│   └── session-sync.sh         # Context synchronization
-├── scripts/                 # Core orchestration scripts
-│   ├── distributed-orchestrator.sh  # Creates tmux sessions
-│   ├── session-manager.sh          # Manages sessions
-│   └── consolidate-reports.sh      # Report consolidation
-├── protocols/               # Message and report formats
-│   ├── distributed-messaging.md    # Message protocol
-│   └── report-format.md            # Report specification
-├── tests/                   # Comprehensive test suite
-│   ├── test-helpers.sh            # Shared test utilities
-│   ├── test-*.sh                  # Unit & integration tests
-│   ├── run-e2e-tests.sh           # E2E test runner
-│   └── manual-test-with-agents.md # Manual testing guide
+├── skills/                  # 36 skills organized by category
+│   ├── foundation/          # 5 core foundational skills
+│   │   ├── brainstorming/
+│   │   ├── spec-driven-development/
+│   │   ├── context-engineering/
+│   │   ├── writing-plans/
+│   │   └── systematic-debugging/
+│   ├── development/         # 12 development skills
+│   │   ├── test-driven-development/
+│   │   ├── frontend-patterns/
+│   │   ├── backend-patterns/
+│   │   ├── typescript-patterns/    (NEW)
+│   │   ├── python-patterns/        (NEW)
+│   │   ├── go-patterns/            (NEW)
+│   │   ├── rust-patterns/          (NEW)
+│   │   ├── incremental-implementation/
+│   │   ├── subagent-driven-development/
+│   │   ├── source-driven-development/
+│   │   ├── api-interface-design/
+│   │   └── security-hardening/
+│   ├── quality/             # 8 quality assurance skills
+│   │   ├── code-review/
+│   │   ├── code-simplification/
+│   │   ├── browser-testing/
+│   │   ├── performance-optimization/
+│   │   ├── e2e-testing/
+│   │   ├── security-audit/
+│   │   ├── api-testing/
+│   │   └── security-common/
+│   └── workflow/            # 6 workflow and automation skills
+│       ├── git-workflow/
+│       ├── ci-cd-automation/
+│       ├── documentation/
+│       ├── finishing-branch/
+│       ├── deprecation-migration/
+│       └── style-switcher/          (NEW - 13 personality + 3 density)
+├── agents/                  # 31 specialized agents
+│   ├── core (8): planner, executor, code-reviewer, debugger,
+│   │   test-engineer, security-auditor, ui-auditor, verifier
+│   ├── specialized (12): team-lead, architect, frontend-expert,
+│   │   senior-code-reviewer, database-expert, product-manager,
+│   │   security-reviewer, staff-engineer, researcher,
+│   │   codebase-mapper, integration-checker, performance-auditor
+│   └── v2.0 (11): market-intelligence, learn, autoplan,
+│       techlead-orchestrator, design-reviewer (NEW),
+│       devex-reviewer (NEW), iron-law-enforcer (NEW), ...
+├── workflows/               # 23 end-to-end workflows
+│   ├── primary (4): new-feature, bug-fix, refactoring, security-audit
+│   ├── support (10): project-setup, documentation, deployment,
+│   │   retro, ship-workflow (NEW), canary-monitoring (NEW), ...
+│   ├── master: six-phase-lifecycle (NEW)
+│   └── team (8): team-review, architecture-review, design-review,
+│       code-review-9axis, database-review, product-review,
+│       security-review-advanced, incident-response
+├── preambles/               # NEW - Shared initialization
+│   ├── ethos.md             # Builder philosophy (Boil the Lake, Iron Laws)
+│   ├── skill-preamble.md    # Standard skill initialization protocol
+│   └── agent-preamble.md    # Standard agent behavior rules
+├── protocols/               # Communication standards
+│   ├── writing-style.md     # Active voice, severity levels, report structure
+│   └── delegation-protocol.md
+├── references/              # NEW - Shared reference docs
+│   ├── compact-output.md    # Communication styles reference
+│   ├── security-checklist.md
+│   ├── testing-patterns.md
+│   ├── code-quality.md
+│   ├── api-checklist.md
+│   └── verification-patterns.md
 ├── templates/               # Reusable templates
+│   ├── agent-template.md    # Standard agent format
+│   ├── skill-template.md    # Standard skill format
+│   ├── workflow-template.md # Standard workflow format
+│   └── context-artifacts/   # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+├── distributed/             # Distributed orchestration system
+├── scripts/                 # Core orchestration scripts
 ├── hooks/                   # Automation hooks
 ├── commands/                # CLI commands
-├── config/                  # Configuration files
-├── docs/                    # Documentation
-│   └── skill-systems-guide.md  # Skill system integration guide
+├── docs/                    # Documentation (EN + VI)
 └── CLAUDE.md                # Main configuration
 ```
-
-> **Note:** EM-Team includes multiple skill systems from different sources. See [Skill Systems Guide](docs/skill-systems-guide.md) for when to use each system.
 
 ---
 
@@ -1061,7 +1080,7 @@ Distributed Mode:
 4. **writing-plans** - Break work into bite-sized tasks
 5. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (8 skills)
+### Development Skills (12 skills)
 
 6. **test-driven-development** - TDD RED-GREEN-REFACTOR
 7. **frontend-patterns** - React/Next.js/Vue patterns
@@ -1071,16 +1090,21 @@ Distributed Mode:
 11. **source-driven-development** - Code from official docs
 12. **api-interface-design** - Contract-first APIs
 13. **security-hardening** - OWASP Top 10 security
+14. **typescript-patterns** - Type system, async, React/Next.js TS (NEW)
+15. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy (NEW)
+16. **go-patterns** - Error handling, concurrency, interfaces, testing (NEW)
+17. **rust-patterns** - Ownership, traits, async tokio, smart pointers (NEW)
 
-### Quality Skills (7 skills)
+### Quality Skills (8 skills)
 
-14. **code-review** - 5-axis review framework
-15. **code-simplification** - Reduce complexity
-16. **browser-testing** - DevTools MCP integration
-17. **performance-optimization** - Measure-first optimization
-18. **e2e-testing** - Playwright patterns
-19. **security-audit** - Vulnerability assessment
-20. **api-testing** - Integration testing
+18. **code-review** - 5-axis review framework
+19. **code-simplification** - Reduce complexity
+20. **browser-testing** - DevTools MCP integration
+21. **performance-optimization** - Measure-first optimization
+22. **e2e-testing** - Playwright patterns
+23. **security-audit** - Vulnerability assessment
+24. **api-testing** - Integration testing
+25. **security-common** - OWASP reference and security checklist
 
 ### Workflow Skills (5 skills)
 
@@ -1184,12 +1208,30 @@ EM-Team includes a unified communication control system with 13 personality styl
 7. **ui-auditor** - Visual QA
 8. **verifier** - Post-execution verification
 
-### Optional Agents (4 agents)
+### Specialized Agents (12 agents)
 
-9. **researcher** - Technical exploration
-10. **codebase-mapper** - Architecture analysis
-11. **integration-checker** - Cross-phase validation
-12. **performance-auditor** - Benchmarking
+13. **team-lead** - Team review orchestrator (trigger: `duck:team-lead`)
+14. **architect** - Architecture & technical design (trigger: `duck:architect`)
+15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `duck:frontend`)
+16. **senior-code-reviewer** - 9-axis deep code review (trigger: `duck:code-review`)
+17. **database-expert** - Schema, queries, fintech patterns (trigger: `duck:database`)
+18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `duck:product`)
+19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `duck:security`)
+20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `duck:staff`)
+21. **researcher** - Technical exploration
+22. **codebase-mapper** - Architecture analysis
+23. **integration-checker** - Cross-phase validation
+24. **performance-auditor** - Benchmarking
+
+### New Agents (v2.0.0)
+
+25. **market-intelligence** - Market analysis, competitive intelligence (trigger: `duck:market`)
+26. **learn** - Knowledge management and cross-session learning
+27. **autoplan** - Multi-phase review pipeline orchestrator
+28. **techlead-orchestrator** - Distributed team coordination
+29. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `duck:design`) (NEW)
+30. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `duck:devex`) (NEW)
+31. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `duck:laws`) (NEW)
 
 ## Workflows
 
@@ -1206,6 +1248,23 @@ EM-Team includes a unified communication control system with 13 personality styl
 6. **documentation** - Generate and update docs
 7. **deployment** - Deploy and monitor
 8. **retro** - Learn and improve
+9. **ship-workflow** - Version bump, changelog, PR creation (NEW)
+10. **canary-monitoring** - Post-deploy health monitoring (NEW)
+
+### Master Workflow
+
+11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
+
+### Team Workflows (8 workflows)
+
+12. **team-review** - Full team review orchestrated by Team Lead
+13. **architecture-review** - Architecture review with Architect & Staff Engineer
+14. **design-review** - UI/UX design review with Frontend Expert & Product Manager
+15. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
+16. **database-review** - Database schema & query review with Database Expert & Architect
+17. **product-review** - Product/spec review with Product Manager & Architect
+18. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
+19. **incident-response** - Production incident handling with Staff Engineer & Security
 
 ## Special Features
 
@@ -1677,9 +1736,10 @@ Last updated: 2026-05-01
 
 **Total Counts:**
 - **Commands**: 29 (11 agents + 6 core workflows + 12 specialized workflows)
-- **Agents**: 16 (8 core + 8 specialized)
-- **Workflows**: 16 (8 primary + 8 team)
-- **Skills**: 25+ (foundation, development, quality, workflow, specialized)
+- **Agents**: 31 (8 core + 12 specialized + 11 v2.0)
+- **Workflows**: 23 (4 primary + 10 support + 1 master + 8 team)
+- **Skills**: 36 (5 foundation + 12 development + 8 quality + 6 workflow + 5 additional)
+- **Personality Styles**: 13 + 3 density modes
 
 ## License
 
@@ -1792,8 +1852,8 @@ em-team/
 
 ### Key Features Summary
 
-1. **🎯 Multiple Skills** - 25-30 reusable patterns
-2. **🤖 Specialized Agents** - 16 AI assistants
+1. **🎯 Multiple Skills** - 36 reusable patterns across 5 categories
+2. **🤖 Specialized Agents** - 31 AI assistants (core + specialized + v2.0)
 3. **🔄 Complete Workflows** - 18 end-to-end processes
 4. **🏗️ Distributed Mode** - Parallel agent execution
 5. **📚 Bilingual Docs** - English & Vietnamese

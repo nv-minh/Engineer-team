@@ -124,6 +124,18 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 24. **finishing-branch** - Merge/PR decisions
 25. **deprecation-migration** - Code-as-liability mindset
 
+#### Language Skills (NEW)
+26. **typescript-patterns** - TypeScript type system, async, React/Next.js TS
+27. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
+28. **go-patterns** - Error handling, concurrency, interfaces, testing
+29. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+
+#### Communication Skills
+30. **style-switcher** - 13 personality styles + 3 density modes
+
+#### Additional Skills
+31. **security-common** - OWASP reference and security checklist
+
 ### How to Use Skills
 
 Invoke skills directly in your conversation:
@@ -230,6 +242,11 @@ Database specialist (schema, queries, optimization)
 
 #### 16. Tech-Lead-Orchestrator Agent
 Coordinates distributed investigations
+
+#### New Agents (v2.0.0)
+27. **Design-Reviewer Agent** - Visual design review with 6-pillar UI audit
+28. **DevEx-Reviewer Agent** - Developer experience audit and TTHW measurement
+29. **Iron-Law-Enforcer Agent** - Gate enforcement for Iron Law compliance
 
 ### How to Use Agents
 
