@@ -17,6 +17,12 @@ skills_used:
   - test-driven-development
   - code-review
   - git-workflow
+  - alignment-session
+  - issue-generator
+related_skills:
+  - alignment-session
+  - spec-driven-development
+  - issue-generator
 estimated_time: "1-3 days (simple) / 2-3 weeks (complex with market validation)"
 ---
 

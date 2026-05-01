@@ -11,9 +11,13 @@ agents_used:
   - "market-intelligence"
   - "planner"
 skills_used:
-  - "brainstorming"
-  - "spec-driven-development"
-  - "writing-plans"
+  - brainstorming
+  - spec-driven-development
+  - writing-plans
+related_skills:
+  - brainstorming
+  - spec-driven-development
+  - opportunity-solution-tree
 estimated_time: "3-8 weeks"
 ---
 

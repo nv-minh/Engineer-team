@@ -5,13 +5,16 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:staff"
-  - "duck:security"
+  - staff-engineer
+  - security-reviewer
 skills_used:
-  - "systematic-debugging"
-  - "security-audit"
-  - "performance-optimization"
-  - "documentation"
+  - systematic-debugging
+  - security-audit
+  - performance-optimization
+  - documentation
+related_skills:
+  - systematic-debugging
+  - security-audit
 estimated_time: "2-8 hours"
 ---
 
@@ -108,12 +111,12 @@ This workflow is split into focused components for better maintainability and to
 ```
 
 ### Agent Triggers
-- Stage 1: `duck:staff` - Initial assessment and triage
-- Stage 2: `duck:security` - Security investigation (if applicable)
-- Stage 3: `duck:staff` - Root cause analysis
-- Stage 4: `duck:staff` - Cross-service impact analysis
-- Stage 5: `duck:staff` + `duck:security` - Resolution and verification
-- Stage 6: `duck:staff` + `duck:security` - Postmortem and prevention
+- Stage 1: staff-engineer - Initial assessment and triage
+- Stage 2: security-reviewer - Security investigation (if applicable)
+- Stage 3: staff-engineer - Root cause analysis
+- Stage 4: staff-engineer - Cross-service impact analysis
+- Stage 5: staff-engineer + security-reviewer - Resolution and verification
+- Stage 6: staff-engineer + security-reviewer - Postmortem and prevention
 
 ### Completion Marker
 ## ✅ INCIDENT_RESPONSE_COMPLETE
@@ -541,4 +544,4 @@ blameless_culture:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:staff, duck:security
+**Primary Agents:** staff-engineer, security-reviewer

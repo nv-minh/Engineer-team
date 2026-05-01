@@ -5,13 +5,17 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:code-review"
-  - "duck:security"
+  - senior-code-reviewer
+  - security-reviewer
 skills_used:
-  - "code-review"
-  - "security-audit"
-  - "performance-optimization"
-  - "code-simplification"
+  - code-review
+  - security-audit
+  - performance-optimization
+  - code-simplification
+related_skills:
+  - code-review
+  - security-audit
+  - code-simplification
 estimated_time: "2-6 hours"
 ---
 
@@ -88,7 +92,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: 9-Axis Code Review (Senior Code Reviewer)
 
-**Agent:** `duck:code-review`
+**Agent:** senior-code-reviewer
 
 **Actions:**
 - Perform comprehensive 9-axis review:
@@ -119,7 +123,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: Security Vulnerability Assessment (Security Reviewer)
 
-**Agent:** `duck:security`
+**Agent:** security-reviewer
 
 **Actions:**
 - OWASP Top 10 assessment
@@ -146,7 +150,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Consolidated Code Quality Report
 
-**Agents:** `duck:code-review` + `duck:security`
+**Agents:** senior-code-reviewer + security-reviewer
 
 **Actions:**
 - Merge 9-axis and security findings
@@ -535,4 +539,4 @@ expects:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:code-review, duck:security
+**Primary Agents:** senior-code-reviewer, security-reviewer

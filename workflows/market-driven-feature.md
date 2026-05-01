@@ -5,18 +5,21 @@ version: "2.0.0"
 category: "primary"
 origin: "agent-skills"
 agents_used:
-  - "market-intelligence"
-  - "product-manager"
-  - "architect"
-  - "planner"
-  - "executor"
-  - "code-reviewer"
+  - market-intelligence
+  - product-manager
+  - architect
+  - planner
+  - executor
+  - code-reviewer
 skills_used:
-  - "brainstorming"
-  - "spec-driven-development"
-  - "writing-plans"
-  - "incremental-implementation"
-  - "code-review"
+  - brainstorming
+  - spec-driven-development
+  - writing-plans
+  - incremental-implementation
+  - code-review
+related_skills:
+  - brainstorming
+  - spec-driven-development
 estimated_time: "2-5 weeks"
 ---
 

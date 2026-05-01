@@ -13,6 +13,11 @@ skills_used:
   - test-driven-development
   - code-review
   - git-workflow
+  - alignment-session
+related_skills:
+  - alignment-session
+  - systematic-debugging
+  - test-driven-development
 estimated_time: "2-4 hours (simple) / 1-2 days (complex)"
 ---
 

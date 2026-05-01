@@ -13,6 +13,9 @@ skills_used:
   - writing-plans
   - ci-cd-automation
   - documentation
+related_skills:
+  - context-engineering
+  - writing-plans
 estimated_time: "3-7 hours"
 ---
 

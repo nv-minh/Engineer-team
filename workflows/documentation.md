@@ -10,6 +10,9 @@ skills_used:
   - documentation
   - code-review
   - api-interface-design
+related_skills:
+  - api-interface-design
+  - finishing-branch
 estimated_time: "4-8 hours (simple) / 1-2 days (complex)"
 ---
 

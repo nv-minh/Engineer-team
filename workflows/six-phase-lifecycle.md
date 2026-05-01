@@ -4,8 +4,11 @@ description: "Master lifecycle workflow that all EM-Skill workflows inherit. Def
 version: "2.0.0"
 category: "primary"
 origin: "agent-skills"
-agents_used: [planner, executor, verifier, code-reviewer]
-skills_used: [spec-driven-development, writing-plans, test-driven-development, code-review]
+agents_used: [planner, executor, code-reviewer, verifier]
+skills_used: [spec-driven-development, writing-plans, test-driven-development, code-review, git-workflow]
+related_skills:
+  - spec-driven-development
+  - test-driven-development
 estimated_time: "Variable - depends on scope"
 ---
 

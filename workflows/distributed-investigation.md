@@ -12,10 +12,14 @@ agents_used:
   - "staff-engineer"
   - "security-reviewer"
 skills_used:
-  - "systematic-debugging"
-  - "performance-optimization"
-  - "security-audit"
-  - "documentation"
+  - systematic-debugging
+  - performance-optimization
+  - security-audit
+  - documentation
+related_skills:
+  - systematic-debugging
+  - architecture-zoom-out
+  - security-audit
 estimated_time: "2-6 hours"
 ---
 

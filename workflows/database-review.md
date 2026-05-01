@@ -5,13 +5,16 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:database"
-  - "duck:architect"
+  - database-expert
+  - architect
 skills_used:
-  - "backend-patterns"
-  - "code-review"
-  - "performance-optimization"
-  - "database-migrations"
+  - backend-patterns
+  - code-review
+  - performance-optimization
+related_skills:
+  - backend-patterns
+  - performance-optimization
+  - code-review
 estimated_time: "2-4 hours"
 ---
 
@@ -91,7 +94,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: Database Schema & Query Review (Database Expert)
 
-**Agent:** `duck:database`
+**Agent:** database-expert
 
 **Actions:**
 - Review schema design (normalization, naming, types)
@@ -120,7 +123,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: Data Architecture Review (Architect)
 
-**Agent:** `duck:architect`
+**Agent:** architect
 
 **Actions:**
 - Assess data architecture in system context
@@ -146,7 +149,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Consolidated Database Assessment
 
-**Agents:** `duck:database` + `duck:architect`
+**Agents:** database-expert + architect
 
 **Actions:**
 - Merge database and architecture findings
@@ -538,4 +541,4 @@ data_integrity:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:database, duck:architect
+**Primary Agents:** database-expert, architect

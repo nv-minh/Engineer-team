@@ -4,8 +4,17 @@ description: "Post-deploy canary monitoring. Watches live app for errors, perfor
 version: "2.0.0"
 category: "support"
 origin: "gstack"
-agents_used: [verifier, performance-auditor]
-skills_used: [browser-testing, performance-optimization]
+agents_used:
+  - executor
+  - verifier
+skills_used:
+  - browser-testing
+  - performance-optimization
+  - e2e-testing
+related_skills:
+  - browser-testing
+  - performance-optimization
+  - finishing-branch
 estimated_time: "30-60 min"
 ---
 

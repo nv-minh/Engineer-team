@@ -5,13 +5,17 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:product"
-  - "duck:architect"
+  - product-manager
+  - architect
 skills_used:
-  - "spec-driven-development"
-  - "brainstorming"
-  - "writing-plans"
-  - "api-interface-design"
+  - spec-driven-development
+  - brainstorming
+  - writing-plans
+  - api-interface-design
+  - prd-generator
+related_skills:
+  - prd-generator
+  - brainstorming
 estimated_time: "2-4 hours"
 ---
 
@@ -92,7 +96,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: Business Requirements Review (Product Manager)
 
-**Agent:** `duck:product`
+**Agent:** product-manager
 
 **Actions:**
 - Review specifications from business perspective
@@ -121,7 +125,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: Technical Feasibility Review (Architect)
 
-**Agent:** `duck:architect`
+**Agent:** architect
 
 **Actions:**
 - Assess technical feasibility
@@ -149,7 +153,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Consolidated Product Assessment
 
-**Agents:** `duck:product` + `duck:architect`
+**Agents:** product-manager + architect
 
 **Actions:**
 - Merge business and technical findings
@@ -580,4 +584,4 @@ invest_criteria:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:product, duck:architect
+**Primary Agents:** product-manager, architect

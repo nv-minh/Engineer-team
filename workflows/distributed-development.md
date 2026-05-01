@@ -12,12 +12,16 @@ agents_used:
   - "code-reviewer"
   - "security-reviewer"
 skills_used:
-  - "spec-driven-development"
-  - "writing-plans"
-  - "incremental-implementation"
-  - "code-review"
-  - "security-audit"
-  - "e2e-testing"
+  - spec-driven-development
+  - writing-plans
+  - incremental-implementation
+  - code-review
+  - security-audit
+  - e2e-testing
+related_skills:
+  - incremental-implementation
+  - subagent-driven-development
+  - code-review
 estimated_time: "7-14 hours"
 ---
 

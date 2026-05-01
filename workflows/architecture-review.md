@@ -12,6 +12,12 @@ skills_used:
   - documentation
   - performance-optimization
   - writing-plans
+  - architecture-zoom-out
+  - architecture-improvement
+related_skills:
+  - architecture-zoom-out
+  - architecture-improvement
+  - code-review
 estimated_time: "2-4 hours (standard) / 1-2 days (comprehensive)"
 ---
 
@@ -90,7 +96,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: Architecture Analysis (Architect)
 
-**Agent:** `duck:architect`
+**Agent:** architect
 
 **Actions:**
 - Identify architectural pattern (Layered, Hexagonal, Microservices, Event-Driven)
@@ -118,7 +124,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: Deep Technical Review (Staff Engineer)
 
-**Agent:** `duck:staff`
+**Agent:** staff-engineer
 
 **Actions:**
 - Cross-service impact analysis
@@ -144,7 +150,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Consolidated Architecture Assessment
 
-**Agents:** `duck:architect` + `duck:staff`
+**Agents:** architect + staff-engineer
 
 **Actions:**
 - Merge architecture and technical findings
@@ -565,4 +571,4 @@ characteristics:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:architect, duck:staff
+**Primary Agents:** architect, staff-engineer

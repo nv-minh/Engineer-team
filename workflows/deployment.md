@@ -12,6 +12,10 @@ skills_used:
   - code-review
   - performance-optimization
   - documentation
+related_skills:
+  - ci-cd-automation
+  - finishing-branch
+  - performance-optimization
 estimated_time: "3-8 hours"
 ---
 

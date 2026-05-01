@@ -13,6 +13,9 @@ skills_used:
   - code-review
   - test-driven-development
   - documentation
+related_skills:
+  - security-hardening
+  - security-common
 estimated_time: "1-2 days (simple) / 3-7 days (complex)"
 ---
 

@@ -5,13 +5,18 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:product"
-  - "duck:frontend"
+  - product-manager
+  - frontend-expert
 skills_used:
-  - "frontend-patterns"
-  - "code-review"
-  - "browser-testing"
-  - "performance-optimization"
+  - frontend-patterns
+  - code-review
+  - browser-testing
+  - performance-optimization
+  - ux-audit
+related_skills:
+  - ux-audit
+  - frontend-patterns
+  - browser-testing
 estimated_time: "2-4 hours"
 ---
 
@@ -89,7 +94,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: Product Requirements Review (Product Manager)
 
-**Agent:** `duck:product`
+**Agent:** product-manager
 
 **Actions:**
 - Validate user stories
@@ -116,7 +121,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: UI/UX Technical Review (Frontend Expert)
 
-**Agent:** `duck:frontend`
+**Agent:** frontend-expert
 
 **Actions:**
 - Review React/Next.js component architecture
@@ -146,7 +151,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Consolidated Design Assessment
 
-**Agents:** `duck:product` + `duck:frontend`
+**Agents:** product-manager + frontend-expert
 
 **Actions:**
 - Merge business and technical findings
@@ -522,4 +527,4 @@ performance_metrics:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:product, duck:frontend
+**Primary Agents:** product-manager, frontend-expert

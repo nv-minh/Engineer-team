@@ -18,6 +18,9 @@ skills_used:
   - security-audit
   - documentation
   - performance-optimization
+related_skills:
+  - code-review
+  - security-audit
 estimated_time: "4-8 hours (standard) / 1-2 days (comprehensive)"
 ---
 
@@ -98,7 +101,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 1: Scope Analysis (Team Lead)
 
-**Agent:** `duck:team-lead`
+**Agent:** team-lead
 
 **Actions:**
 - Analyze task scope and complexity
@@ -120,7 +123,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 2: Business Validation (Product Manager)
 
-**Agent:** `duck:product`
+**Agent:** product-manager
 
 **Actions:**
 - Review specifications from business perspective
@@ -142,7 +145,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 3: Architecture Review (Architect)
 
-**Agent:** `duck:architect`
+**Agent:** architect
 
 **Actions:**
 - Review technical architecture
@@ -166,7 +169,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 #### 4a: Database Review (if applicable)
 
-**Agent:** `duck:database`
+**Agent:** database-expert
 
 **Actions:**
 - Review database schema
@@ -181,7 +184,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 #### 4b: Frontend Review (if applicable)
 
-**Agent:** `duck:frontend`
+**Agent:** frontend-expert
 
 **Actions:**
 - Review UI/UX design
@@ -197,7 +200,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 #### 4c: Code Review (if applicable)
 
-**Agent:** `duck:code-review`
+**Agent:** senior-code-reviewer
 
 **Actions:**
 - Perform 9-axis code review
@@ -215,7 +218,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 5: Security Review (Security Reviewer)
 
-**Agent:** `duck:security`
+**Agent:** security-reviewer
 
 **Actions:**
 - Perform OWASP Top 10 assessment
@@ -239,7 +242,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 6: Deep Investigation (if needed)
 
-**Agent:** `duck:staff`
+**Agent:** staff-engineer
 
 **Actions:**
 - Root cause analysis (if issues found)
@@ -259,7 +262,7 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 
 ### Stage 7: Consolidation (Team Lead)
 
-**Agent:** `duck:team-lead`
+**Agent:** team-lead
 
 **Actions:**
 - Collect all agent reports
@@ -294,7 +297,7 @@ To prevent circular dependencies, the workflow includes iteration limits:
 ```yaml
 iteration_limit: 3
 escalation_trigger: "After 3 iterations without resolution"
-escalation_target: "Team Lead (duck:team-lead)"
+escalation_target: "Team Lead (team-lead)"
 final_authority: "Team Lead decision is binding"
 ```
 

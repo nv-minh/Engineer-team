@@ -5,13 +5,16 @@ version: "2.0.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
-  - "duck:security"
-  - "duck:staff"
+  - security-reviewer
+  - staff-engineer
 skills_used:
-  - "security-audit"
-  - "security-hardening"
-  - "code-review"
-  - "systematic-debugging"
+  - security-audit
+  - security-hardening
+  - code-review
+  - systematic-debugging
+related_skills:
+  - security-audit
+  - security-hardening
 estimated_time: "4-8 hours"
 ---
 
@@ -106,9 +109,9 @@ This workflow is split into focused components for better maintainability and to
 ```
 
 ### Agent Triggers
-- Stage 1: `duck:security` - OWASP Top 10 assessment
-- Stage 2: `duck:security` + `duck:staff` - STRIDE threat modeling
-- Stage 3: `duck:staff` - Deep security investigation
+- Stage 1: security-reviewer - OWASP Top 10 assessment
+- Stage 2: security-reviewer + staff-engineer - STRIDE threat modeling
+- Stage 3: staff-engineer - Deep security investigation
 - Stage 4: Consolidation by Security Reviewer + Staff Engineer
 
 ### Completion Marker
@@ -577,4 +580,4 @@ mitigations:
 
 **Workflow Version:** 1.0.0
 **Last Updated:** 2026-04-19
-**Primary Agents:** duck:security, duck:staff
+**Primary Agents:** security-reviewer, staff-engineer

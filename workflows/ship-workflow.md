@@ -4,8 +4,11 @@ description: "Ship workflow: version bump, changelog update, commit, push, creat
 version: "2.0.0"
 category: "support"
 origin: "gstack"
-agents_used: [code-reviewer, verifier]
-skills_used: [git-workflow, documentation]
+agents_used: [executor, verifier, code-reviewer]
+skills_used: [git-workflow, code-review, ci-cd-automation]
+related_skills:
+  - git-workflow
+  - finishing-branch
 estimated_time: "15-30 min"
 ---
 

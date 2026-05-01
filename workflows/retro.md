@@ -10,6 +10,9 @@ skills_used:
   - documentation
   - code-review
   - writing-plans
+related_skills:
+  - documentation
+  - writing-plans
 estimated_time: "6-12 hours (retro) / 1-2 weeks (execute actions)"
 ---
 

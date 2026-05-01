@@ -15,6 +15,10 @@ skills_used:
   - test-driven-development
   - writing-plans
   - git-workflow
+  - architecture-improvement
+related_skills:
+  - code-simplification
+  - architecture-improvement
 estimated_time: "4-8 hours (simple) / 1-3 days (complex)"
 ---
 
