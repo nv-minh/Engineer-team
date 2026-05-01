@@ -39,8 +39,8 @@ em-show           # Hoặc em-commands
 em-help
 
 # Skills - Gõ trực tiếp tên skill
-/brainstorming User authentication với JWT
-/spec-driven-dev Tạo spec cho payment system
+/em:skill:brainstorming User authentication với JWT
+/em:skill:spec-driven-development Tạo spec cho payment system
 
 # Agents - Gõ với em: prefix
 /em-planner Tạo kế hoạch cho JWT auth
@@ -151,8 +151,8 @@ EM-Team v2.1.0 có hệ thống điều khiển giao tiếp thống nhất với
 EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 
 ```bash
-# Skills (36 commands) - Gõ trực tiếp
-/skill-name [task description]
+# Skills (36 commands) - Prefix em:skill:
+/em:skill:skill-name [task description]
 
 # Agents (31 commands) - Prefix em:
 /em:agent-name [task description]
@@ -170,36 +170,36 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 #### 📚 Skills (36 commands) - Gõ trực tiếp
 
 ```
-/brainstorming          - Explore ideas into designs
-/spec-driven-dev        - Create specifications
-/systematic-debugging   - Debug with scientific method
-/context-engineering    - Optimize agent context
-/writing-plans          - Write implementation plans
-/test-driven-dev        - TDD RED-GREEN-REFACTOR
-/frontend-patterns      - React/Next.js/Vue patterns
-/backend-patterns       - API/Database patterns
+/em:skill:brainstorming          - Explore ideas into designs
+/em:skill:spec-driven-development        - Create specifications
+/em:skill:systematic-debugging   - Debug with scientific method
+/em:skill:context-engineering    - Optimize agent context
+/em:skill:writing-plans          - Write implementation plans
+/em:skill:test-driven-development        - TDD RED-GREEN-REFACTOR
+/em:skill:frontend-patterns      - React/Next.js/Vue patterns
+/em:skill:backend-patterns       - API/Database patterns
 /typescript-patterns     - TypeScript types, async, React TS (MỚI)
 /python-patterns        - Python 3.10+, FastAPI, SQLAlchemy (MỚI)
 /go-patterns            - Go errors, concurrency, testing (MỚI)
 /rust-patterns          - Rust ownership, traits, tokio (MỚI)
-/security-hardening     - OWASP Top 10 security
-/incremental-impl       - Vertical slice development
-/subagent-dev           - Fresh context per task
-/source-driven-dev      - Code from official docs
-/api-interface-design   - Contract-first APIs
-/code-review            - 5-axis code review
-/code-simplification    - Reduce complexity
-/browser-testing        - DevTools MCP
-/performance-optimization - Measure-first optimization
-/e2e-testing            - Playwright testing
-/security-audit         - Vulnerability assessment
-/security-common        - OWASP reference & checklist (MỚI)
-/api-testing            - Integration testing
-/git-workflow           - Atomic commits
-/ci-cd-automation       - Feature flags
-/documentation          - ADRs & docs
-/finishing-branch       - Merge/PR decisions
-/deprecation-migration  - Code-as-liability
+/em:skill:security-hardening     - OWASP Top 10 security
+/em:skill:incremental-implementation       - Vertical slice development
+/em:skill:subagent-driven-development           - Fresh context per task
+/em:skill:source-driven-development      - Code from official docs
+/em:skill:api-interface-design   - Contract-first APIs
+/em:skill:code-review            - 5-axis code review
+/em:skill:code-simplification    - Reduce complexity
+/em:skill:browser-testing        - DevTools MCP
+/em:skill:performance-optimization - Measure-first optimization
+/em:skill:e2e-testing            - Playwright testing
+/em:skill:security-audit         - Vulnerability assessment
+/em:skill:security-common        - OWASP reference & checklist (MỚI)
+/em:skill:api-testing            - Integration testing
+/em:skill:git-workflow           - Atomic commits
+/em:skill:ci-cd-automation       - Feature flags
+/em:skill:documentation          - ADRs & docs
+/em:skill:finishing-branch       - Merge/PR decisions
+/em:skill:deprecation-migration  - Code-as-liability
 /style-switcher                - 13 personality + 3 density modes (MỚI)
 ```
 
@@ -276,16 +276,16 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 
 ```bash
 # Pattern cơ bản
-/skill-name [mô tả task]
+/em:skill:skill-name [mô tả task]
 
 # Ví dụ thực tế
-/brainstorming Explore authentication options với JWT, OAuth2, và Session-based
-/spec-driven-dev Create spec cho payment gateway integration
-/systematic-debugging Investigate memory leak trong API service
-/test-driven-dev Implement user registration với TDD
-/frontend-patterns Tạo reusable button component trong React
-/backend-patterns Design REST API cho user management
-/security-hardening Review code cho OWASP vulnerabilities
+/em:skill:brainstorming Explore authentication options với JWT, OAuth2, và Session-based
+/em:skill:spec-driven-development Create spec cho payment gateway integration
+/em:skill:systematic-debugging Investigate memory leak trong API service
+/em:skill:test-driven-development Implement user registration với TDD
+/em:skill:frontend-patterns Tạo reusable button component trong React
+/em:skill:backend-patterns Design REST API cho user management
+/em:skill:security-hardening Review code cho OWASP vulnerabilities
 ```
 
 ### Use Case Chi tiết: Authentication Feature
@@ -293,7 +293,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 1: Brainstorming
 
 ```bash
-/brainstorming Explore user authentication options
+/em:skill:brainstorming Explore user authentication options
 
 # Agent sẽ phân tích:
 # - JWT vs Session-based vs OAuth2
@@ -311,7 +311,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 2: Spec-driven Development
 
 ```bash
-/spec-driven-dev Create specification cho JWT authentication
+/em:skill:spec-driven-development Create specification cho JWT authentication
 
 # Agent sẽ tạo:
 # - Functional requirements
@@ -330,7 +330,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 3: Test-Driven Development
 
 ```bash
-/test-driven-dev Implement authentication với TDD
+/em:skill:test-driven-development Implement authentication với TDD
 
 # Agent sẽ theo cycle:
 # 1. RED - Viết failing test
@@ -944,8 +944,8 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # Task đơn giản, single concern → Skill
-/brainstorming Explore feature ideas
-/test-driven-dev Implement simple function
+/em:skill:brainstorming Explore feature ideas
+/em:skill:test-driven-development Implement simple function
 
 # Task chuyên môn, single domain → Agent
 /em-backend-expert Optimize database queries
@@ -1003,7 +1003,7 @@ Reproduction steps: [steps]
 
 ```bash
 # TDD Iron Law
-/test-driven-dev Implement feature
+/em:skill:test-driven-development Implement feature
 # Agent sẽ:
 # 1. RED - Viết failing test
 # 2. GREEN - Implement để pass
@@ -1020,7 +1020,7 @@ Reproduction steps: [steps]
 # NEVER fix WITHOUT root cause
 
 # Spec Iron Law
-/spec-driven-dev Create spec
+/em:skill:spec-driven-development Create spec
 # Agent sẽ:
 # 1. Write specification FIRST
 # 2. Get approval

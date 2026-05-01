@@ -329,9 +329,9 @@ EM-Team works with Claude Code CLI out of the box. Simply invoke skills, agents,
 **Development:**
 ```bash
 # Skills - invoke directly
-/brainstorming Explore authentication options
-/spec-driven-development Create spec for payment system
-/systematic-debugging Investigate login timeout bug
+/em:skill:brainstorming Explore authentication options
+/em:skill:spec-driven-development Create spec for payment system
+/em:skill:systematic-debugging Investigate login timeout bug
 
 # Agents - use /em: prefix
 /em:planner Create plan for user auth
@@ -687,14 +687,14 @@ Invoke skills directly by name:
 /pol-probe Design a lightweight validation experiment
 
 # Development Skills
-/brainstorming Explore ideas for this feature idea
-/spec-driven-development Create a spec for user authentication
-/systematic-debugging Investigate this bug systematically
-/test-driven-development Implement this feature with TDD
-/frontend-patterns Refactor these React components
-/backend-patterns Optimize this API endpoint
-/security-hardening Apply OWASP Top 10 security
-/code-simplification Reduce complexity in this code
+/em:skill:brainstorming Explore ideas for this feature idea
+/em:skill:spec-driven-development Create a spec for user authentication
+/em:skill:systematic-debugging Investigate this bug systematically
+/em:skill:test-driven-development Implement this feature with TDD
+/em:skill:frontend-patterns Refactor these React components
+/em:skill:backend-patterns Optimize this API endpoint
+/em:skill:security-hardening Apply OWASP Top 10 security
+/em:skill:code-simplification Reduce complexity in this code
 ```
 
 ### Using Agents
@@ -1375,13 +1375,13 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 
 ```bash
 # Step 1: Brainstorm the feature
-/brainstorming Explore a user authentication feature
+/em:skill:brainstorming Explore a user authentication feature
 
 # Step 2: Create a spec
-/spec-driven-development Create a spec for authentication
+/em:skill:spec-driven-development Create a spec for authentication
 
 # Step 3: Write a plan
-/writing-plans Break down the implementation
+/em:skill:writing-plans Break down the implementation
 
 # Step 4: Execute the plan
 /subagent-driven-development Implement the plan
@@ -1397,14 +1397,14 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 
 ```bash
 # Step 1: Debug systematically
-/systematic-debugging Investigate the login bug
+/em:skill:systematic-debugging Investigate the login bug
 
 # Step 2: Fix the root cause
 # (After root cause is identified)
-/test-driven-development Fix the bug
+/em:skill:test-driven-development Fix the bug
 
 # Step 3: Verify the fix
-/api-testing Verify the login endpoint works
+/em:skill:api-testing Verify the login endpoint works
 
 # Step 4: Code review
 /em:code-reviewer Review the bug fix
