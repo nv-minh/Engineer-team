@@ -1005,10 +1005,10 @@ A successful market-driven-feature workflow:
 ## Related Resources
 
 - **Agents:**
-  - `/em-market-intel` - Market analysis and competitive intelligence
-  - `/em-product` - Requirements and GAP analysis
-  - `/em-architect` - Technical design and architecture
-  - `/em-planner` - Implementation planning
+  - `/em:market-intel` - Market analysis and competitive intelligence
+  - `/em:product` - Requirements and GAP analysis
+  - `/em:architect` - Technical design and architecture
+  - `/em:planner` - Implementation planning
 
 - **Skills:**
   - `/jobs-to-be-done` - Customer jobs analysis
@@ -1017,8 +1017,8 @@ A successful market-driven-feature workflow:
   - `/opportunity-solution-tree` - Problem framing and solution exploration
 
 - **Workflows:**
-  - `/em-new-feature` - Standard feature development (enhanced with optional market validation)
-  - `/em-product-review` - Product spec review with market considerations
+  - `/em:new-feature` - Standard feature development (enhanced with optional market validation)
+  - `/em:product-review` - Product spec review with market considerations
 
 ---
 

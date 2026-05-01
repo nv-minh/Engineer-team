@@ -338,14 +338,14 @@ tier_1_skills:
 tier_2_agents:
   use_for: "Specialized, domain-specific tasks"
   examples:
-    - "/em-backend-expert Optimize API"
-    - "/em-security-auditor Audit system"
+    - "/em:backend-expert Optimize API"
+    - "/em:security-auditor Audit system"
 
 tier_3_workflows:
   use_for: "Complex, multi-phase processes"
   examples:
-    - "/em-new-feature Idea to production"
-    - "/em-distributed-investigation Full stack investigation"
+    - "/em:new-feature Idea to production"
+    - "/em:distributed-investigation Full stack investigation"
 ```
 
 ### 2. File-Based Communication Pattern

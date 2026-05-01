@@ -71,13 +71,13 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Create implementation plan
-"Agent: em-planner - Create plan for user authentication feature"
+"Agent: em:planner - Create plan for user authentication feature"
 
 # Review code
-"Agent: em-code-reviewer - Review the authentication PR"
+"Agent: em:code-reviewer - Review the authentication PR"
 
 # Debug issues
-"Agent: em-debugger - Investigate the authentication failure"
+"Agent: em:debugger - Investigate the authentication failure"
 ```
 
 ### 3. Using Workflows
@@ -109,13 +109,13 @@ Run end-to-end processes:
 "Use the spec-driven-development skill to create a spec"
 
 # Step 3: Plan implementation
-"Agent: em-planner - Create implementation plan for user profile"
+"Agent: em:planner - Create implementation plan for user profile"
 
 # Step 4: Implement
 "Use the subagent-driven-development skill to implement the plan"
 
 # Step 5: Review
-"Agent: em-code-reviewer - Review the user profile implementation"
+"Agent: em:code-reviewer - Review the user profile implementation"
 
 # Step 6: Deploy
 "Workflow: em-deployment - Deploy user profile feature"
@@ -135,14 +135,14 @@ Run end-to-end processes:
 "Use the api-testing skill to verify the fix"
 
 # Step 4: Review
-"Agent: em-code-reviewer - Review the bug fix"
+"Agent: em:code-reviewer - Review the bug fix"
 ```
 
 ### Task 3: Code Review
 
 ```bash
 # Standard review
-"Agent: em-code-reviewer - Review the changes in this PR"
+"Agent: em:code-reviewer - Review the changes in this PR"
 
 # Deep 9-axis review
 "Workflow: em-code-review-9axis - Deep review of authentication changes"
@@ -165,7 +165,7 @@ For complex tasks requiring multiple specialist agents:
 tmux attach -t claude-work:orchestrator
 
 # Trigger distributed investigation
-"Agent: em-techlead-orchestrator - Investigate authentication across the stack"
+"Agent: em:techlead-orchestrator - Investigate authentication across the stack"
 
 # View consolidated report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md

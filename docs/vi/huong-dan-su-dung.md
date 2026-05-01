@@ -38,17 +38,17 @@ em-show           # Hoặc em-commands
 # Xem help
 em-help
 
-# Skills - Gõ trực tiếp tên skill
+# Skills - Prefix em:skill:
 /em:skill:brainstorming User authentication với JWT
 /em:skill:spec-driven-development Tạo spec cho payment system
 
 # Agents - Gõ với em: prefix
-/em-planner Tạo kế hoạch cho JWT auth
-/em-code-reviewer Review PR #123
+/em:planner Tạo kế hoạch cho JWT auth
+/em:code-reviewer Review PR #123
 
 # Workflows - Gõ với em: prefix
-/em-new-feature Triển khai user authentication
-/em-bug-fix Fix login timeout bug
+/em:new-feature Triển khai user authentication
+/em:bug-fix Fix login timeout bug
 ```
 
 ---
@@ -167,7 +167,7 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 
 ### Tất cả Commands Available
 
-#### 📚 Skills (36 commands) - Gõ trực tiếp
+#### 📚 Skills (36 commands) - Prefix em:skill:
 
 ```
 /em:skill:brainstorming          - Explore ideas into designs
@@ -178,10 +178,10 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 /em:skill:test-driven-development        - TDD RED-GREEN-REFACTOR
 /em:skill:frontend-patterns      - React/Next.js/Vue patterns
 /em:skill:backend-patterns       - API/Database patterns
-/typescript-patterns     - TypeScript types, async, React TS (MỚI)
-/python-patterns        - Python 3.10+, FastAPI, SQLAlchemy (MỚI)
-/go-patterns            - Go errors, concurrency, testing (MỚI)
-/rust-patterns          - Rust ownership, traits, tokio (MỚI)
+/em:skill:typescript-patterns     - TypeScript types, async, React TS (MỚI)
+/em:skill:python-patterns        - Python 3.10+, FastAPI, SQLAlchemy (MỚI)
+/em:skill:go-patterns            - Go errors, concurrency, testing (MỚI)
+/em:skill:rust-patterns          - Rust ownership, traits, tokio (MỚI)
 /em:skill:security-hardening     - OWASP Top 10 security
 /em:skill:incremental-implementation       - Vertical slice development
 /em:skill:subagent-driven-development           - Fresh context per task
@@ -200,66 +200,66 @@ EM-Team v2.1.0 sử dụng cấu trúc command thống nhất:
 /em:skill:documentation          - ADRs & docs
 /em:skill:finishing-branch       - Merge/PR decisions
 /em:skill:deprecation-migration  - Code-as-liability
-/style-switcher                - 13 personality + 3 density modes (MỚI)
+/em:skill:style-switcher                - 13 personality + 3 density modes (MỚI)
 ```
 
 #### 🤖 Agents (31 commands) - Prefix em:
 
 ```
-/em-planner               - Create implementation plans
-/em-executor              - Execute plans with atomic commits
-/em-code-reviewer         - 5-axis code review
-/em-debugger              - Systematic debugging
-/em-test-engineer         - Test strategy & generation
-/em-security-auditor      - OWASP security audit
-/em-ui-auditor            - Visual QA and design review
-/em-verifier              - Post-execution verification
-/em-architect             - Architecture & technical design
-/em-backend-expert        - Database, API, performance ⭐
-/em-frontend-expert       - React/Next.js, UI/UX ⭐
-/em-database-expert       - Schema, queries, fintech ⭐
-/em-product-manager       - Requirements, GAP analysis
-/em-senior-code-reviewer  - 9-axis deep code review
-/em-security-reviewer     - OWASP + STRIDE security
-/em-staff-engineer        - Root cause analysis
-/em-team-lead             - Team coordination
-/em-techlead-orchestrator - Distributed investigation ⭐
-/em-researcher            - Technical research
-/em-codebase-mapper       - Architecture analysis
-/em-integration-checker   - Cross-phase validation
-/em-performance-auditor   - Benchmarking & optimization ⭐
-/em-market-intelligence   - Market analysis, competitive intel
-/em-learn                 - Knowledge management
-/em-autoplan              - Multi-phase review orchestrator
-/em-design-reviewer       - Visual design, 6-pillar UI audit (MỚI) 🎨
-/em-devex-reviewer        - Dev experience audit, TTHW (MỚI) 🎨
-/em-iron-law-enforcer     - Iron Law compliance gate (MỚI) 🔒
+/em:planner               - Create implementation plans
+/em:executor              - Execute plans with atomic commits
+/em:code-reviewer         - 5-axis code review
+/em:debugger              - Systematic debugging
+/em:test-engineer         - Test strategy & generation
+/em:security-auditor      - OWASP security audit
+/em:ui-auditor            - Visual QA and design review
+/em:verifier              - Post-execution verification
+/em:architect             - Architecture & technical design
+/em:backend-expert        - Database, API, performance ⭐
+/em:frontend-expert       - React/Next.js, UI/UX ⭐
+/em:database-expert       - Schema, queries, fintech ⭐
+/em:product-manager       - Requirements, GAP analysis
+/em:senior-code-reviewer  - 9-axis deep code review
+/em:security-reviewer     - OWASP + STRIDE security
+/em:staff-engineer        - Root cause analysis
+/em:team-lead             - Team coordination
+/em:techlead-orchestrator - Distributed investigation ⭐
+/em:researcher            - Technical research
+/em:codebase-mapper       - Architecture analysis
+/em:integration-checker   - Cross-phase validation
+/em:performance-auditor   - Benchmarking & optimization ⭐
+/em:market-intelligence   - Market analysis, competitive intel
+/em:learn                 - Knowledge management
+/em:autoplan              - Multi-phase review orchestrator
+/em:design-reviewer       - Visual design, 6-pillar UI audit (MỚI) 🎨
+/em:devex-reviewer        - Dev experience audit, TTHW (MỚI) 🎨
+/em:iron-law-enforcer     - Iron Law compliance gate (MỚI) 🔒
 ```
 
 #### 🔄 Workflows (23 commands) - Prefix em:
 
 ```
-/em-new-feature           - Idea → Production
-/em-bug-fix               - Investigate and fix bugs
-/em-refactoring           - Improve code quality
-/em-security-audit        - Security assessment
-/em-project-setup         - Initialize projects
-/em-documentation         - Generate docs
-/em-deployment            - Deploy and monitor
-/em-retro                 - Learn and improve
-/em-ship-workflow         - Version bump, changelog, PR (MỚI)
-/em-canary-monitoring     - Post-deploy health check (MỚI)
-/em-six-phase-lifecycle   - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (MỚI)
-/em-team-review           - Full team review
-/em-architecture-review   - Architecture review
-/em-design-review         - UI/UX review
-/em-code-review-9axis     - Deep 9-axis review
-/em-database-review       - Database review
-/em-product-review        - Product review
-/em-security-review-advanced - Advanced security
-/em-incident-response     - Production incidents
-/em-distributed-investigation - Parallel investigation ⭐
-/em-distributed-development    - Parallel development ⭐
+/em:new-feature           - Idea → Production
+/em:bug-fix               - Investigate and fix bugs
+/em:refactoring           - Improve code quality
+/em:security-audit        - Security assessment
+/em:project-setup         - Initialize projects
+/em:documentation         - Generate docs
+/em:deployment            - Deploy and monitor
+/em:retro                 - Learn and improve
+/em:ship-workflow         - Version bump, changelog, PR (MỚI)
+/em:canary-monitoring     - Post-deploy health check (MỚI)
+/em:six-phase-lifecycle   - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (MỚI)
+/em:team-review           - Full team review
+/em:architecture-review   - Architecture review
+/em:design-review         - UI/UX review
+/em:code-review-9axis     - Deep 9-axis review
+/em:database-review       - Database review
+/em:product-review        - Product review
+/em:security-review-advanced - Advanced security
+/em:incident-response     - Production incidents
+/em:distributed-investigation - Parallel investigation ⭐
+/em:distributed-development    - Parallel development ⭐
 ```
 
 ---
@@ -363,14 +363,14 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 /em:agent-name [mô tả task]
 
 # Ví dụ thực tế
-/em-planner Create implementation plan cho JWT auth
-/em-executor Implement authentication system
-/em-code-reviewer Review PR #123 authentication
-/em-debugger Investigate login timeout bug
-/em-backend-expert Optimize database queries
-/em-frontend-expert Review React components
-/em-database-expert Design user schema
-/em-security-auditor Audit authentication system
+/em:planner Create implementation plan cho JWT auth
+/em:executor Implement authentication system
+/em:code-reviewer Review PR #123 authentication
+/em:debugger Investigate login timeout bug
+/em:backend-expert Optimize database queries
+/em:frontend-expert Review React components
+/em:database-expert Design user schema
+/em:security-auditor Audit authentication system
 ```
 
 ### Use Case Chi tiết: Code Review
@@ -379,7 +379,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 
 ```bash
 # Bước 1: Code review cơ bản
-/em-code-reviewer Review PR #123
+/em:code-reviewer Review PR #123
 
 # Agent sẽ kiểm tra:
 # - Correctness: Code có đúng không?
@@ -389,7 +389,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Maintainability: Code có dễ maintain không?
 
 # Bước 2: Deep review 9-axis (cho critical code)
-/em-senior-code-reviewer Deep review PR #123
+/em:senior-code-reviewer Deep review PR #123
 
 # Agent sẽ kiểm tra 9 dimensions:
 # - Correctness
@@ -403,7 +403,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Architecture Alignment
 
 # Bước 3: Security review (cho sensitive code)
-/em-security-reviewer OWASP + STRIDE security review
+/em:security-reviewer OWASP + STRIDE security review
 
 # Agent sẽ phân tích:
 # - OWASP Top 10 vulnerabilities
@@ -417,7 +417,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 
 ```bash
 # Bước 1: Benchmark current state
-/em-performance-auditor Benchmark API endpoints
+/em:performance-auditor Benchmark API endpoints
 
 # Agent sẽ:
 # - Measure response times
@@ -426,7 +426,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Find bottlenecks
 
 # Bước 2: Analyze backend
-/em-backend-expert Analyze database queries và API performance
+/em:backend-expert Analyze database queries và API performance
 
 # Agent sẽ:
 # - Review query patterns
@@ -435,7 +435,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Analyze caching strategy
 
 # Bước 3: Analyze frontend
-/em-frontend-expert Review React rendering performance
+/em:frontend-expert Review React rendering performance
 
 # Agent sẽ:
 # - Check unnecessary re-renders
@@ -444,7 +444,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Check memoization
 
 # Bước 4: Implement optimizations
-/em-executor Implement performance optimizations
+/em:executor Implement performance optimizations
 
 # Agent sẽ:
 # - Add database indexes
@@ -453,7 +453,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Add pagination
 
 # Bước 5: Verify improvements
-/em-performance-auditor Re-benchmark sau optimization
+/em:performance-auditor Re-benchmark sau optimization
 
 # Agent sẽ:
 # - Compare before/after metrics
@@ -480,11 +480,11 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 /em:workflow-name [mô tả task]
 
 # Ví dụ thực tế
-/em-new-feature Implement user authentication from idea to production
-/em-bug-fix Fix login timeout bug systematically
-/em-refactoring Refactor authentication code for better maintainability
-/em-security-audit Audit payment system for vulnerabilities
-/em-distributed-investigation Investigate authentication failure across full stack
+/em:new-feature Implement user authentication from idea to production
+/em:bug-fix Fix login timeout bug systematically
+/em:refactoring Refactor authentication code for better maintainability
+/em:security-audit Audit payment system for vulnerabilities
+/em:distributed-investigation Investigate authentication failure across full stack
 ```
 
 ### Use Case Chi tiết: New Feature Workflow
@@ -492,13 +492,13 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #### Workflow: New Feature
 
 ```bash
-/em-new-feature Implement user authentication
+/em:new-feature Implement user authentication
 
 # Workflow sẽ đi qua 7 phases:
 
 # PHASE 1: DEFINE
 # ==============================
-# Agent: em-product-manager
+# Agent: em:product-manager
 # Output: Feature specification với:
 #   - Business requirements
 #   - User stories
@@ -507,7 +507,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 2: PLAN
 # ==============================
-# Agent: em-planner
+# Agent: em:planner
 # Output: Implementation plan với:
 #   - Technical approach
 #   - Database schema
@@ -518,7 +518,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 3: BUILD
 # ==============================
-# Agent: em-executor
+# Agent: em:executor
 # Output: Working implementation với:
 #   - Database migrations
 #   - Backend API
@@ -528,7 +528,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 4: VERIFY
 # ==============================
-# Agent: em-test-engineer
+# Agent: em:test-engineer
 # Output: Test results với:
 #   - Unit tests (80%+ coverage)
 #   - Integration tests
@@ -546,7 +546,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 6: SIMPLIFY
 # ==============================
-# Agent: em-code-reviewer
+# Agent: em:code-reviewer
 # Output: Refactored code với:
 #   - Reduced complexity
 #   - Better abstractions
@@ -555,7 +555,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 7: SHIP
 # ==============================
-# Agent: em-verifier
+# Agent: em:verifier
 # Output: Deployment package với:
 #   - Final verification
 #   - Deployment checklist
@@ -568,13 +568,13 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #### Workflow: Bug Fix
 
 ```bash
-/em-bug-fix Fix login timeout bug
+/em:bug-fix Fix login timeout bug
 
 # Workflow sẽ đi qua 5 phases:
 
 # PHASE 1: INVESTIGATE
 # ==============================
-# Agent: em-debugger
+# Agent: em:debugger
 # Process:
 #   1. Gather information
 #   2. Reproduce bug
@@ -587,7 +587,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 2: ANALYZE
 # ==============================
-# Agent: em-staff-engineer
+# Agent: em:staff-engineer
 # Process:
 #   1. Root cause analysis
 #   2. Cross-service impact
@@ -599,7 +599,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 3: HYPOTHESIZE
 # ==============================
-# Agent: em-debugger
+# Agent: em:debugger
 # Process:
 #   1. Form hypothesis
 #   2. Design experiment
@@ -611,7 +611,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 4: IMPLEMENT
 # ==============================
-# Agent: em-executor
+# Agent: em:executor
 # Process:
 #   1. Write failing test (TDD)
 #   2. Implement fix
@@ -624,7 +624,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 5: VERIFY
 # ==============================
-# Agent: em-verifier
+# Agent: em:verifier
 # Process:
 #   1. Run all tests
 #   2. Verify fix
@@ -679,7 +679,7 @@ Chế độ phân tán chạy nhiều specialist agents song song trong tmux ses
 tmux attach -t claude-work:orchestrator
 
 # Bước 3: Kích hoạt investigation
-/em-techlead-orchestrator Investigate authentication failure affecting 10% users
+/em:techlead-orchestrator Investigate authentication failure affecting 10% users
 
 # Tech Lead sẽ:
 # 1. Analyze problem
@@ -743,7 +743,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: REQUIREMENTS
-/em-product-manager Define payment feature requirements
+/em:product-manager Define payment feature requirements
 
 # Output:
 # - User stories
@@ -752,7 +752,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Success metrics
 
 # PHASE 2: PLANNING
-/em-planner Create implementation plan cho Stripe integration
+/em:planner Create implementation plan cho Stripe integration
 
 # Output:
 # - Architecture decision
@@ -762,7 +762,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Error handling strategy
 
 # PHASE 3: SECURITY REVIEW
-/em-security-auditor Review payment security requirements
+/em:security-auditor Review payment security requirements
 
 # Output:
 # - Security assessment
@@ -771,7 +771,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - PCI DSS checklist
 
 # PHASE 4: IMPLEMENTATION
-/em-executor Implement Stripe payment integration
+/em:executor Implement Stripe payment integration
 
 # Process:
 # 1. Database migrations (TDD)
@@ -786,7 +786,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - API documentation
 
 # PHASE 5: TESTING
-/em-test-engineer Create test strategy cho payment system
+/em:test-engineer Create test strategy cho payment system
 
 # Output:
 # - Unit tests (90%+ coverage)
@@ -795,8 +795,8 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Security tests (OWASP ZAP)
 
 # PHASE 6: REVIEW
-/em-code-reviewer Review payment code
-/em-security-reviewer Security review payment system
+/em:code-reviewer Review payment code
+/em:security-reviewer Security review payment system
 
 # Output:
 # - Code quality assessment
@@ -804,7 +804,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Recommendations
 
 # PHASE 7: DEPLOYMENT
-/em-deployment Deploy payment feature to staging
+/em:deployment Deploy payment feature to staging
 
 # Output:
 # - Staging deployment
@@ -819,7 +819,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: ANALYSIS
-/em-codebase-mapper Analyze user service architecture
+/em:codebase-mapper Analyze user service architecture
 
 # Output:
 # - Current architecture analysis
@@ -828,7 +828,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Refactoring opportunities
 
 # PHASE 2: QUALITY ASSESSMENT
-/em-senior-code-reviewer Deep review user service code
+/em:senior-code-reviewer Deep review user service code
 
 # Output:
 # - 9-axis code review
@@ -837,7 +837,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Technical debt
 
 # PHASE 3: PLANNING
-/em-planner Create refactoring plan
+/em:planner Create refactoring plan
 
 # Output:
 # - Refactoring strategy
@@ -846,9 +846,9 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Testing approach
 
 # PHASE 4: REFACTORING (incremental)
-/em-refactoring Refactor user authentication module
-/em-refactoring Refactor user profile module
-/em-refactoring Refactor user permissions module
+/em:refactoring Refactor user authentication module
+/em:refactoring Refactor user profile module
+/em:refactoring Refactor user permissions module
 
 # Each refactoring:
 # 1. Write tests (TDD)
@@ -858,7 +858,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # 5. Document changes
 
 # PHASE 5: VERIFICATION
-/em-test-engineer Verify refactoring with regression tests
+/em:test-engineer Verify refactoring with regression tests
 
 # Output:
 # - Regression test suite
@@ -866,7 +866,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Performance comparison
 
 # PHASE 6: DEPLOYMENT
-/em-deployment Deploy refactored service
+/em:deployment Deploy refactored service
 
 # Output:
 # - Gradual rollout
@@ -880,8 +880,8 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: ARCHITECTURE ASSESSMENT
-/em-architect Review current architecture
-/em-codebase-mapper Map dependencies and boundaries
+/em:architect Review current architecture
+/em:codebase-mapper Map dependencies and boundaries
 
 # Output:
 # - Current architecture analysis
@@ -889,9 +889,9 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Migration roadmap
 
 # PHASE 2: DESIGN
-/em-architect Design microservices architecture
-/em-database-expert Design data distribution strategy
-/em-backend-expert Design inter-service communication
+/em:architect Design microservices architecture
+/em:database-expert Design data distribution strategy
+/em:backend-expert Design inter-service communication
 
 # Output:
 # - Architecture decision record (ADR)
@@ -900,7 +900,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - API contracts
 
 # PHASE 3: PROOF OF CONCEPT
-/em-new-feature Implement first microservice (user service)
+/em:new-feature Implement first microservice (user service)
 
 # Output:
 # - Working microservice
@@ -908,7 +908,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Patterns established
 
 # PHASE 4: MIGRATION (incremental)
-/em-distributed-development Migrate features to microservices in parallel
+/em:distributed-development Migrate features to microservices in parallel
 
 # Parallel teams:
 # - Team 1: User service
@@ -917,10 +917,10 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Team 4: Order service
 
 # Each team uses:
-/em-new-feature Implement [service] features
+/em:new-feature Implement [service] features
 
 # PHASE 5: INTEGRATION
-/em-integration-checker Verify cross-service integration
+/em:integration-checker Verify cross-service integration
 
 # Output:
 # - Integration test results
@@ -928,7 +928,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Data flow verification
 
 # PHASE 6: DEPLOYMENT
-/em-deployment Deploy microservices to production
+/em:deployment Deploy microservices to production
 
 # Output:
 # - Deployment strategy
@@ -948,31 +948,31 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 /em:skill:test-driven-development Implement simple function
 
 # Task chuyên môn, single domain → Agent
-/em-backend-expert Optimize database queries
-/em-frontend-expert Review React components
-/em-security-auditor Audit authentication
+/em:backend-expert Optimize database queries
+/em:frontend-expert Review React components
+/em:security-auditor Audit authentication
 
 # Quy trình phức tạp, multi-phase → Workflow
-/em-new-feature Take feature from idea to production
-/em-bug-fix Fix bug systematically
-/em-refactoring Improve code quality
+/em:new-feature Take feature from idea to production
+/em:bug-fix Fix bug systematically
+/em:refactoring Improve code quality
 
 # Task multi-domain, cần parallel → Distributed Mode
 ./scripts/distributed-orchestrator.sh start
-/em-techlead-orchestrator Investigate across full stack
+/em:techlead-orchestrator Investigate across full stack
 ```
 
 ### 2. Viết Prompts Hiệu quả
 
 ```bash
 # ❌ Quá mơ hồ
-/em-planner Lập kế hoạch
+/em:planner Lập kế hoạch
 
 # ❌ Quá cụ thể, micromanaging
-/em-planner Tạo kế hoạch với 5 tasks, task 1 làm A, task 2 làm B, ...
+/em:planner Tạo kế hoạch với 5 tasks, task 1 làm A, task 2 làm B, ...
 
 # ✅ Cân bằng - Clear goal với sufficient context
-/em-planner Tạo kế hoạch triển khai cho user authentication với JWT.
+/em:planner Tạo kế hoạch triển khai cho user authentication với JWT.
 Nên bao gồm: database schema, API endpoints, frontend components,
 testing strategy, và security considerations.
 ```
@@ -981,10 +981,10 @@ testing strategy, và security considerations.
 
 ```bash
 # ❌ Không có context
-/em-debugger Fix bug
+/em:debugger Fix bug
 
 # ✅ Với context
-/em-debugger Investigate login timeout bug.
+/em:debugger Investigate login timeout bug.
 Started 2 hours ago after deployment.
 Error: "Connection timeout after 30s".
 Affects 10% of login attempts.
@@ -992,7 +992,7 @@ Backend logs show database query timeouts.
 Database: PostgreSQL 13, connection pool: 20 max.
 
 # ✅✅ Với context + artifacts
-/em-debugger Investigate login timeout.
+/em:debugger Investigate login timeout.
 Bug report: JIRA-123
 Logs: /var/log/auth-service.log
 Metrics: https://grafana.example.com/d/auth
@@ -1011,7 +1011,7 @@ Reproduction steps: [steps]
 # NEVER write production code WITHOUT failing test
 
 # Debugging Iron Law
-/em-debugger Investigate bug
+/em:debugger Investigate bug
 # Agent sẽ:
 # 1. Gather information
 # 2. Form hypotheses
@@ -1032,25 +1032,25 @@ Reproduction steps: [steps]
 
 ```bash
 # ❌ Big bang approach
-/em-new-feature Implement entire e-commerce system
+/em:new-feature Implement entire e-commerce system
 
 # ✅ Iterative approach
-/em-new-feature Implement user registration
+/em:new-feature Implement user registration
 # Review, test, deploy
 
-/em-new-feature Implement user profile
+/em:new-feature Implement user profile
 # Review, test, deploy
 
-/em-new-feature Implement user authentication
+/em:new-feature Implement user authentication
 # Review, test, deploy
 
 # ✅✅ Incremental with feedback
-/em-new-feature Implement MVP authentication
-/em-code-reviewer Review authentication
+/em:new-feature Implement MVP authentication
+/em:code-reviewer Review authentication
 # Incorporate feedback
 
-/em-new-feature Add OAuth2 support
-/em-security-auditor Audit OAuth2 implementation
+/em:new-feature Add OAuth2 support
+/em:security-auditor Audit OAuth2 implementation
 # Incorporate feedback
 ```
 
@@ -1187,7 +1187,7 @@ cd tests
 # Tests sẽ tự retry với exponential backoff
 
 # 5. Review test logs
-cat /tmp/em-team-test-logs/latest.log
+cat /tmp/em:team-test-logs/latest.log
 ```
 
 ---

@@ -317,13 +317,13 @@ EM-Team works with Claude Code CLI out of the box. Simply invoke skills, agents,
 /office-hours I have an idea for a AI-powered code reviewer
 
 # Run complete discovery workflow
-/em-discovery-process We need to improve our checkout conversion rate
+/em:discovery-process We need to improve our checkout conversion rate
 
 # Capture project learnings
-/em-learn We just completed a major refactoring project
+/em:learn We just completed a major refactoring project
 
 # Coordinate multi-phase reviews
-/em-autoplan Coordinate reviews for our new authentication feature
+/em:autoplan Coordinate reviews for our new authentication feature
 ```
 
 **Development:**
@@ -451,13 +451,13 @@ Get started with EM-Team in 5 minutes!
 /office-hours I have an idea for a AI-powered code reviewer
 
 # Run discovery workflow (2-4 weeks)
-/em-discovery-process We need to improve our checkout conversion
+/em:discovery-process We need to improve our checkout conversion
 
 # Capture learnings from completed projects
-/em-learn We just completed a major refactoring project
+/em:learn We just completed a major refactoring project
 
 # Coordinate multi-phase reviews
-/em-autoplan Coordinate reviews for our new authentication feature
+/em:autoplan Coordinate reviews for our new authentication feature
 ```
 
 **Or use other discovery skills:**
@@ -607,10 +607,10 @@ Use the /jobs-to-be-done skill to understand customer motivation
 Use the /lean-ux-canvas skill to frame business problems
 Use the /opportunity-solution-tree skill to explore solutions
 Use the /pol-probe skill to design validation experiments
-Use the /em-discovery-process skill to run complete discovery
-Use the /em-learn skill to capture project learnings
-Use the /em-autoplan skill to coordinate reviews
-Use the /em-market-intelligence skill to analyze markets
+Use the /em:discovery-process skill to run complete discovery
+Use the /em:learn skill to capture project learnings
+Use the /em:autoplan skill to coordinate reviews
+Use the /em:market-intelligence skill to analyze markets
 ```
 
 **Agent Commands:**
@@ -659,19 +659,19 @@ Validate product ideas and run discovery before building:
 # → 6 forcing questions, scoring system, go/no-go decision
 
 # Run complete discovery workflow
-/em-discovery-process We need to improve our checkout conversion rate
+/em:discovery-process We need to improve our checkout conversion rate
 # → 6 stages: Frame → Research → Synthesize → Solutions → Decide (2-4 weeks)
 
 # Capture project learnings
-/em-learn We just completed a major refactoring project
+/em:learn We just completed a major refactoring project
 # → Patterns, pitfalls, preferences, architecture decisions
 
 # Coordinate multi-phase reviews
-/em-autoplan Coordinate reviews for our new authentication feature
+/em:autoplan Coordinate reviews for our new authentication feature
 # → CEO, Design, Engineering, DX reviews with auto-decision framework
 
 # Market analysis
-/em-market-intelligence Analyze the CRM market for SMB
+/em:market-intelligence Analyze the CRM market for SMB
 # → Market sizing, competitive analysis, opportunity detection
 ```
 
@@ -703,24 +703,24 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Discovery & Learning Agents
-/em-market-intelligence Analyze market opportunity
-/em-learn Capture project learnings
-/em-autoplan Coordinate multi-phase reviews
+/em:market-intelligence Analyze market opportunity
+/em:learn Capture project learnings
+/em:autoplan Coordinate multi-phase reviews
 
 # Core Development Agents
-/em-planner Create implementation plan for user authentication feature
-/em-executor Execute plan with atomic commits
-/em-code-reviewer Review the changes in this PR
-/em-debugger Investigate this bug systematically
-/em-test-engineer Generate test strategy for this feature
-/em-security-auditor Audit this code for security issues
+/em:planner Create implementation plan for user authentication feature
+/em:executor Execute plan with atomic commits
+/em:code-reviewer Review the changes in this PR
+/em:debugger Investigate this bug systematically
+/em:test-engineer Generate test strategy for this feature
+/em:security-auditor Audit this code for security issues
 
 # Expert Agents
-/em-backend-expert Review API performance and optimize queries
-/em-frontend-expert Review React components and UI/UX
-/em-database-expert Optimize database schema and queries
-/em-architect Design architecture for this system
-/em-product-manager Gather requirements for this feature
+/em:backend-expert Review API performance and optimize queries
+/em:frontend-expert Review React components and UI/UX
+/em:database-expert Optimize database schema and queries
+/em:architect Design architecture for this system
+/em:product-manager Gather requirements for this feature
 ```
 
 ### Using Workflows
@@ -729,21 +729,21 @@ Run end-to-end workflows:
 
 ```bash
 # Discovery & Feature Workflows
-/em-discovery-process Take this problem through complete discovery
-/em-new-feature Take user authentication from idea to production
-/em-market-driven-feature Launch this market-driven feature
+/em:discovery-process Take this problem through complete discovery
+/em:new-feature Take user authentication from idea to production
+/em:market-driven-feature Launch this market-driven feature
 
 # Core Workflows
-/em-bug-fix Fix the login bug systematically
-/em-refactor Improve code quality in this module
-/em-security-audit Audit the codebase for security issues
+/em:bug-fix Fix the login bug systematically
+/em:refactor Improve code quality in this module
+/em:security-audit Audit the codebase for security issues
 
 # Team Review Workflows
-/em-team-review Coordinate full team review
-/em-architecture-review Architecture review with team
-/em-design-review UI/UX design review
-/em-code-review-9axis Deep 9-axis code review
-/em-distributed-investigation Parallel investigation across services
+/em:team-review Coordinate full team review
+/em:architecture-review Architecture review with team
+/em:design-review UI/UX design review
+/em:code-review-9axis Deep 9-axis code review
+/em:distributed-investigation Parallel investigation across services
 ```
 
 ## Project Structure
@@ -1352,10 +1352,10 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 /office-hours I have an idea for a AI-powered code reviewer for startups
 
 # Step 2: Run discovery (if score 8-10 or 5-7)
-/em-discovery-process We need to improve our checkout conversion rate
+/em:discovery-process We need to improve our checkout conversion rate
 
 # Step 3: Coordinate reviews
-/em-autoplan Coordinate reviews for our new authentication feature
+/em:autoplan Coordinate reviews for our new authentication feature
 
 # Step 4: Create implementation plan
 /em:planner Create plan for authentication feature
@@ -1416,7 +1416,7 @@ For complex tasks requiring multiple specialist agents:
 
 ```bash
 # Start distributed orchestration
-cd /path/to/em-team
+cd /path/to/em:team
 ./scripts/distributed-orchestrator.sh start
 
 # Attach to orchestrator window
