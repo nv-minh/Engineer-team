@@ -1,7 +1,7 @@
 ---
 name: pol-probe
 description: "Proof of Life probes - lightweight, disposable validation experiments to test risky hypotheses cheaply. Use for eliminating risks before expensive development and avoiding prototype theater. Keywords: pol-probe, validation, experiments, hypothesis-testing, lean-validation"
-category: Foundation
+category: additional
 compatibility: Claude Code, Claude Desktop, Cursor
 metadata:
   author: EM-Team

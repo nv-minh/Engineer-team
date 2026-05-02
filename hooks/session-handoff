@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# EM-Team Session End Hook
+#
+# Generates SESSION_HANDOFF.md when session ends
+# Install: Copy or symlink to .git/hooks/ or configure in Claude Code hooks
+#
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Run the handoff generator
+if [ -f "$PROJECT_ROOT/scripts/session-handoff.sh" ]; then
+    bash "$PROJECT_ROOT/scripts/session-handoff.sh"
+fi

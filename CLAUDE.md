@@ -25,20 +25,29 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 36+ skills
+├── skills/              # 44 skills
 │   ├── foundation/      # 6 core foundational skills
-│   ├── development/     # 16 development skills (including language patterns)
+│   ├── development/     # 17 development skills (including language patterns + diagram)
 │   ├── quality/         # 10 quality assurance skills
-│   └── workflow/        # 5 workflow and automation skills
-├── agents/              # 28 specialized agents (8 core + 12 specialized + 8 additional)
-├── workflows/           # 23 end-to-end workflows (4 primary + 4 support + 8 team + 2 distributed + 5 new)
+│   ├── workflow/        # 6 workflow and automation skills
+│   └── additional/      # 5 product & discovery skills
+├── agents/              # 27 specialized agents (8 core + 4 optional + 8 specialized + 7 v2.0+)
+├── workflows/           # 23 end-to-end workflows (4 primary + 6 support + 8 team + 2 distributed + 1 master + 2 incident)
+├── .claude/
+│   ├── lib/             # Agent Trace Store (code provenance tracking)
+│   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
+│   └── rules/           # Operational rules (mistakes ledger, context management)
 ├── templates/           # Reusable templates + context artifacts
 │   └── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
 ├── preambles/           # Shared initialization (ethos, skill preamble, agent preamble)
 ├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging)
 ├── references/          # Shared reference docs (security, testing, code-quality, API, verification)
-├── hooks/              # Automation hooks
+├── hooks/              # Automation hooks (pre-commit, post-commit, session-handoff)
 ├── commands/           # CLI commands
+├── distributed/         # Distributed orchestration scripts (session coordinator, queue monitor, sync)
+├── docs/               # Documentation (architecture guide, guides, Vietnamese docs)
+├── scripts/            # Setup and orchestration scripts
+├── .github/workflows/  # CI pipeline (skill/agent validation)
 └── CLAUDE.md           # Main configuration (this file)
 ```
 
@@ -52,7 +61,7 @@ em-team/
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (16 skills)
+### Development Skills (17 skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
 8. **frontend-patterns** - React/Next.js/Vue patterns
 9. **backend-patterns** - API/Database patterns
@@ -69,33 +78,34 @@ em-team/
 20. **architecture-improvement** - Systematic module deepening
 21. **issue-generator** - Plans to structured vertical-slice issues
 22. **prd-generator** - Ideas to structured PRD documents
+23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
 
 ### Quality Skills (10 skills)
-23. **code-review** - 5-axis review framework
-24. **code-simplification** - Reduce complexity
-25. **browser-testing** - DevTools MCP integration
-26. **performance-optimization** - Measure-first optimization
-27. **e2e-testing** - Playwright patterns
-28. **security-audit** - Vulnerability assessment
-29. **api-testing** - Integration testing
-30. **security-common** - OWASP reference and security checklist
-31. **ux-audit** - Behavioral UX audit with scored dimensions
-32. **plan-tune** - Learn and tune output preferences
+24. **code-review** - 5-axis review framework
+25. **code-simplification** - Reduce complexity
+26. **browser-testing** - DevTools MCP integration
+27. **performance-optimization** - Measure-first optimization
+28. **e2e-testing** - Playwright patterns
+29. **security-audit** - Vulnerability assessment
+30. **api-testing** - Integration testing
+31. **security-common** - OWASP reference and security checklist
+32. **ux-audit** - Behavioral UX audit with scored dimensions
+33. **plan-tune** - Learn and tune output preferences
 
-### Workflow Skills (5 skills)
-33. **git-workflow** - Atomic commits
-34. **ci-cd-automation** - Feature flags, quality gates
-35. **documentation** - ADRs, API docs
-36. **finishing-branch** - Merge/PR decisions
-37. **deprecation-migration** - Code-as-liability mindset
-38. **style-switcher** - Unified personality styles (13) and density modes (3)
+### Workflow Skills (6 skills)
+34. **git-workflow** - Atomic commits
+35. **ci-cd-automation** - Feature flags, quality gates
+36. **documentation** - ADRs, API docs
+37. **finishing-branch** - Merge/PR decisions
+38. **deprecation-migration** - Code-as-liability mindset
+39. **style-switcher** - Unified personality styles (13) and density modes (3)
 
-### Additional Skills
-39. **jobs-to-be-done** - JTBD framework for understanding user needs
-40. **lean-ux-canvas** - Lean UX hypothesis testing
-41. **opportunity-solution-tree** - Product opportunity mapping
-42. **pol-probe** - Product opportunity probe
-43. **office-hours** - YC-style brainstorming and idea validation
+### Additional Skills (5 skills)
+40. **jobs-to-be-done** - JTBD framework for understanding user needs
+41. **lean-ux-canvas** - Lean UX hypothesis testing
+42. **opportunity-solution-tree** - Product opportunity mapping
+43. **pol-probe** - Product opportunity probe
+44. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -116,23 +126,23 @@ em-team/
 12. **performance-auditor** - Benchmarking
 
 ### Specialized Agents (8 agents)
-13. **team-lead** - Orchestrator for team reviews (trigger: `duck:team-lead`)
-14. **architect** - Architecture & technical design (trigger: `duck:architect`)
-15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `duck:frontend`)
-16. **senior-code-reviewer** - 9-axis deep code review (trigger: `duck:code-review`)
-17. **database-expert** - Schema, queries, fintech patterns (trigger: `duck:database`)
-18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `duck:product`)
-19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `duck:security`)
-20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `duck:staff`)
+13. **team-lead** - Orchestrator for team reviews (trigger: `em-agent:team-lead`)
+14. **architect** - Architecture & technical design (trigger: `em-agent:architect`)
+15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `em-agent:frontend-expert`)
+16. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
+17. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
+18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
+19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
+20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
 
 ### New Agents (v2.0.0)
-21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `duck:market`)
+21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
 22. **learn** - Knowledge management and cross-session learning
 23. **autoplan** - Multi-phase review pipeline orchestrator
 24. **techlead-orchestrator** - Distributed team coordination
-25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `duck:design`)
-26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `duck:devex`)
-27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `duck:laws`)
+25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
+26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
+27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
 
 ## Workflow Categories
 
@@ -154,14 +164,35 @@ em-team/
 11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
 
 ### Team Workflows (8 workflows)
-9. **team-review** - Full team review orchestrated by Team Lead
-10. **architecture-review** - Architecture review with Architect & Staff Engineer
-11. **design-review** - UI/UX design review with Frontend Expert & Product Manager
-12. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
-13. **database-review** - Database schema & query review with Database Expert & Architect
-14. **product-review** - Product/spec review with Product Manager & Architect
-15. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
-16. **incident-response** - Production incident handling with Staff Engineer & Security
+12. **team-review** - Full team review orchestrated by Team Lead
+13. **architecture-review** - Architecture review with Architect & Staff Engineer
+14. **design-review** - UI/UX design review with Frontend Expert & Product Manager
+15. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
+16. **database-review** - Database schema & query review with Database Expert & Architect
+17. **product-review** - Product/spec review with Product Manager & Architect
+18. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
+19. **incident-response** - Production incident handling with Staff Engineer & Security
+
+### Distributed Workflows (2 workflows)
+20. **distributed-investigation** - Parallel bug investigation across full stack
+21. **distributed-development** - Parallel feature development with multiple agents
+
+### Product Workflows (2 workflows)
+22. **discovery-process** - Product discovery and validation
+23. **market-driven-feature** - Market-driven feature development
+
+### Incident Sub-Workflows (workflows/incident/)
+- **initial-triage** - First response and impact assessment
+- **cross-service-impact** - Multi-service incident investigation
+- **root-cause-analysis** - Systematic root cause identification
+- **resolution-verification** - Verify fix and prevent regression
+- **postmortem-prevention** - Postmortem and prevention measures
+- **security-investigation** - Security-focused incident investigation
+
+### Security Sub-Workflows (workflows/security/)
+- **deep-investigation** - Deep security vulnerability investigation
+- **owasp-assessment** - OWASP Top 10 assessment
+- **stride-threat-modeling** - STRIDE threat modeling
 
 ## Iron Laws
 
@@ -292,8 +323,43 @@ When adding new skills or agents:
 ## Version
 
 Current version: 2.2.0
-Last updated: 2026-05-01
-Changes: v2.2.0 — 7 new skills (alignment-session, architecture-zoom-out, architecture-improvement, issue-generator, prd-generator, ux-audit, plan-tune) + NestJS patterns in backend-patterns
+Last updated: 2026-05-02
+Changes: v2.2.0 — Consistency audit fixes + CI validation pipeline + auto-changelog hook + session handoff + additional skills reorganized into skills/additional/
+
+## Automation
+
+### CI Pipeline (.github/workflows/validate.yml)
+- Validates YAML frontmatter in all skill files
+- Checks SKILL.md symlinks are valid
+- Validates related_skills references exist
+- Checks agent required fields
+- Verifies skill/agent count matches CLAUDE.md
+
+### Hooks (hooks/)
+- **pre-commit** - Type check, lint, unit tests, common issue detection
+- **post-commit** - Auto-generates CHANGELOG entries from commit messages
+- **commit-msg** - Commit message format validation
+- **pre-push** - Pre-push quality gates
+- **session-handoff** - Generates SESSION_HANDOFF.md at session end
+
+### Session Continuity
+- Run `scripts/session-handoff.sh` to generate a handoff document preserving context between sessions
+- SESSION_HANDOFF.md is gitignored (local only)
+
+### Code Provenance (.claude/lib/)
+- **trace-store.ts** - Agent Trace Store following Agent Trace spec v0.1.0
+- Tracks AI-generated code: contributor type, model, file ranges, commit/branch
+- Usage: `const store = new TraceStore(projectRoot); store.saveFileEditTrace(filePath, 'ai', model, description);`
+
+### Custom MCP Servers (.claude/mcp-servers/)
+- **github-enhanced.js** - Extended GitHub: auto-labeled issues, agent task tracking, PR creation with quality reports, review status
+- **project-context.js** - Codebase analysis: structure tree, dependencies, agent config, LOC metrics, recent git changes
+- Requires: `npm install` (installs @modelcontextprotocol/sdk, @octokit/rest)
+- Requires env vars: `GITHUB_TOKEN`, `REPOSITORY=owner/repo`
+
+### Operational Rules (.claude/rules/)
+- **mistakes.md** - Mistake ledger recording past failures and prevention patterns
+- **context-management.md** - Guidelines for efficient context window usage
 
 ## License
 

@@ -1,7 +1,7 @@
 ---
 name: lean-ux-canvas
 description: "Jeff Gothelf's Lean UX Canvas v2 - Frame business problems, surface assumptions, and define testable hypotheses. Use for aligning teams on outcomes vs outputs and turning vague initiatives into learning goals. Keywords: lean-ux, hypothesis-driven, assumptions, experiments"
-category: Development
+category: additional
 compatibility: Claude Code, Claude Desktop, Cursor
 metadata:
   author: EM-Team

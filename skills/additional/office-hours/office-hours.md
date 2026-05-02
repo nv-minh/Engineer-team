@@ -1,7 +1,7 @@
 ---
 name: office-hours
 description: "YC Office Hours style validation - six forcing questions to expose demand reality, status quo, narrowest wedge, observation, and future-fit. Use for product idea validation before building. Keywords: yc-office-hours, product-validation, demand-testing, idea-validation"
-category: Foundation
+category: additional
 compatibility: Claude Code, Claude Desktop, Cursor
 metadata:
   author: EM-Team

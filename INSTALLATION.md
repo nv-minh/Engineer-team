@@ -50,8 +50,8 @@ Once installed, open **any project** in Claude Code. All EM-Team skills are avai
 
 | Component | Source | Global Location |
 |-----------|--------|-----------------|
-| Agent/Workflow wrappers (33) | `EM-Team/.claude/skills/em-*.md` | `~/.claude/skills/em:*/SKILL.md` (symlinks) |
-| Skill wrappers (36) | `EM-Team/.claude/skills/em-skill-*.md` | `~/.claude/skills/em:skill:*/SKILL.md` (symlinks) |
+| Agent/Workflow wrappers (33) | `EM-Team/.claude/skills/em:*.md` | `~/.claude/skills/em:*/SKILL.md` (symlinks) |
+| Skill wrappers (36) | `EM-Team/.claude/skills/em:skill-*.md` | `~/.claude/skills/em:skill:*/SKILL.md` (symlinks) |
 | Agents (31) | `EM-Team/agents/*.md` | Referenced via `~/.claude/config.json` |
 | Workflows (23) | `EM-Team/workflows/*.md` | Referenced via `~/.claude/config.json` |
 
@@ -66,7 +66,7 @@ EM-Team repo is the **single source of truth**. Symlinks point back to it — up
 ls ~/.claude/skills/em:*/SKILL.md ~/.claude/skills/em:skill:*/SKILL.md 2>/dev/null | wc -l
 
 # Check no orphaned entries (should be empty)
-ls ~/.claude/skills/em-* 2>/dev/null
+ls ~/.claude/skills/em:* 2>/dev/null
 
 # Verify paths in config
 cat ~/.claude/config.json | grep "paths" -A2
@@ -99,7 +99,7 @@ REPO="/path/to/EM-Team"
 # Set workflows.paths → ["$REPO/workflows"]
 
 # 2. Create symlinks for each skill wrapper
-for src in $REPO/.claude/skills/em-*.md; do
+for src in $REPO/.claude/skills/em:*.md; do
   name=$(basename "$src" .md | sed 's/^em-//')
   dir="$HOME/.claude/skills/em:$name"
   mkdir -p "$dir"
@@ -107,7 +107,7 @@ for src in $REPO/.claude/skills/em-*.md; do
 done
 
 # Also symlink em-skill-* wrappers
-for src in $REPO/.claude/skills/em-skill-*.md; do
+for src in $REPO/.claude/skills/em:skill-*.md; do
   name=$(basename "$src" .md | sed 's/^em-skill-//')
   dir="$HOME/.claude/skills/em:skill:$name"
   mkdir -p "$dir"
@@ -155,5 +155,5 @@ bash install.sh
 
 ---
 
-**Last Updated:** 2026-05-01
+**Last Updated:** 2026-05-02
 **Version:** 2.2.0

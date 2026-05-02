@@ -1,0 +1,1 @@
+architecture-zoom-out.md

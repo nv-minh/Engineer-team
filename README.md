@@ -985,7 +985,7 @@ Distributed Mode:
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (16 skills)
+### Development Skills (17 skills)
 
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
 8. **frontend-patterns** - React/Next.js/Vue patterns
@@ -999,10 +999,11 @@ Distributed Mode:
 16. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy
 17. **go-patterns** - Error handling, concurrency, interfaces, testing
 18. **rust-patterns** - Ownership, traits, async tokio, smart pointers
-19. **architecture-zoom-out** - Higher-level code perspective (NEW)
-20. **architecture-improvement** - Systematic module deepening (NEW)
-21. **issue-generator** - Plans to structured vertical-slice issues (NEW)
-22. **prd-generator** - Ideas to structured PRD documents (NEW)
+19. **architecture-zoom-out** - Higher-level code perspective
+20. **architecture-improvement** - Systematic module deepening
+21. **issue-generator** - Plans to structured vertical-slice issues
+22. **prd-generator** - Ideas to structured PRD documents
+23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
 
 ### Quality Skills (10 skills)
 
@@ -1017,17 +1018,22 @@ Distributed Mode:
 31. **ux-audit** - Behavioral UX audit with scored dimensions (NEW)
 32. **plan-tune** - Learn and tune output preferences (NEW)
 
-### Workflow Skills (5 skills)
+### Workflow Skills (6 skills)
 
 33. **git-workflow** - Atomic commits
 34. **ci-cd-automation** - Feature flags, quality gates
 35. **documentation** - ADRs, API docs
 36. **finishing-branch** - Merge/PR decisions
 37. **deprecation-migration** - Code-as-liability mindset
+38. **style-switcher** - 13 personality styles + 3 density modes
 
-### Communication Skills
+### Additional Skills (5 skills)
 
-38. **style-switcher** - 13 personality styles + 3 density modes (unified control)
+39. **jobs-to-be-done** - JTBD framework for understanding user needs
+40. **lean-ux-canvas** - Lean UX hypothesis testing
+41. **opportunity-solution-tree** - Product opportunity mapping
+42. **pol-probe** - Product opportunity probe
+43. **office-hours** - YC-style brainstorming and idea validation
 
 ## Communication Styles (NEW)
 
@@ -1119,30 +1125,33 @@ EM-Team includes a unified communication control system with 13 personality styl
 7. **ui-auditor** - Visual QA
 8. **verifier** - Post-execution verification
 
-### Specialized Agents (12 agents)
+### Optional Agents (4 agents)
 
-13. **team-lead** - Team review orchestrator (trigger: `duck:team-lead`)
-14. **architect** - Architecture & technical design (trigger: `duck:architect`)
-15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `duck:frontend`)
-16. **senior-code-reviewer** - 9-axis deep code review (trigger: `duck:code-review`)
-17. **database-expert** - Schema, queries, fintech patterns (trigger: `duck:database`)
-18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `duck:product`)
-19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `duck:security`)
-20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `duck:staff`)
-21. **researcher** - Technical exploration
-22. **codebase-mapper** - Architecture analysis
-23. **integration-checker** - Cross-phase validation
-24. **performance-auditor** - Benchmarking
+9. **researcher** - Technical exploration
+10. **codebase-mapper** - Architecture analysis
+11. **integration-checker** - Cross-phase validation
+12. **performance-auditor** - Benchmarking
 
-### New Agents (v2.0.0)
+### Specialized Agents (8 agents)
 
-25. **market-intelligence** - Market analysis, competitive intelligence (trigger: `duck:market`)
-26. **learn** - Knowledge management and cross-session learning
-27. **autoplan** - Multi-phase review pipeline orchestrator
-28. **techlead-orchestrator** - Distributed team coordination
-29. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `duck:design`) (NEW)
-30. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `duck:devex`) (NEW)
-31. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `duck:laws`) (NEW)
+13. **team-lead** - Team review orchestrator (trigger: `em-agent:team-lead`)
+14. **architect** - Architecture & technical design (trigger: `em-agent:architect`)
+15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `em-agent:frontend-expert`)
+16. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
+17. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
+18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
+19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
+20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
+
+### New Agents (v2.0+)
+
+21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
+22. **learn** - Knowledge management and cross-session learning
+23. **autoplan** - Multi-phase review pipeline orchestrator
+24. **techlead-orchestrator** - Distributed team coordination
+25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
+26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
+27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
 
 ## Workflows
 
@@ -1629,27 +1638,31 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: **2.0.0** (Major Architecture Upgrade)
-Last updated: 2026-05-01
+Current version: **2.2.0**
+Last updated: 2026-05-02
 
-**🎉 New in v2.0.0:**
-- ✨ **Communication Styles** - 13 personality styles + 3 density modes with `/em:skill:style-switcher` command
-- 🏗️ **Foundation Infrastructure** - Preambles, protocols, templates, references
-- ✨ **New Skills** - TypeScript, Python, Go, Rust pattern skills
-- ✨ **New Agents** - Design reviewer, DevEx reviewer, Iron Law enforcer
-- ✨ **6-Phase Lifecycle** - All workflows follow DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
-- ✨ **Enriched Frontmatter** - All skills/agents upgraded with YAML metadata
+**Changes in v2.2.0:**
+- Consistency audit: all skill/agent/workflow counts verified and synchronized
+- 7 new skills: alignment-session, architecture-zoom-out, architecture-improvement, issue-generator, prd-generator, ux-audit, plan-tune
+- Diagram skill (Excalidraw, Mermaid, SVG)
+- Additional skills reorganized into `skills/additional/`
+- CI pipeline (`.github/workflows/validate.yml`) - validates frontmatter, symlinks, references
+- Auto-changelog hook (`hooks/post-commit`)
+- Session handoff mechanism (`scripts/session-handoff.sh`)
+- Agent Trace Store (`.claude/lib/trace-store.ts`) - code provenance tracking
+- Custom MCP servers (`.claude/mcp-servers/`) - GitHub enhanced + Project context
+- Operational rules (`.claude/rules/`) - mistakes ledger + context management
 
-**Previous (v1.2.0):**
-- ✨ **TDD Auto-Retry Loop** - Automated test failure capture with exponential backoff
-- ✨ **Token Summarization** - Intelligent token management preventing context overflow
-- 🏗️ **Enhanced Distributed Mode** - Token-aware report consolidation
+**Previous (v2.0.0):**
+- Communication styles (13 personality + 3 density modes)
+- Foundation infrastructure (preambles, protocols, templates, references)
+- TypeScript, Python, Go, Rust pattern skills
+- Design reviewer, DevEx reviewer, Iron Law enforcer agents
 
 **Total Counts:**
-- **Commands**: 29 (11 agents + 6 core workflows + 12 specialized workflows)
-- **Agents**: 31 (8 core + 12 specialized + 11 v2.0)
-- **Workflows**: 23 (4 primary + 10 support + 1 master + 8 team)
-- **Skills**: 36 (5 foundation + 12 development + 8 quality + 6 workflow + 5 additional)
+- **Skills**: 44 (6 foundation + 17 development + 10 quality + 6 workflow + 5 additional)
+- **Agents**: 27 (8 core + 4 optional + 8 specialized + 7 v2.0+)
+- **Workflows**: 23 (4 primary + 6 support + 8 team + 2 distributed + 2 product + 1 master)
 - **Personality Styles**: 13 + 3 density modes
 
 ## License
@@ -1749,8 +1762,8 @@ em-team/
 
 ### Version Information
 
-- **Current Version:** 2.0.0
-- **Last Updated:** 2026-05-01
+- **Current Version:** 2.2.0
+- **Last Updated:** 2026-05-02
 - **Status:** Production Ready
 - **License:** MIT
 
@@ -1763,16 +1776,16 @@ em-team/
 
 ### Key Features Summary
 
-1. **🎯 Multiple Skills** - 36 reusable patterns across 5 categories
-2. **🤖 Specialized Agents** - 31 AI assistants (core + specialized + v2.0)
-3. **🔄 Complete Workflows** - 18 end-to-end processes
-4. **🏗️ Distributed Mode** - Parallel agent execution
-5. **📚 Bilingual Docs** - English & Vietnamese
-6. **🧪 Comprehensive Tests** - 120+ tests, 92% pass
-7. **📖 Full Documentation** - 5,000+ lines
-8. **🌍 Multi-language** - Supports 10+ programming languages
-9. **🔒 Security Focus** - OWASP, STRIDE coverage
-10. **⚡ Performance** - Optimized for speed
+1. **Multiple Skills** - 44 reusable patterns across 5 categories
+2. **Specialized Agents** - 27 AI assistants (core + optional + specialized + v2.0+)
+3. **Complete Workflows** - 23 end-to-end processes
+4. **Distributed Mode** - Parallel agent execution
+5. **Bilingual Docs** - English & Vietnamese
+6. **Multi-language** - Supports 10+ programming languages
+7. **Security Focus** - OWASP, STRIDE coverage
+8. **CI Validation** - Automated frontmatter and reference checking
+9. **Code Provenance** - Agent Trace Store for AI-generated code tracking
+10. **Custom MCP Servers** - GitHub enhanced + Project context analysis
 
 ### Getting Help
 

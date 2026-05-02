@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# EM-Team Auto-Changelog Hook
+# Inspired by: TAISUN auto-changelog pattern
+#
+# Automatically generates CHANGELOG entries from the last commit
+# Runs as a post-commit hook
+#
+
+# Only run if CHANGELOG.md exists
+[ -f "CHANGELOG.md" ] || exit 0
+
+COMMIT_MSG=$(git log -1 --pretty=%B)
+COMMIT_HASH=$(git log -1 --pretty=%h)
+COMMIT_DATE=$(date +%Y-%m-%d)
+
+# Skip if commit message contains [skip changelog]
+if echo "$COMMIT_MSG" | grep -q "\[skip changelog\]"; then
+    exit 0
+fi
+
+# Categorize the commit
+categorize() {
+    local msg="$1"
+    local lower=$(echo "$msg" | tr '[:upper:]' '[:lower:]')
+
+    if echo "$lower" | grep -qE "^(feat|add|new|create)\b"; then
+        echo "feat"
+    elif echo "$lower" | grep -qE "^(fix|patch|resolve|repair|hotfix)\b"; then
+        echo "fix"
+    elif echo "$lower" | grep -qE "^(refactor|restructure|reorganize|clean|move)\b"; then
+        echo "refactor"
+    elif echo "$lower" | grep -qE "^(doc|docs|readme|comment)\b"; then
+        echo "docs"
+    elif echo "$lower" | grep -qE "^(test|spec|coverage)\b"; then
+        echo "test"
+    elif echo "$lower" | grep -qE "^(ci|build|deploy|release)\b"; then
+        echo "ci"
+    else
+        echo "chore"
+    fi
+}
+
+CATEGORY=$(categorize "$COMMIT_MSG")
+FIRST_LINE=$(echo "$COMMIT_MSG" | head -1)
+
+# Check if today's section already exists
+TODAY_HEADER="## $COMMIT_DATE"
+
+if ! grep -q "$TODAY_HEADER" CHANGELOG.md; then
+    # Add new day section after the header
+    TEMP=$(mktemp)
+    awk -v date="$COMMIT_DATE" '
+        NR == 1 { print; print ""; print "## " date; next }
+        { print }
+    ' CHANGELOG.md > "$TEMP"
+    mv "$TEMP" CHANGELOG.md
+fi
+
+# Check if this exact commit hash is already in changelog
+if grep -q "$COMMIT_HASH" CHANGELOG.md; then
+    exit 0
+fi
+
+# Add entry under today's section
+ENTRY="- [$CATEGORY] $FIRST_LINE ($COMMIT_HASH)"
+
+# Find the today's section line number and insert after it
+TEMP=$(mktemp)
+awk -v date="$COMMIT_DATE" -v entry="$ENTRY" '
+    $0 == "## " date { print; print entry; next }
+    { print }
+' CHANGELOG.md > "$TEMP"
+mv "$TEMP" CHANGELOG.md

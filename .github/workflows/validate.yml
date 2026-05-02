@@ -1,0 +1,124 @@
+name: Validate Skills, Agents & Workflows
+
+on:
+  push:
+    paths:
+      - 'skills/**'
+      - 'agents/**'
+      - 'workflows/**'
+      - 'CLAUDE.md'
+      - 'skills/SKILL-INDEX.md'
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'agents/**'
+      - 'workflows/**'
+      - 'CLAUDE.md'
+      - 'skills/SKILL-INDEX.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate skill YAML frontmatter
+        run: |
+          errors=0
+          for dir in skills/*/*/; do
+            [ -d "$dir" ] || continue
+            skill_file=$(find "$dir" -maxdepth 1 -name "*.md" ! -name "SKILL.md" | head -1)
+            [ -z "$skill_file" ] && continue
+
+            # Check required fields
+            for field in name description version category triggers; do
+              if ! grep -q "^${field}:" "$skill_file"; then
+                echo "MISSING: $skill_file missing field '$field'"
+                errors=$((errors + 1))
+              fi
+            done
+
+            # Check YAML frontmatter is valid (has opening and closing ---)
+            opening=$(head -1 "$skill_file")
+            closing=$(awk '/^---$/{n++; if(n==2) print NR; exit}' "$skill_file")
+            if [ "$opening" != "---" ] || [ -z "$closing" ]; then
+              echo "INVALID YAML: $skill_file has malformed frontmatter"
+              errors=$((errors + 1))
+            fi
+          done
+          echo "Total frontmatter errors: $errors"
+          [ "$errors" -eq 0 ] || exit 1
+
+      - name: Validate SKILL.md symlinks
+        run: |
+          errors=0
+          for link in $(find skills -name "SKILL.md" -type l); do
+            if [ ! -e "$link" ]; then
+              echo "BROKEN SYMLINK: $link"
+              errors=$((errors + 1))
+            fi
+          done
+          echo "Broken symlinks: $errors"
+          [ "$errors" -eq 0 ] || exit 1
+
+      - name: Validate skill related_skills references
+        run: |
+          errors=0
+          for dir in skills/*/*/; do
+            [ -d "$dir" ] || continue
+            skill_file=$(find "$dir" -maxdepth 1 -name "*.md" ! -name "SKILL.md" | head -1)
+            [ -z "$skill_file" ] && continue
+
+            # Extract related_skills entries
+            refs=$(awk '/related_skills:/{found=1; next} found && /^  - /{gsub(/^  - /, ""); print; next} found && /^[^ ]/{exit}' "$skill_file")
+
+            for ref in $refs; do
+              ref=$(echo "$ref" | tr -d '[]",')
+              [ -z "$ref" ] && continue
+              if [ ! -d "skills/"*"/$ref" ] && [ ! -d "skills/$ref" ]; then
+                echo "BROKEN REF: $skill_file references skill '$ref' which does not exist"
+                errors=$((errors + 1))
+              fi
+            done
+          done
+          echo "Broken related_skills references: $errors"
+          [ "$errors" -eq 0 ] || exit 1
+
+      - name: Validate agent required fields
+        run: |
+          errors=0
+          for agent_file in agents/*.md; do
+            [ -f "$agent_file" ] || continue
+
+            for field in name type trigger status_protocol completion_marker; do
+              if ! grep -q "^${field}:" "$agent_file"; then
+                echo "MISSING: $agent_file missing field '$field'"
+                errors=$((errors + 1))
+              fi
+            done
+          done
+          echo "Total agent errors: $errors"
+          [ "$errors" -eq 0 ] || exit 1
+
+      - name: Check skill count matches CLAUDE.md
+        run: |
+          actual=$(find skills -mindepth 2 -maxdepth 2 -type d | wc -l | tr -d ' ')
+          claimed=$(grep -oP 'skills/.*#\K[0-9]+' CLAUDE.md | head -1)
+          if [ -z "$claimed" ]; then
+            claimed=$(grep '# 44 skills' CLAUDE.md | grep -oP '\d+' | head -1)
+          fi
+          echo "Actual skill directories: $actual"
+          echo "CLAUDE.md claims: $claimed"
+          if [ "$actual" != "$claimed" ]; then
+            echo "MISMATCH: Skill count ($actual) does not match CLAUDE.md ($claimed)"
+            exit 1
+          fi
+
+      - name: Check agent count matches CLAUDE.md
+        run: |
+          actual=$(ls agents/*.md 2>/dev/null | wc -l | tr -d ' ')
+          echo "Actual agent files: $actual"
+          # CLAUDE.md claims 27 agents
+          if [ "$actual" != "27" ]; then
+            echo "WARN: Agent count ($actual) differs from expected (27)"
+          fi

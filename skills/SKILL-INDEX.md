@@ -1,10 +1,10 @@
 # EM-Team System - Complete Skill Index
 
-**EM-Team** is a comprehensive fullstack engineering system with 25+ skills, 16 agents, and 18 workflows synthesized from the best practices of 6 top AI agent repositories.
+**EM-Team** is a comprehensive fullstack engineering system with 44 skills, 27 agents, and 23 workflows synthesized from the best practices of 6 top AI agent repositories.
 
 ---
 
-## 🎯 What is EM-Team?
+## What is EM-Team?
 
 EM-Team provides three powerful ways to accelerate your development:
 
@@ -14,16 +14,17 @@ EM-Team provides three powerful ways to accelerate your development:
 
 ---
 
-## 📚 Available Skills (25 Skills)
+## Available Skills (44 Skills)
 
-### Foundation Skills (5 skills)
+### Foundation Skills (6 skills)
 Location: `skills/foundation/`
 
-1. **brainstorming** - Explore ideas into detailed designs
-2. **context-engineering** - Optimize agent context setup
-3. **spec-driven-development** - Write specs before coding
-4. **systematic-debugging** - 4-phase debugging methodology
-5. **writing-plans** - Break work into manageable tasks
+1. **alignment-session** - Pre-coding human-AI alignment
+2. **spec-driven-development** - Write specs before coding
+3. **brainstorming** - Explore ideas into designs
+4. **context-engineering** - Optimize agent context setup
+5. **writing-plans** - Break work into bite-sized tasks
+6. **systematic-debugging** - 4-phase debugging methodology
 
 **Usage:**
 ```
@@ -32,17 +33,26 @@ Location: `skills/foundation/`
 "Use the systematic-debugging skill to investigate bugs"
 ```
 
-### Development Skills (8 skills)
+### Development Skills (17 skills)
 Location: `skills/development/`
 
-6. **api-interface-design** - Contract-first API design
-7. **backend-patterns** - API & Database best practices
+7. **test-driven-development** - TDD RED-GREEN-REFACTOR
 8. **frontend-patterns** - React/Next.js/Vue patterns
-9. **incremental-implementation** - Vertical slice development
-10. **security-hardening** - OWASP Top 10 security practices
-11. **source-driven-development** - Code from official documentation
-12. **subagent-driven-development** - Fresh context per task
-13. **test-driven-development** - TDD: RED-GREEN-REFACTOR
+9. **backend-patterns** - API/Database patterns
+10. **incremental-implementation** - Vertical slice development
+11. **subagent-driven-development** - Fresh context per task + two-stage review
+12. **source-driven-development** - Code from official docs
+13. **api-interface-design** - Contract-first APIs
+14. **security-hardening** - OWASP Top 10 security
+15. **typescript-patterns** - TypeScript type system, async, React/Next.js TS patterns
+16. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
+17. **go-patterns** - Error handling, concurrency, interfaces, testing
+18. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+19. **architecture-zoom-out** - Higher-level code perspective
+20. **architecture-improvement** - Systematic module deepening
+21. **issue-generator** - Plans to structured vertical-slice issues
+22. **prd-generator** - Ideas to structured PRD documents
+23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
 
 **Usage:**
 ```
@@ -51,16 +61,19 @@ Location: `skills/development/`
 "Use the security-hardening skill to secure the application"
 ```
 
-### Quality Skills (7 skills)
+### Quality Skills (10 skills)
 Location: `skills/quality/`
 
-14. **api-testing** - Integration testing strategies
-15. **browser-testing** - DevTools MCP integration
-16. **code-review** - 5-axis code review framework
-17. **code-simplification** - Reduce complexity
-18. **e2e-testing** - Playwright testing patterns
-19. **performance-optimization** - Measure-first optimization
-20. **security-audit** - Vulnerability assessment
+24. **code-review** - 5-axis review framework
+25. **code-simplification** - Reduce complexity
+26. **browser-testing** - DevTools MCP integration
+27. **performance-optimization** - Measure-first optimization
+28. **e2e-testing** - Playwright patterns
+29. **security-audit** - Vulnerability assessment
+30. **api-testing** - Integration testing
+31. **security-common** - OWASP reference and security checklist
+32. **ux-audit** - Behavioral UX audit with scored dimensions
+33. **plan-tune** - Learn and tune output preferences
 
 **Usage:**
 ```
@@ -69,14 +82,15 @@ Location: `skills/quality/`
 "Use the security-audit skill to check for vulnerabilities"
 ```
 
-### Workflow Skills (5 skills)
+### Workflow Skills (6 skills)
 Location: `skills/workflow/`
 
-21. **ci-cd-automation** - Feature flags & quality gates
-22. **deprecation-migration** - Code-as-liability mindset
-23. **documentation** - ADRs & API documentation
-24. **finishing-branch** - Merge/PR decisions
-25. **git-workflow** - Atomic commits
+34. **git-workflow** - Atomic commits
+35. **ci-cd-automation** - Feature flags, quality gates
+36. **documentation** - ADRs, API docs
+37. **finishing-branch** - Merge/PR decisions
+38. **deprecation-migration** - Code-as-liability mindset
+39. **style-switcher** - Unified personality styles (13) and density modes (3)
 
 **Usage:**
 ```
@@ -85,40 +99,62 @@ Location: `skills/workflow/`
 "Use the ci-cd-automation skill for deployment strategies"
 ```
 
-### Specialized Skills
-Location: `skills/specialized/`
+### Additional Skills (5 skills)
+Location: `skills/additional/`
 
-Language & framework-specific patterns for:
-- TypeScript, Python, Go, Rust, Java, Kotlin, PHP, C#, C++
-- React, Next.js, Vue, Svelte, Angular
-- Node.js, Django, Laravel, NestJS, Spring Boot
-- PostgreSQL, MySQL, MongoDB, Redis
+40. **jobs-to-be-done** - JTBD framework for understanding user needs
+41. **lean-ux-canvas** - Lean UX hypothesis testing
+42. **opportunity-solution-tree** - Product opportunity mapping
+43. **pol-probe** - Product opportunity probe
+44. **office-hours** - YC-style brainstorming and idea validation
+
+**Usage:**
+```
+"Use the jobs-to-be-done skill to understand customer needs"
+"Use the lean-ux-canvas skill to frame business assumptions"
+"Use the office-hours skill to validate this product idea"
+```
 
 ---
 
-## 🤖 Available Agents (16 Agents)
+## Available Agents (27 Agents)
 
 Location: `agents/`
 
 ### Core Agents (8 agents)
 1. **planner** - Create detailed implementation plans
 2. **executor** - Execute plans with atomic commits
-3. **code-reviewer** - 5-axis code review
+3. **code-reviewer** - 5-axis code review (two-stage: spec compliance then quality)
 4. **debugger** - Systematic debugging
 5. **test-engineer** - Test strategy & generation
 6. **security-auditor** - OWASP security assessment
 7. **ui-auditor** - Visual QA & design review
 8. **verifier** - Post-execution verification
 
+### Optional Agents (4 agents)
+9. **researcher** - Technical exploration
+10. **codebase-mapper** - Architecture analysis
+11. **integration-checker** - Cross-phase validation
+12. **performance-auditor** - Benchmarking
+
 ### Specialized Agents (8 agents)
-9. **architect** - Architecture & technical design
-10. **database-expert** - Schema, queries, fintech patterns
-11. **frontend-expert** - React/Next.js, UI/UX, performance
-12. **product-manager** - Requirements, GAP analysis
-13. **senior-code-reviewer** - 9-axis deep code review
-14. **security-reviewer** - OWASP + STRIDE security
-15. **staff-engineer** - Root cause analysis
-16. **team-lead** - Orchestrator for team reviews
+13. **team-lead** - Orchestrator for team reviews (trigger: `em-agent:team-lead`)
+14. **architect** - Architecture & technical design (trigger: `em-agent:architect`)
+15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `em-agent:frontend-expert`)
+16. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
+17. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
+18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
+19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
+20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
+
+### New Agents v2.0+ (7 agents)
+21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
+22. **learn** - Knowledge management and cross-session learning
+23. **autoplan** - Multi-phase review pipeline orchestrator
+24. **techlead-orchestrator** - Distributed team coordination
+25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
+26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
+27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
 
 **Usage:**
 ```
@@ -130,7 +166,7 @@ Location: `agents/`
 
 ---
 
-## 🔄 Available Workflows (18 Workflows)
+## Available Workflows (23 Workflows)
 
 Location: `workflows/`
 
@@ -140,25 +176,40 @@ Location: `workflows/`
 3. **refactoring** - Improve code quality safely
 4. **security-audit** - Comprehensive security assessment
 
-### Support Workflows (4 workflows)
+### Support Workflows (6 workflows)
 5. **project-setup** - Initialize new projects
 6. **documentation** - Generate and update docs
 7. **deployment** - Deploy and monitor features
 8. **retro** - Learn and improve from completed work
+9. **ship-workflow** - Version bump, changelog, PR creation
+10. **canary-monitoring** - Post-deploy health monitoring
+
+### Master Workflow (1 workflow)
+11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
 
 ### Team Workflows (8 workflows)
-9. **team-review** - Full team review orchestrated by Team Lead
-10. **architecture-review** - Architecture review with Architect
-11. **design-review** - UI/UX review with Frontend Expert
-12. **code-review-9axis** - Deep 9-axis code review
-13. **database-review** - Database schema & query review
-14. **product-review** - Product/spec review with Product Manager
-15. **security-review-advanced** - Advanced security (OWASP + STRIDE)
-16. **incident-response** - Production incident handling
+12. **team-review** - Full team review orchestrated by Team Lead
+13. **architecture-review** - Architecture review with Architect & Staff Engineer
+14. **design-review** - UI/UX review with Frontend Expert & Product Manager
+15. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
+16. **database-review** - Database schema & query review with Database Expert & Architect
+17. **product-review** - Product/spec review with Product Manager & Architect
+18. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
+19. **incident-response** - Production incident handling with Staff Engineer & Security
 
 ### Distributed Workflows (2 workflows)
-17. **distributed-investigation** - Parallel bug investigation
-18. **distributed-development** - Parallel feature development
+20. **distributed-investigation** - Parallel bug investigation across full stack
+21. **distributed-development** - Parallel feature development with multiple agents
+
+### Product Workflows (2 workflows)
+22. **discovery-process** - Product discovery and validation
+23. **market-driven-feature** - Market-driven feature development
+
+### Incident Sub-Workflows (workflows/incident/)
+- initial-triage, cross-service-impact, root-cause-analysis, resolution-verification, postmortem-prevention, security-investigation
+
+### Security Sub-Workflows (workflows/security/)
+- deep-investigation, owasp-assessment, stride-threat-modeling
 
 **Usage:**
 ```
@@ -170,7 +221,7 @@ Location: `workflows/`
 
 ---
 
-## 🌐 Distributed Mode
+## Distributed Mode
 
 EM-Team includes distributed orchestration for complex multi-domain tasks:
 
@@ -191,7 +242,7 @@ em-stop  # or: ./scripts/distributed-orchestrator.sh stop
 
 ---
 
-## 📖 Quick Reference
+## Quick Reference
 
 ### For Specific Tasks
 ```bash
@@ -252,7 +303,7 @@ em-stop  # or: ./scripts/distributed-orchestrator.sh stop
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 - **[README](../README.md)** - Main documentation
 - **[INSTALLATION.md](../INSTALLATION.md)** - Installation guide
@@ -263,28 +314,28 @@ em-stop  # or: ./scripts/distributed-orchestrator.sh stop
 
 ---
 
-## 🎯 Iron Laws
+## Iron Laws
 
 EM-Team follows these Iron Laws from best practices:
 
 1. **TDD Iron Law**: NO PRODUCTION CODE WITHOUT FAILING TEST
 2. **Debugging Iron Law**: NO FIXES WITHOUT ROOT CAUSE
 3. **Spec Iron Law**: NO CODE WITHOUT SPEC (for features)
+4. **Review Iron Law**: NO MERGE WITHOUT REVIEW
 
 ---
 
-## ✅ Installation Status
+## Installation Status
 
-- ✅ Repository: `/Users/abc/Desktop/EM-Team`
-- ✅ Skills: 25 skills configured
-- ✅ Agents: 16 agents configured
-- ✅ Workflows: 18 workflows configured
-- ✅ Tests: 8/8 E2E tests passing
-- ✅ Distributed Mode: Operational
+- Repository: `/Users/abc/Desktop/EM-Team`
+- Skills: 44 skills configured
+- Agents: 27 agents configured
+- Workflows: 23 workflows configured
+- Distributed Mode: Operational
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Use a skill:**
    ```
@@ -303,7 +354,7 @@ EM-Team follows these Iron Laws from best practices:
 
 ---
 
-**Version:** 1.1.0
-**Last Updated:** 2026-04-19
-**Status:** ✅ Production Ready
+**Version:** 2.2.0
+**Last Updated:** 2026-05-02
+**Status:** Production Ready
 **Repository:** https://github.com/nv-minh/agent-team
