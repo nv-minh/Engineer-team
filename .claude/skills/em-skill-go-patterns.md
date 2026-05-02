@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/go-patterns/go-patterns.md`
+`skills/expert-go/go-patterns/go-patterns.md`
 
 ## Usage
 

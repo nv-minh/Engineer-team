@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/backend-patterns/backend-patterns.md`
+`skills/expert-backend/backend-patterns/backend-patterns.md`
 
 ## Usage
 

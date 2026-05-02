@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/api-interface-design/api-interface-design.md`
+`skills/expert-backend/api-interface-design/api-interface-design.md`
 
 ## Usage
 

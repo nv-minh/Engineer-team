@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/typescript-patterns/typescript-patterns.md`
+`skills/expert-typescript/typescript-patterns/typescript-patterns.md`
 
 ## Usage
 

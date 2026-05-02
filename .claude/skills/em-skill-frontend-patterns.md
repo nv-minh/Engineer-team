@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/frontend-patterns/frontend-patterns.md`
+`skills/expert-frontend/frontend-patterns/frontend-patterns.md`
 
 ## Usage
 

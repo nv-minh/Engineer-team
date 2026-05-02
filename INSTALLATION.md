@@ -51,8 +51,8 @@ Once installed, open **any project** in Claude Code. All EM-Team skills are avai
 | Component | Source | Global Location |
 |-----------|--------|-----------------|
 | Agent/Workflow wrappers (33) | `EM-Team/.claude/skills/em:*.md` | `~/.claude/skills/em:*/SKILL.md` (symlinks) |
-| Skill wrappers (36) | `EM-Team/.claude/skills/em:skill-*.md` | `~/.claude/skills/em:skill:*/SKILL.md` (symlinks) |
-| Agents (31) | `EM-Team/agents/*.md` | Referenced via `~/.claude/config.json` |
+| Skill wrappers (72) | `EM-Team/.claude/skills/em:skill-*.md` | `~/.claude/skills/em:skill:*/SKILL.md` (symlinks) |
+| Agents (35) | `EM-Team/agents/*.md` | Referenced via `~/.claude/config.json` |
 | Workflows (23) | `EM-Team/workflows/*.md` | Referenced via `~/.claude/config.json` |
 
 EM-Team repo is the **single source of truth**. Symlinks point back to it — update the repo, changes apply everywhere.

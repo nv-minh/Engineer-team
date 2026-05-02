@@ -11,7 +11,7 @@ EM-Team skill wrapper. See source for full content.
 
 ## Source
 
-`skills/development/rust-patterns/rust-patterns.md`
+`skills/expert-rust/rust-patterns/rust-patterns.md`
 
 ## Usage
 

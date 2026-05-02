@@ -22,7 +22,7 @@ err()   { echo -e "${RED}[ERROR]${NC} $1" >&2; exit 1; }
 
 echo ""
 echo "  ╔══════════════════════════════════════╗"
-echo "  ║       EM-Team v2.2.0 Installer       ║"
+echo "  ║       EM-Team v3.0.0 Installer       ║"
 echo "  ╚══════════════════════════════════════╝"
 echo ""
 
@@ -62,12 +62,12 @@ cfg.setdefault('assistant', {})
 cfg['skills'] = {
     'enabled': True,
     'paths': [repo + '/.claude/skills'],
-    'description': f'EM-Team v2.2.0 — 33 skills, 31 agents, 23 workflows. See: {repo}/CLAUDE.md'
+    'description': f'EM-Team v3.0.0 — 72 skills, 35 agents, 23 workflows. See: {repo}/CLAUDE.md'
 }
 cfg['agents'] = {
     'enabled': True,
     'paths': [repo + '/agents'],
-    'description': f'EM-Team Agents — 31 specialized agents. See: {repo}/agents/'
+    'description': f'EM-Team Agents — 35 specialized agents. See: {repo}/agents/'
 }
 cfg['workflows'] = {
     'enabled': True,
