@@ -3,7 +3,7 @@ name: planner
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:planner
+trigger: em-agent:planner
 description: Creates detailed implementation plans from specs and requirements. Use when starting a new feature, breaking down work, or needing a structured approach.
 capabilities:
   - Spec analysis and requirements extraction

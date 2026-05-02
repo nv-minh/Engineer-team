@@ -303,7 +303,7 @@ em-team team-lead "Cross-functional review for checkout flow"
 - Security Reviewer (security assessment)
 - Staff Engineer (deep investigation)
 
-**Trigger:** `duck:team-lead`
+**Trigger:** `em-agent:team-lead`
 
 ---
 
@@ -329,7 +329,7 @@ em-team arch-review "Review event-driven architecture for payments"
 - Cross-service impact
 - Scalability
 
-**Trigger:** `duck:architect` + `duck:staff`
+**Trigger:** `em-agent:architect` + `em-agent:staff-engineer`
 
 ---
 
@@ -356,7 +356,7 @@ em-team design-review "Review mobile app navigation design"
 - Accessibility (WCAG 2.1 AA/AAA)
 - Responsive design
 
-**Trigger:** `duck:product` + `duck:frontend`
+**Trigger:** `em-agent:product-manager` + `em-agent:frontend-expert`
 
 ---
 
@@ -402,7 +402,7 @@ Automatically redirects to `code-review-deep.sh`.
 8. Scalability 📈
 9. Documentation 📚
 
-**Trigger:** `duck:code-review` + `duck:security`
+**Trigger:** `em-agent:senior-code-reviewer` + `em-agent:security-reviewer`
 
 ---
 
@@ -429,7 +429,7 @@ em-team db-review "Review migration strategy for user table split"
 - Data integrity
 - Fintech patterns (ledger, audit trail)
 
-**Trigger:** `duck:database` + `duck:architect`
+**Trigger:** `em-agent:database-expert` + `em-agent:architect`
 
 ---
 
@@ -457,7 +457,7 @@ em-team product-review "Assess market fit for subscription management"
 - Market fit
 - Technical feasibility
 
-**Trigger:** `duck:product` + `duck:architect`
+**Trigger:** `em-agent:product-manager` + `em-agent:architect`
 
 ---
 
@@ -485,7 +485,7 @@ em-team security-review "Security review for authentication service"
 
 **BLOCKING Authority:** CRITICAL/HIGH issues must be fixed
 
-**Trigger:** `duck:security` + `duck:staff`
+**Trigger:** `em-agent:security-reviewer` + `em-agent:staff-engineer`
 
 ---
 
@@ -513,7 +513,7 @@ em-team incident "Payment processing failures"
 5. Resolution & verification
 6. Blameless postmortem
 
-**Trigger:** `duck:staff` + `duck:security`
+**Trigger:** `em-agent:staff-engineer` + `em-agent:security-reviewer`
 
 ---
 

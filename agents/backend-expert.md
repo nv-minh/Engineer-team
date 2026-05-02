@@ -37,6 +37,12 @@ related_skills:
   - api-interface-design
   - security-hardening
   - performance-optimization
+  - nestjs
+  - python-patterns
+  - fastapi
+  - django
+  - go-patterns
+  - spring-boot
 status_protocol: standard
 completion_marker: "BACKEND_REVIEW_COMPLETE"
 ---

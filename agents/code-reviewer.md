@@ -3,7 +3,7 @@ name: code-reviewer
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:code-reviewer
+trigger: em-agent:senior-code-reviewerer
 description: Performs 5-axis code review for quality and correctness. Use when reviewing pull requests, before merging code, or ensuring code quality.
 capabilities:
   - 5-axis code review (correctness, readability, architecture, security, performance)

@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: Product Requirements Review (Product Manager)
-**Agent:** \`duck:product\`
+**Agent:** \`em-agent:product-manager\`
 **Trigger:** "Agent: product-manager - Review user stories and requirements for: $DESIGN_DESCRIPTION"
 
 **Assessment:**
@@ -54,7 +54,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Market fit validation
 
 ### Stage 2: UI/UX Technical Review (Frontend Expert)
-**Agent:** \`duck:frontend\`
+**Agent:** \`em-agent:frontend-expert\`
 **Trigger:** "Agent: frontend-expert - Review UI/UX design for: $DESIGN_DESCRIPTION"
 
 **Assessment:**
@@ -66,7 +66,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Performance optimization
 
 ### Stage 3: Consolidated Design Assessment
-**Agents:** \`duck:product\` + \`duck:frontend\`
+**Agents:** \`em-agent:product-manager\` + \`em-agent:frontend-expert\`
 
 **Output:**
 - Merged business and technical findings

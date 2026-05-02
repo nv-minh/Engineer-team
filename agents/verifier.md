@@ -3,7 +3,7 @@ name: verifier
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:verifier
+trigger: em-agent:verifier
 description: Post-execution verification against spec and requirements. Use when completing implementation, validating delivery, or ensuring quality.
 capabilities:
   - Spec coverage mapping (fully implemented, partial, missing)

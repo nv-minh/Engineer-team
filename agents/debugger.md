@@ -3,7 +3,7 @@ name: debugger
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:debugger
+trigger: em-agent:debugger
 description: Systematic debugging using scientific method with root cause investigation. Use when investigating bugs, diagnosing issues, or finding root causes.
 capabilities:
   - 4-phase scientific debugging (Investigate, Analyze, Hypothesize, Implement)

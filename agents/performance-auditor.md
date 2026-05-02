@@ -1,7 +1,7 @@
 ---
 name: performance-auditor
 type: optional
-trigger: duck:performance-auditor
+trigger: em-agent:performance-auditor
 description: Benchmarking, performance analysis, and optimization recommendations
 version: 1.1.0
 origin: EM-Team
@@ -91,7 +91,7 @@ The Performance Auditor agent conducts comprehensive performance analysis, creat
 "Agent: em-performance-auditor - Create performance baseline"
 ```
 
-**Trigger Command:** `duck:performance-auditor`
+**Trigger Command:** `em-agent:performance-auditor`
 
 ## Auditing Process
 

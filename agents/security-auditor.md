@@ -3,7 +3,7 @@ name: security-auditor
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:security-auditor
+trigger: em-agent:security-auditor
 description: OWASP-based security audit for vulnerability assessment. Use when auditing code, checking security, or ensuring compliance.
 capabilities:
   - OWASP Top 10 vulnerability scanning

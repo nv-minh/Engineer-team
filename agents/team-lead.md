@@ -1,7 +1,7 @@
 ---
 name: team-lead
 type: orchestrator
-trigger: duck:team-lead
+trigger: em-agent:team-lead
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -14,7 +14,7 @@ capabilities:
   - escalation_management
 distributed_mode:
   enabled: true
-  coordinator_trigger: "duck:techlead-orchestrator"
+  coordinator_trigger: "em-agent:techlead-orchestrator"
   reporting_protocol: "protocols/report-format.md"
 inputs:
   - task_description
@@ -100,7 +100,7 @@ Team Lead is the orchestrator agent responsible for scanning scope, selecting ap
 "Agent: em-team-lead - Lead architecture review"
 ```
 
-**Trigger Command:** `duck:team-lead`
+**Trigger Command:** `em-agent:team-lead`
 
 ## Distributed Mode
 

@@ -1,7 +1,7 @@
 ---
 name: integration-checker
 type: optional
-trigger: duck:integration-checker
+trigger: em-agent:integration-checker-checker
 description: Cross-phase validation and end-to-end flow verification
 version: 1.1.0
 origin: EM-Team
@@ -91,7 +91,7 @@ The Integration Checker agent validates cross-phase integration points, verifies
 "Agent: em-integration-checker - Verify cross-phase consistency"
 ```
 
-**Trigger Command:** `duck:integration-checker`
+**Trigger Command:** `em-agent:integration-checker`
 
 ## Checking Process
 

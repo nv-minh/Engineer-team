@@ -1,7 +1,7 @@
 ---
 name: researcher
 type: optional
-trigger: duck:researcher
+trigger: em-agent:researcher
 description: Technical exploration and research for emerging technologies, frameworks, and best practices
 version: 1.1.0
 origin: EM-Team
@@ -90,7 +90,7 @@ The Researcher agent performs deep technical exploration and research on emergin
 "Agent: em-researcher - Investigate the latest React state management solutions"
 ```
 
-**Trigger Command:** `duck:researcher`
+**Trigger Command:** `em-agent:researcher`
 
 ## Research Process
 

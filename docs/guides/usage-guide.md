@@ -32,7 +32,7 @@ EM-Team provides three main ways to accomplish tasks:
 
 ## Communication Styles
 
-EM-Team v2.2.0 includes a unified communication control system with two independent axes:
+EM-Team v3.0.0 includes a unified communication control system with two independent axes:
 
 - **Personality** (tone/voice) — 13 styles via `/em:skill:style-switcher`
 - **Density** (verbosity/format) — 3 modes via `/compact`, `/terse`, `/standard`
@@ -736,5 +736,5 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 ---
 
-**Last Updated:** 2026-05-01
-**Version:** 2.2.0
+**Last Updated:** 2026-05-02
+**Version:** 3.0.0

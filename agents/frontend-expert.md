@@ -1,7 +1,7 @@
 ---
 name: frontend-expert
 type: specialist
-trigger: duck:frontend
+trigger: em-agent:frontend-expert
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -14,7 +14,7 @@ capabilities:
   - performance_audit
 distributed_mode:
   enabled: true
-  coordinator_trigger: "duck:techlead-orchestrator"
+  coordinator_trigger: "em-agent:techlead-orchestrator"
   reporting_protocol: "protocols/report-format.md"
 inputs:
   - ui_requirements
@@ -35,6 +35,15 @@ collaborates_with:
   - ui-auditor
 related_skills:
   - ux-audit
+  - frontend-patterns
+  - react
+  - react-hooks
+  - nextjs
+  - redux
+  - vue3
+  - pinia
+  - vue-router
+  - typescript-patterns
 status_protocol: standard
 completion_marker: "FRONTEND_REVIEW_COMPLETE"
 ---
@@ -101,7 +110,7 @@ Frontend Expert is a specialist in UI/UX and React/Next.js ecosystem with deep e
 "Agent: em-frontend-expert - Analyze render performance issues"
 ```
 
-**Trigger Command:** `duck:frontend`
+**Trigger Command:** `em-agent:frontend-expert`
 
 ## Distributed Mode
 

@@ -111,25 +111,25 @@ start_distributed() {
     tmux rename-window -t "$SESSION_NAME:0" "techlead"
     tmux send-keys -t "$SESSION_NAME:techlead" "cd $(pwd)" C-m
     tmux send-keys -t "$SESSION_NAME:techlead" "echo 'Tech Lead Coordinator Session'" C-m
-    tmux send-keys -t "$SESSION_NAME:techlead" "echo 'Trigger: duck:techlead-orchestrator'" C-m
+    tmux send-keys -t "$SESSION_NAME:techlead" "echo 'Trigger: em-agent:techlead-orchestrator'" C-m
 
     # Window 1: Backend Agent
     tmux new-window -t "$SESSION_NAME:1" -n "backend"
     tmux send-keys -t "$SESSION_NAME:backend" "cd $(pwd)" C-m
     tmux send-keys -t "$SESSION_NAME:backend" "echo 'Backend Agent Session'" C-m
-    tmux send-keys -t "$SESSION_NAME:backend" "echo 'Trigger: duck:backend'" C-m
+    tmux send-keys -t "$SESSION_NAME:backend" "echo 'Trigger: em-agent:backend-expert'" C-m
 
     # Window 2: Frontend Agent
     tmux new-window -t "$SESSION_NAME:2" -n "frontend"
     tmux send-keys -t "$SESSION_NAME:frontend" "cd $(pwd)" C-m
     tmux send-keys -t "$SESSION_NAME:frontend" "echo 'Frontend Agent Session'" C-m
-    tmux send-keys -t "$SESSION_NAME:frontend" "echo 'Trigger: duck:frontend'" C-m
+    tmux send-keys -t "$SESSION_NAME:frontend" "echo 'Trigger: em-agent:frontend-expert'" C-m
 
     # Window 3: Database Agent
     tmux new-window -t "$SESSION_NAME:3" -n "database"
     tmux send-keys -t "$SESSION_NAME:database" "cd $(pwd)" C-m
     tmux send-keys -t "$SESSION_NAME:database" "echo 'Database Agent Session'" C-m
-    tmux send-keys -t "$SESSION_NAME:database" "echo 'Trigger: duck:database'" C-m
+    tmux send-keys -t "$SESSION_NAME:database" "echo 'Trigger: em-agent:database-expert'" C-m
 
     # Window 4: Scratch/General workspace
     tmux new-window -t "$SESSION_NAME:4" -n "scratch"

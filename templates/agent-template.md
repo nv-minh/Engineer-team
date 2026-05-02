@@ -1,7 +1,7 @@
 ---
 name: "[agent-name]"
 type: "core|specialist|orchestrator"
-trigger: "duck:[agent-name]"
+trigger: "em-agent:[agent-name]"
 description: "[One-line: what this agent does and when to use it]"
 version: "2.0.0"
 origin: "[source-repo: agent-skills|superpowers|gstack|gsd|ecc|pm-skills]"

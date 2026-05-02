@@ -1,7 +1,7 @@
 ---
 name: devex-reviewer
 type: specialist
-trigger: duck:devex-reviewer
+trigger: em-agent:devex-reviewer-reviewer
 description: "Developer experience auditor who tests documentation, onboarding flows, CLI help, and API usability. Measures TTHW and produces DX scorecard."
 version: "2.0.0"
 origin: "gstack"

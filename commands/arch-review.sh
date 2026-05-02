@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: Architecture Analysis (Architect)
-**Agent:** \`duck:architect\`
+**Agent:** \`em-agent:architect\`
 **Trigger:** "Agent: architect - Review architecture for: $ARCH_DESCRIPTION"
 
 **Assessment:**
@@ -54,7 +54,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - ADR review (if applicable)
 
 ### Stage 2: Deep Technical Review (Staff Engineer)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** "Agent: staff-engineer - Deep technical review for: $ARCH_DESCRIPTION"
 
 **Assessment:**
@@ -65,7 +65,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Risk identification
 
 ### Stage 3: Consolidated Architecture Assessment
-**Agents:** \`duck:architect\` + \`duck:staff\`
+**Agents:** \`em-agent:architect\` + \`em-agent:staff-engineer\`
 
 **Output:**
 - Merged architecture and technical findings

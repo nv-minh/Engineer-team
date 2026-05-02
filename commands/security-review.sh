@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: OWASP Top 10 Assessment (Security Reviewer)
-**Agent:** \`duck:security\`
+**Agent:** \`em-agent:security-reviewer\`
 **Trigger:** "Agent: security-reviewer - Perform OWASP assessment for: $SECURITY_DESCRIPTION"
 
 **OWASP Categories:**
@@ -61,7 +61,7 @@ cat > "$WORKFLOW_FILE" << EOF
 **BLOCKING Authority:** CRITICAL/HIGH issues MUST be fixed
 
 ### Stage 2: STRIDE Threat Modeling (Security Reviewer + Staff Engineer)
-**Agents:** \`duck:security\` + \`duck:staff\`
+**Agents:** \`em-agent:security-reviewer\` + \`em-agent:staff-engineer\`
 **Trigger:** "Agent: security-reviewer + staff-engineer - STRIDE threat modeling for: $SECURITY_DESCRIPTION"
 
 **STRIDE Categories:**
@@ -73,7 +73,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - **E**levation of Privilege: Unauthorized access
 
 ### Stage 3: Deep Security Investigation (Staff Engineer)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** "Agent: staff-engineer - Deep security investigation for: $SECURITY_DESCRIPTION"
 
 **Assessment:**
@@ -84,7 +84,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Security architecture review
 
 ### Stage 4: Consolidated Security Assessment
-**Agents:** \`duck:security\` + \`duck:staff\`
+**Agents:** \`em-agent:security-reviewer\` + \`em-agent:staff-engineer\`
 
 **Output:**
 - Merged OWASP and STRIDE findings

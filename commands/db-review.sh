@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: Database Schema & Query Review (Database Expert)
-**Agent:** \`duck:database\`
+**Agent:** \`em-agent:database-expert\`
 **Trigger:** "Agent: database-expert - Review database for: $DB_DESCRIPTION"
 
 **Assessment:**
@@ -55,7 +55,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Fintech patterns (ledger, audit trail) if applicable
 
 ### Stage 2: Data Architecture Review (Architect)
-**Agent:** \`duck:architect\`
+**Agent:** \`em-agent:architect\`
 **Trigger:** "Agent: architect - Review data architecture for: $DB_DESCRIPTION"
 
 **Assessment:**
@@ -66,7 +66,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Data consistency strategy
 
 ### Stage 3: Consolidated Database Assessment
-**Agents:** \`duck:database\` + \`duck:architect\`
+**Agents:** \`em-agent:database-expert\` + \`em-agent:architect\`
 
 **Output:**
 - Merged database and architecture findings

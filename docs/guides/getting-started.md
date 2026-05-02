@@ -281,5 +281,5 @@ cd tests
 
 ---
 
-**Last Updated:** 2026-05-01
-**Version:** 2.1.0
+**Last Updated:** 2026-05-02
+**Version:** 3.0.0

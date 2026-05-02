@@ -2,7 +2,7 @@
 
 ## Agents
 
-**Security Reviewer** (`duck:security`) + **Staff Engineer** (`duck:staff`)
+**Security Reviewer** (`em-agent:security-reviewer`) + **Staff Engineer** (`em-agent:staff-engineer`)
 
 ## STRIDE Categories
 

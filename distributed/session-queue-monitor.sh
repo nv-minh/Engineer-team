@@ -71,13 +71,13 @@ get_agent_trigger() {
 
     case "$agent_name" in
         backend)
-            echo "duck:backend"
+            echo "em-agent:backend-expert"
             ;;
         frontend)
-            echo "duck:frontend"
+            echo "em-agent:frontend-expert"
             ;;
         database)
-            echo "duck:database"
+            echo "em-agent:database-expert"
             ;;
         *)
             echo "unknown:$agent_name"

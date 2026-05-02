@@ -48,35 +48,35 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Orchestration Plan
 
 ### Stage 1: Scope Analysis (Team Lead)
-**Agent:** \`duck:team-lead\`
+**Agent:** \`em-agent:team-lead\`
 **Trigger:** "Agent: team-lead - Analyze scope for: $TASK_DESCRIPTION"
 
 ### Stage 2: Business Validation (Product Manager)
-**Agent:** \`duck:product\`
+**Agent:** \`em-agent:product-manager\`
 **Trigger:** "Agent: product-manager - Review business requirements for: $TASK_DESCRIPTION"
 
 ### Stage 3: Architecture Review (Architect)
-**Agent:** \`duck:architect\`
+**Agent:** \`em-agent:architect\`
 **Trigger:** "Agent: architect - Review architecture for: $TASK_DESCRIPTION"
 
 ### Stage 4: Specialized Reviews
 **Agents:** Based on scope identified by Team Lead
 
-- Frontend Expert: \`duck:frontend\`
-- Database Expert: \`duck:database\`
-- Senior Code Reviewer: \`duck:code-review\`
+- Frontend Expert: \`em-agent:frontend-expert\`
+- Database Expert: \`em-agent:database-expert\`
+- Senior Code Reviewer: \`em-agent:senior-code-reviewer\`
 
 ### Stage 5: Security Review (Security Reviewer)
-**Agent:** \`duck:security\`
+**Agent:** \`em-agent:security-reviewer\`
 **Trigger:** "Agent: security-reviewer - Perform security assessment for: $TASK_DESCRIPTION"
 **Note:** This agent has BLOCKING authority for CRITICAL/HIGH issues
 
 ### Stage 6: Deep Investigation (if needed)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** Only if complex issues identified
 
 ### Stage 7: Consolidation (Team Lead)
-**Agent:** \`duck:team-lead\`
+**Agent:** \`em-agent:team-lead\`
 **Trigger:** "Agent: team-lead - Consolidate all team review reports"
 
 ## Quality Gates

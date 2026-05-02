@@ -1,7 +1,7 @@
 ---
 name: database-expert
 type: specialist
-trigger: duck:database
+trigger: em-agent:database-expert
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -28,6 +28,13 @@ collaborates_with:
   - security-reviewer
   - staff-engineer
   - backend-expert
+related_skills:
+  - postgresql
+  - redis
+  - elasticsearch
+  - backend-patterns
+  - security-hardening
+  - performance-optimization
 status_protocol: standard
 completion_marker: "DATABASE_REVIEW_COMPLETE"
 ---
@@ -94,7 +101,7 @@ Database Expert is a specialist in database schema, query optimization, migratio
 "Agent: em-database-expert - Review database scaling strategy"
 ```
 
-**Trigger Command:** `duck:database`
+**Trigger Command:** `em-agent:database-expert`
 
 ## Schema Design Principles
 

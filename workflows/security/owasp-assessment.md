@@ -2,7 +2,7 @@
 
 ## Agent
 
-**Security Reviewer** (`duck:security`)
+**Security Reviewer** (`em-agent:security-reviewer`)
 
 ## Reference
 

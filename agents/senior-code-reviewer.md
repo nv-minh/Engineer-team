@@ -1,7 +1,7 @@
 ---
 name: senior-code-reviewer
 type: specialist
-trigger: duck:code-review
+trigger: em-agent:senior-code-reviewer
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -92,7 +92,7 @@ Senior Code Reviewer performs thorough code review across **9 categories** (expa
 "Agent: em-senior-code-reviewer - Assess technical debt in legacy code"
 ```
 
-**Trigger Command:** `duck:code-review`
+**Trigger Command:** `em-agent:senior-code-reviewer`
 
 ## 9-Axis Review Framework
 

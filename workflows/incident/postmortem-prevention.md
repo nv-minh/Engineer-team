@@ -2,7 +2,7 @@
 
 ## Agents
 
-**Staff Engineer** (`duck:staff`) + **Security Reviewer** (`duck:security`)
+**Staff Engineer** (`em-agent:staff-engineer`) + **Security Reviewer** (`em-agent:security-reviewer`)
 
 ## Actions
 

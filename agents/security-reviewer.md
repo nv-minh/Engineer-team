@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 type: specialist
-trigger: duck:security
+trigger: em-agent:security-reviewer
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -93,7 +93,7 @@ Security Reviewer agent performs comprehensive security assessment using **OWASP
 "Agent: em-security-reviewer - Review deployment security"
 ```
 
-**Trigger Command:** `duck:security`
+**Trigger Command:** `em-agent:security-reviewer`
 
 ## OWASP Top 10 Assessment
 

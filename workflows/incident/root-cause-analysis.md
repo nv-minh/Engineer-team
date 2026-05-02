@@ -2,7 +2,7 @@
 
 ## Agent
 
-**Staff Engineer** (`duck:staff`)
+**Staff Engineer** (`em-agent:staff-engineer`)
 
 ## Actions
 

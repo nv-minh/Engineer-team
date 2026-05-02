@@ -44,7 +44,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Response Plan
 
 ### Stage 1: Initial Assessment & Triage (Staff Engineer)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** "Agent: staff-engineer - Assess incident: $INCIDENT_DESCRIPTION"
 
 **Actions:**
@@ -61,7 +61,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - **P3 (Low):** Cosmetic issue, no user impact
 
 ### Stage 2: Security Investigation (if applicable)
-**Agent:** \`duck:security\`
+**Agent:** \`em-agent:security-reviewer\`
 **Trigger:** "Agent: security-reviewer - Investigate security incident: $INCIDENT_DESCRIPTION"
 
 **Actions:**
@@ -72,7 +72,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Assess data exposure
 
 ### Stage 3: Root Cause Analysis (Staff Engineer)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** "Agent: staff-engineer - Root cause analysis for: $INCIDENT_DESCRIPTION"
 
 **Actions:**
@@ -83,7 +83,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Determine root cause
 
 ### Stage 4: Cross-Service Impact Analysis (Staff Engineer)
-**Agent:** \`duck:staff\`
+**Agent:** \`em-agent:staff-engineer\`
 **Trigger:** "Agent: staff-engineer - Cross-service impact analysis for: $INCIDENT_DESCRIPTION"
 
 **Actions:**
@@ -94,7 +94,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Document user impact
 
 ### Stage 5: Resolution & Verification (Staff Engineer + Security Reviewer)
-**Agents:** \`duck:staff\` + \`duck:security\`
+**Agents:** \`em-agent:staff-engineer\` + \`em-agent:security-reviewer\`
 
 **Actions:**
 - Implement fixes
@@ -104,7 +104,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Plan permanent fixes
 
 ### Stage 6: Postmortem & Prevention (Staff Engineer + Security Reviewer)
-**Agents:** \`duck:staff\` + \`duck:security\`
+**Agents:** \`em-agent:staff-engineer\` + \`em-agent:security-reviewer\`
 
 **Actions:**
 - Create blameless postmortem

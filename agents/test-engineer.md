@@ -3,7 +3,7 @@ name: test-engineer
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:test-engineer
+trigger: em-agent:test-engineer-engineer
 description: Test strategy and generation for comprehensive coverage. Use when planning tests, generating test cases, or ensuring test quality.
 capabilities:
   - Multi-level test strategy (unit 80%, integration 15%, E2E 5%)

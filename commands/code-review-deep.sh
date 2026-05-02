@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: 9-Axis Code Review (Senior Code Reviewer)
-**Agent:** \`duck:code-review\`
+**Agent:** \`em-agent:senior-code-reviewer\`
 **Trigger:** "Agent: senior-code-reviewer - Perform 9-axis review for: $CODE_DESCRIPTION"
 
 **9 Axes:**
@@ -58,7 +58,7 @@ cat > "$WORKFLOW_FILE" << EOF
 9. **Documentation** 📚 - Comments, API docs, README
 
 ### Stage 2: Security Vulnerability Assessment (Security Reviewer)
-**Agent:** \`duck:security\`
+**Agent:** \`em-agent:security-reviewer\`
 **Trigger:** "Agent: security-reviewer - Perform security assessment for: $CODE_DESCRIPTION"
 
 **Assessment:**
@@ -68,7 +68,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - **BLOCKING authority** for CRITICAL/HIGH issues
 
 ### Stage 3: Consolidated Code Quality Report
-**Agents:** \`duck:code-review\` + \`duck:security\`
+**Agents:** \`em-agent:senior-code-reviewer\` + \`em-agent:security-reviewer\`
 
 **Output:**
 - Merged 9-axis and security findings

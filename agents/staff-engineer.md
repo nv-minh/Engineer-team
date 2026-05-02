@@ -1,7 +1,7 @@
 ---
 name: staff-engineer
 type: specialist
-trigger: duck:staff
+trigger: em-agent:staff-engineer
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -94,7 +94,7 @@ Staff Engineer agent performs **deep technical investigation**, **root cause ana
 "Agent: em-staff-engineer - Investigate why latency increased 300%"
 ```
 
-**Trigger Command:** `duck:staff`
+**Trigger Command:** `em-agent:staff-engineer`
 
 ## Root Cause Analysis (RCA) Framework
 

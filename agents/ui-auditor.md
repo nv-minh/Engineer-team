@@ -3,7 +3,7 @@ name: ui-auditor
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:ui-auditor
+trigger: em-agent:ui-auditor
 description: Visual QA and 6-pillar UI audit for frontend code. Use when reviewing UI changes, checking visual quality, or ensuring user experience.
 capabilities:
   - 6-pillar UI audit (Visual Consistency, Responsive, Accessibility, Performance, UX, Browser Compat)

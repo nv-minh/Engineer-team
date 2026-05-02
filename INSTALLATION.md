@@ -156,4 +156,4 @@ bash install.sh
 ---
 
 **Last Updated:** 2026-05-02
-**Version:** 2.2.0
+**Version:** 3.0.0

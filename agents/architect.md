@@ -1,7 +1,7 @@
 ---
 name: architect
 type: specialist
-trigger: duck:architect
+trigger: em-agent:architect
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -97,7 +97,7 @@ Architect agent reviews architecture, technical design, ADR (Architecture Decisi
 "Agent: em-architect - Review database architecture for e-commerce platform"
 ```
 
-**Trigger Command:** `duck:architect`
+**Trigger Command:** `em-agent:architect`
 
 ## Architecture Review Framework
 

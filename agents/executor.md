@@ -3,7 +3,7 @@ name: executor
 type: agent
 version: 1.2.0
 origin: EM-Skill Core Agents
-trigger: duck:executor
+trigger: em-agent:executor
 description: Executes implementation plans with atomic commits and quality gates. Use when implementing features, following plans, or ensuring code quality.
 capabilities:
   - Task-by-task plan execution with atomic commits

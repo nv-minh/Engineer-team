@@ -6,27 +6,22 @@
 
 EM-Team provides a complete toolkit for fullstack engineering with:
 
-**🎯 Core Features (NEW in v1.2.0):**
-- **Discovery & Market Intelligence** - Complete product validation and discovery framework
-  - YC Office Hours validation with 6 forcing questions
-  - 6-stage discovery workflow (2-4 weeks)
-  - Project learnings management system
-  - Multi-phase review pipeline with auto-decisions
-- **TDD Auto-Retry Loop** - Automated test failure capture with exponential backoff
-- **Token Summarization** - Intelligent token management preventing context overflow
-- **Knowledge Persistence** - Project convention learning for consistent agent output
-- **Enhanced Distributed Mode** - Token-aware report consolidation with Haiku
+**🎯 Core Features (NEW in v3.0.0):**
+- **Expert Skill Groups** - 15 expert groups covering React, Vue, Go, NestJS, Python, Database, DevOps, Mobile, Spring, Rust, TypeScript, Frontend, Backend, Drawio, Tauri
+- **27 New Skills** - Condensed from full-stack-skills, covering Docker, Kubernetes, Terraform, Flutter, React Native, Android, iOS, Spring Boot, and more
+- **7 New Expert Agents** - Dedicated agents for each major technology stack
+- **34 Agents Total** - Full coverage from planning to deployment
 
 **📋 Quick Commands:**
-- **74+ Commands** - Organized by type for easy access
-  - 26 **Skills** - Reusable patterns and practices
-  - 24 **Agents** (`em:*`) - Specialized task handlers
-  - 18 **Workflows** (`em:*` & `em:wl-*`) - End-to-end processes
+- **100+ Commands** - Organized by type for easy access
+  - 72 **Skills** - Reusable patterns and practices across 17 categories
+  - 35 **Agents** (`em:*`) - Specialized task handlers including 7 expert agents
+  - 23 **Workflows** (`em:*` & `em:wl-*`) - End-to-end processes
 
 **🔧 Development Tools:**
-- **38 Skills** - Discovery, development, quality, workflow management
-- **24 Agents** - Market intelligence, learn, autoplan, planner, backend, frontend, database, etc.
-- **18 Workflows** - Discovery, new-feature, bug-fix, security-audit, team reviews, etc.
+- **72 Skills** - Foundation, development, expert groups, quality, workflow, additional
+- **35 Agents** - Core, optional, specialized, expert (React, Vue, NestJS, DevOps, Mobile, Spring, Rust)
+- **23 Workflows** - New-feature, bug-fix, security-audit, team reviews, distributed, product
 
 **⚡ Advanced Features:**
 - **Distributed Mode** - Parallel agent execution for complex tasks
@@ -750,61 +745,51 @@ Run end-to-end workflows:
 
 ```
 em-team/
-├── skills/                  # 36 skills organized by category
-│   ├── foundation/          # 5 core foundational skills
-│   │   ├── brainstorming/
-│   │   ├── spec-driven-development/
-│   │   ├── context-engineering/
-│   │   ├── writing-plans/
-│   │   └── systematic-debugging/
-│   ├── development/         # 12 development skills
-│   │   ├── test-driven-development/
-│   │   ├── frontend-patterns/
-│   │   ├── backend-patterns/
-│   │   ├── typescript-patterns/    (NEW)
-│   │   ├── python-patterns/        (NEW)
-│   │   ├── go-patterns/            (NEW)
-│   │   ├── rust-patterns/          (NEW)
-│   │   ├── incremental-implementation/
-│   │   ├── subagent-driven-development/
-│   │   ├── source-driven-development/
-│   │   ├── api-interface-design/
-│   │   └── security-hardening/
-│   ├── quality/             # 8 quality assurance skills
-│   │   ├── code-review/
-│   │   ├── code-simplification/
-│   │   ├── browser-testing/
-│   │   ├── performance-optimization/
-│   │   ├── e2e-testing/
-│   │   ├── security-audit/
-│   │   ├── api-testing/
-│   │   └── security-common/
-│   └── workflow/            # 6 workflow and automation skills
-│       ├── git-workflow/
-│       ├── ci-cd-automation/
-│       ├── documentation/
-│       ├── finishing-branch/
-│       ├── deprecation-migration/
-│       └── style-switcher/          (NEW - 13 personality + 3 density)
-├── agents/                  # 31 specialized agents
+├── skills/                  # 72 skills organized in 17 categories
+│   ├── foundation/          # 6 core foundational skills
+│   ├── development/         # 11 methodology skills (TDD, architecture, etc.)
+│   ├── expert-react/        # 4 React skills (react, react-hooks, nextjs, redux)
+│   ├── expert-vue/          # 3 Vue skills (vue3, pinia, vue-router)
+│   ├── expert-go/           # 1 Go skill (go-patterns)
+│   ├── expert-nest/         # 1 NestJS skill (nestjs)
+│   ├── expert-python/       # 3 Python skills (python-patterns, fastapi, django)
+│   ├── expert-database/     # 3 Database skills (postgresql, redis, elasticsearch)
+│   ├── expert-devops/       # 6 DevOps skills (docker, k8s, terraform, ansible, etc.)
+│   ├── expert-mobile/       # 4 Mobile skills (flutter, react-native, android, ios)
+│   ├── expert-spring/       # 1 Spring skill (spring-boot)
+│   ├── expert-frontend/     # 1 Frontend skill (frontend-patterns)
+│   ├── expert-backend/      # 2 Backend skills (backend-patterns, api-interface-design)
+│   ├── expert-rust/         # 1 Rust skill (rust-patterns)
+│   ├── expert-typescript/   # 1 TypeScript skill (typescript-patterns)
+│   ├── drawio/              # 2 Drawio skills (architecture, flowchart)
+│   ├── tauri/               # 1 Tauri skill (tauri)
+│   ├── quality/             # 10 quality assurance skills
+│   ├── workflow/            # 6 workflow and automation skills
+│   └── additional/          # 5 product & discovery skills
+├── agents/                  # 35 specialized agents
 │   ├── core (8): planner, executor, code-reviewer, debugger,
 │   │   test-engineer, security-auditor, ui-auditor, verifier
-│   ├── specialized (12): team-lead, architect, frontend-expert,
-│   │   senior-code-reviewer, database-expert, product-manager,
-│   │   security-reviewer, staff-engineer, researcher,
-│   │   codebase-mapper, integration-checker, performance-auditor
-│   └── v2.0 (11): market-intelligence, learn, autoplan,
-│       techlead-orchestrator, design-reviewer (NEW),
-│       devex-reviewer (NEW), iron-law-enforcer (NEW), ...
+│   ├── optional (4): researcher, codebase-mapper,
+│   │   integration-checker, performance-auditor
+│   ├── specialized (9): team-lead, architect, frontend-expert,
+│   │   backend-expert, senior-code-reviewer, database-expert,
+│   │   product-manager, security-reviewer, staff-engineer
+│   ├── v2.0 (7): market-intelligence, learn, autoplan,
+│   │   techlead-orchestrator, design-reviewer, devex-reviewer,
+│   │   iron-law-enforcer
+│   └── expert (7): react-expert, vue-expert, nestjs-expert,
+│       devops-expert, mobile-expert, spring-expert, rust-expert
 ├── workflows/               # 23 end-to-end workflows
 │   ├── primary (4): new-feature, bug-fix, refactoring, security-audit
-│   ├── support (10): project-setup, documentation, deployment,
-│   │   retro, ship-workflow (NEW), canary-monitoring (NEW), ...
-│   ├── master: six-phase-lifecycle (NEW)
-│   └── team (8): team-review, architecture-review, design-review,
-│       code-review-9axis, database-review, product-review,
-│       security-review-advanced, incident-response
-├── preambles/               # NEW - Shared initialization
+│   ├── support (6): project-setup, documentation, deployment,
+│   │   retro, ship-workflow, canary-monitoring
+│   ├── master: six-phase-lifecycle
+│   ├── team (8): team-review, architecture-review, design-review,
+│   │   code-review-9axis, database-review, product-review,
+│   │   security-review-advanced, incident-response
+│   ├── distributed (2): distributed-investigation, distributed-development
+│   └── product (2): discovery-process, market-driven-feature
+├── preambles/               # Shared initialization
 │   ├── ethos.md             # Builder philosophy (Boil the Lake, Iron Laws)
 │   ├── skill-preamble.md    # Standard skill initialization protocol
 │   └── agent-preamble.md    # Standard agent behavior rules
@@ -1132,26 +1117,37 @@ EM-Team includes a unified communication control system with 13 personality styl
 11. **integration-checker** - Cross-phase validation
 12. **performance-auditor** - Benchmarking
 
-### Specialized Agents (8 agents)
+### Specialized Agents (9 agents)
 
 13. **team-lead** - Team review orchestrator (trigger: `em-agent:team-lead`)
 14. **architect** - Architecture & technical design (trigger: `em-agent:architect`)
 15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `em-agent:frontend-expert`)
-16. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
-17. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
-18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
-19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
-20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
+16. **backend-expert** - API design, performance, auth, error handling (trigger: `em-agent:backend-expert`)
+17. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
+18. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
+19. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
+20. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
+21. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
 
 ### New Agents (v2.0+)
 
-21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
-22. **learn** - Knowledge management and cross-session learning
-23. **autoplan** - Multi-phase review pipeline orchestrator
-24. **techlead-orchestrator** - Distributed team coordination
-25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
-26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
-27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
+22. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
+23. **learn** - Knowledge management and cross-session learning
+24. **autoplan** - Multi-phase review pipeline orchestrator
+25. **techlead-orchestrator** - Distributed team coordination
+26. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
+27. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
+28. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
+
+### Expert Agents (v3.0)
+
+29. **react-expert** - React/Next.js, hooks, state management (trigger: `em-agent:react-expert`)
+30. **vue-expert** - Vue 3, Composition API, Pinia, Vue Router (trigger: `em-agent:vue-expert`)
+31. **nestjs-expert** - NestJS, TypeScript backend, GraphQL, microservices (trigger: `em-agent:nestjs-expert`)
+32. **devops-expert** - Docker, Kubernetes, Terraform, CI/CD (trigger: `em-agent:devops-expert`)
+33. **mobile-expert** - Flutter, React Native, Android, iOS (trigger: `em-agent:mobile-expert`)
+34. **spring-expert** - Spring Boot, JPA, security, microservices (trigger: `em-agent:spring-expert`)
+35. **rust-expert** - Rust systems, ownership, async tokio (trigger: `em-agent:rust-expert`)
 
 ## Workflows
 
@@ -1638,30 +1634,24 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: **2.2.0**
+Current version: **3.0.0**
 Last updated: 2026-05-02
 
-**Changes in v2.2.0:**
-- Consistency audit: all skill/agent/workflow counts verified and synchronized
-- 7 new skills: alignment-session, architecture-zoom-out, architecture-improvement, issue-generator, prd-generator, ux-audit, plan-tune
-- Diagram skill (Excalidraw, Mermaid, SVG)
-- Additional skills reorganized into `skills/additional/`
-- CI pipeline (`.github/workflows/validate.yml`) - validates frontmatter, symlinks, references
-- Auto-changelog hook (`hooks/post-commit`)
-- Session handoff mechanism (`scripts/session-handoff.sh`)
-- Agent Trace Store (`.claude/lib/trace-store.ts`) - code provenance tracking
-- Custom MCP servers (`.claude/mcp-servers/`) - GitHub enhanced + Project context
-- Operational rules (`.claude/rules/`) - mistakes ledger + context management
+**Changes in v3.0.0:**
+- Expert group restructuring: 15 expert skill groups replacing flat development/ structure
+- 27 new skills condensed from full-stack-skills (React, Vue, NestJS, DevOps, Database, Mobile, Spring, Drawio, Tauri)
+- 7 new expert agents (react-expert, vue-expert, nestjs-expert, devops-expert, mobile-expert, spring-expert, rust-expert)
+- 6 skills moved from development/ to expert-* groups (frontend-patterns, backend-patterns, api-interface-design, go-patterns, python-patterns, typescript-patterns, rust-patterns)
+- Enhanced existing agents (frontend-expert, backend-expert, database-expert) with expert skill references
 
-**Previous (v2.0.0):**
-- Communication styles (13 personality + 3 density modes)
-- Foundation infrastructure (preambles, protocols, templates, references)
-- TypeScript, Python, Go, Rust pattern skills
-- Design reviewer, DevEx reviewer, Iron Law enforcer agents
+**Previous (v2.2.0):**
+- Consistency audit + CI validation pipeline
+- Auto-changelog hook + session handoff
+- Agent Trace Store + MCP servers + operational rules
 
 **Total Counts:**
-- **Skills**: 45 (6 foundation + 18 development + 10 quality + 6 workflow + 5 additional)
-- **Agents**: 27 (8 core + 4 optional + 8 specialized + 7 v2.0+)
+- **Skills**: 72 (6 foundation + 11 development + 31 expert + 2 drawio + 1 tauri + 10 quality + 6 workflow + 5 additional)
+- **Agents**: 34 (8 core + 4 optional + 8 specialized + 7 v2.0+ + 7 expert)
 - **Workflows**: 23 (4 primary + 6 support + 8 team + 2 distributed + 2 product + 1 master)
 - **Personality Styles**: 13 + 3 density modes
 
@@ -1762,7 +1752,7 @@ em-team/
 
 ### Version Information
 
-- **Current Version:** 2.2.0
+- **Current Version:** 3.0.0
 - **Last Updated:** 2026-05-02
 - **Status:** Production Ready
 - **License:** MIT
@@ -1776,12 +1766,12 @@ em-team/
 
 ### Key Features Summary
 
-1. **Multiple Skills** - 44 reusable patterns across 5 categories
-2. **Specialized Agents** - 27 AI assistants (core + optional + specialized + v2.0+)
-3. **Complete Workflows** - 23 end-to-end processes
+1. **72 Skills** - Reusable patterns across 17 categories including 15 expert groups
+2. **35 Agents** - Core + optional + specialized + expert agents for every tech stack
+3. **23 Workflows** - End-to-end processes for complete project lifecycles
 4. **Distributed Mode** - Parallel agent execution
 5. **Bilingual Docs** - English & Vietnamese
-6. **Multi-language** - Supports 10+ programming languages
+6. **Multi-language** - Supports 15+ programming languages and frameworks
 7. **Security Focus** - OWASP, STRIDE coverage
 8. **CI Validation** - Automated frontmatter and reference checking
 9. **Code Provenance** - Agent Trace Store for AI-generated code tracking

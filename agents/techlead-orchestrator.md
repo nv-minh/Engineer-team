@@ -1,7 +1,7 @@
 ---
 name: techlead-orchestrator
 type: orchestrator
-trigger: duck:techlead-orchestrator
+trigger: em-agent:techlead-orchestrator
 distributed_mode: true
 coordinator_type: distributed
 version: 1.1.0
@@ -148,7 +148,7 @@ VIOLATION:
 "Agent: em-techlead-orchestrator - Lead cross-repo investigation across BE and FE"
 ```
 
-**Trigger Command:** `duck:techlead-orchestrator`
+**Trigger Command:** `em-agent:techlead-orchestrator`
 
 **Prerequisites:**
 - Distributed orchestrator script running: `./scripts/distributed-orchestrator.sh start`

@@ -1,7 +1,7 @@
 ---
 name: product-manager
 type: specialist
-trigger: duck:product
+trigger: em-agent:product-manager
 version: 1.1.0
 origin: EM-Team Specialized Agents
 capabilities:
@@ -98,7 +98,7 @@ Product Manager agent reviews specifications from a business perspective, perfor
 "Agent: em-product-manager - Review product roadmap for Q2"
 ```
 
-**Trigger Command:** `duck:product`
+**Trigger Command:** `em-agent:product-manager`
 
 ## Spec Review Framework
 

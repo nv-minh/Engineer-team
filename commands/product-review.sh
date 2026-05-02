@@ -43,7 +43,7 @@ cat > "$WORKFLOW_FILE" << EOF
 ## Review Plan
 
 ### Stage 1: Business Requirements Review (Product Manager)
-**Agent:** \`duck:product\`
+**Agent:** \`em-agent:product-manager\`
 **Trigger:** "Agent: product-manager - Review requirements for: $PRODUCT_DESCRIPTION"
 
 **Assessment:**
@@ -55,7 +55,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Business impact and ROI
 
 ### Stage 2: Technical Feasibility Review (Architect)
-**Agent:** \`duck:architect\`
+**Agent:** \`em-agent:architect\`
 **Trigger:** "Agent: architect - Assess technical feasibility for: $PRODUCT_DESCRIPTION"
 
 **Assessment:**
@@ -67,7 +67,7 @@ cat > "$WORKFLOW_FILE" << EOF
 - Integration requirements
 
 ### Stage 3: Consolidated Product Assessment
-**Agents:** \`duck:product\` + \`duck:architect\`
+**Agents:** \`em-agent:product-manager\` + \`em-agent:architect\`
 
 **Output:**
 - Merged business and technical findings

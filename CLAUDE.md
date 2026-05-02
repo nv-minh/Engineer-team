@@ -25,14 +25,29 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 45 skills
+├── skills/              # 72 skills
 │   ├── foundation/      # 6 core foundational skills
-│   ├── development/     # 18 development skills (including language patterns + diagram + figma-design)
+│   ├── development/     # 11 methodology skills (TDD, architecture, debugging, etc.)
+│   ├── expert-react/    # 4 React skills (react, react-hooks, nextjs, redux)
+│   ├── expert-vue/      # 3 Vue skills (vue3, pinia, vue-router)
+│   ├── expert-go/       # 1 Go skill (go-patterns)
+│   ├── expert-nest/     # 1 NestJS skill (nestjs)
+│   ├── expert-python/   # 3 Python skills (python-patterns, fastapi, django)
+│   ├── expert-database/ # 3 Database skills (postgresql, redis, elasticsearch)
+│   ├── expert-devops/   # 6 DevOps skills (docker, docker-compose, kubernetes, terraform, ansible, github-actions)
+│   ├── expert-mobile/   # 4 Mobile skills (flutter, react-native, android-kotlin, ios-swift)
+│   ├── expert-spring/   # 1 Spring skill (spring-boot)
+│   ├── expert-frontend/ # 1 Frontend skill (frontend-patterns)
+│   ├── expert-backend/  # 2 Backend skills (backend-patterns, api-interface-design)
+│   ├── expert-rust/     # 1 Rust skill (rust-patterns)
+│   ├── expert-typescript/ # 1 TypeScript skill (typescript-patterns)
+│   ├── drawio/          # 2 Drawio skills (architecture, flowchart)
+│   ├── tauri/           # 1 Tauri skill (tauri)
 │   ├── quality/         # 10 quality assurance skills
 │   ├── workflow/        # 6 workflow and automation skills
 │   └── additional/      # 5 product & discovery skills
-├── agents/              # 27 specialized agents (8 core + 4 optional + 8 specialized + 7 v2.0+)
-├── workflows/           # 23 end-to-end workflows (4 primary + 6 support + 8 team + 2 distributed + 1 master + 2 incident)
+├── agents/              # 35 specialized agents (8 core + 4 optional + 9 specialized + 7 v2.0+ + 7 expert)
+├── workflows/           # 23 end-to-end workflows
 ├── .claude/
 │   ├── lib/             # Agent Trace Store (code provenance tracking)
 │   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
@@ -61,52 +76,109 @@ em-team/
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (18 skills)
+### Development Skills (11 methodology skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
-8. **frontend-patterns** - React/Next.js/Vue patterns
-9. **backend-patterns** - API/Database patterns
-10. **incremental-implementation** - Vertical slice development
-11. **subagent-driven-development** - Fresh context per task + two-stage review
-12. **source-driven-development** - Code from official docs
-13. **api-interface-design** - Contract-first APIs
-14. **security-hardening** - OWASP Top 10 security
-15. **typescript-patterns** - TypeScript type system, async, React/Next.js TS patterns
-16. **python-patterns** - Python 3.10+ types, async, FastAPI, SQLAlchemy 2.0
-17. **go-patterns** - Error handling, concurrency, interfaces, testing
-18. **rust-patterns** - Ownership, traits, async tokio, smart pointers
-19. **architecture-zoom-out** - Higher-level code perspective
-20. **architecture-improvement** - Systematic module deepening
-21. **issue-generator** - Plans to structured vertical-slice issues
-22. **prd-generator** - Ideas to structured PRD documents
-23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
-24. **figma-design** - Figma-to-code conversion with MCP server
+8. **incremental-implementation** - Vertical slice development
+9. **subagent-driven-development** - Fresh context per task + two-stage review
+10. **source-driven-development** - Code from official docs
+11. **security-hardening** - OWASP Top 10 security
+12. **architecture-zoom-out** - Higher-level code perspective
+13. **architecture-improvement** - Systematic module deepening
+14. **issue-generator** - Plans to structured vertical-slice issues
+15. **prd-generator** - Ideas to structured PRD documents
+16. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+17. **figma-design** - Figma-to-code conversion with MCP server
+
+### Expert React Skills (4 skills)
+18. **react** - React fundamentals, components, JSX, Context API, performance
+19. **react-hooks** - useState, useEffect, useCallback, useMemo, custom hooks
+20. **nextjs** - App Router, Pages Router, SSR/SSG/ISR, data fetching, deployment
+21. **redux** - Redux Toolkit, slices, async thunks, RTK Query
+
+### Expert Vue Skills (3 skills)
+22. **vue3** - Composition API, reactivity, templates, SSR, TypeScript
+23. **pinia** - Stores, getters, actions, plugins, Vuex migration
+24. **vue-router** - Dynamic routes, guards, lazy loading
+
+### Expert Go Skills (1 skill)
+25. **go-patterns** - Error handling, concurrency, interfaces, testing, Gin
+
+### Expert NestJS Skills (1 skill)
+26. **nestjs** - Controllers, providers, modules, guards, pipes, GraphQL, microservices
+
+### Expert Python Skills (3 skills)
+27. **python-patterns** - Python 3.10+ types, async, SQLAlchemy 2.0
+28. **fastapi** - FastAPI patterns, Pydantic, dependency injection, async
+29. **django** - Django ORM, views, REST framework, testing
+
+### Expert Database Skills (3 skills)
+30. **postgresql** - Indexing, PL/pgSQL, JSONB, window functions, EXPLAIN
+31. **redis** - Data structures, caching, pub/sub, clustering
+32. **elasticsearch** - Query DSL, aggregations, ELK stack, performance
+
+### Expert DevOps Skills (6 skills)
+33. **docker** - Dockerfile, multi-stage builds, image optimization
+34. **docker-compose** - Multi-container orchestration, networking, volumes
+35. **kubernetes** - Pods, deployments, services, ingress, ConfigMaps
+36. **terraform** - IaC, providers, modules, state management, multi-cloud
+37. **ansible** - Playbooks, roles, inventory, idempotency
+38. **github-actions** - Workflows, matrix, reusable workflows, secrets
+
+### Expert Mobile Skills (4 skills)
+39. **flutter** - Widgets, state management, navigation, platform channels
+40. **react-native** - Components, navigation, native modules, Expo
+41. **android-kotlin** - Jetpack Compose, MVVM, ViewModel, Navigation
+42. **ios-swift** - SwiftUI, async/await, Core Data, App Store
+
+### Expert Spring Skills (1 skill)
+43. **spring-boot** - Auto-config, DI, JPA, security, actuator
+
+### Expert Frontend Skills (1 skill)
+44. **frontend-patterns** - UI component patterns, responsive design, accessibility
+
+### Expert Backend Skills (2 skills)
+45. **backend-patterns** - API/Database patterns, authentication, services
+46. **api-interface-design** - Contract-first APIs
+
+### Expert Rust Skills (1 skill)
+47. **rust-patterns** - Ownership, traits, async tokio, smart pointers
+
+### Expert TypeScript Skills (1 skill)
+48. **typescript-patterns** - Type system, async, React/Next.js TS patterns
+
+### Drawio Skills (2 skills)
+49. **drawio-architecture** - C4 model, UML, cloud shapes, deployment diagrams
+50. **drawio-flowchart** - Business process, swim lanes, decision trees
+
+### Tauri Skills (1 skill)
+51. **tauri** - Rust backend, frontend integration, plugins, mobile builds
 
 ### Quality Skills (10 skills)
-25. **code-review** - 5-axis review framework
-25. **code-simplification** - Reduce complexity
-26. **browser-testing** - DevTools MCP integration
-27. **performance-optimization** - Measure-first optimization
-28. **e2e-testing** - Playwright patterns
-29. **security-audit** - Vulnerability assessment
-30. **api-testing** - Integration testing
-31. **security-common** - OWASP reference and security checklist
-32. **ux-audit** - Behavioral UX audit with scored dimensions
-33. **plan-tune** - Learn and tune output preferences
+52. **code-review** - 5-axis review framework
+53. **code-simplification** - Reduce complexity
+54. **browser-testing** - DevTools MCP integration
+55. **performance-optimization** - Measure-first optimization
+56. **e2e-testing** - Playwright patterns
+57. **security-audit** - Vulnerability assessment
+58. **api-testing** - Integration testing
+59. **security-common** - OWASP reference and security checklist
+60. **ux-audit** - Behavioral UX audit with scored dimensions
+61. **plan-tune** - Learn and tune output preferences
 
 ### Workflow Skills (6 skills)
-35. **git-workflow** - Atomic commits
-35. **ci-cd-automation** - Feature flags, quality gates
-36. **documentation** - ADRs, API docs
-37. **finishing-branch** - Merge/PR decisions
-38. **deprecation-migration** - Code-as-liability mindset
-39. **style-switcher** - Unified personality styles (13) and density modes (3)
+62. **git-workflow** - Atomic commits
+63. **ci-cd-automation** - Feature flags, quality gates
+64. **documentation** - ADRs, API docs
+65. **finishing-branch** - Merge/PR decisions
+66. **deprecation-migration** - Code-as-liability mindset
+67. **style-switcher** - Unified personality styles (13) and density modes (3)
 
 ### Additional Skills (5 skills)
-41. **jobs-to-be-done** - JTBD framework for understanding user needs
-42. **lean-ux-canvas** - Lean UX hypothesis testing
-43. **opportunity-solution-tree** - Product opportunity mapping
-44. **pol-probe** - Product opportunity probe
-45. **office-hours** - YC-style brainstorming and idea validation
+68. **jobs-to-be-done** - JTBD framework for understanding user needs
+69. **lean-ux-canvas** - Lean UX hypothesis testing
+70. **opportunity-solution-tree** - Product opportunity mapping
+71. **pol-probe** - Product opportunity probe
+72. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -126,24 +198,34 @@ em-team/
 11. **integration-checker** - Cross-phase validation
 12. **performance-auditor** - Benchmarking
 
-### Specialized Agents (8 agents)
+### Specialized Agents (9 agents)
 13. **team-lead** - Orchestrator for team reviews (trigger: `em-agent:team-lead`)
 14. **architect** - Architecture & technical design (trigger: `em-agent:architect`)
 15. **frontend-expert** - React/Next.js, UI/UX, performance (trigger: `em-agent:frontend-expert`)
-16. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
-17. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
-18. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
-19. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
-20. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
+16. **backend-expert** - API design, performance, auth, error handling (trigger: `em-agent:backend-expert`)
+17. **senior-code-reviewer** - 9-axis deep code review (trigger: `em-agent:senior-code-reviewer`)
+18. **database-expert** - Schema, queries, fintech patterns (trigger: `em-agent:database-expert`)
+19. **product-manager** - Requirements, GAP analysis, market fit (trigger: `em-agent:product-manager`)
+20. **security-reviewer** - OWASP Top 10, STRIDE, blocking authority (trigger: `em-agent:security-reviewer`)
+21. **staff-engineer** - Root cause analysis, cross-service impact (trigger: `em-agent:staff-engineer`)
 
 ### New Agents (v2.0.0)
-21. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
-22. **learn** - Knowledge management and cross-session learning
-23. **autoplan** - Multi-phase review pipeline orchestrator
-24. **techlead-orchestrator** - Distributed team coordination
-25. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
-26. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
-27. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
+22. **market-intelligence** - Market analysis, competitive intelligence (trigger: `em-agent:market-intelligence`)
+23. **learn** - Knowledge management and cross-session learning
+24. **autoplan** - Multi-phase review pipeline orchestrator
+25. **techlead-orchestrator** - Distributed team coordination
+26. **design-reviewer** - Visual design review with 6-pillar UI audit (trigger: `em-agent:design-reviewer`)
+27. **devex-reviewer** - Developer experience audit and TTHW measurement (trigger: `em-agent:devex-reviewer`)
+28. **iron-law-enforcer** - Gate enforcement for Iron Law compliance (trigger: `em-agent:iron-law-enforcer`)
+
+### Expert Agents (v3.0.0)
+29. **react-expert** - React/Next.js, hooks, state management, SSR (trigger: `em-agent:react-expert`)
+30. **vue-expert** - Vue 3, Composition API, Pinia, Vue Router (trigger: `em-agent:vue-expert`)
+31. **nestjs-expert** - NestJS, TypeScript backend, GraphQL, microservices (trigger: `em-agent:nestjs-expert`)
+32. **devops-expert** - Docker, Kubernetes, Terraform, CI/CD, cloud (trigger: `em-agent:devops-expert`)
+33. **mobile-expert** - Flutter, React Native, Android, iOS (trigger: `em-agent:mobile-expert`)
+34. **spring-expert** - Spring Boot, JPA, security, microservices (trigger: `em-agent:spring-expert`)
+35. **rust-expert** - Rust systems, ownership, async tokio, FFI (trigger: `em-agent:rust-expert`)
 
 ## Workflow Categories
 
@@ -294,12 +376,14 @@ Workflow: security-audit - Audit the codebase for security issues
 
 ## Tech Stack
 
-- **Languages**: JavaScript/TypeScript, Python, Go, Rust, Java, Kotlin, PHP, C#, C++
-- **Frontend**: React, Next.js, Vue, Svelte, Angular
-- **Backend**: Node.js, Django, Laravel, NestJS, Spring Boot, Express
-- **Databases**: PostgreSQL, MySQL, MongoDB, Redis
-- **Testing**: Jest, Playwright, Cypress, pytest
-- **Tools**: Git, Docker, CI/CD, MCP
+- **Languages**: JavaScript/TypeScript, Python, Go, Rust, Java, Kotlin, Swift, Dart, C#, C++
+- **Frontend**: React, Next.js, Vue, Nuxt, Svelte, Angular
+- **Backend**: Node.js, NestJS, Express, FastAPI, Django, Spring Boot, Laravel, Gin
+- **Mobile**: Flutter, React Native, Android (Kotlin), iOS (Swift), Tauri
+- **Databases**: PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch
+- **DevOps**: Docker, Kubernetes, Terraform, Ansible, GitHub Actions
+- **Testing**: Jest, Vitest, Playwright, Cypress, pytest, JUnit
+- **Tools**: Git, CI/CD, MCP, Draw.io, Figma
 
 ## Quality Gates
 
@@ -323,9 +407,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 2.2.0
+Current version: 3.0.0
 Last updated: 2026-05-02
-Changes: v2.2.0 — Consistency audit fixes + CI validation pipeline + auto-changelog hook + session handoff + additional skills reorganized into skills/additional/
+Changes: v3.0.0 — Expert group restructuring: 27 new skills from full-stack-skills, 7 new expert agents, 6 skills moved from development/ to expert-* groups. Total: 72 skills, 34 agents.
 
 ## Automation
 

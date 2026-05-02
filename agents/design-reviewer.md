@@ -1,7 +1,7 @@
 ---
 name: design-reviewer
 type: specialist
-trigger: duck:design-reviewer
+trigger: em-agent:design-reviewer-reviewer
 description: "Visual design review with screenshot comparison and 6-pillar UI audit. Evaluates layout, typography, color, spacing, motion, and interaction quality."
 version: "2.0.0"
 origin: "gstack"

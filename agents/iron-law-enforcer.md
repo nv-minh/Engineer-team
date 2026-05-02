@@ -1,7 +1,7 @@
 ---
 name: iron-law-enforcer
 type: specialist
-trigger: duck:iron-law-enforcer
+trigger: em-agent:iron-law-enforcer
 description: "Gate enforcement agent that validates Iron Law compliance: TDD, root cause debugging, spec-before-code, and review-before-merge."
 version: "2.0.0"
 origin: "superpowers"

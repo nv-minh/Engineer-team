@@ -1,7 +1,7 @@
 ---
 name: codebase-mapper
 type: optional
-trigger: duck:codebase-mapper
+trigger: em-agent:codebase-mapper
 description: Architecture analysis, codebase documentation, and structural mapping
 version: 1.1.0
 origin: EM-Team
@@ -92,7 +92,7 @@ The Codebase Mapper agent analyzes codebase architecture, documents structure, m
 "Agent: em-codebase-mapper - Document integration points"
 ```
 
-**Trigger Command:** `duck:codebase-mapper`
+**Trigger Command:** `em-agent:codebase-mapper`
 
 ## Knowledge Persistence Feature ✨
 

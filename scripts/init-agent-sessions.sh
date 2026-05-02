@@ -48,9 +48,9 @@ echo ""
 
 # Define agents and their triggers
 declare -A agents=(
-    ["backend"]="duck:backend"
-    ["frontend"]="duck:frontend"
-    ["database"]="duck:database"
+    ["backend"]="em-agent:backend-expert"
+    ["frontend"]="em-agent:frontend-expert"
+    ["database"]="em-agent:database-expert"
 )
 
 for agent in "${!agents[@]}"; do
@@ -80,8 +80,8 @@ echo ""
 log_info "Session ready for distributed orchestration"
 echo ""
 log_info "Agent triggers:"
-echo "  - backend:    duck:backend"
-echo "  - frontend:   duck:frontend"
-echo "  - database:   duck:database"
+echo "  - backend:    em-agent:backend-expert"
+echo "  - frontend:   em-agent:frontend-expert"
+echo "  - database:   em-agent:database-expert"
 echo ""
 log_info "Start delegation from techlead window (Ctrl+B 0)"
