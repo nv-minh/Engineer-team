@@ -25,9 +25,9 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 44 skills
+├── skills/              # 45 skills
 │   ├── foundation/      # 6 core foundational skills
-│   ├── development/     # 17 development skills (including language patterns + diagram)
+│   ├── development/     # 18 development skills (including language patterns + diagram + figma-design)
 │   ├── quality/         # 10 quality assurance skills
 │   ├── workflow/        # 6 workflow and automation skills
 │   └── additional/      # 5 product & discovery skills
@@ -61,7 +61,7 @@ em-team/
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 
-### Development Skills (17 skills)
+### Development Skills (18 skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
 8. **frontend-patterns** - React/Next.js/Vue patterns
 9. **backend-patterns** - API/Database patterns
@@ -79,9 +79,10 @@ em-team/
 21. **issue-generator** - Plans to structured vertical-slice issues
 22. **prd-generator** - Ideas to structured PRD documents
 23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+24. **figma-design** - Figma-to-code conversion with MCP server
 
 ### Quality Skills (10 skills)
-24. **code-review** - 5-axis review framework
+25. **code-review** - 5-axis review framework
 25. **code-simplification** - Reduce complexity
 26. **browser-testing** - DevTools MCP integration
 27. **performance-optimization** - Measure-first optimization
@@ -93,7 +94,7 @@ em-team/
 33. **plan-tune** - Learn and tune output preferences
 
 ### Workflow Skills (6 skills)
-34. **git-workflow** - Atomic commits
+35. **git-workflow** - Atomic commits
 35. **ci-cd-automation** - Feature flags, quality gates
 36. **documentation** - ADRs, API docs
 37. **finishing-branch** - Merge/PR decisions
@@ -101,11 +102,11 @@ em-team/
 39. **style-switcher** - Unified personality styles (13) and density modes (3)
 
 ### Additional Skills (5 skills)
-40. **jobs-to-be-done** - JTBD framework for understanding user needs
-41. **lean-ux-canvas** - Lean UX hypothesis testing
-42. **opportunity-solution-tree** - Product opportunity mapping
-43. **pol-probe** - Product opportunity probe
-44. **office-hours** - YC-style brainstorming and idea validation
+41. **jobs-to-be-done** - JTBD framework for understanding user needs
+42. **lean-ux-canvas** - Lean UX hypothesis testing
+43. **opportunity-solution-tree** - Product opportunity mapping
+44. **pol-probe** - Product opportunity probe
+45. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 

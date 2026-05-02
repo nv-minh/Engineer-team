@@ -1,6 +1,6 @@
 # EM-Team System - Complete Skill Index
 
-**EM-Team** is a comprehensive fullstack engineering system with 44 skills, 27 agents, and 23 workflows synthesized from the best practices of 6 top AI agent repositories.
+**EM-Team** is a comprehensive fullstack engineering system with 45 skills, 27 agents, and 23 workflows synthesized from the best practices of 6 top AI agent repositories.
 
 ---
 
@@ -14,7 +14,7 @@ EM-Team provides three powerful ways to accelerate your development:
 
 ---
 
-## Available Skills (44 Skills)
+## Available Skills (45 Skills)
 
 ### Foundation Skills (6 skills)
 Location: `skills/foundation/`
@@ -33,7 +33,7 @@ Location: `skills/foundation/`
 "Use the systematic-debugging skill to investigate bugs"
 ```
 
-### Development Skills (17 skills)
+### Development Skills (18 skills)
 Location: `skills/development/`
 
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
@@ -53,6 +53,7 @@ Location: `skills/development/`
 21. **issue-generator** - Plans to structured vertical-slice issues
 22. **prd-generator** - Ideas to structured PRD documents
 23. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+24. **figma-design** - Figma-to-code conversion with MCP server
 
 **Usage:**
 ```
@@ -328,7 +329,7 @@ EM-Team follows these Iron Laws from best practices:
 ## Installation Status
 
 - Repository: `/Users/abc/Desktop/EM-Team`
-- Skills: 44 skills configured
+- Skills: 45 skills configured
 - Agents: 27 agents configured
 - Workflows: 23 workflows configured
 - Distributed Mode: Operational

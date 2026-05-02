@@ -1660,7 +1660,7 @@ Last updated: 2026-05-02
 - Design reviewer, DevEx reviewer, Iron Law enforcer agents
 
 **Total Counts:**
-- **Skills**: 44 (6 foundation + 17 development + 10 quality + 6 workflow + 5 additional)
+- **Skills**: 45 (6 foundation + 18 development + 10 quality + 6 workflow + 5 additional)
 - **Agents**: 27 (8 core + 4 optional + 8 specialized + 7 v2.0+)
 - **Workflows**: 23 (4 primary + 6 support + 8 team + 2 distributed + 2 product + 1 master)
 - **Personality Styles**: 13 + 3 density modes
