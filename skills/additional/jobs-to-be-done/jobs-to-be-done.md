@@ -1,6 +1,7 @@
 ---
 name: jobs-to-be-done
 description: "Uncover customer jobs, pains, and gains in structured JTBD format. Use for validating product ideas, understanding customer motivations, and ensuring solutions address real needs. Keywords: jtbd, jobs-to-be-done, customer-needs, value-proposition"
+version: "1.0.0"
 category: additional
 compatibility: Claude Code, Claude Desktop, Cursor
 metadata:

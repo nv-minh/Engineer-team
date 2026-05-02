@@ -1,6 +1,7 @@
 ---
 name: opportunity-solution-tree
 description: "Build Opportunity Solution Trees (Teresa Torres) from outcomes to opportunities, solutions, and experiments. Use for moving from vague requests to structured discovery and avoiding feature factory syndrome. Keywords: ost, opportunity-solution-tree, discovery, product-discovery"
+version: "1.0.0"
 category: additional
 compatibility: Claude Code, Claude Desktop, Cursor
 metadata:

@@ -103,10 +103,7 @@ jobs:
       - name: Check skill count matches CLAUDE.md
         run: |
           actual=$(find skills -mindepth 2 -maxdepth 2 -type d | wc -l | tr -d ' ')
-          claimed=$(grep -oP 'skills/.*#\K[0-9]+' CLAUDE.md | head -1)
-          if [ -z "$claimed" ]; then
-            claimed=$(grep '# 44 skills' CLAUDE.md | grep -oP '\d+' | head -1)
-          fi
+          claimed=$(grep -oP '# \K[0-9]+(?= skills)' CLAUDE.md | head -1)
           echo "Actual skill directories: $actual"
           echo "CLAUDE.md claims: $claimed"
           if [ "$actual" != "$claimed" ]; then
@@ -117,8 +114,25 @@ jobs:
       - name: Check agent count matches CLAUDE.md
         run: |
           actual=$(ls agents/*.md 2>/dev/null | wc -l | tr -d ' ')
+          claimed=$(grep -oP '# \K[0-9]+(?= specialized agents)' CLAUDE.md | head -1)
           echo "Actual agent files: $actual"
-          # CLAUDE.md claims 27 agents
-          if [ "$actual" != "27" ]; then
-            echo "WARN: Agent count ($actual) differs from expected (27)"
+          echo "CLAUDE.md claims: $claimed"
+          if [ "$actual" != "$claimed" ]; then
+            echo "MISMATCH: Agent count ($actual) does not match CLAUDE.md ($claimed)"
+            exit 1
           fi
+
+      - name: Validate expert group structure
+        run: |
+          errors=0
+          for dir in expert-react expert-vue expert-go expert-nest expert-python \
+                     expert-database expert-devops expert-mobile expert-spring \
+                     expert-frontend expert-backend expert-rust expert-typescript \
+                     drawio tauri; do
+            if [ ! -d "skills/$dir" ]; then
+              echo "MISSING: skills/$dir"
+              errors=$((errors + 1))
+            fi
+          done
+          echo "Missing expert directories: $errors"
+          [ "$errors" -eq 0 ] || exit 1
