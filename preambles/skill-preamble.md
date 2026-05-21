@@ -12,6 +12,8 @@ Before executing any skill, follow these steps:
    - Check for `CLAUDE.md` in the project root
    - Check for `PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`, `STATE.md` if they exist
    - Check for `SPEC.md` or `docs/SPEC.md` if applicable
+   - Check for `spec/PROJECT-DNA.md` if it exists (requirement traceability and architecture decisions)
+   - Check for `.claude/rules/*.md` for project-specific rules (domain language, architecture boundaries, conventions)
 
 2. **Check existing work:**
    - Review `git log --oneline -10` for recent activity

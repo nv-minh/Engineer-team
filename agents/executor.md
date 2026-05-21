@@ -1,7 +1,7 @@
 ---
 name: executor
 type: agent
-version: 1.2.0
+version: 1.3.0
 origin: EM-Skill Core Agents
 trigger: em-agent:executor
 description: Executes implementation plans with atomic commits and quality gates. Use when implementing features, following plans, or ensuring code quality.
@@ -119,6 +119,19 @@ execution:
 
 ### Phase 1: Preparation
 
+**Step 0: Load Project DNA (if exists)**
+
+Before executing any plan, check for and read project guidance files:
+1. Check for `spec/PROJECT-DNA.md` — if found, read it to understand:
+   - Requirement trace matrix (what needs to be built, current status)
+   - Domain-to-code map (where things go, which bounded context owns what)
+   - Architecture decisions and their rationale (why things are structured this way)
+2. Check for `CLAUDE.md` at project root (project conventions, tech stack, commands)
+3. Check for `.claude/rules/*.md` (domain language, architecture boundaries, coding conventions)
+4. This context informs all implementation decisions throughout execution
+
+**Step 1-4: Standard preparation**
+
 1. Load and parse the plan
 2. Verify project context
 3. Check environment setup
@@ -172,6 +185,44 @@ quality_gates:
 2. Run full test suite
 3. Generate execution summary
 4. Update documentation
+
+**Post-Phase Self-Evolving Updates (if Project DNA exists):**
+
+After completing each roadmap phase, update the project context files:
+
+```yaml
+post_phase_actions:
+  - update_trace_matrix:
+      file: spec/PROJECT-DNA.md
+      action: "Mark completed REQ-IDs as 'Implemented', add implementation file paths and test file paths"
+      when: always
+
+  - update_domain_to_code_map:
+      file: spec/PROJECT-DNA.md
+      action: "Update bounded context status, add concrete module paths"
+      when: always
+
+  - update_claude_md:
+      file: CLAUDE.md
+      action: "Append new conventions discovered during this phase"
+      when: "Only if new patterns emerged that are not already documented"
+
+  - update_mistakes:
+      file: .claude/rules/mistakes.md
+      action: "Append project-specific gotcha with: what happened, why, and prevention pattern"
+      when: "Only if a project-specific issue was encountered and resolved"
+
+  - update_state:
+      file: spec/context/STATE.md
+      action: "Record phase completion, update progress, set next phase"
+      when: always
+```
+
+**Update rules:**
+- Updates are **append-only** — never delete or overwrite existing content
+- Only add conventions that **actually emerged** during implementation
+- Trace matrix updates must use **actual file paths**, not guesses
+- Mistakes entries must include **what happened, why, and prevention** pattern
 
 ## Atomic Commit Protocol
 

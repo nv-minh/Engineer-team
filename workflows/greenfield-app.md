@@ -1,31 +1,40 @@
 ---
 name: greenfield-app
-description: Complete workflow from blank directory to shipped application. Covers ideation, problem reframing, domain modeling, requirements, architecture, bootstrapping, implementation, and launch.
-version: "1.0.0"
+description: Complete workflow from blank directory to shipped application. Covers ideation, problem reframing, domain modeling, requirements, UI/UX design, architecture, bootstrapping, Project DNA crystallization, implementation, and launch.
+version: "3.0.0"
 category: "primary"
 origin: "EM-Team"
 agents_used:
   - product-manager
   - architect
   - planner
+  - frontend-expert
   - executor
   - verifier
   - test-engineer
   - market-intelligence
+  - ui-auditor
+  - design-reviewer
 skills_used:
   - brainstorming
   - domain-modeling
   - spec-driven-development
   - alignment-session
   - writing-plans
+  - frontend-patterns
+  - project-dna
   - test-driven-development
   - subagent-driven-development
   - code-review
   - git-workflow
+  - ux-audit
 related_skills:
   - domain-modeling
   - spec-driven-development
   - project-setup
+  - project-dna
+  - figma-design
+  - flow-discovery
 estimated_time: "1-2 weeks (MVP) / 4-8 weeks (full product)"
 ---
 
@@ -59,13 +68,13 @@ Build an application from scratch — from blank directory to shipped product. T
 ## Lifecycle
 
 ```
-DEFINE ──────────────────→ PLAN ──────────→ BUILD ────────→ VERIFY → REVIEW → SHIP
-  Stage 1: Ideation        Stage 4: Spec     Stage 6: Setup   Stage 8  Stage 9  Stage 10
-  Stage 2: Reframing       Stage 5: Arch     Stage 7: Build
-  Stage 3: Domain Model
-     │                        │                 │            │        │        │
-     ▼                        ▼                 ▼            ▼        ▼        ▼
-  GATE 1                   GATE 2           GATE 3       GATE 4   GATE 5    DONE
+DEFINE ──────────────────→ PLAN ──────────────→ BUILD ──────────────────→ VERIFY → REVIEW → SHIP
+  Stage 1: Ideation        Stage 4: Spec        Stage 7: Setup          Stage 10  Stage 11  Stage 12
+  Stage 2: Reframing       Stage 5: UI/UX       Stage 8: Crystallize
+  Stage 3: Domain Model    Stage 6: Arch        Stage 9: Build
+     │                        │                    │                │        │        │
+     ▼                        ▼                    ▼                ▼        ▼        ▼
+  GATE 1                   GATE 2              GATE 3            GATE 4   GATE 5    DONE
 ```
 
 ### Stage-to-Lifecycle Mapping
@@ -76,24 +85,26 @@ DEFINE ──────────────────→ PLAN ───�
 | REFRAMING (Stage 2) | DEFINE | Reframe problem, explore design approaches |
 | DOMAIN MODEL (Stage 3) | DEFINE | Extract bounded contexts, entities, relationships |
 | SPEC (Stage 4) | PLAN | Write specification with requirements |
-| ARCHITECTURE (Stage 5) | PLAN | Design system, create phased roadmap |
-| BOOTSTRAP (Stage 6) | BUILD | Technical setup — delegates to project-setup |
-| IMPLEMENT (Stage 7) | BUILD | Execute roadmap phases with TDD |
-| VALIDATE (Stage 8) | VERIFY | Full verification against spec and domain model |
-| REVIEW (Stage 9) | REVIEW | Multi-agent code, architecture, security review |
-| LAUNCH (Stage 10) | SHIP | PR, deploy, monitor — delegates to ship-workflow |
+| UI/UX DESIGN (Stage 5) | PLAN | Design user flows, components, design system, accessibility |
+| ARCHITECTURE (Stage 6) | PLAN | Design system, create phased roadmap |
+| BOOTSTRAP (Stage 7) | BUILD | Technical setup — delegates to project-setup |
+| CRYSTALLIZE (Stage 8) | BUILD | Generate agent guidance — CLAUDE.md, rules, traceability |
+| IMPLEMENT (Stage 9) | BUILD | Execute roadmap phases with TDD |
+| VALIDATE (Stage 10) | VERIFY | Full verification against spec, domain model, and UX |
+| REVIEW (Stage 11) | REVIEW | Multi-agent code, architecture, security, and UI review |
+| LAUNCH (Stage 12) | SHIP | PR, deploy, monitor — delegates to ship-workflow |
 
 ## Workflow Stages
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                 │
-│  IDEATION → REFRAME → DOMAIN → SPEC → ARCH → BOOTSTRAP → BUILD → VAL → REV → LAUNCH │
-│     1          2        3       4       5        6         7      8      9     10   │
-│                                                                                 │
-│  ─── DEFINE ──→ ──── PLAN ────→ ────── BUILD ──────→ VERIFY → REVIEW → SHIP   │
-│                                                                                 │
-└─────────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                                          │
+│  IDEATION → REFRAME → DOMAIN → SPEC → UI/UX → ARCH → BOOTSTRAP → CRYSTALLIZE → BUILD → VAL → REV → LAUNCH │
+│     1          2        3       4       5       6        7            8           9      10    11    12  │
+│                                                                                                          │
+│  ─── DEFINE ──→ ────── PLAN ──────→ ──────────── BUILD ───────────────→ VERIFY → REVIEW → SHIP          │
+│                                                                                                          │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Stage 1: Ideation and Validation
@@ -212,16 +223,130 @@ DEFINE ──────────────────→ PLAN ───�
 
 ---
 
-## Stage 5: Architecture and Roadmap
+## Stage 5: UI/UX Design
+
+**Agent:** frontend-expert
+**Skill:** frontend-patterns
+**Optional Skill:** figma-design (if Figma URL provided)
+
+**Process:**
+1. Read SPEC.md and REQUIREMENTS.md from Stage 4
+2. Read domain model from Stage 3 for entity awareness
+3. If Figma URL is available, use `figma-design` skill to extract design tokens, component hierarchy, and layout specs
+4. If no Figma, derive UI decisions from spec requirements and domain model
+5. Define user flows — screen-by-screen with actions, transitions, and error paths
+6. Define component specifications — component tree with props, states, and variants
+7. Establish design system decisions — typography scale, color palette, spacing system, component library choice
+8. Define accessibility requirements — WCAG compliance level, keyboard navigation, screen reader considerations
+9. Define responsive strategy — breakpoints, mobile-first patterns, touch targets
+10. Set performance targets — Core Web Vitals goals (LCP, INP, CLS)
+11. Document interaction patterns — loading states, error states, empty states, success feedback, transitions
+12. Present UI-SPEC.md for user review
+
+**Output:**
+- `docs/UI-SPEC.md` — Full UI/UX specification
+- Design token definitions (colors, typography, spacing) — embedded in UI-SPEC.md or extracted from Figma
+- User flow diagrams (Mermaid or text-based)
+
+**UI-SPEC.md Structure:**
+
+```markdown
+# UI Specification: [Project Name]
+
+## 1. User Flows
+### Flow: [Flow Name]
+- **Entry:** [Starting screen/state]
+- **Steps:** [Screen-by-screen with actions and transitions]
+- **Success:** [End state]
+- **Error paths:** [What happens when things go wrong]
+
+## 2. Component Specifications
+### Component Tree
+[Hierarchical view: page → section → component]
+
+### Component Details
+#### [ComponentName]
+- **Props:** [typed props with defaults]
+- **States:** [loading, error, empty, populated, disabled]
+- **Variants:** [size, color, style variations]
+- **Accessibility:** [ARIA role, keyboard behavior]
+
+## 3. Design System
+### Typography
+[Font family, scale (h1-h6, body, caption), weights, line heights]
+
+### Colors
+[Primary, secondary, accent, semantic (success, warning, error, info), neutrals]
+
+### Spacing
+[Spacing scale (4px or 8px base), component spacing rules]
+
+### Component Library
+[Choice and rationale: Tailwind + Headless UI, shadcn/ui, Material UI, custom, etc.]
+
+## 4. Accessibility Requirements
+- **WCAG Level:** [AA or AAA]
+- **Keyboard navigation:** [Tab order, focus management, skip links]
+- **Screen reader:** [ARIA landmarks, live regions, announcements]
+- **Color contrast:** [Minimum ratios for text and UI elements]
+- **Motion:** [prefers-reduced-motion support]
+- **Form accessibility:** [Label association, error announcements]
+
+## 5. Responsive Strategy
+### Breakpoints
+[Mobile: <768px, Tablet: 768-1023px, Desktop: 1024px+]
+
+### Mobile-First Patterns
+[Navigation collapse, stacking, touch target sizes (min 44x44px)]
+
+### Layout Strategy
+[Grid system, container widths, fluid vs fixed]
+
+## 6. Performance Targets
+- **LCP:** < 2.5s
+- **INP:** < 200ms
+- **CLS:** < 0.1
+- **Bundle budget:** [target size]
+- **Image strategy:** [lazy loading, modern formats, responsive images]
+
+## 7. Interaction Patterns
+### Loading States
+[Skeleton screens, spinners, progressive loading]
+
+### Error States
+[Inline validation, toast notifications, error pages, retry patterns]
+
+### Empty States
+[First-time user experience, no-data states with CTAs]
+
+### Success Feedback
+[Confirmation messages, optimistic updates, transitions]
+```
+
+**Quality Gate:**
+- [ ] User flows cover all v1 requirements from SPEC.md
+- [ ] Every user flow includes error paths (not just happy path)
+- [ ] Component tree maps to domain entities where applicable
+- [ ] Design system decisions documented (typography, colors, spacing)
+- [ ] WCAG compliance level chosen and specific considerations listed
+- [ ] Responsive breakpoints defined with mobile-first approach
+- [ ] Performance targets set with specific Core Web Vitals goals
+- [ ] Interaction patterns cover loading, error, empty, and success states
+- [ ] User approved UI-SPEC.md
+
+---
+
+## Stage 6: Architecture and Roadmap
 
 **Agent:** architect + planner
 **Skill:** writing-plans
 
 **Process:**
-1. Design system architecture from domain model:
+1. Design system architecture from domain model and UI-SPEC.md:
    - Bounded contexts → modules/services
    - Entity relationships → data model
    - Actions → API endpoints / commands
+   - UI component architecture → frontend module structure (informed by UI-SPEC.md)
 2. Run architecture review (CEO scope check + Eng review):
    - Scope: Is this the right scope, or are we over/under-building?
    - Data flow: How does information move through the system?
@@ -247,7 +372,7 @@ DEFINE ──────────────────→ PLAN ───�
 
 ---
 
-## Stage 6: Technical Bootstrapping
+## Stage 7: Technical Bootstrapping
 
 **Agent:** planner + executor
 **Workflow:** delegates to `project-setup`
@@ -255,7 +380,7 @@ DEFINE ──────────────────→ PLAN ───�
 **Process:**
 1. Delegate to the project-setup workflow:
    - CHOOSE → SCAFFOLD → CONFIGURE → TEST → INITIALIZE
-2. Tech stack selected based on Stage 5 architecture decisions
+2. Tech stack selected based on Stage 6 architecture decisions
 3. Project structure aligned with bounded contexts from Stage 3
 
 **Output:**
@@ -271,38 +396,98 @@ DEFINE ──────────────────→ PLAN ───�
 
 ---
 
-## Stage 7: Core Implementation
+## Stage 8: Crystallize (Project DNA)
+
+**Agent:** planner
+**Skill:** project-dna
+
+**Process:**
+Crystallize all prior-stage artifacts into agent guidance files for the target project:
+
+1. **Inventory** — Scan for all available source documents (design doc, domain model, SPEC.md, REQUIREMENTS.md, UI-SPEC.md, ARCHITECTURE.md, ROADMAP.md)
+2. **Consolidate** — Create `spec/` folder structure, copy all artifacts into organized locations, generate `spec/README.md` index. Include `spec/ui/UI-SPEC.md` from Stage 5.
+3. **Synthesize CLAUDE.md** — Read each source document, extract relevant sections, compose a concise CLAUDE.md (80-150 lines) at the project root. Include Design System section synthesized from UI-SPEC.md.
+4. **Generate Rules** — Create `.claude/rules/` with project-specific rules:
+   - `domain-language.md` — Ubiquitous language enforcement from domain model
+   - `architecture-boundaries.md` — Module dependency rules from architecture
+   - `project-conventions.md` — Coding patterns from spec and architecture
+   - `testing-standards.md` — Test quality requirements from spec
+   - `design-system.md` — Design system enforcement from UI-SPEC.md (typography, colors, spacing, component library, accessibility minimums, responsive breakpoints, performance budgets)
+   - `mistakes.md` — Empty project-specific gotcha ledger (grows during Stage 9)
+5. **Create PROJECT-DNA.md** — Build traceability manifest at `spec/PROJECT-DNA.md`:
+   - Lineage table (decision → origin stage → rationale)
+   - Requirement trace matrix (REQ-ID → domain entity → module → impl file → test file → status)
+   - Domain-to-code map (bounded context → module path → entities → status)
+   - UI-to-code map (user flow → route/page → components → status; component → impl file → design tokens → status)
+   - ADR index
+
+**Output:**
+- Consolidated `spec/` folder with all artifacts indexed (including `spec/ui/UI-SPEC.md`)
+- `CLAUDE.md` at project root (concise agent guidance with Design System section)
+- `.claude/rules/` with 6 project-specific rule files (including `design-system.md`)
+- `spec/PROJECT-DNA.md` traceability manifest (including UI-to-code map)
+
+**Quality Gate:**
+- [ ] `spec/` folder populated with all found artifacts (including UI-SPEC.md)
+- [ ] `spec/README.md` index generated and accurate
+- [ ] `CLAUDE.md` generated (80-150 lines, no placeholders, includes Design System)
+- [ ] At least 5 rule files in `.claude/rules/` (including `design-system.md`)
+- [ ] `spec/PROJECT-DNA.md` has trace matrix covering all requirements
+- [ ] Every domain entity appears in domain-to-code map
+- [ ] UI-to-code map covers all user flows and components from UI-SPEC.md
+- [ ] User reviewed and approved generated files
+
+---
+
+## Stage 9: Core Implementation
 
 **Agent:** executor
 **Skill:** subagent-driven-development, test-driven-development
 
 **Process:**
-Execute roadmap phases from Stage 5 using wave-based parallelization:
+Execute roadmap phases from Stage 6 using wave-based parallelization:
 - Independent phases → parallel execution
 - Dependent phases → sequential execution
 
+**Step 0: Load Project DNA**
+Before executing any plan, the executor reads:
+- `spec/PROJECT-DNA.md` — understand requirement trace matrix, domain-to-code map, and UI-to-code map
+- `spec/ui/UI-SPEC.md` — understand user flows, component specs, design system, and interaction patterns
+- `CLAUDE.md` — understand project conventions, tech stack, and design system
+- `.claude/rules/` — understand project-specific rules (including `design-system.md`)
+
 Per phase:
 1. **Discuss** — Identify implementation gray areas, capture decisions in CONTEXT.md
-2. **Plan** — Create detailed plan with tasks (XML format), verify against requirements
+2. **Plan** — Create detailed plan with tasks (XML format), verify against requirements and UI-SPEC.md
 3. **Execute** — Implement with TDD (RED → GREEN → REFACTOR), atomic commits
 4. **Verify** — Check acceptance criteria, run tests
+
+**Post-phase self-evolving updates:**
+- Update `spec/PROJECT-DNA.md` trace matrix (mark implemented REQs, add file paths)
+- Update `spec/PROJECT-DNA.md` UI-to-code map (mark implemented flows/components, add file paths)
+- Append new conventions to `CLAUDE.md` if patterns emerge during implementation
+- Append gotchas to `.claude/rules/mistakes.md` when project-specific issues are encountered
+- Update `spec/context/STATE.md` with phase completion status
 
 **Output:**
 - Working code per roadmap phase
 - Tests for all implemented features
 - Atomic commits with descriptive messages
+- Updated trace matrix and project context
 
 **Quality Gate:**
 - [ ] All phase acceptance criteria met
 - [ ] Tests passing (unit + integration)
 - [ ] No TODOs or placeholders in code
 - [ ] Atomic commits with clear messages
+- [ ] Trace matrix updated with implementation file paths
 
 ---
 
-## Stage 8: Validation
+## Stage 10: Validation
 
 **Agent:** verifier + test-engineer
+**Skill:** ux-audit, flow-discovery
 
 **Process:**
 1. Verify spec coverage — every requirement has a working implementation
@@ -310,46 +495,62 @@ Per phase:
 3. Run full test suite (unit + integration + E2E)
 4. Test acceptance criteria
 5. Edge case testing
-6. User acceptance testing
+6. Run UX audit (`ux-audit` skill) — score across 6 dimensions: cognitive load, interaction quality, accessibility, user flow coherence, mobile responsiveness, perceived performance
+7. Run flow discovery (`flow-discovery` skill) — verify documented user flows from UI-SPEC.md match implementation, generate Playwright test stubs for each flow
+8. User acceptance testing
 
 **Output:**
 - Verification report
 - Test coverage report
 - Domain model ↔ implementation cross-check
+- UX audit scorecard (6-dimension scores)
+- Flow verification report
+- Generated Playwright flow tests
 
 **Quality Gate:**
 - [ ] Spec coverage 100%
 - [ ] Every domain entity implemented
 - [ ] All acceptance criteria met
 - [ ] No regressions
+- [ ] UX audit overall score >= 7/10
+- [ ] No critical findings (score <= 4) in any UX dimension
+- [ ] All user flows from UI-SPEC.md verified as implemented
+- [ ] Accessibility compliance verified against stated WCAG level
 - [ ] User acceptance testing passed
 
 ---
 
-## Stage 9: Multi-Agent Review
+## Stage 11: Multi-Agent Review
 
-**Agent:** code-reviewer (Deep mode), security-reviewer, architect
+**Agent:** code-reviewer (Deep mode), security-reviewer, architect, ui-auditor, design-reviewer
 
 **Process:**
 Sequential review pipeline:
 1. **Architecture review** — Does implementation match architecture? Any drift?
 2. **Code review (Deep mode, 9-axis)** — Correctness, readability, architecture, security, performance, testing, maintainability, scalability, documentation
 3. **Security review** — OWASP Top 10 + STRIDE threat modeling
+4. **UI audit (6-pillar)** — Visual consistency, responsive design, accessibility, performance, UX, browser compatibility (`ui-auditor` agent)
+5. **Design review (6-pillar)** — Layout & structure, typography, color & contrast, spacing & rhythm, motion & interaction, edge cases (`design-reviewer` agent)
 
 **Output:**
 - Architecture review report
 - Code review report with scores
 - Security review report with scorecard
+- UI audit report with 6-pillar scores
+- Design review report with visual diff results
 
 **Quality Gate:**
 - [ ] No critical findings in any review
 - [ ] High findings have remediation plan
 - [ ] Architecture matches design (no drift)
 - [ ] Security scorecard acceptable
+- [ ] UI audit passes all 6 pillars (no critical failures)
+- [ ] Design review passes (no critical visual regressions)
+- [ ] Accessibility compliance confirmed by ui-auditor
 
 ---
 
-## Stage 10: Launch
+## Stage 12: Launch
 
 **Agent:** executor
 **Workflow:** delegates to `ship-workflow`
@@ -429,8 +630,29 @@ handoff:
 ```yaml
 handoff:
   from: planner
+  to: frontend-expert
+  provides:
+    - spec_document
+    - requirements
+    - domain_model
+  expects:
+    - ui_spec_document
+    - user_flows
+    - component_specifications
+    - design_system_decisions
+```
+
+### Stage 5 → Stage 6
+
+```yaml
+handoff:
+  from: frontend-expert
   to: architect + planner
   provides:
+    - ui_spec_document
+    - user_flows
+    - component_specifications
+    - design_system_decisions
     - spec_document
     - requirements
   expects:
@@ -438,7 +660,7 @@ handoff:
     - roadmap
 ```
 
-### Stage 5 → Stage 6
+### Stage 6 → Stage 7
 
 ```yaml
 handoff:
@@ -453,20 +675,46 @@ handoff:
     - cicd_active
 ```
 
-### Stage 6 → Stage 7
+### Stage 7 → Stage 8
 
 ```yaml
 handoff:
   from: planner + executor
-  to: executor
+  to: planner (project-dna skill)
   provides:
     - initialized_project
-    - roadmap
+    - design_document
     - domain_model
     - spec_document
+    - requirements
+    - ui_spec_document
+    - architecture_document
+    - roadmap
+  expects:
+    - consolidated_spec_folder
+    - generated_claude_md
+    - generated_rules
+    - project_dna_manifest
+```
+
+### Stage 8 → Stage 9
+
+```yaml
+handoff:
+  from: planner (project-dna skill)
+  to: executor
+  provides:
+    - consolidated_spec_folder
+    - claude_md
+    - project_rules
+    - project_dna_manifest
+    - roadmap
+    - ui_spec_document
+    - design_system_rules
   expects:
     - working_code
     - tests_passing
+    - updated_trace_matrix
 ```
 
 ---
@@ -479,8 +727,10 @@ timeline:
   reframing: "2-4 hours"
   domain_modeling: "2-6 hours"
   spec: "2-4 hours"
+  ui_ux_design: "2-4 hours"
   architecture: "3-6 hours"
   bootstrapping: "3-7 hours"
+  crystallize: "15-30 min"
   implementation: "1-6 weeks (depends on scope)"
   validation: "4-8 hours"
   review: "4-8 hours"
@@ -522,6 +772,17 @@ quality_gates:
     - success_criteria_testable
     - user_approved
 
+  ui_ux_design:
+    - user_flows_cover_v1_requirements
+    - user_flows_include_error_paths
+    - component_tree_defined
+    - design_system_documented
+    - wcag_level_chosen
+    - responsive_breakpoints_defined
+    - performance_targets_set
+    - interaction_patterns_documented
+    - user_approved
+
   architecture:
     - architecture_covers_contexts
     - data_flow_documented
@@ -535,6 +796,17 @@ quality_gates:
     - cicd_active
     - repository_initialized
 
+  crystallize:
+    - spec_folder_populated
+    - spec_readme_generated
+    - claude_md_generated
+    - rules_generated_including_design_system
+    - project_dna_created
+    - requirements_traced
+    - domain_entities_mapped
+    - ui_to_code_map_populated
+    - user_approved
+
   implementation:
     - acceptance_criteria_met
     - tests_passing
@@ -545,12 +817,19 @@ quality_gates:
     - spec_coverage_100
     - domain_model_covered
     - acceptance_criteria_met
+    - ux_audit_score_minimum_7
+    - no_critical_ux_findings
+    - user_flows_verified
+    - accessibility_verified
     - user_acceptance_passed
 
   review:
     - no_critical_findings
     - architecture_no_drift
     - security_acceptable
+    - ui_audit_6_pillars_pass
+    - design_review_pass
+    - accessibility_compliance
 
   launch:
     - pr_merged
@@ -568,15 +847,20 @@ A successful greenfield app workflow:
 - [ ] Problem reframed with clear design approach
 - [ ] Domain model complete with bounded contexts and ubiquitous language
 - [ ] Specification covers all domain entities with traceable requirements
-- [ ] Architecture matches domain model and addresses failure modes
+- [ ] UI/UX specification defines user flows, components, design system, and accessibility
+- [ ] UI-SPEC.md approved and included in project documentation
+- [ ] Architecture matches domain model and UI-SPEC.md, addresses failure modes
 - [ ] Phased roadmap delivered with thinnest viable slice first
 - [ ] Project bootstrapped with proper tooling and CI/CD
+- [ ] Project DNA crystallized — CLAUDE.md, rules (including design-system.md), and traceability manifest generated
 - [ ] All v1 requirements implemented and tested
+- [ ] Trace matrix and UI-to-code map updated with implementation file paths
+- [ ] UX audit and design review passed with no critical findings
 - [ ] Multi-agent review passed with no critical findings
 - [ ] Deployed to production with healthy monitoring
 
 ---
 
-**Version:** 1.0.0
-**Last Updated:** 2026-05-08
+**Version:** 3.0.0
+**Last Updated:** 2026-05-21
 **Status:** Production Ready

@@ -221,3 +221,20 @@ A successful project setup workflow:
 - [ ] Repository initialized
 - [ ] Team ready to start
 - [ ] Documentation complete
+
+## Optional: Project DNA Generation
+
+After project setup is complete, you can generate agent guidance files using the `project-dna` skill:
+
+```
+Use the project-dna skill to generate agent guidance for this project
+```
+
+**When invoked from greenfield-app workflow:**
+- The greenfield workflow will automatically invoke project-dna as Stage 7 (Crystallize) after bootstrapping
+- No manual invocation needed
+
+**When used standalone:**
+- Requires at minimum: tech stack choices and project description
+- Will generate CLAUDE.md, rules, and traceability manifest from available documentation
+- If no spec/architecture docs exist, suggests running `spec-driven-development` first

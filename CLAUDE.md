@@ -25,8 +25,8 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 75 skills
-│   ├── foundation/      # 7 core foundational skills
+├── skills/              # 76 skills
+│   ├── foundation/      # 8 core foundational skills
 │   ├── development/     # 11 methodology skills (TDD, architecture, debugging, etc.)
 │   ├── expert-react/    # 4 React skills (react, react-hooks, nextjs, redux)
 │   ├── expert-vue/      # 3 Vue skills (vue3, pinia, vue-router)
@@ -53,7 +53,8 @@ em-team/
 │   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
 │   └── rules/           # Operational rules (mistakes ledger, context management)
 ├── templates/           # Reusable templates + context artifacts
-│   └── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+│   ├── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+│   └── project-dna/      # Templates for generated agent guidance (CLAUDE.md, rules, traceability)
 ├── preambles/           # Shared initialization (ethos, skill preamble, agent preamble)
 ├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging)
 ├── references/          # Shared reference docs (security, testing, code-quality, API, verification)
@@ -68,7 +69,7 @@ em-team/
 
 ## Skill Categories
 
-### Foundation Skills (7 skills)
+### Foundation Skills (8 skills)
 1. **alignment-session** - Pre-coding human-AI alignment
 2. **spec-driven-development** - Write specs before coding
 3. **brainstorming** - Explore ideas into designs
@@ -76,6 +77,7 @@ em-team/
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 7. **domain-modeling** - Bounded contexts, entities, relationships, ubiquitous language
+8. **project-dna** - Crystallize decisions into agent guidance (CLAUDE.md, rules, traceability)
 
 ### Development Skills (11 methodology skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
@@ -236,7 +238,7 @@ em-team/
 
 ### Primary Workflows
 1. **new-feature** - From idea to production
-2. **greenfield-app** - From blank directory to shipped application
+2. **greenfield-app** - From blank directory to shipped application (12 stages, includes UI/UX design)
 3. **bug-fix** - Investigate and fix bugs
 4. **refactoring** - Improve code quality
 5. **security-audit** - Security assessment
@@ -422,9 +424,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 3.2.0
-Last updated: 2026-05-09
-Changes: v3.2.0 — Session audit logging (JSONL, toggle via EM_TEAM_SESSION_AUDIT), skill artifact export (Markdown, toggle via EM_TEAM_ARTIFACT_EXPORT), new CLI scripts (session-audit.sh, artifact-register.sh), artifact export instructions in 5 key skills. Total: 82 skills, 35 agents, 24 workflows.
+Current version: 3.4.0
+Last updated: 2026-05-21
+Changes: v3.4.0 — UI/UX integration into greenfield workflow: new Stage 5 (UI/UX Design) with frontend-expert agent producing UI-SPEC.md. Greenfield workflow v3.0.0 (12 stages). Crystallize stage generates design-system.md rule and UI-to-code map in PROJECT-DNA.md. Validation stage adds ux-audit + flow-discovery skills. Review stage adds ui-auditor + design-reviewer agents. Updated project-dna skill and templates. Total: 83 skills, 35 agents, 24 workflows.
 
 ## Automation
 
