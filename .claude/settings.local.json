@@ -302,7 +302,13 @@
       "Bash([ -f \"/Users/abc/Desktop/EM-Team/$f\" ])",
       "Bash(git status *)",
       "Bash(echo \"exit: $?\")",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(ln -s github-cicd-setup.md skills/workflow/github-cicd-setup/SKILL.md)",
+      "Bash(ln -s github-pr-manager.md skills/workflow/github-pr-manager/SKILL.md)",
+      "Bash(ln -s github-issue-manager.md skills/workflow/github-issue-manager/SKILL.md)",
+      "Bash(ln -s github-release-manager.md skills/workflow/github-release-manager/SKILL.md)",
+      "Bash(ls -la skills/workflow/github-*/SKILL.md)",
+      "Bash(ls skills/workflow/github-*/)"
     ]
   },
   "enableAllProjectMcpServers": true,
