@@ -1,22 +1,23 @@
 # EM-Team - Fullstack Engineering Agent/Skill/Workflow System
 
-> A comprehensive system of agents, skills, and workflows for fullstack engineering. Current version: **v3.6.0** — 81 skills, 35 agents, 25 workflows.
+> A comprehensive system of agents, skills, and workflows for fullstack engineering. Current version: **v3.7.0** — 85 skills, 35 agents, 25 workflows.
 
 ## Overview
 
 EM-Team provides a complete toolkit for fullstack engineering with:
 
-**🎯 What's New in v3.6.0:**
-- **Codebase Architecture Intelligence** — `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures, then generates 3 architecture-specific rule files that enforce the chosen architecture throughout development
-- **Japanese Outsourcing Support (v3.5.0)** — Full suite for Japanese clients: `basic-design` (基本設計), `detailed-design` (詳細設計), `uat-process` (受け入れテスト), `progress-reporting` (進捗報告), change management protocol, review gates, and `japanese-outsourcing` master workflow
-- **Greenfield Workflow v3.1** — Stage 6 upgraded with architecture research + decision + rule generation
+**🎯 What's New in v3.7.0:**
+- **GitHub Management Suite** — 4 new skills + 12 commands covering the full GitHub workflow: CI/CD setup, PR creation with templates, AI-assisted review fix, issue management, sprint planning, release management
+- **Codebase Architecture Intelligence (v3.6.0)** — `codebase-architecture` skill researches modern architecture patterns, presents 2-3 best-fit options, generates 3 architecture-specific rule files
+- **Japanese Outsourcing Support (v3.5.0)** — Full suite: `basic-design` (基本設計), `detailed-design` (詳細設計), `uat-process` (受け入れテスト), `progress-reporting` (進捗報告), and `japanese-outsourcing` master workflow
 
 **📋 System Summary:**
-- **81 Skills** — Foundation, development, expert groups, quality, workflow, additional
+- **85 Skills** — Foundation, development, expert groups, quality, workflow (incl. GitHub suite), additional
 - **35 Agents** — Core, optional, specialized, expert (React, Vue, NestJS, DevOps, Mobile, Spring, Rust)
 - **25 Workflows** — Primary, support, team, distributed, product, outsourcing
 
 **⚡ Advanced Features:**
+- **GitHub Management Suite** (v3.7.0) — CI/CD setup, PR lifecycle, issue management, sprint planning, release management
 - **Codebase Architecture** — Research-driven pattern selection + rule enforcement for every project
 - **Greenfield Workflow** — 12 stages from blank dir to production, with architecture intelligence in Stage 6
 - **Japanese Outsourcing** — Formal 基本設計/詳細設計/受け入れテスト with sign-off gates
@@ -169,6 +170,46 @@ All agents automatically load knowledge when starting tasks:
 5. Validate output against patterns
 
 **Documentation:** `agents/codebase-mapper.md`, `.claude/knowledge/README.md`
+
+---
+
+### ✨ GitHub Management Suite (NEW v3.7.0)
+
+**Full GitHub lifecycle automation — from CI setup to release**
+
+Stop context-switching between your terminal and GitHub. The GitHub Management Suite covers every stage of the GitHub workflow with AI-powered automation.
+
+**4 New Skills + 12 New Commands:**
+
+| Skill | Commands | What It Does |
+|-------|----------|--------------|
+| `github-cicd-setup` | `/setup-cicd` | Detect stack (Node/Python/Go/Rust/Java) → generate `.github/workflows/ci.yml` with lint, typecheck, test, build, caching |
+| `github-pr-manager` | `/pr-create`, `/pr-fix`, `/pr-merge`, `/pr-review` | Auto-fill PR description from commits + template, AI-fix review comments + reply, safe merge, auto-assign reviewers |
+| `github-issue-manager` | `/issue-create`, `/issue-triage`, `/issue-sprint` | Create structured issues (bug/feature/task), triage backlog with labels + priority, sprint planning with GitHub Milestones |
+| `github-release-manager` | `/release` | Version bump, release notes from CHANGELOG, git tag, GitHub Release with artifacts |
+
+**Bonus Commands:**
+- `/branch-create [issue#]` — Smart branch naming `feat/123-issue-title` from issue number
+- `/dep-review` — Security + license scan for new dependencies in PR
+- `/stale-issues` — Auto-label + close stale issues (30d / 60d thresholds)
+
+**Quick Start:**
+```bash
+# Set up CI for a new project
+/em:skill:github-cicd-setup
+
+# Create a PR with AI-generated description
+/em:skill:github-pr-manager  # (PR Creation section)
+
+# After receiving review feedback — fix all comments in one go
+/em:skill:github-pr-manager  # (Review Fix section)
+
+# Plan the next sprint from open issues
+/em:skill:github-issue-manager  # (Sprint Planning section)
+
+# Ship a release
+/em:skill:github-release-manager
+```
 
 ---
 
@@ -338,7 +379,7 @@ Once installed, open **any project** in Claude Code and use the commands:
 /em:new-feature implement user authentication
 ```
 
-**Skills (81):**
+**Skills (85):**
 ```bash
 # Architecture & Design
 /em:skill:codebase-architecture  Research patterns, get best-fit options, generate rules
@@ -351,6 +392,12 @@ Once installed, open **any project** in Claude Code and use the commands:
 /em:skill:systematic-debugging   Investigate login timeout bug
 /em:skill:uat-process            Run UAT with sign-off for Japanese clients
 /em:skill:progress-reporting     Generate weekly 進捗報告 status report
+
+# GitHub Management (v3.7.0)
+/em:skill:github-cicd-setup      Detect stack → generate .github/workflows/ci.yml
+/em:skill:github-pr-manager      Create PR / fix review comments / merge
+/em:skill:github-issue-manager   Create issue / triage backlog / plan sprint
+/em:skill:github-release-manager Version bump → release notes → tag → GitHub Release
 
 # Expert stacks
 /em:skill:react                  React patterns and best practices

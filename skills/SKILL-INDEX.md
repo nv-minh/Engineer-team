@@ -1,6 +1,6 @@
 # EM-Team System - Complete Skill Index
 
-**EM-Team** is a comprehensive fullstack engineering system with 81 skills, 35 agents, and 25 workflows. Skills are organized into 20 categories covering every major technology stack.
+**EM-Team** is a comprehensive fullstack engineering system with 85 skills, 35 agents, and 25 workflows. Skills are organized into 20 categories covering every major technology stack.
 
 ---
 
@@ -190,7 +190,7 @@ Location: `skills/quality/`
 63. **flow-discovery** - Discover and document user flows with step-by-step guides
 64. **uat-process** *(v3.5.0)* - 受け入れテスト: UAT plan + test cases + execution log + client sign-off
 
-### Workflow Skills (7 skills)
+### Workflow Skills (11 skills)
 Location: `skills/workflow/`
 
 65. **git-workflow** - Atomic commits
@@ -200,15 +200,19 @@ Location: `skills/workflow/`
 69. **deprecation-migration** - Code-as-liability mindset
 70. **style-switcher** - Unified personality styles (13) and density modes (3)
 71. **progress-reporting** *(v3.5.0)* - Weekly 進捗報告 with GREEN/YELLOW/RED status indicators
+72. **github-cicd-setup** *(v3.7.0)* - Detect stack → generate `.github/workflows/ci.yml` with lint/typecheck/test/build
+73. **github-pr-manager** *(v3.7.0)* - PR creation with template auto-fill + review comment AI-assisted fix
+74. **github-issue-manager** *(v3.7.0)* - Issue creation, triage (labels/priority/duplicates), sprint planning
+75. **github-release-manager** *(v3.7.0)* - Version bump, release notes, git tag, GitHub Release
 
 ### Additional Skills (5 skills)
 Location: `skills/additional/`
 
-72. **jobs-to-be-done** - JTBD framework for understanding user needs
-73. **lean-ux-canvas** - Lean UX hypothesis testing
-74. **opportunity-solution-tree** - Product opportunity mapping
-75. **pol-probe** - Product opportunity probe
-76. **office-hours** - YC-style brainstorming and idea validation
+76. **jobs-to-be-done** - JTBD framework for understanding user needs
+77. **lean-ux-canvas** - Lean UX hypothesis testing
+78. **opportunity-solution-tree** - Product opportunity mapping
+79. **pol-probe** - Product opportunity probe
+80. **office-hours** - YC-style brainstorming and idea validation
 
 ---
 
@@ -395,7 +399,7 @@ Location: `workflows/`
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-05-02
+**Version:** 3.7.0
+**Last Updated:** 2026-05-22
 **Status:** Production Ready
 **Repository:** https://github.com/nv-minh/agent-team

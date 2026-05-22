@@ -1,4 +1,4 @@
-# Hướng Dẫn Sử Dụng EM-Team v3.6.0
+# Hướng Dẫn Sử Dụng EM-Team v3.7.0
 
 Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 
@@ -22,17 +22,54 @@ Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 
 ## Tổng quan
 
-EM-Team v3.6.0 cung cấp 149+ commands được tổ chức thành 3 danh mục chính:
+EM-Team v3.7.0 cung cấp 149+ commands được tổ chức thành 3 danh mục chính:
 
 | Phương pháp | Số lượng | Mô tả | Tốt nhất cho |
 |-------------|----------|-------|--------------|
-| **Skills** | 81 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
+| **Skills** | 85 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
 | **Agents** | 35 | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
 | **Workflows** | 25 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
 
 ---
 
 ## Tính năng mới
+
+### v3.7.0 — GitHub Management Suite
+
+Bộ công cụ tự động hóa hoàn toàn vòng đời GitHub — từ CI/CD đến release.
+
+**4 skills mới + 12 commands:**
+
+| Skill | Commands | Chức năng |
+|-------|----------|-----------|
+| `github-cicd-setup` | `/setup-cicd` | Phát hiện stack (Node/Python/Go/Rust/Java) → tạo `.github/workflows/ci.yml` với lint, typecheck, test, build, caching |
+| `github-pr-manager` | `/pr-create`, `/pr-fix`, `/pr-merge`, `/pr-review` | Tự động điền PR description từ commits + template, AI fix review comments + reply, safe merge, tự assign reviewers |
+| `github-issue-manager` | `/issue-create`, `/issue-triage`, `/issue-sprint` | Tạo issue có cấu trúc (bug/feature/task), triage backlog với labels + priority, sprint planning với GitHub Milestones |
+| `github-release-manager` | `/release` | Bump version, tạo release notes từ CHANGELOG, git tag, GitHub Release với artifacts |
+
+**Commands bổ sung:**
+- `/branch-create [issue#]` — Đặt tên branch thông minh `feat/123-issue-title` từ issue number
+- `/dep-review` — Kiểm tra security + license cho dependencies mới trong PR
+- `/stale-issues` — Tự động label + đóng stale issues (ngưỡng 30d / 60d)
+
+```bash
+# Setup CI/CD cho project mới
+/em:skill:github-cicd-setup
+
+# Tạo PR với description được AI điền tự động
+/em:skill:github-pr-manager  # (phần PR Creation)
+
+# Fix tất cả review comments cùng lúc
+/em:skill:github-pr-manager  # (phần Review Fix)
+
+# Lên kế hoạch sprint từ open issues
+/em:skill:github-issue-manager  # (phần Sprint Planning)
+
+# Phát hành phiên bản mới
+/em:skill:github-release-manager
+```
+
+---
 
 ### v3.6.0 — Codebase Architecture Intelligence
 
@@ -198,10 +235,10 @@ EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với
 
 ## Cấu trúc Command
 
-EM-Team v3.6.0 sử dụng cấu trúc command thống nhất:
+EM-Team v3.7.0 sử dụng cấu trúc command thống nhất:
 
 ```bash
-# Skills (81 commands) - Prefix em:skill:
+# Skills (85 commands) - Prefix em:skill:
 /em:skill:skill-name [task description]
 
 # Agents (35 commands) - Prefix em:
@@ -217,7 +254,7 @@ EM-Team v3.6.0 sử dụng cấu trúc command thống nhất:
 
 ### Tất cả Commands Available
 
-#### 📚 Skills (81 commands) - Prefix em:skill:
+#### 📚 Skills (85 commands) - Prefix em:skill:
 
 ```
 /em:skill:brainstorming          - Explore ideas into designs
@@ -258,6 +295,12 @@ EM-Team v3.6.0 sử dụng cấu trúc command thống nhất:
 /em:skill:finishing-branch       - Merge/PR decisions
 /em:skill:deprecation-migration  - Code-as-liability
 /em:skill:style-switcher         - 13 personality + 3 density modes
+
+# MỚI v3.7.0 — GitHub Management Suite
+/em:skill:github-cicd-setup      - Phát hiện stack → tạo .github/workflows/ci.yml
+/em:skill:github-pr-manager      - Tạo PR / fix review comments / merge an toàn
+/em:skill:github-issue-manager   - Tạo issue / triage backlog / sprint planning
+/em:skill:github-release-manager - Bump version → release notes → tag → GitHub Release
 
 # MỚI v3.6.0
 /em:skill:codebase-architecture  - Nghiên cứu 6 kiến trúc → đề xuất 2-3 → sinh rule files

@@ -149,7 +149,7 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 34. **test-generation** - Automated test generation
 35. **uat-process** - 受け入れテスト: UAT plan + test cases + execution log + client sign-off *(v3.5.0)*
 
-#### Workflow Skills (7 skills)
+#### Workflow Skills (11 skills)
 36. **git-workflow** - Atomic commits
 37. **ci-cd-automation** - Feature flags, quality gates
 38. **documentation** - ADRs, API docs
@@ -157,13 +157,17 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 40. **deprecation-migration** - Code-as-liability mindset
 41. **style-switcher** - 13 personality styles + 3 density modes
 42. **progress-reporting** - Weekly 進捗報告 with GREEN/YELLOW/RED status *(v3.5.0)*
+43. **github-cicd-setup** - Detect stack → generate `.github/workflows/ci.yml` *(v3.7.0)*
+44. **github-pr-manager** - PR creation with template auto-fill + review comment AI-fix *(v3.7.0)*
+45. **github-issue-manager** - Issue creation, triage, sprint planning with milestones *(v3.7.0)*
+46. **github-release-manager** - Version bump, release notes, git tag, GitHub Release *(v3.7.0)*
 
 #### Additional Skills (5 skills)
-43. **jobs-to-be-done** - JTBD framework for understanding user needs
-44. **lean-ux-canvas** - Lean UX hypothesis testing
-45. **opportunity-solution-tree** - Product opportunity mapping
-46. **pol-probe** - Product opportunity probe
-40. **office-hours** - YC-style brainstorming and idea validation
+47. **jobs-to-be-done** - JTBD framework for understanding user needs
+48. **lean-ux-canvas** - Lean UX hypothesis testing
+49. **opportunity-solution-tree** - Product opportunity mapping
+50. **pol-probe** - Product opportunity probe
+51. **office-hours** - YC-style brainstorming and idea validation
 
 ### How to Use Skills
 

@@ -42,6 +42,12 @@ Welcome to the EM-Team documentation hub. This directory contains comprehensive 
 - `protocols/review-gates.md` — Phase gate sign-off protocol
 - `workflows/japanese-outsourcing.md` — Master outsourcing workflow
 
+### 🐙 GitHub Management Suite (v3.7.0)
+- `skills/workflow/github-cicd-setup/` — Auto-generate CI/CD workflows
+- `skills/workflow/github-pr-manager/` — PR creation + review fix
+- `skills/workflow/github-issue-manager/` — Issue lifecycle + sprint planning
+- `skills/workflow/github-release-manager/` — Release management
+
 ### 🏗️ Architecture Intelligence (v3.6.0)
 - `skills/development/codebase-architecture/` — Pattern research + rule generation skill
 
@@ -89,5 +95,5 @@ Need help?
 
 ---
 
-**Last Updated:** 2026-05-08
-**Documentation Version:** 3.1.0
+**Last Updated:** 2026-05-22
+**Documentation Version:** 3.7.0

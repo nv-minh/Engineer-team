@@ -25,7 +25,7 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 81 skills
+├── skills/              # 85 skills
 │   ├── foundation/      # 10 core foundational skills
 │   ├── development/     # 12 methodology skills (TDD, architecture, debugging, etc.)
 │   ├── expert-react/    # 4 React skills (react, react-hooks, nextjs, redux)
@@ -174,7 +174,7 @@ em-team/
 63. **test-generation** - Automated test generation strategies
 64. **uat-process** - Formal 受け入れテスト (User Acceptance Testing) with sign-off
 
-### Workflow Skills (7 skills)
+### Workflow Skills (11 skills)
 65. **git-workflow** - Atomic commits
 66. **ci-cd-automation** - Feature flags, quality gates
 67. **documentation** - ADRs, API docs
@@ -182,13 +182,17 @@ em-team/
 69. **deprecation-migration** - Code-as-liability mindset
 70. **style-switcher** - Unified personality styles (13) and density modes (3)
 71. **progress-reporting** - Formal 進捗報告 (weekly progress reports) with metrics and escalation
+72. **github-cicd-setup** - Detect stack → auto-generate `.github/workflows/ci.yml` with lint/typecheck/test/build
+73. **github-pr-manager** - PR creation with template auto-fill + review comment AI-assisted fix
+74. **github-issue-manager** - Issue creation, triage (labels/priority/duplicates), sprint planning with milestones
+75. **github-release-manager** - Version bump, release notes, git tag, GitHub Release with artifacts
 
 ### Additional Skills (5 skills)
-72. **jobs-to-be-done** - JTBD framework for understanding user needs
-73. **lean-ux-canvas** - Lean UX hypothesis testing
-74. **opportunity-solution-tree** - Product opportunity mapping
-75. **pol-probe** - Product opportunity probe
-76. **office-hours** - YC-style brainstorming and idea validation
+76. **jobs-to-be-done** - JTBD framework for understanding user needs
+77. **lean-ux-canvas** - Lean UX hypothesis testing
+78. **opportunity-solution-tree** - Product opportunity mapping
+79. **pol-probe** - Product opportunity probe
+80. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -432,9 +436,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 3.6.0
+Current version: 3.7.0
 Last updated: 2026-05-22
-Changes: v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 81 skills, 35 agents, 25 workflows.
+Changes: v3.7.0 — GitHub Management Suite: 4 new skills (github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager) + 12 commands (setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues). Total: 85 skills, 35 agents, 25 workflows. v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 85 skills, 35 agents, 25 workflows.
 
 ## Automation
 
