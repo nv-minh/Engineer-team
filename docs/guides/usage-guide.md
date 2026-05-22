@@ -91,29 +91,33 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 
 ### Available Skills
 
-#### Foundation Skills (Core)
-1. **spec-driven-development** - Write specifications before coding
-2. **brainstorming** - Explore ideas into detailed designs
-3. **context-engineering** - Optimize agent context setup
-4. **writing-plans** - Break work into manageable tasks
-5. **systematic-debugging** - 4-phase debugging methodology
-6. **alignment-session** - Pre-coding human-AI alignment session
+#### Foundation Skills (10 skills)
+1. **alignment-session** - Pre-coding human-AI alignment session
+2. **spec-driven-development** - Write specifications before coding
+3. **brainstorming** - Explore ideas into detailed designs
+4. **context-engineering** - Optimize agent context setup
+5. **writing-plans** - Break work into manageable tasks
+6. **systematic-debugging** - 4-phase debugging methodology
 7. **domain-modeling** - Bounded contexts, entities, relationships, ubiquitous language
+8. **project-dna** - Crystallize decisions into CLAUDE.md + 8 rule files
+9. **basic-design** - Formal 基本設計 document with 8 sections + sign-off gate *(v3.5.0)*
+10. **detailed-design** - Formal 詳細設計 per-module with class diagrams + sign-off gate *(v3.5.0)*
 
-#### Development Skills
-7. **test-driven-development** - TDD: RED-GREEN-REFACTOR
-8. **incremental-implementation** - Vertical slice development
-9. **subagent-driven-development** - Fresh context per task
-10. **source-driven-development** - Code from official docs
-11. **security-hardening** - OWASP Top 10 security
-12. **architecture-zoom-out** - Higher-level code perspective
-13. **architecture-improvement** - Systematic module deepening
-14. **issue-generator** - Plans to structured vertical-slice GitHub issues
-15. **prd-generator** - Convert ideas to structured PRD documents
-16. **diagram** - Excalidraw, Mermaid, SVG diagram generation
-17. **figma-design** - Figma-to-code conversion with MCP server
+#### Development Skills (12 skills)
+11. **test-driven-development** - TDD: RED-GREEN-REFACTOR
+12. **incremental-implementation** - Vertical slice development
+13. **subagent-driven-development** - Fresh context per task
+14. **source-driven-development** - Code from official docs
+15. **security-hardening** - OWASP Top 10 security
+16. **architecture-zoom-out** - Higher-level code perspective
+17. **architecture-improvement** - Systematic module deepening
+18. **issue-generator** - Plans to structured vertical-slice GitHub issues
+19. **prd-generator** - Convert ideas to structured PRD documents
+20. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+21. **figma-design** - Figma-to-code conversion with MCP server
+22. **codebase-architecture** - Research 6 patterns → recommend 2-3 options → generate rules *(v3.6.0)*
 
-#### Expert Skills
+#### Expert Skills (31 skills across 15 groups)
 - **Expert React:** react, react-hooks, nextjs, redux
 - **Expert Vue:** vue3, pinia, vue-router
 - **Expert Go:** go-patterns
@@ -130,33 +134,35 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 - **Drawio:** drawio-architecture, drawio-flowchart
 - **Tauri:** tauri
 
-#### Quality Skills
-18. **code-review** - 5-axis review framework
-19. **code-simplification** - Reduce complexity
-20. **browser-testing** - DevTools MCP integration
-21. **performance-optimization** - Measure-first optimization
-22. **e2e-testing** - Playwright patterns
-23. **security-audit** - Vulnerability assessment
-24. **api-testing** - Integration testing
-25. **security-common** - OWASP reference and security checklist
-26. **ux-audit** - Behavioral UX audit with scored dimensions
-27. **plan-tune** - Learn and tune output preferences
-28. **flow-discovery** - Flow discovery and mapping
-29. **test-generation** - Automated test generation
+#### Quality Skills (13 skills)
+23. **code-review** - 5-axis review framework
+24. **code-simplification** - Reduce complexity
+25. **browser-testing** - DevTools MCP integration
+26. **performance-optimization** - Measure-first optimization
+27. **e2e-testing** - Playwright patterns
+28. **security-audit** - Vulnerability assessment
+29. **api-testing** - Integration testing
+30. **security-common** - OWASP reference and security checklist
+31. **ux-audit** - Behavioral UX audit with scored dimensions
+32. **plan-tune** - Learn and tune output preferences
+33. **flow-discovery** - Flow discovery and mapping
+34. **test-generation** - Automated test generation
+35. **uat-process** - 受け入れテスト: UAT plan + test cases + execution log + client sign-off *(v3.5.0)*
 
-#### Workflow Skills
-30. **git-workflow** - Atomic commits
-31. **ci-cd-automation** - Feature flags, quality gates
-32. **documentation** - ADRs, API docs
-33. **finishing-branch** - Merge/PR decisions
-34. **deprecation-migration** - Code-as-liability mindset
-35. **style-switcher** - 13 personality styles + 3 density modes
+#### Workflow Skills (7 skills)
+36. **git-workflow** - Atomic commits
+37. **ci-cd-automation** - Feature flags, quality gates
+38. **documentation** - ADRs, API docs
+39. **finishing-branch** - Merge/PR decisions
+40. **deprecation-migration** - Code-as-liability mindset
+41. **style-switcher** - 13 personality styles + 3 density modes
+42. **progress-reporting** - Weekly 進捗報告 with GREEN/YELLOW/RED status *(v3.5.0)*
 
-#### Additional Skills
-36. **jobs-to-be-done** - JTBD framework for understanding user needs
-37. **lean-ux-canvas** - Lean UX hypothesis testing
-38. **opportunity-solution-tree** - Product opportunity mapping
-39. **pol-probe** - Product opportunity probe
+#### Additional Skills (5 skills)
+43. **jobs-to-be-done** - JTBD framework for understanding user needs
+44. **lean-ux-canvas** - Lean UX hypothesis testing
+45. **opportunity-solution-tree** - Product opportunity mapping
+46. **pol-probe** - Product opportunity probe
 40. **office-hours** - YC-style brainstorming and idea validation
 
 ### How to Use Skills
@@ -323,97 +329,76 @@ Dispatch agents for specialized tasks:
 
 Workflows are end-to-end processes that combine multiple skills and agents to complete complex tasks.
 
-### Primary Workflows
+### Primary Workflows (5 workflows)
 
-#### 1. Greenfield App Workflow (NEW v3.1.0)
-**Purpose:** Build an application from scratch — blank directory to shipped product
-**Usage:** `Workflow: em-greenfield-app - [app description]`
-**Stages:** Ideation → Problem Reframing → Domain Modeling → Spec → Architecture → Bootstrap → Build → Verify → Review → Launch
-
-#### 2. New Feature Workflow
-**Purpose:** Take features from idea to production
-**Usage:** `Workflow: new-feature - [feature description]`
-**Stages:** Define → Plan → Build → Verify → Review → Simplify → Ship
+#### 1. Greenfield App Workflow *(v3.1.0, updated v3.6.0)*
+**Purpose:** Blank directory → shipped product
+**Usage:** `/em:greenfield-app [app description]`
+**Stages (12):** Ideation → Problem Reframing → Domain Modeling → Spec → UI/UX Design → **Architecture** (codebase-architecture skill) → Crystallize DNA → Bootstrap → Implement → Validate → Review → Launch
+**What's new in v3.6.0:** Stage 6 uses `codebase-architecture` skill — researches 6 patterns, presents 2-3 options, generates 3 rule files after your decision.
 
 #### 2. New Feature Workflow
 **Purpose:** Take features from idea to production
-**Usage:** `Workflow: new-feature - [feature description]`
+**Usage:** `/em:new-feature [feature description]`
 **Stages:** Define → Plan → Build → Verify → Review → Simplify → Ship
 
 #### 3. Bug Fix Workflow
 **Purpose:** Investigate and fix bugs systematically
-**Usage:** `Workflow: bug-fix - [bug description]`
-**Stages:** Investigate → Analyze → Hypothesize → Implement → Verify
-
-#### 3. Bug Fix Workflow
-**Purpose:** Investigate and fix bugs systematically
-**Usage:** `Workflow: bug-fix - [bug description]`
+**Usage:** `/em:bug-fix [bug description]`
 **Stages:** Investigate → Analyze → Hypothesize → Implement → Verify
 
 #### 4. Refactoring Workflow
 **Purpose:** Improve code quality safely
-**Usage:** `Workflow: refactoring - [refactoring goal]`
-**Stages:** Analyze → Plan → Refactor → Test → Verify
-
-#### 4. Refactoring Workflow
-**Purpose:** Improve code quality safely
-**Usage:** `Workflow: refactoring - [refactoring goal]`
+**Usage:** `/em:refactor [refactoring goal]`
 **Stages:** Analyze → Plan → Refactor → Test → Verify
 
 #### 5. Security Audit Workflow
 **Purpose:** Comprehensive security assessment
-**Usage:** `Workflow: security-audit - [system to audit]`
+**Usage:** `/em:security-audit [system to audit]`
 **Stages:** Reconnaissance → Vulnerability Scan → Analysis → Reporting
 
-### Support Workflows
+### Support Workflows (6 workflows)
 
-#### 6. Project Setup Workflow
-Initialize new projects with best practices
+#### 6. Project Setup — Initialize new projects with best practices
+#### 7. Documentation — Generate and update documentation
+#### 8. Deployment — Deploy and monitor features
+#### 9. Retro — Learn and improve from completed work
+#### 10. Ship Workflow — Version bump, changelog, PR creation
+#### 11. Canary Monitoring — Post-deploy health monitoring
 
-#### 7. Documentation Workflow
-Generate and update documentation
+### Outsourcing Workflows *(v3.5.0)*
 
-#### 8. Deployment Workflow
-Deploy and monitor features
+#### 12. Japanese Outsourcing Workflow
+**Purpose:** End-to-end workflow for Japanese clients with formal sign-off gates
+**Usage:** `/em:japanese-outsourcing`
+**Stages (9):**
+1. Kickoff — project charter, communication protocol
+2. Requirements — REQUIREMENTS.md + **Gate 1: Requirements Sign-Off**
+3. Basic Design — BASIC-DESIGN.md (基本設計) + **Gate 2a: Basic Design Sign-Off**
+4. Detailed Design — DETAILED-DESIGN.md (詳細設計) + **Gate 2b: Detailed Design Sign-Off**
+5. Implementation — TDD + code review + atomic commits
+6. Internal Testing — unit/integration/E2E + **Gate 3: Code Review Approval**
+7. UAT — UAT-PLAN + UAT-EXECUTION-LOG + **Gate 4: Client UAT Sign-Off**
+8. Delivery — ACCEPTANCE-CHECKLIST + dual sign-off
+9. Post-delivery Support — monitoring, defect management
 
-#### 9. Retro Workflow
-Learn and improve from completed work
+### Distributed Workflows (2 workflows)
 
-### Distributed Workflows
+#### 13. Distributed Investigation — Parallel bug investigation across codebase
+**Usage:** `/em:distributed [investigation topic]`
 
-#### 10. Distributed Investigation Workflow
-Parallel bug investigation across codebase
-**Usage:** `Workflow: distributed-investigation - [investigation topic]`
+#### 14. Distributed Development — Parallel feature implementation
 
-#### 11. Distributed Development Workflow
-Parallel feature implementation
-**Usage:** `Workflow: distributed-development - [feature description]`
+### Team Workflows (8 workflows)
 
-### Team Workflows
-
-#### 12. Team Review Workflow
-Full team review orchestrated by Team Lead
-
-#### 13. Architecture Review Workflow
-Architecture review with Architect & Staff Engineer
-
-#### 14. Design Review Workflow
-UI/UX design review with Frontend Expert & Product Manager
-
-#### 15. Code Review 9-Axis Workflow
-Deep 9-axis code review with Code Reviewer (Deep mode) & Security
-
-#### 16. Database Review Workflow
-Database schema & query review
-
-#### 17. Product Review Workflow
-Product/spec review with Product Manager
-
-#### 18. Security Review Advanced Workflow
-Advanced security (OWASP + STRIDE)
-
-#### 19. Incident Response Workflow
-Production incident handling
+#### 15. Team Review — Full team review orchestrated by Team Lead
+#### 16. Architecture Review — Architecture review with Architect & Staff Engineer
+#### 17. Design Review — UI/UX design review with Frontend Expert & Product Manager
+#### 18. Code Review 9-Axis — Deep 9-axis code review with Code Reviewer (Deep mode) & Security
+#### 19. Database Review — Database schema & query review
+#### 20. Product Review — Product/spec review with Product Manager
+#### 21. Security Review Advanced — Advanced security (OWASP + STRIDE)
+#### 22. Incident Response — Production incident handling
 
 ### How to Use Workflows
 

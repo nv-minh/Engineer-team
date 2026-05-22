@@ -336,39 +336,121 @@ DEFINE ──────────────────→ PLAN ───�
 
 ---
 
-## Stage 6: Architecture and Roadmap
+## Stage 6: Architecture Design and Codebase Structure
 
 **Agent:** architect + planner
-**Skill:** writing-plans
+**Skills:** `codebase-architecture`, `writing-plans`
 
 **Process:**
-1. Design system architecture from domain model and UI-SPEC.md:
-   - Bounded contexts → modules/services
-   - Entity relationships → data model
-   - Actions → API endpoints / commands
-   - UI component architecture → frontend module structure (informed by UI-SPEC.md)
-2. Run architecture review (CEO scope check + Eng review):
-   - Scope: Is this the right scope, or are we over/under-building?
-   - Data flow: How does information move through the system?
-   - Failure modes: What breaks and how do we recover?
-3. Create phased roadmap:
-   - Each phase = 1-2 atomic plans
-   - Dependencies between phases explicit
-   - First phase = thinnest viable slice
-4. Generate ARCHITECTURE.md and ROADMAP.md
+
+### 6a: Architecture Research & Decision (NEW)
+
+Run `codebase-architecture` skill:
+
+1. **Context Analysis** — Read domain model, requirements, and UI-SPEC to assess:
+   - Domain complexity (CRUD vs. rich domain logic)
+   - Number of bounded contexts and their relationships
+   - Team size and experience level
+   - Scale target and longevity expectations
+   - Tech stack constraints from earlier stages
+
+2. **Research Modern Architectures** — Identify 2-3 patterns best suited for this context from:
+   - Layered (N-Tier) — Simple CRUD, small teams
+   - Clean Architecture / Hexagonal (Ports & Adapters) — Rich domain, long-lived
+   - Modular Monolith — Medium complexity, future microservices optionality
+   - Feature-Sliced Design (FSD) — Large React/Vue frontends
+   - Vertical Slice Architecture — CQRS-oriented, many discrete features
+   - CQRS + Event Sourcing — Complex audit, event-driven systems
+
+3. **Present Options** — For each candidate architecture, show:
+   - File structure using THIS project's bounded context names (no generic placeholders)
+   - Dependency rule (what imports what)
+   - Why it fits this project (specific, not generic)
+   - Trade-offs to accept (specific to this project)
+   - Code example with this project's domain concepts
+
+4. **User Decides** — Architecture choice is a human judgment call. Present a recommendation but explicitly ask the user to choose.
+
+### 6b: Architecture Document
+
+After the user decides, produce:
+
+```markdown
+# Architecture: [Project Name]
+
+## Pattern: [Chosen Pattern Name]
+**Rationale:** [Why this was chosen for this specific project]
+
+## Bounded Contexts → Modules
+
+| Bounded Context | Module Path | Type | Description |
+|---|---|---|---|
+| [Context] | src/[module]/ | Core/Supporting/Generic | [Description] |
+
+## File Structure
+[Actual structure for this project — not generic]
+
+## Dependency Rule
+[One clear sentence: what imports what, what never imports what]
+
+## Data Flow
+[Request → ... → Response, for the primary use case]
+
+## Failure Modes
+| Component | Failure | Recovery |
+|---|---|---|
+| [Component] | [What can fail] | [How to recover] |
+
+## Technology Decisions
+| Decision | Choice | Rationale |
+|---|---|---|
+| [e.g., ORM] | [e.g., Prisma] | [Why] |
+```
+
+### 6c: Generate Architecture Rules
+
+After architecture decision, generate THREE rule files in `.claude/rules/`:
+
+1. **`architecture-boundaries.md`** — Layer/module dependency rules
+   - Exactly which folders can import from which
+   - Cross-context communication rules
+   - Shared kernel minimalism rules
+   - Code examples: correct AND incorrect imports
+
+2. **`architecture-conventions.md`** — Naming and file structure conventions
+   - File naming per concern (entities, use cases, controllers, DTOs, etc.)
+   - Class/interface naming for this pattern
+   - Folder naming conventions
+   - "What goes where" decision table
+
+3. **`architecture-patterns.md`** — Code patterns to follow and anti-patterns to avoid
+   - 3-4 canonical patterns for this architecture with code examples
+   - 3-4 anti-patterns that commonly arise with code examples (❌ wrong, ✅ right)
+   - Testing strategy aligned with the chosen architecture
+
+### 6d: Roadmap
+
+Run `writing-plans` skill to create ROADMAP.md:
+- Phases organized around the chosen architecture's natural units
+- Each phase = 1-2 atomic plans
+- Dependencies between phases explicit
+- First phase = thinnest viable slice that exercises the full architecture stack
 
 **Output:**
-- ARCHITECTURE.md (system design, data flow, failure modes)
-- ROADMAP.md (phased delivery plan)
-- Architecture diagrams
+- `docs/ARCHITECTURE.md` — Architecture decision, structure, dependency rule, data flow, failure modes
+- `ROADMAP.md` — Phased delivery plan
+- `.claude/rules/architecture-boundaries.md` — Enforced layer rules
+- `.claude/rules/architecture-conventions.md` — Naming and structure conventions
+- `.claude/rules/architecture-patterns.md` — Patterns and anti-patterns
 
 **Quality Gate:**
-- [ ] Architecture covers all bounded contexts
-- [ ] Data flow documented
-- [ ] Failure modes identified with recovery plans
-- [ ] Roadmap phases map to v1 requirements
-- [ ] First phase is the thinnest viable slice
-- [ ] User approved architecture and roadmap
+- [ ] Architecture research presented: 2-3 options with project-specific structure examples
+- [ ] User has explicitly chosen an architecture (not just acknowledged)
+- [ ] ARCHITECTURE.md written: pattern name, rationale, file structure, dependency rule, data flow, failure modes
+- [ ] Three rule files generated with project-specific names (no placeholders)
+- [ ] Rule files have concrete code examples (correct AND incorrect)
+- [ ] Roadmap phases consistent with chosen architecture's module structure
+- [ ] First phase exercises the full architecture stack end-to-end
 
 ---
 
@@ -409,8 +491,10 @@ Crystallize all prior-stage artifacts into agent guidance files for the target p
 3. **Synthesize CLAUDE.md** — Read each source document, extract relevant sections, compose a concise CLAUDE.md (80-150 lines) at the project root. Include Design System section synthesized from UI-SPEC.md.
 4. **Generate Rules** — Create `.claude/rules/` with project-specific rules:
    - `domain-language.md` — Ubiquitous language enforcement from domain model
-   - `architecture-boundaries.md` — Module dependency rules from architecture
-   - `project-conventions.md` — Coding patterns from spec and architecture
+   - `architecture-boundaries.md` — Layer/module dependency rules (generated in Stage 6)
+   - `architecture-conventions.md` — Naming, file structure, what-goes-where (generated in Stage 6)
+   - `architecture-patterns.md` — Patterns to follow + anti-patterns with code examples (generated in Stage 6)
+   - `project-conventions.md` — General coding patterns from spec and architecture
    - `testing-standards.md` — Test quality requirements from spec
    - `design-system.md` — Design system enforcement from UI-SPEC.md (typography, colors, spacing, component library, accessibility minimums, responsive breakpoints, performance budgets)
    - `mistakes.md` — Empty project-specific gotcha ledger (grows during Stage 9)
@@ -424,14 +508,14 @@ Crystallize all prior-stage artifacts into agent guidance files for the target p
 **Output:**
 - Consolidated `spec/` folder with all artifacts indexed (including `spec/ui/UI-SPEC.md`)
 - `CLAUDE.md` at project root (concise agent guidance with Design System section)
-- `.claude/rules/` with 6 project-specific rule files (including `design-system.md`)
+- `.claude/rules/` with 8 project-specific rule files (including `design-system.md`, `architecture-conventions.md`, `architecture-patterns.md`)
 - `spec/PROJECT-DNA.md` traceability manifest (including UI-to-code map)
 
 **Quality Gate:**
 - [ ] `spec/` folder populated with all found artifacts (including UI-SPEC.md)
 - [ ] `spec/README.md` index generated and accurate
 - [ ] `CLAUDE.md` generated (80-150 lines, no placeholders, includes Design System)
-- [ ] At least 5 rule files in `.claude/rules/` (including `design-system.md`)
+- [ ] At least 8 rule files in `.claude/rules/` (architecture-boundaries, architecture-conventions, architecture-patterns, domain-language, project-conventions, testing-standards, design-system, mistakes)
 - [ ] `spec/PROJECT-DNA.md` has trace matrix covering all requirements
 - [ ] Every domain entity appears in domain-to-code map
 - [ ] UI-to-code map covers all user flows and components from UI-SPEC.md
@@ -861,6 +945,45 @@ A successful greenfield app workflow:
 
 ---
 
-**Version:** 3.0.0
-**Last Updated:** 2026-05-21
+## Japanese Outsourcing Extension (日本向け受託開発オプション)
+
+When running this workflow for a **Japanese outsourcing client**, apply these extensions at the corresponding stages. These extensions produce the formal documentation required by Japanese clients (基本設計, 詳細設計, 受け入れテスト) and add client sign-off gates.
+
+> For a dedicated Japanese outsourcing workflow, use `japanese-outsourcing` workflow instead of this extension.
+
+### Stage 3 Extension: Basic Design (基本設計)
+After domain modeling, run `basic-design` skill to produce `docs/BASIC-DESIGN.md`.
+- Includes: system architecture, API interfaces, ER diagram, NFRs, error handling strategy
+- **Gate 2a:** Get client sign-off before proceeding to Detailed Design
+
+### Stage 4 Extension: Requirements Gate
+After REQUIREMENTS.md is complete:
+- **Gate 1:** Formal requirements sign-off with client (use `protocols/review-gates.md` Gate 1 template)
+- Initialize `templates/context-artifacts/WBS.md` with phase breakdown
+
+### Stage 6 Extension: Detailed Design (詳細設計)
+After architecture, run `detailed-design` skill for each complex module.
+- Produces per-module specs with function contracts, data flows, test designs
+- **Gate 2b:** Tech lead + QA lead sign-off before implementation
+
+### Stage 9 Extension: Weekly Progress Reports
+During implementation, run `progress-reporting` skill weekly.
+- GREEN/YELLOW/RED status with metrics
+- All change requests go through `protocols/change-management.md`
+
+### Stage 10 Extension: UAT (受け入れテスト)
+Replace standard validation with formal UAT using `uat-process` skill.
+- Formal UAT test plan + numbered test cases
+- Client tester participates in execution
+- **Gate 4:** UAT sign-off before deployment
+
+### Stage 12 Extension: Acceptance Checklist
+Before final deployment, complete `templates/context-artifacts/ACCEPTANCE-CHECKLIST.md`.
+- All documentation verified, all defects documented
+- **Final sign-off:** Client signs acceptance checklist
+
+---
+
+**Version:** 3.1.0
+**Last Updated:** 2026-05-22
 **Status:** Production Ready

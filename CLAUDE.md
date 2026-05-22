@@ -25,9 +25,9 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 76 skills
-│   ├── foundation/      # 8 core foundational skills
-│   ├── development/     # 11 methodology skills (TDD, architecture, debugging, etc.)
+├── skills/              # 81 skills
+│   ├── foundation/      # 10 core foundational skills
+│   ├── development/     # 12 methodology skills (TDD, architecture, debugging, etc.)
 │   ├── expert-react/    # 4 React skills (react, react-hooks, nextjs, redux)
 │   ├── expert-vue/      # 3 Vue skills (vue3, pinia, vue-router)
 │   ├── expert-go/       # 1 Go skill (go-patterns)
@@ -43,20 +43,20 @@ em-team/
 │   ├── expert-typescript/ # 1 TypeScript skill (typescript-patterns)
 │   ├── drawio/          # 2 Drawio skills (architecture, flowchart)
 │   ├── tauri/           # 1 Tauri skill (tauri)
-│   ├── quality/         # 12 quality assurance skills
-│   ├── workflow/        # 6 workflow and automation skills
+│   ├── quality/         # 13 quality assurance skills
+│   ├── workflow/        # 7 workflow and automation skills
 │   └── additional/      # 5 product & discovery skills
 ├── agents/              # 35 agents (33 active + 2 deprecated)
-├── workflows/           # 24 end-to-end workflows
+├── workflows/           # 25 end-to-end workflows
 ├── .claude/
 │   ├── lib/             # Libraries (trace-store, session-audit, artifact-store)
 │   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
 │   └── rules/           # Operational rules (mistakes ledger, context management)
 ├── templates/           # Reusable templates + context artifacts
-│   ├── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+│   ├── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, WBS.md, ISSUE-REGISTER.md, CHANGE-LOG.md, ACCEPTANCE-CHECKLIST.md
 │   └── project-dna/      # Templates for generated agent guidance (CLAUDE.md, rules, traceability)
 ├── preambles/           # Shared initialization (ethos, skill preamble, agent preamble)
-├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging)
+├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging, change-management, review-gates)
 ├── references/          # Shared reference docs (security, testing, code-quality, API, verification)
 ├── hooks/              # Automation hooks (pre-commit, post-commit, session-handoff)
 ├── commands/           # CLI commands
@@ -69,7 +69,7 @@ em-team/
 
 ## Skill Categories
 
-### Foundation Skills (8 skills)
+### Foundation Skills (10 skills)
 1. **alignment-session** - Pre-coding human-AI alignment
 2. **spec-driven-development** - Write specs before coding
 3. **brainstorming** - Explore ideas into designs
@@ -78,6 +78,8 @@ em-team/
 6. **systematic-debugging** - 4-phase debugging methodology
 7. **domain-modeling** - Bounded contexts, entities, relationships, ubiquitous language
 8. **project-dna** - Crystallize decisions into agent guidance (CLAUDE.md, rules, traceability)
+9. **basic-design** - Formal 基本設計 (Basic Design Document) for Japanese outsourcing
+10. **detailed-design** - Formal 詳細設計 (Detailed Design) per module before implementation
 
 ### Development Skills (11 methodology skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
@@ -91,6 +93,7 @@ em-team/
 15. **prd-generator** - Ideas to structured PRD documents
 16. **diagram** - Excalidraw, Mermaid, SVG diagram generation
 17. **figma-design** - Figma-to-code conversion with MCP server
+18. **codebase-architecture** - Research modern architecture patterns, present options, generate architecture-specific rules
 
 ### Expert React Skills (4 skills)
 18. **react** - React fundamentals, components, JSX, Context API, performance
@@ -156,7 +159,7 @@ em-team/
 ### Tauri Skills (1 skill)
 51. **tauri** - Rust backend, frontend integration, plugins, mobile builds
 
-### Quality Skills (12 skills)
+### Quality Skills (13 skills)
 52. **code-review** - 5-axis review framework
 53. **code-simplification** - Reduce complexity
 54. **browser-testing** - DevTools MCP integration
@@ -169,21 +172,23 @@ em-team/
 61. **plan-tune** - Learn and tune output preferences
 62. **flow-discovery** - Discovery flow pattern identification
 63. **test-generation** - Automated test generation strategies
+64. **uat-process** - Formal 受け入れテスト (User Acceptance Testing) with sign-off
 
-### Workflow Skills (6 skills)
-64. **git-workflow** - Atomic commits
-65. **ci-cd-automation** - Feature flags, quality gates
-66. **documentation** - ADRs, API docs
-67. **finishing-branch** - Merge/PR decisions
-68. **deprecation-migration** - Code-as-liability mindset
-69. **style-switcher** - Unified personality styles (13) and density modes (3)
+### Workflow Skills (7 skills)
+65. **git-workflow** - Atomic commits
+66. **ci-cd-automation** - Feature flags, quality gates
+67. **documentation** - ADRs, API docs
+68. **finishing-branch** - Merge/PR decisions
+69. **deprecation-migration** - Code-as-liability mindset
+70. **style-switcher** - Unified personality styles (13) and density modes (3)
+71. **progress-reporting** - Formal 進捗報告 (weekly progress reports) with metrics and escalation
 
 ### Additional Skills (5 skills)
-70. **jobs-to-be-done** - JTBD framework for understanding user needs
-71. **lean-ux-canvas** - Lean UX hypothesis testing
-72. **opportunity-solution-tree** - Product opportunity mapping
-73. **pol-probe** - Product opportunity probe
-74. **office-hours** - YC-style brainstorming and idea validation
+72. **jobs-to-be-done** - JTBD framework for understanding user needs
+73. **lean-ux-canvas** - Lean UX hypothesis testing
+74. **opportunity-solution-tree** - Product opportunity mapping
+75. **pol-probe** - Product opportunity probe
+76. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -271,6 +276,9 @@ em-team/
 ### Product Workflows (2 workflows)
 23. **discovery-process** - Product discovery and validation
 24. **market-driven-feature** - Market-driven feature development
+
+### Outsourcing Workflows (1 workflow)
+25. **japanese-outsourcing** - End-to-end Japanese outsourcing workflow with 基本設計, 詳細設計, 受け入れテスト, formal gates
 
 ### Incident Sub-Workflows (workflows/incident/)
 - **initial-triage** - First response and impact assessment
@@ -424,9 +432,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 3.4.0
-Last updated: 2026-05-21
-Changes: v3.4.0 — UI/UX integration into greenfield workflow: new Stage 5 (UI/UX Design) with frontend-expert agent producing UI-SPEC.md. Greenfield workflow v3.0.0 (12 stages). Crystallize stage generates design-system.md rule and UI-to-code map in PROJECT-DNA.md. Validation stage adds ux-audit + flow-discovery skills. Review stage adds ui-auditor + design-reviewer agents. Updated project-dna skill and templates. Total: 83 skills, 35 agents, 24 workflows.
+Current version: 3.6.0
+Last updated: 2026-05-22
+Changes: v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 81 skills, 35 agents, 25 workflows.
 
 ## Automation
 

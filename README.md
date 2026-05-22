@@ -1,35 +1,31 @@
 # EM-Team - Fullstack Engineering Agent/Skill/Workflow System
 
-> A comprehensive system of agents, skills, and workflows for fullstack engineering, synthesized from the best practices of 6 top AI agent/workflow repositories.
+> A comprehensive system of agents, skills, and workflows for fullstack engineering. Current version: **v3.6.0** — 81 skills, 35 agents, 25 workflows.
 
 ## Overview
 
 EM-Team provides a complete toolkit for fullstack engineering with:
 
-**🎯 Core Features (NEW in v3.0.0):**
-- **Expert Skill Groups** - 15 expert groups covering React, Vue, Go, NestJS, Python, Database, DevOps, Mobile, Spring, Rust, TypeScript, Frontend, Backend, Drawio, Tauri
-- **27 New Skills** - Condensed from full-stack-skills, covering Docker, Kubernetes, Terraform, Flutter, React Native, Android, iOS, Spring Boot, and more
-- **7 New Expert Agents** - Dedicated agents for each major technology stack
-- **35 Agents Total** - Full coverage from planning to deployment
+**🎯 What's New in v3.6.0:**
+- **Codebase Architecture Intelligence** — `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures, then generates 3 architecture-specific rule files that enforce the chosen architecture throughout development
+- **Japanese Outsourcing Support (v3.5.0)** — Full suite for Japanese clients: `basic-design` (基本設計), `detailed-design` (詳細設計), `uat-process` (受け入れテスト), `progress-reporting` (進捗報告), change management protocol, review gates, and `japanese-outsourcing` master workflow
+- **Greenfield Workflow v3.1** — Stage 6 upgraded with architecture research + decision + rule generation
 
-**📋 Quick Commands:**
-- **100+ Commands** - Organized by type for easy access
-  - 74 **Skills** - Reusable patterns and practices across 17 categories
-  - 35 **Agents** (`em:*`) - Specialized task handlers including 7 expert agents
-  - 23 **Workflows** (`em:*` & `em:wl-*`) - End-to-end processes
-
-**🔧 Development Tools:**
-- **74 Skills** - Foundation, development, expert groups, quality, workflow, additional
-- **35 Agents** - Core, optional, specialized, expert (React, Vue, NestJS, DevOps, Mobile, Spring, Rust)
-- **23 Workflows** - New-feature, bug-fix, security-audit, team reviews, distributed, product
+**📋 System Summary:**
+- **81 Skills** — Foundation, development, expert groups, quality, workflow, additional
+- **35 Agents** — Core, optional, specialized, expert (React, Vue, NestJS, DevOps, Mobile, Spring, Rust)
+- **25 Workflows** — Primary, support, team, distributed, product, outsourcing
 
 **⚡ Advanced Features:**
-- **Distributed Mode** - Parallel agent execution for complex tasks
-- **Browser Automation** - Headless browser for E2E testing
-- **MCP Integrations** - GitHub, Context7, Exa, Memory, Playwright
-- **Memory System** - Cross-session learning and knowledge building
-- **Session Audit** (NEW v3.2.0) - JSONL audit log for user-AI conversations with enable/disable toggle
-- **Artifact Export** (NEW v3.2.0) - Export skill outputs (specs, plans, reviews) as Markdown files with enable/disable toggle
+- **Codebase Architecture** — Research-driven pattern selection + rule enforcement for every project
+- **Greenfield Workflow** — 12 stages from blank dir to production, with architecture intelligence in Stage 6
+- **Japanese Outsourcing** — Formal 基本設計/詳細設計/受け入れテスト with sign-off gates
+- **Distributed Mode** — Parallel agent execution for complex tasks
+- **Browser Automation** — Headless browser for E2E testing
+- **MCP Integrations** — GitHub, Context7, Exa, Memory, Playwright
+- **Memory System** — Cross-session learning and knowledge building
+- **Session Audit** (v3.2.0) — JSONL audit log for user-AI conversations
+- **Artifact Export** (v3.2.0) — Export skill outputs as Markdown files
 
 ---
 
@@ -176,6 +172,95 @@ All agents automatically load knowledge when starting tasks:
 
 ---
 
+### ✨ Codebase Architecture Intelligence (NEW v3.6.0)
+
+**Research-driven architecture selection + rule enforcement for every greenfield project**
+
+Stop starting new projects with the wrong architecture. The `codebase-architecture` skill researches 6 modern patterns, presents the 2-3 best fits for *your specific project*, and then generates 3 rule files that enforce the chosen architecture throughout development — preventing architectural drift from the first commit.
+
+**How it works:**
+
+1. **Context Analysis** — Evaluates your domain complexity, team size, scale requirements, and tech stack
+2. **Pattern Catalog** — Researches 6 modern architectures with trade-offs:
+   - Layered (N-Tier) — `controllers/ → services/ → repositories/`
+   - Clean / Hexagonal (Ports & Adapters) — `domain/ → application/ → infrastructure/`
+   - Modular Monolith — `modules/[module]/api/` + `modules/[module]/internal/`
+   - Feature-Sliced Design (FSD) — `app/ → pages/ → widgets/ → features/ → entities/ → shared/`
+   - Vertical Slice — `features/[feature]/[Feature]CommandHandler.ts`
+   - CQRS + Event Sourcing — `commands/ + queries/ + events/ + read-models/`
+3. **Recommend & Decide** — Presents 2-3 best-fit options with project-specific file structures; user picks one
+4. **Generate Rules** — Produces 3 enforcing rule files after the decision:
+   - `architecture-boundaries.md` — Layer dependency rules with import examples (✅/❌)
+   - `architecture-conventions.md` — File naming, folder naming, class naming per pattern
+   - `architecture-patterns.md` — Code patterns + anti-patterns with real examples
+
+**Real-World Impact:**
+- ✅ No more "which architecture should I use?" paralysis on greenfield projects
+- ✅ Architecture rules become part of CLAUDE.md context — every agent follows them
+- ✅ Prevents the #1 cause of codebase rot: architectural drift over time
+- ✅ Integrated into Greenfield workflow Stage 6 automatically
+
+**Quick Start:**
+```bash
+# Standalone usage
+/em:skill:codebase-architecture
+
+# Automatic in Greenfield workflow (Stage 6)
+/em:greenfield-app Build a fintech payments platform
+
+# Stage 6 will:
+# 1. Analyze your project context
+# 2. Present 2-3 architecture options
+# 3. Wait for your decision
+# 4. Generate architecture-boundaries.md, architecture-conventions.md, architecture-patterns.md
+# 5. Continue to Stage 7 with rules active
+```
+
+---
+
+### ✨ Japanese Outsourcing Support (NEW v3.5.0)
+
+**Complete formal deliverable suite for Japanese outsourcing projects**
+
+Japanese outsourcing requires formal, signed-off documents at every phase — 基本設計 (Basic Design), 詳細設計 (Detailed Design), 受け入れテスト (UAT), and 進捗報告 (Weekly Progress Reports). EM-Team now includes the full suite.
+
+**New Skills:**
+| Skill | Japanese | What It Produces |
+|-------|----------|-----------------|
+| `basic-design` | 基本設計 | BASIC-DESIGN.md — 8-section architecture doc with sign-off gate |
+| `detailed-design` | 詳細設計 | DETAILED-DESIGN.md — per-module class diagrams, pre/post-conditions |
+| `uat-process` | 受け入れテスト | UAT-PLAN + UAT-TEST-CASES + UAT-EXECUTION-LOG + UAT-SIGNOFF |
+| `progress-reporting` | 進捗報告 | Weekly GREEN/YELLOW/RED status report with metrics |
+
+**New Protocols:**
+- `protocols/change-management.md` — CHG-YYYYMM-NNN format, 4-tier approval routing, rollback plan
+- `protocols/review-gates.md` — 5 formal phase gates (Requirements → Basic Design → Detailed Design → Code Review → UAT)
+
+**New Templates:**
+- `templates/context-artifacts/WBS.md` — 4-level WBS with effort estimates, owners, milestones
+- `templates/context-artifacts/ISSUE-REGISTER.md` — Issue + Risk register with 5-Why root cause
+- `templates/context-artifacts/CHANGE-LOG.md` — Consolidated CHG tracking log
+- `templates/context-artifacts/ACCEPTANCE-CHECKLIST.md` — 8-section delivery checklist with dual sign-off
+
+**New Workflow:**
+```bash
+# Full Japanese outsourcing lifecycle (9 stages)
+/em:japanese-outsourcing
+
+# Stage 1: Kickoff  →  Stage 2: Requirements (Gate 1)
+# Stage 3: Basic Design (Gate 2a)  →  Stage 4: Detailed Design (Gate 2b)
+# Stage 5: Implementation  →  Stage 6: Internal Testing (Gate 3)
+# Stage 7: UAT (Gate 4)  →  Stage 8: Delivery  →  Stage 9: Support
+
+# Individual skills
+/em:skill:basic-design          # Create 基本設計 document
+/em:skill:detailed-design       # Create 詳細設計 per module
+/em:skill:uat-process           # Run UAT with client sign-off
+/em:skill:progress-reporting    # Generate weekly 進捗報告
+```
+
+---
+
 ### 🏗️ Distributed Agent Orchestration
 
 **Parallel agent execution for complex multi-domain tasks**
@@ -231,7 +316,7 @@ ls ~/.claude/commands/em/*.md | wc -l
 
 # Check content directory
 ls ~/.claude/em-team/agents/ | wc -l   # 35 agents
-ls ~/.claude/em-team/workflows/ | wc -l # 24 workflows
+ls ~/.claude/em-team/workflows/ | wc -l # 25 workflows
 
 # Check lib files
 ls ~/.claude/em-team/lib/*.ts           # session-audit.ts, artifact-store.ts, trace-store.ts
@@ -253,14 +338,23 @@ Once installed, open **any project** in Claude Code and use the commands:
 /em:new-feature implement user authentication
 ```
 
-**Skills (74):**
+**Skills (81):**
 ```bash
-/em:skill:brainstorming Explore authentication options
+# Architecture & Design
+/em:skill:codebase-architecture  Research patterns, get best-fit options, generate rules
+/em:skill:basic-design           Create 基本設計 (Basic Design Document)
 /em:skill:spec-driven-development Create spec for payment system
-/em:skill:systematic-debugging Investigate login timeout bug
+/em:skill:domain-modeling        Model bounded contexts and entities
+
+# Development
 /em:skill:test-driven-development Implement feature with TDD
-/em:skill:react React patterns and best practices
-/em:skill:python-patterns Python patterns and best practices
+/em:skill:systematic-debugging   Investigate login timeout bug
+/em:skill:uat-process            Run UAT with sign-off for Japanese clients
+/em:skill:progress-reporting     Generate weekly 進捗報告 status report
+
+# Expert stacks
+/em:skill:react                  React patterns and best practices
+/em:skill:python-patterns        Python patterns and best practices
 ```
 
 **Agents (35):**
@@ -269,18 +363,20 @@ Once installed, open **any project** in Claude Code and use the commands:
 /em:architect Architecture & technical design
 /em:backend-expert Backend API, database, performance
 /em:frontend-expert React, Next.js, UI/UX
-/em:code-reviewer 5-axis code review
+/em:code-reviewer 5-axis or 9-axis code review
 /em:security OWASP security audit
 /em:react-expert React/Next.js expert
 ```
 
-**Workflows (23):**
+**Workflows (25):**
 ```bash
-/em:new-feature Implement feature from idea to production
-/em:bug-fix Fix bugs systematically
-/em:refactor Improve code quality
-/em:security-audit Security assessment
-/em:team Full team review coordination
+/em:new-feature          Implement feature from idea to production
+/em:greenfield-app       Build new app from scratch (12 stages)
+/em:bug-fix              Fix bugs systematically
+/em:refactor             Improve code quality
+/em:security-audit       Security assessment
+/em:team                 Full team review coordination
+/em:japanese-outsourcing End-to-end Japanese outsourcing workflow
 ```
 
 ### Troubleshooting
@@ -522,8 +618,8 @@ Use the em:wl-security-review skill to conduct threat modeling
 - When you know which agent/workflow you need
 
 **Use full commands for:**
-- Accessing all 74 skills (including discovery skills)
-- Using specific agents not in EM:* list
+- Accessing all 81 skills (including architecture, design, Japanese outsourcing skills)
+- Using specific agents not in EM:* shortcut list
 - Discovery & market intelligence tasks
 - When you need more control
 
@@ -630,42 +726,49 @@ Run end-to-end workflows:
 
 ```
 em-team/
-├── skills/                  # 74 skills organized in 17 categories
-│   ├── foundation/          # 6 core foundational skills
-│   ├── development/         # 11 methodology skills (TDD, architecture, etc.)
-│   ├── expert-react/        # 4 React skills (react, react-hooks, nextjs, redux)
-│   ├── expert-vue/          # 3 Vue skills (vue3, pinia, vue-router)
-│   ├── expert-go/           # 1 Go skill (go-patterns)
-│   ├── expert-nest/         # 1 NestJS skill (nestjs)
-│   ├── expert-python/       # 3 Python skills (python-patterns, fastapi, django)
-│   ├── expert-database/     # 3 Database skills (postgresql, redis, elasticsearch)
-│   ├── expert-devops/       # 6 DevOps skills (docker, k8s, terraform, ansible, etc.)
-│   ├── expert-mobile/       # 4 Mobile skills (flutter, react-native, android, ios)
-│   ├── expert-spring/       # 1 Spring skill (spring-boot)
-│   ├── expert-frontend/     # 1 Frontend skill (frontend-patterns)
-│   ├── expert-backend/      # 2 Backend skills (backend-patterns, api-interface-design)
-│   ├── expert-rust/         # 1 Rust skill (rust-patterns)
-│   ├── expert-typescript/   # 1 TypeScript skill (typescript-patterns)
-│   ├── drawio/              # 2 Drawio skills (architecture, flowchart)
-│   ├── tauri/               # 1 Tauri skill (tauri)
-│   ├── quality/             # 12 quality assurance skills
-│   ├── workflow/            # 6 workflow and automation skills
+├── skills/                  # 81 skills organized in 20 categories
+│   ├── foundation/          # 10 core foundational skills
+│   │   (alignment-session, spec-driven-development, brainstorming,
+│   │    context-engineering, writing-plans, systematic-debugging,
+│   │    domain-modeling, project-dna, basic-design, detailed-design)
+│   ├── development/         # 12 methodology skills
+│   │   (TDD, incremental, subagent, source-driven, security-hardening,
+│   │    architecture-zoom-out, architecture-improvement, issue-generator,
+│   │    prd-generator, diagram, figma-design, codebase-architecture)
+│   ├── expert-react/        # 4 React skills
+│   ├── expert-vue/          # 3 Vue skills
+│   ├── expert-go/           # 1 Go skill
+│   ├── expert-nest/         # 1 NestJS skill
+│   ├── expert-python/       # 3 Python skills
+│   ├── expert-database/     # 3 Database skills
+│   ├── expert-devops/       # 6 DevOps skills
+│   ├── expert-mobile/       # 4 Mobile skills
+│   ├── expert-spring/       # 1 Spring skill
+│   ├── expert-frontend/     # 1 Frontend skill
+│   ├── expert-backend/      # 2 Backend skills
+│   ├── expert-rust/         # 1 Rust skill
+│   ├── expert-typescript/   # 1 TypeScript skill
+│   ├── drawio/              # 2 Drawio skills
+│   ├── tauri/               # 1 Tauri skill
+│   ├── quality/             # 13 quality assurance skills (+uat-process)
+│   ├── workflow/            # 7 workflow and automation skills (+progress-reporting)
 │   └── additional/          # 5 product & discovery skills
 ├── agents/                  # 35 specialized agents
 │   ├── core (8): planner, executor, code-reviewer, debugger,
-│   │   test-engineer, security-auditor, ui-auditor, verifier
+│   │   test-engineer, security-reviewer, ui-auditor, verifier
 │   ├── optional (4): researcher, codebase-mapper,
 │   │   integration-checker, performance-auditor
 │   ├── specialized (9): team-lead, architect, frontend-expert,
-│   │   backend-expert, senior-code-reviewer, database-expert,
-│   │   product-manager, security-reviewer, staff-engineer
+│   │   backend-expert, database-expert, product-manager,
+│   │   security-reviewer, staff-engineer, iron-law-enforcer
 │   ├── v2.0 (7): market-intelligence, learn, autoplan,
 │   │   techlead-orchestrator, design-reviewer, devex-reviewer,
 │   │   iron-law-enforcer
 │   └── expert (7): react-expert, vue-expert, nestjs-expert,
 │       devops-expert, mobile-expert, spring-expert, rust-expert
-├── workflows/               # 23 end-to-end workflows
-│   ├── primary (4): new-feature, bug-fix, refactoring, security-audit
+├── workflows/               # 25 end-to-end workflows
+│   ├── primary (5): new-feature, greenfield-app, bug-fix,
+│   │   refactoring, security-audit
 │   ├── support (6): project-setup, documentation, deployment,
 │   │   retro, ship-workflow, canary-monitoring
 │   ├── master: six-phase-lifecycle
@@ -673,26 +776,25 @@ em-team/
 │   │   code-review-9axis, database-review, product-review,
 │   │   security-review-advanced, incident-response
 │   ├── distributed (2): distributed-investigation, distributed-development
-│   └── product (2): discovery-process, market-driven-feature
+│   ├── product (2): discovery-process, market-driven-feature
+│   └── outsourcing (1): japanese-outsourcing
 ├── preambles/               # Shared initialization
 │   ├── ethos.md             # Builder philosophy (Boil the Lake, Iron Laws)
 │   ├── skill-preamble.md    # Standard skill initialization protocol
 │   └── agent-preamble.md    # Standard agent behavior rules
 ├── protocols/               # Communication standards
 │   ├── writing-style.md     # Active voice, severity levels, report structure
-│   └── delegation-protocol.md
-├── references/              # NEW - Shared reference docs
-│   ├── compact-output.md    # Communication styles reference
-│   ├── security-checklist.md
-│   ├── testing-patterns.md
-│   ├── code-quality.md
-│   ├── api-checklist.md
-│   └── verification-patterns.md
+│   ├── delegation-protocol.md
+│   ├── change-management.md # CR format, 4-tier approval routing (v3.5.0)
+│   └── review-gates.md      # 5 formal phase gates with sign-off (v3.5.0)
+├── references/              # Shared reference docs
 ├── templates/               # Reusable templates
-│   ├── agent-template.md    # Standard agent format
-│   ├── skill-template.md    # Standard skill format
-│   ├── workflow-template.md # Standard workflow format
-│   └── context-artifacts/   # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+│   ├── context-artifacts/   # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md,
+│   │                        # WBS.md, ISSUE-REGISTER.md, CHANGE-LOG.md,
+│   │                        # ACCEPTANCE-CHECKLIST.md (v3.5.0)
+│   └── project-dna/         # Generated agent guidance (CLAUDE.md, rules, traceability)
+│       └── rules/           # architecture-boundaries, architecture-conventions,
+│                            # architecture-patterns, design-system templates
 ├── distributed/             # Distributed orchestration system
 ├── scripts/                 # Core orchestration scripts
 ├── hooks/                   # Automation hooks
@@ -846,60 +948,67 @@ Distributed Mode:
 
 ## Skills
 
-### Foundation Skills (6 skills)
+### Foundation Skills (10 skills)
 
-1. **alignment-session** - Pre-coding human-AI alignment (NEW)
+1. **alignment-session** - Pre-coding human-AI alignment
 2. **spec-driven-development** - Write specs before coding
 3. **brainstorming** - Explore ideas into designs
 4. **context-engineering** - Optimize agent context setup
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
+7. **domain-modeling** - Bounded contexts, entities, ubiquitous language
+8. **project-dna** - Crystallize decisions into CLAUDE.md + 8 rule files
+9. **basic-design** - Formal 基本設計 document with sign-off gate (v3.5.0)
+10. **detailed-design** - Formal 詳細設計 per-module with sign-off gate (v3.5.0)
 
-### Development Skills (11 skills)
+### Development Skills (12 skills)
 
-7. **test-driven-development** - TDD RED-GREEN-REFACTOR
-8. **incremental-implementation** - Vertical slice development
-9. **subagent-driven-development** - Fresh context per task
-10. **source-driven-development** - Code from official docs
-11. **security-hardening** - OWASP Top 10 security
-12. **architecture-zoom-out** - Higher-level code perspective
-13. **architecture-improvement** - Systematic module deepening
-14. **issue-generator** - Plans to structured vertical-slice issues
-15. **prd-generator** - Ideas to structured PRD documents
-16. **diagram** - Excalidraw, Mermaid, SVG diagram generation
-17. **figma-design** - Figma-to-code conversion with MCP server
+11. **test-driven-development** - TDD RED-GREEN-REFACTOR
+12. **incremental-implementation** - Vertical slice development
+13. **subagent-driven-development** - Fresh context per task
+14. **source-driven-development** - Code from official docs
+15. **security-hardening** - OWASP Top 10 security
+16. **architecture-zoom-out** - Higher-level code perspective
+17. **architecture-improvement** - Systematic module deepening
+18. **issue-generator** - Plans to structured vertical-slice issues
+19. **prd-generator** - Ideas to structured PRD documents
+20. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+21. **figma-design** - Figma-to-code conversion with MCP server
+22. **codebase-architecture** - Research patterns, recommend 2-3 options, generate rules (v3.6.0)
 
-### Quality Skills (12 skills)
+### Quality Skills (13 skills)
 
-18. **code-review** - 5-axis review framework
-19. **code-simplification** - Reduce complexity
-20. **browser-testing** - DevTools MCP integration
-21. **performance-optimization** - Measure-first optimization
-22. **e2e-testing** - Playwright patterns
-23. **security-audit** - Vulnerability assessment
-24. **api-testing** - Integration testing
-25. **security-common** - OWASP reference and security checklist
-26. **ux-audit** - Behavioral UX audit with scored dimensions
-27. **plan-tune** - Learn and tune output preferences
-28. **flow-discovery** - Discovery flow pattern identification
-29. **test-generation** - Automated test generation strategies
+23. **code-review** - 5-axis review framework
+24. **code-simplification** - Reduce complexity
+25. **browser-testing** - DevTools MCP integration
+26. **performance-optimization** - Measure-first optimization
+27. **e2e-testing** - Playwright patterns
+28. **security-audit** - Vulnerability assessment
+29. **api-testing** - Integration testing
+30. **security-common** - OWASP reference and security checklist
+31. **ux-audit** - Behavioral UX audit with scored dimensions
+32. **plan-tune** - Learn and tune output preferences
+33. **flow-discovery** - Discovery flow pattern identification
+34. **test-generation** - Automated test generation strategies
+35. **uat-process** - 受け入れテスト with UAT plan, execution log, client sign-off (v3.5.0)
 
-### Workflow Skills (6 skills)
+### Workflow Skills (7 skills)
 
-30. **git-workflow** - Atomic commits
-31. **ci-cd-automation** - Feature flags, quality gates
-32. **documentation** - ADRs, API docs
-33. **finishing-branch** - Merge/PR decisions
-34. **deprecation-migration** - Code-as-liability mindset
-35. **style-switcher** - 13 personality styles + 3 density modes
+36. **git-workflow** - Atomic commits
+37. **ci-cd-automation** - Feature flags, quality gates
+38. **documentation** - ADRs, API docs
+39. **finishing-branch** - Merge/PR decisions
+40. **deprecation-migration** - Code-as-liability mindset
+41. **style-switcher** - 13 personality styles + 3 density modes
+42. **progress-reporting** - Weekly 進捗報告 with GREEN/YELLOW/RED status (v3.5.0)
 
 ### Additional Skills (5 skills)
 
-36. **jobs-to-be-done** - JTBD framework for understanding user needs
-37. **lean-ux-canvas** - Lean UX hypothesis testing
-38. **opportunity-solution-tree** - Product opportunity mapping
-39. **pol-probe** - Product opportunity probe
-40. **office-hours** - YC-style brainstorming and idea validation
+43. **jobs-to-be-done** - JTBD framework for understanding user needs
+44. **lean-ux-canvas** - Lean UX hypothesis testing
+45. **opportunity-solution-tree** - Product opportunity mapping
+46. **pol-probe** - Product opportunity probe
+47. **office-hours** - YC-style brainstorming and idea validation
 
 ## Communication Styles (NEW)
 
@@ -1032,36 +1141,41 @@ EM-Team includes a unified communication control system with 13 personality styl
 
 ## Workflows
 
-### Primary Workflows
+### Primary Workflows (5 workflows)
 
 1. **new-feature** - From idea to production
-2. **bug-fix** - Investigate and fix bugs
-3. **refactoring** - Improve code quality
-4. **security-audit** - Security assessment
+2. **greenfield-app** - Blank directory to shipped app (12 stages, architecture intelligence in Stage 6)
+3. **bug-fix** - Investigate and fix bugs
+4. **refactoring** - Improve code quality
+5. **security-audit** - Security assessment
 
-### Support Workflows
+### Support Workflows (6 workflows)
 
-5. **project-setup** - Initialize new projects
-6. **documentation** - Generate and update docs
-7. **deployment** - Deploy and monitor
-8. **retro** - Learn and improve
-9. **ship-workflow** - Version bump, changelog, PR creation (NEW)
-10. **canary-monitoring** - Post-deploy health monitoring (NEW)
+6. **project-setup** - Initialize new projects
+7. **documentation** - Generate and update docs
+8. **deployment** - Deploy and monitor
+9. **retro** - Learn and improve
+10. **ship-workflow** - Version bump, changelog, PR creation
+11. **canary-monitoring** - Post-deploy health monitoring
 
 ### Master Workflow
 
-11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
+12. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
 
 ### Team Workflows (8 workflows)
 
-12. **team-review** - Full team review orchestrated by Team Lead
-13. **architecture-review** - Architecture review with Architect & Staff Engineer
-14. **design-review** - UI/UX design review with Frontend Expert & Product Manager
-15. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
-16. **database-review** - Database schema & query review with Database Expert & Architect
-17. **product-review** - Product/spec review with Product Manager & Architect
-18. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
-19. **incident-response** - Production incident handling with Staff Engineer & Security
+13. **team-review** - Full team review orchestrated by Team Lead
+14. **architecture-review** - Architecture review with Architect & Staff Engineer
+15. **design-review** - UI/UX design review with Frontend Expert & Product Manager
+16. **code-review-9axis** - Deep 9-axis code review with Senior Code Reviewer & Security
+17. **database-review** - Database schema & query review with Database Expert & Architect
+18. **product-review** - Product/spec review with Product Manager & Architect
+19. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
+20. **incident-response** - Production incident handling with Staff Engineer & Security
+
+### Outsourcing Workflows (1 workflow)
+
+21. **japanese-outsourcing** - 9-stage formal workflow for Japanese clients: Kickoff → Requirements (Gate 1) → 基本設計 (Gate 2a) → 詳細設計 (Gate 2b) → Implementation → Internal Testing (Gate 3) → UAT (Gate 4) → Delivery → Support
 
 ## Special Features
 
@@ -1561,36 +1675,43 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: **3.2.0**
-Last updated: 2026-05-09
+Current version: **3.6.0**
+Last updated: 2026-05-22
+
+**Changes in v3.6.0:**
+- `codebase-architecture` skill — Research 6 modern patterns, present 2-3 best-fit options, generate 3 architecture rule files
+- Greenfield workflow Stage 6 upgraded with architecture research + decision + rule generation
+- New architecture rule templates: `architecture-boundaries`, `architecture-conventions`, `architecture-patterns`
+- `design-system.template.md` added to project-dna templates (fills gap required by project-dna skill)
+
+**Changes in v3.5.0:**
+- Japanese outsourcing support: `basic-design` (基本設計), `detailed-design` (詳細設計), `uat-process` (受け入れテスト), `progress-reporting` (進捗報告)
+- New protocols: `change-management.md` (CR format, 4-tier approval), `review-gates.md` (5 phase gates)
+- New templates: `WBS.md`, `ISSUE-REGISTER.md`, `CHANGE-LOG.md`, `ACCEPTANCE-CHECKLIST.md`
+- New `japanese-outsourcing` master workflow (9 stages)
+
+**Changes in v3.4.0:**
+- UI/UX integration into greenfield workflow: Stage 5 with frontend-expert producing UI-SPEC.md
+- `project-dna` skill generates design-system.md rule and UI-to-code map
+- `ux-audit` + `flow-discovery` in Validation stage; `ui-auditor` + `design-reviewer` in Review stage
+
+**Changes in v3.3.0:**
+- `EM_TEAM_ATOMIC_COMMITS` toggle to disable atomic commits when needed
 
 **Changes in v3.2.0:**
-- Session audit logging — JSONL append-only log for user-AI conversations (`.em-team/logs/`)
-- Skill artifact export — Export specs, plans, reviews, brainstorm as Markdown files
-- Enable/disable toggles via `EM_TEAM_SESSION_AUDIT` and `EM_TEAM_ARTIFACT_EXPORT` env vars
+- Session audit logging — JSONL append-only log (`.em-team/logs/`)
+- Skill artifact export — Export specs, plans, reviews as Markdown files
 - New CLI scripts: `scripts/session-audit.sh`, `scripts/artifact-register.sh`
 - New libraries: `.claude/lib/session-audit.ts`, `.claude/lib/artifact-store.ts`
-- Artifact export instructions added to 5 key skills (brainstorming, spec-driven, writing-plans, architecture-zoom-out, code-review)
 
-**Changes in v3.1.0:**
+**Changes in v3.0-3.1:**
 - Greenfield app workflow, domain-modeling skill, agent consolidation
-
-**Changes in v3.0.0:**
-- Expert group restructuring: 15 expert skill groups replacing flat development/ structure
-- 27 new skills condensed from full-stack-skills (React, Vue, NestJS, DevOps, Database, Mobile, Spring, Drawio, Tauri)
-- 7 new expert agents (react-expert, vue-expert, nestjs-expert, devops-expert, mobile-expert, spring-expert, rust-expert)
-- 6 skills moved from development/ to expert-* groups (frontend-patterns, backend-patterns, api-interface-design, go-patterns, python-patterns, typescript-patterns, rust-patterns)
-- Enhanced existing agents (frontend-expert, backend-expert, database-expert) with expert skill references
-
-**Previous (v2.2.0):**
-- Consistency audit + CI validation pipeline
-- Auto-changelog hook + session handoff
-- Agent Trace Store + MCP servers + operational rules
+- Expert group restructuring: 15 expert skill groups, 7 new expert agents
 
 **Total Counts:**
-- **Skills**: 74 (6 foundation + 11 development + 31 expert + 2 drawio + 1 tauri + 12 quality + 6 workflow + 5 additional)
+- **Skills**: 81 (10 foundation + 12 development + 31 expert + 2 drawio + 1 tauri + 13 quality + 7 workflow + 5 additional)
 - **Agents**: 35 (8 core + 4 optional + 9 specialized + 7 v2.0+ + 7 expert)
-- **Workflows**: 23 (4 primary + 6 support + 8 team + 2 distributed + 2 product + 1 master)
+- **Workflows**: 25 (5 primary + 6 support + 8 team + 2 distributed + 2 product + 1 master + 1 outsourcing)
 - **Personality Styles**: 13 + 3 density modes
 
 ## License
@@ -1606,9 +1727,9 @@ MIT License - Feel free to use and adapt for your projects
 EM-Team is a comprehensive fullstack engineering system that includes:
 
 **Core Components:**
-- ✅ 74 Skills - Reusable development patterns
+- ✅ 81 Skills - Reusable development patterns across 20 categories
 - ✅ 35 Agents - Specialized AI assistants
-- ✅ 23 Workflows - End-to-end processes
+- ✅ 25 Workflows - End-to-end processes
 - ✅ Distributed orchestration system
 - ✅ Comprehensive test suite (120+ tests)
 - ✅ Bilingual documentation (English/Vietnamese)
@@ -1657,11 +1778,12 @@ em-team/
 │   ├── v2.0+ agents (7)
 │   └── Expert agents (7)
 ├── 🔄 Workflows (workflows/)
-│   ├── Primary workflows (4)
+│   ├── Primary workflows (5)
 │   ├── Support workflows (6)
 │   ├── Team workflows (8)
 │   ├── Distributed workflows (2)
 │   ├── Product workflows (2)
+│   ├── Outsourcing workflows (1)
 │   └── Master workflow (1)
 ├── 🧪 Tests (tests/)
 │   ├── Unit tests (4 suites)
@@ -1694,8 +1816,8 @@ em-team/
 
 ### Version Information
 
-- **Current Version:** 3.2.0
-- **Last Updated:** 2026-05-09
+- **Current Version:** 3.6.0
+- **Last Updated:** 2026-05-22
 - **Status:** Production Ready
 - **License:** MIT
 
@@ -1708,16 +1830,16 @@ em-team/
 
 ### Key Features Summary
 
-1. **74 Skills** - Reusable patterns across 17 categories including 15 expert groups
+1. **81 Skills** - Reusable patterns across 20 categories including 15 expert groups
 2. **35 Agents** - Core + optional + specialized + expert agents for every tech stack
-3. **23 Workflows** - End-to-end processes for complete project lifecycles
-4. **Distributed Mode** - Parallel agent execution
-5. **Bilingual Docs** - English & Vietnamese
-6. **Multi-language** - Supports 15+ programming languages and frameworks
-7. **Security Focus** - OWASP, STRIDE coverage
-8. **CI Validation** - Automated frontmatter and reference checking
-9. **Code Provenance** - Agent Trace Store for AI-generated code tracking
-10. **Custom MCP Servers** - GitHub enhanced + Project context analysis
+3. **25 Workflows** - End-to-end processes including greenfield and Japanese outsourcing
+4. **Architecture Intelligence** - `codebase-architecture` skill selects pattern + generates enforcing rules
+5. **Japanese Outsourcing** - Full suite: 基本設計, 詳細設計, 受け入れテスト, 進捗報告 with sign-off gates
+6. **Distributed Mode** - Parallel agent execution (3-5x faster for complex tasks)
+7. **Bilingual Docs** - English & Vietnamese
+8. **Multi-language** - Supports 15+ programming languages and frameworks
+9. **Security Focus** - OWASP, STRIDE coverage
+10. **CI Validation** - Automated frontmatter and reference checking
 
 ### Getting Help
 

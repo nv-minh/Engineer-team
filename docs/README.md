@@ -24,14 +24,26 @@ Welcome to the EM-Team documentation hub. This directory contains comprehensive 
 - [Workflow Reference](workflows/overview.md) - Complete workflow catalog
 
 ### 📖 Skill, Agent & Workflow Guides
-- [Skills Overview](skills/overview.md) - All 75 skills organized by category
-- [Agent Reference](agents/overview.md) - All 35 agents with descriptions (33 active + 2 deprecated)
+- [Skills Overview](skills/overview.md) - All 81 skills organized by category
+- [Agent Reference](agents/overview.md) - All 35 agents with descriptions
 - [Skill Systems Guide](skill-systems-guide.md) - How the skill system is organized
 
 ### 📝 Feature Documentation
 - [TDD Auto-Retry](TDD-AUTO-RETRY.md) - Automated test failure capture and retry
 - [Token Summarization](TOKEN-SUMMARIZATION.md) - Intelligent token management
 - [Knowledge Persistence](KNOWLEDGE-PERSISTENCE.md) - Project convention learning
+
+### 🇯🇵 Japanese Outsourcing (v3.5.0)
+- `skills/foundation/basic-design/` — 基本設計 skill
+- `skills/foundation/detailed-design/` — 詳細設計 skill
+- `skills/quality/uat-process/` — 受け入れテスト skill
+- `skills/workflow/progress-reporting/` — 進捗報告 skill
+- `protocols/change-management.md` — Change management protocol
+- `protocols/review-gates.md` — Phase gate sign-off protocol
+- `workflows/japanese-outsourcing.md` — Master outsourcing workflow
+
+### 🏗️ Architecture Intelligence (v3.6.0)
+- `skills/development/codebase-architecture/` — Pattern research + rule generation skill
 
 ### 🧪 Testing
 - [Test Suite](tests/README.md) - Test documentation and results

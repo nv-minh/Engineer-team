@@ -1,33 +1,85 @@
-# Hướng Dẫn Sử Dụng EM-Team v3.1.0
+# Hướng Dẫn Sử Dụng EM-Team v3.6.0
 
-Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team với các command mới `em:`.
+Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 
 ---
 
 ## Mục Lục
 
 1. [Tổng quan](#tổng-quan)
-2. [Communication Styles (MỚI)](#communication-styles)
-3. [Cấu trúc Command mới](#cấu-trúc-command-mới)
-4. [Sử dụng Skills](#sử-dụng-skills)
-5. [Sử dụng Agents](#sử-dụng-agents)
-6. [Sử dụng Workflows](#sử-dụng-workflows)
-7. [Chế độ Phân tán](#chế-độ-phân-tán)
-8. [Use Cases Chi tiết](#use-cases-chi-tiết)
-9. [Best Practices](#best-practices)
-10. [Xử lý sự cố](#xử-lý-sự-cố)
+2. [Tính năng mới v3.6.0](#tính-năng-mới)
+3. [Communication Styles](#communication-styles)
+4. [Cấu trúc Command](#cấu-trúc-command)
+5. [Sử dụng Skills](#sử-dụng-skills)
+6. [Sử dụng Agents](#sử-dụng-agents)
+7. [Sử dụng Workflows](#sử-dụng-workflows)
+8. [Dự án Outsource Nhật Bản](#dự-án-outsource-nhật-bản)
+9. [Chế độ Phân tán](#chế-độ-phân-tán)
+10. [Best Practices](#best-practices)
+11. [Xử lý sự cố](#xử-lý-sự-cố)
 
 ---
 
 ## Tổng quan
 
-EM-Team v3.1.0 cung cấp 130+ commands được tổ chức thành 3 danh mục chính:
+EM-Team v3.6.0 cung cấp 149+ commands được tổ chức thành 3 danh mục chính:
 
 | Phương pháp | Số lượng | Mô tả | Tốt nhất cho |
 |-------------|----------|-------|--------------|
-| **Skills** | 75 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
-| **Agents** | 33 active + 2 deprecated | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
-| **Workflows** | 24 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
+| **Skills** | 81 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
+| **Agents** | 35 | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
+| **Workflows** | 25 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
+
+---
+
+## Tính năng mới
+
+### v3.6.0 — Codebase Architecture Intelligence
+
+Skill `codebase-architecture` giải quyết bài toán: **chọn kiến trúc nào cho dự án greenfield?**
+
+**Quy trình 4 bước:**
+1. Phân tích ngữ cảnh dự án (domain complexity, team size, scale requirements)
+2. Nghiên cứu 6 kiến trúc hiện đại với trade-off thực tế
+3. Đề xuất 2-3 lựa chọn phù hợp nhất với file structure cụ thể → **User quyết định**
+4. Sinh 3 file rule sau khi user chọn:
+   - `architecture-boundaries.md` — Quy tắc import giữa các layer (✅/❌)
+   - `architecture-conventions.md` — Naming conventions theo kiến trúc
+   - `architecture-patterns.md` — Code patterns + anti-patterns có ví dụ
+
+**6 kiến trúc được nghiên cứu:**
+- Layered (N-Tier) — `controllers/ → services/ → repositories/`
+- Clean / Hexagonal — `domain/ → application/ → infrastructure/`
+- Modular Monolith — `modules/[module]/api/` + `internal/`
+- Feature-Sliced Design (FSD) — `app/ → pages/ → widgets/ → features/ → entities/`
+- Vertical Slice — `features/[feature]/[Feature]CommandHandler.ts`
+- CQRS + Event Sourcing — `commands/ + queries/ + events/ + read-models/`
+
+```bash
+# Dùng trực tiếp
+/em:skill:codebase-architecture
+
+# Tự động trong Greenfield workflow (Stage 6)
+/em:greenfield-app Xây dựng nền tảng thanh toán fintech
+```
+
+### v3.5.0 — Hỗ trợ Outsource Nhật Bản
+
+Bộ tài liệu chính thức đầy đủ cho dự án outsource Nhật Bản:
+
+| Skill | Tên Nhật | Sản phẩm |
+|-------|----------|----------|
+| `basic-design` | 基本設計 | BASIC-DESIGN.md — 8 phần + sign-off gate |
+| `detailed-design` | 詳細設計 | DETAILED-DESIGN.md — per-module + sign-off gate |
+| `uat-process` | 受け入れテスト | UAT plan + execution log + client sign-off |
+| `progress-reporting` | 進捗報告 | Weekly status GREEN/YELLOW/RED + metrics |
+
+```bash
+/em:japanese-outsourcing        # Workflow tổng thể 9 giai đoạn
+/em:skill:basic-design          # Tạo 基本設計
+/em:skill:uat-process           # Chạy UAT với sign-off
+/em:skill:progress-reporting    # Báo cáo tiến độ tuần
+```
 
 ### 🎯 Quick Start
 
@@ -144,20 +196,18 @@ EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với
 
 ---
 
-## Cấu trúc Command mới
+## Cấu trúc Command
 
-### v2.2.0 Command Structure
-
-EM-Team v3.0.0 sử dụng cấu trúc command thống nhất:
+EM-Team v3.6.0 sử dụng cấu trúc command thống nhất:
 
 ```bash
-# Skills (74 commands) - Prefix em:skill:
+# Skills (81 commands) - Prefix em:skill:
 /em:skill:skill-name [task description]
 
 # Agents (35 commands) - Prefix em:
 /em:agent-name [task description]
 
-# Workflows (23 commands) - Prefix em:
+# Workflows (25 commands) - Prefix em:
 /em:workflow-name [task description]
 
 # Communication Styles
@@ -167,7 +217,7 @@ EM-Team v3.0.0 sử dụng cấu trúc command thống nhất:
 
 ### Tất cả Commands Available
 
-#### 📚 Skills (74 commands) - Prefix em:skill:
+#### 📚 Skills (81 commands) - Prefix em:skill:
 
 ```
 /em:skill:brainstorming          - Explore ideas into designs
@@ -207,7 +257,16 @@ EM-Team v3.0.0 sử dụng cấu trúc command thống nhất:
 /em:skill:documentation          - ADRs & docs
 /em:skill:finishing-branch       - Merge/PR decisions
 /em:skill:deprecation-migration  - Code-as-liability
-/em:skill:style-switcher                - 13 personality + 3 density modes (MỚI)
+/em:skill:style-switcher         - 13 personality + 3 density modes
+
+# MỚI v3.6.0
+/em:skill:codebase-architecture  - Nghiên cứu 6 kiến trúc → đề xuất 2-3 → sinh rule files
+
+# MỚI v3.5.0 — Outsource Nhật Bản
+/em:skill:basic-design           - Tạo 基本設計 (8 phần + sign-off gate)
+/em:skill:detailed-design        - Tạo 詳細設計 per-module (class diagrams + sign-off)
+/em:skill:uat-process            - Chạy 受け入れテスト với client sign-off
+/em:skill:progress-reporting     - Báo cáo 進捗報告 tuần GREEN/YELLOW/RED
 ```
 
 #### 🤖 Agents (35 commands) - Prefix em:
@@ -474,6 +533,64 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Verify improvements
 # - Document results
 ```
+
+---
+
+## Dự án Outsource Nhật Bản
+
+### Tổng quan
+
+Khách hàng Nhật Bản yêu cầu tài liệu chính thức và sign-off tại mỗi giai đoạn. EM-Team v3.5.0 cung cấp đầy đủ bộ công cụ này.
+
+### Workflow chính: Japanese Outsourcing (9 giai đoạn)
+
+```bash
+/em:japanese-outsourcing
+```
+
+| Giai đoạn | Tên | Gate | Sản phẩm |
+|-----------|-----|------|----------|
+| 1 | Kickoff | — | Project charter, communication protocol |
+| 2 | Requirements | **Gate 1** | REQUIREMENTS.md + client sign-off |
+| 3 | Basic Design (基本設計) | **Gate 2a** | BASIC-DESIGN.md + architect sign-off |
+| 4 | Detailed Design (詳細設計) | **Gate 2b** | DETAILED-DESIGN.md + dev lead sign-off |
+| 5 | Implementation | — | TDD + atomic commits |
+| 6 | Internal Testing | **Gate 3** | Unit/integration/E2E + code review sign-off |
+| 7 | UAT (受け入れテスト) | **Gate 4** | UAT execution log + client sign-off |
+| 8 | Delivery | — | ACCEPTANCE-CHECKLIST + dual sign-off |
+| 9 | Support | — | Monitoring, defect management |
+
+### Skills riêng lẻ
+
+```bash
+# Tạo 基本設計
+/em:skill:basic-design
+# Sinh ra: BASIC-DESIGN.md với 8 phần
+# (System Overview, Architecture, Data Design, Interface Design,
+#  NFRs, Error Handling, Issues/Risks, Sign-Off Table)
+
+# Tạo 詳細設計 per module
+/em:skill:detailed-design
+# Sinh ra: DETAILED-DESIGN.md với class diagrams, pre/post-conditions
+
+# Chạy 受け入れテスト
+/em:skill:uat-process
+# Sinh ra: UAT-PLAN.md, UAT-TEST-CASES.md, UAT-EXECUTION-LOG.md,
+#           UAT-DEFECT-LOG.md, UAT-SIGNOFF.md
+
+# Báo cáo tiến độ tuần
+/em:skill:progress-reporting
+# Sinh ra: Weekly status với GREEN/YELLOW/RED, metrics, escalation
+```
+
+### Templates và Protocols có sẵn
+
+- `templates/context-artifacts/WBS.md` — WBS 4 cấp với effort estimates
+- `templates/context-artifacts/ISSUE-REGISTER.md` — Quản lý issue + rủi ro
+- `templates/context-artifacts/CHANGE-LOG.md` — Tracking thay đổi CHG-YYYYMM-NNN
+- `templates/context-artifacts/ACCEPTANCE-CHECKLIST.md` — Checklist 8 phần nghiệm thu
+- `protocols/change-management.md` — Quy trình phê duyệt thay đổi 4 cấp
+- `protocols/review-gates.md` — 5 phase gates với sign-off template
 
 ---
 

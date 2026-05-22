@@ -1,6 +1,6 @@
 # EM-Team System - Complete Skill Index
 
-**EM-Team** is a comprehensive fullstack engineering system with 75 skills, 35 agents, and 24 workflows. Skills are organized into 15 expert groups covering every major technology stack.
+**EM-Team** is a comprehensive fullstack engineering system with 81 skills, 35 agents, and 25 workflows. Skills are organized into 20 categories covering every major technology stack.
 
 ---
 
@@ -8,15 +8,15 @@
 
 EM-Team provides three powerful ways to accelerate your development:
 
-1. **Skills** - Reusable patterns & best practices for specific tasks (75 skills in 17 categories)
+1. **Skills** - Reusable patterns & best practices for specific tasks (81 skills in 20 categories)
 2. **Agents** - Specialized AI assistants for domain expertise (35 agents)
-3. **Workflows** - End-to-end processes for complete project lifecycles (24 workflows)
+3. **Workflows** - End-to-end processes for complete project lifecycles (25 workflows)
 
 ---
 
-## Available Skills (74 Skills)
+## Available Skills (81 Skills)
 
-### Foundation Skills (7 skills)
+### Foundation Skills (10 skills)
 Location: `skills/foundation/`
 
 1. **alignment-session** - Pre-coding human-AI alignment
@@ -26,21 +26,25 @@ Location: `skills/foundation/`
 5. **writing-plans** - Break work into bite-sized tasks
 6. **systematic-debugging** - 4-phase debugging methodology
 7. **domain-modeling** - Bounded contexts, entities, relationships, ubiquitous language
+8. **project-dna** - Crystallize decisions into CLAUDE.md + 8 rule files
+9. **basic-design** *(v3.5.0)* - Formal 基本設計 document with 8 sections + sign-off gate
+10. **detailed-design** *(v3.5.0)* - Formal 詳細設計 per-module with class diagrams + sign-off gate
 
-### Development Skills (11 skills)
+### Development Skills (12 skills)
 Location: `skills/development/`
 
-7. **test-driven-development** - TDD RED-GREEN-REFACTOR
-8. **incremental-implementation** - Vertical slice development
-9. **subagent-driven-development** - Fresh context per task + two-stage review
-10. **source-driven-development** - Code from official docs
-11. **security-hardening** - OWASP Top 10 security
-12. **architecture-zoom-out** - Higher-level code perspective
-13. **architecture-improvement** - Systematic module deepening
-14. **issue-generator** - Plans to structured vertical-slice issues
-15. **prd-generator** - Ideas to structured PRD documents
-16. **diagram** - Excalidraw, Mermaid, SVG diagram generation
-17. **figma-design** - Figma-to-code conversion with MCP server
+11. **test-driven-development** - TDD RED-GREEN-REFACTOR
+12. **incremental-implementation** - Vertical slice development
+13. **subagent-driven-development** - Fresh context per task + two-stage review
+14. **source-driven-development** - Code from official docs
+15. **security-hardening** - OWASP Top 10 security
+16. **architecture-zoom-out** - Higher-level code perspective
+17. **architecture-improvement** - Systematic module deepening
+18. **issue-generator** - Plans to structured vertical-slice issues
+19. **prd-generator** - Ideas to structured PRD documents
+20. **diagram** - Excalidraw, Mermaid, SVG diagram generation
+21. **figma-design** - Figma-to-code conversion with MCP server
+22. **codebase-architecture** *(v3.6.0)* - Research 6 modern patterns → recommend 2-3 → generate 3 rule files
 
 ### Expert React Skills (4 skills)
 Location: `skills/expert-react/`
@@ -169,7 +173,7 @@ Location: `skills/tauri/`
 
 51. **tauri** - Rust backend, frontend integration, plugins, mobile builds
 
-### Quality Skills (12 skills)
+### Quality Skills (13 skills)
 Location: `skills/quality/`
 
 52. **code-review** - 5-axis review framework
@@ -184,25 +188,27 @@ Location: `skills/quality/`
 61. **plan-tune** - Learn and tune output preferences
 62. **test-generation** - Auto-generate test cases from code & specs
 63. **flow-discovery** - Discover and document user flows with step-by-step guides
+64. **uat-process** *(v3.5.0)* - 受け入れテスト: UAT plan + test cases + execution log + client sign-off
 
-### Workflow Skills (6 skills)
+### Workflow Skills (7 skills)
 Location: `skills/workflow/`
 
-63. **git-workflow** - Atomic commits
-64. **ci-cd-automation** - Feature flags, quality gates
-65. **documentation** - ADRs, API docs
-66. **finishing-branch** - Merge/PR decisions
-67. **deprecation-migration** - Code-as-liability mindset
-68. **style-switcher** - Unified personality styles (13) and density modes (3)
+65. **git-workflow** - Atomic commits
+66. **ci-cd-automation** - Feature flags, quality gates
+67. **documentation** - ADRs, API docs
+68. **finishing-branch** - Merge/PR decisions
+69. **deprecation-migration** - Code-as-liability mindset
+70. **style-switcher** - Unified personality styles (13) and density modes (3)
+71. **progress-reporting** *(v3.5.0)* - Weekly 進捗報告 with GREEN/YELLOW/RED status indicators
 
 ### Additional Skills (5 skills)
 Location: `skills/additional/`
 
-69. **jobs-to-be-done** - JTBD framework for understanding user needs
-70. **lean-ux-canvas** - Lean UX hypothesis testing
-71. **opportunity-solution-tree** - Product opportunity mapping
-72. **pol-probe** - Product opportunity probe
-73. **office-hours** - YC-style brainstorming and idea validation
+72. **jobs-to-be-done** - JTBD framework for understanding user needs
+73. **lean-ux-canvas** - Lean UX hypothesis testing
+74. **opportunity-solution-tree** - Product opportunity mapping
+75. **pol-probe** - Product opportunity probe
+76. **office-hours** - YC-style brainstorming and idea validation
 
 ---
 
@@ -257,44 +263,48 @@ Location: `agents/`
 
 ---
 
-## Available Workflows (23 Workflows)
+## Available Workflows (25 Workflows)
 
 Location: `workflows/`
 
-### Primary Workflows (4)
+### Primary Workflows (5)
 1. **new-feature** - From idea to production
-2. **bug-fix** - Investigate and fix bugs systematically
-3. **refactoring** - Improve code quality safely
-4. **security-audit** - Comprehensive security assessment
+2. **greenfield-app** - Blank directory to shipped app (12 stages, architecture intelligence in Stage 6)
+3. **bug-fix** - Investigate and fix bugs systematically
+4. **refactoring** - Improve code quality safely
+5. **security-audit** - Comprehensive security assessment
 
 ### Support Workflows (6)
-5. **project-setup** - Initialize new projects
-6. **documentation** - Generate and update docs
-7. **deployment** - Deploy and monitor features
-8. **retro** - Learn and improve from completed work
-9. **ship-workflow** - Version bump, changelog, PR creation
-10. **canary-monitoring** - Post-deploy health monitoring
+6. **project-setup** - Initialize new projects
+7. **documentation** - Generate and update docs
+8. **deployment** - Deploy and monitor features
+9. **retro** - Learn and improve from completed work
+10. **ship-workflow** - Version bump, changelog, PR creation
+11. **canary-monitoring** - Post-deploy health monitoring
 
 ### Master Workflow (1)
-11. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
+12. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
 
 ### Team Workflows (8)
-12. **team-review** - Full team review orchestrated by Team Lead
-13. **architecture-review** - Architecture review with Architect & Staff Engineer
-14. **design-review** - UI/UX review with Frontend Expert & Product Manager
-15. **code-review-9axis** - Deep 9-axis code review
-16. **database-review** - Database schema & query review
-17. **product-review** - Product/spec review
-18. **security-review-advanced** - Advanced security (OWASP + STRIDE)
-19. **incident-response** - Production incident handling
+13. **team-review** - Full team review orchestrated by Team Lead
+14. **architecture-review** - Architecture review with Architect & Staff Engineer
+15. **design-review** - UI/UX review with Frontend Expert & Product Manager
+16. **code-review-9axis** - Deep 9-axis code review
+17. **database-review** - Database schema & query review
+18. **product-review** - Product/spec review
+19. **security-review-advanced** - Advanced security (OWASP + STRIDE)
+20. **incident-response** - Production incident handling
 
 ### Distributed Workflows (2)
-20. **distributed-investigation** - Parallel bug investigation across full stack
-21. **distributed-development** - Parallel feature development
+21. **distributed-investigation** - Parallel bug investigation across full stack
+22. **distributed-development** - Parallel feature development
 
 ### Product Workflows (2)
-22. **discovery-process** - Product discovery and validation
-23. **market-driven-feature** - Market-driven feature development
+23. **discovery-process** - Product discovery and validation
+24. **market-driven-feature** - Market-driven feature development
+
+### Outsourcing Workflows (1) *(v3.5.0)*
+25. **japanese-outsourcing** - 9-stage formal workflow for Japanese clients: Kickoff → Requirements → 基本設計 → 詳細設計 → Implementation → Internal Testing → UAT → Delivery → Support
 
 ### Incident Sub-Workflows (workflows/incident/)
 - initial-triage, cross-service-impact, root-cause-analysis
