@@ -4,7 +4,7 @@ description: >
   React fundamentals and expert patterns for components, JSX, state management,
   Context API, and performance optimization. Use when building React components,
   managing component state, implementing Context, or optimizing rendering performance.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-react"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -29,73 +29,86 @@ anti_patterns:
   - "Storing server state in useState instead of a caching library"
   - "Inline object/function creation in JSX causing unnecessary re-renders"
 related_skills: ["react-hooks", "nextjs", "redux", "frontend-patterns", "typescript-patterns"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # React Fundamentals
 
-## Overview
+[ROLE]
+Act as a React expert. Deliver idiomatic functional components, hooks-based state management, and performance-optimized rendering patterns.
 
-React development centers on functional components, declarative JSX, unidirectional data flow, and the hooks API. This skill covers the core patterns for building, composing, and optimizing React components.
+[OBJECTIVE]
+Produce React code that is composable, type-safe, and performant — using functional components, proper state lifting, Context API, and memoization where profiling justifies it.
 
-## When to Use
+[RULES]
+1. <thought>Before writing any component, determine: What is the single responsibility? Where does state live? Is memoization justified by profiling?</thought>
+2. Use functional components with TypeScript interfaces for all props.
+3. Lift state to the lowest common ancestor. Use Context only for low-frequency cross-cutting concerns (theme, locale, auth).
+4. DO NOT use class components — refactor to functional components with hooks.
+5. DO NOT store server state in useState — use React Query, SWR, or equivalent caching library.
+6. DO NOT create inline objects or functions in JSX — extract to useMemo/useCallback or constants.
+7. Always use stable keys in lists — never use array index for dynamic lists.
+8. Clean up all side effects in useEffect return functions (subscriptions, timers, abort controllers).
+9. Use React.lazy + Suspense for route-level code splitting.
+10. Prefer composition over props-driven conditional rendering.
+11. ABC: Teach the user why Context triggers re-renders on all consumers when the value changes, and when to reach for external state management instead.
 
-- Creating new React components or refactoring class components to functional
-- Managing local or shared state with Context API
-- Optimizing rendering with memoization (React.memo, useMemo, useCallback)
-- Setting up code splitting with React.lazy and Suspense
-
-## When NOT to Use
-
-- For Next.js-specific concerns (App Router, SSR/SSG) -- use the `nextjs` skill
-- For complex global state -- use the `redux` skill
-- For hook-specific patterns -- use the `react-hooks` skill
-
-## Process
+[PROCESS]
 
 ### Step 1: Define Component Interface
-
-Design props with TypeScript first:
-
-```typescript
-interface UserCardProps {
-  name: string;
-  email: string;
-  avatar?: string;
-  onSelect: (userId: string) => void;
-}
-```
+Define props as TypeScript interfaces first — before writing any JSX.
 
 ### Step 2: Build Functional Component
-
-```typescript
-export function UserCard({ name, email, avatar, onSelect }: UserCardProps) {
-  return (
-    <div className="user-card" onClick={() => onSelect(name)}>
-      {avatar && <img src={avatar} alt={name} />}
-      <h3>{name}</h3>
-      <p>{email}</p>
-    </div>
-  );
-}
-```
+Implement the component from the interface. Destructure props directly.
 
 ### Step 3: Manage State Locally or Lift
-
-```typescript
-// Local state for UI-only concerns
-const [isOpen, setIsOpen] = useState(false);
-
-// Lift state to nearest common ancestor for shared state
-function Parent() {
-  const [selected, setSelected] = useState<string | null>(null);
-  return (
-    <>
-      <ChildA selected={selected} />
-      <ChildB onSelect={setSelected} />
-    </>
-  );
-}
-```
+Use `useState` for local UI state. Lift to nearest common ancestor for shared state. Never duplicate state.
 
 ### Step 4: Share State with Context (When Needed)
 
@@ -116,33 +129,9 @@ export function useTheme() {
 ```
 
 ### Step 5: Optimize Performance
+Apply memoization only where profiling shows need — `React.memo` for components, `useMemo` for expensive values, `useCallback` for callbacks passed to memoized children, `React.lazy` for route-level code splitting.
 
-```typescript
-// Memoize expensive components
-const ExpensiveList = React.memo(function ExpensiveList({ items }: { items: Item[] }) {
-  return <ul>{items.map(item => <li key={item.id}>{item.name}</li>)}</ul>;
-});
-
-// Memoize expensive computations
-const filtered = useMemo(() => items.filter(i => i.active), [items]);
-
-// Memoize callbacks passed to children
-const handleClick = useCallback((id: string) => select(id), [select]);
-
-// Code-split routes
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-```
-
-## Best Practices
-
-1. **One component, one responsibility** -- split when a component does more than one visual thing
-2. **Always use stable keys** in lists -- never use array index for dynamic lists
-3. **Clean up side effects** in useEffect return functions (subscriptions, timers, abort controllers)
-4. **Prefer composition** over props-driven conditional rendering
-5. **Use React.lazy + Suspense** for route-level code splitting
-6. **Avoid inline objects/functions in JSX** -- extract to useMemo/useCallback or constants
-
-## Performance Decision Guide
+### Performance Decision Guide
 
 | Situation | Technique |
 |---|---|
@@ -152,13 +141,7 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 | Large route not needed immediately | `React.lazy` + `Suspense` |
 | Large list (>1000 items) | Virtual scrolling (react-window) |
 
-## Coaching Notes
-
-- **Memoization is not free** -- only use React.memo, useMemo, useCallback when profiling shows a measurable benefit. Premature memoization adds complexity without payoff.
-- **Context is not a global store** -- it triggers re-renders on all consumers when the value changes. For high-frequency updates across many consumers, use Redux or Zustand instead.
-- **Server state != client state** -- API responses belong in React Query or SWR, not useState. They handle caching, revalidation, and optimistic updates automatically.
-
-## Verification
+### Verification
 
 - [ ] Components are functional with TypeScript interfaces
 - [ ] State is lifted to the appropriate level (local vs Context vs external store)
@@ -167,10 +150,5 @@ const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 - [ ] Performance optimizations are applied where profiling shows need
 - [ ] Code splitting is used for route-level components
 
-## Related Skills
-
-- **react-hooks** -- Deep dive into useState, useEffect, useReducer, and custom hooks
-- **nextjs** -- Next.js App Router, SSR/SSG/ISR, and deployment
-- **redux** -- Redux Toolkit for complex global state
-- **frontend-patterns** -- Broader UI patterns (forms, data fetching, accessibility)
-- **typescript-patterns** -- TypeScript patterns for React applications
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing React patterns used, and `recommendations` for improvements.

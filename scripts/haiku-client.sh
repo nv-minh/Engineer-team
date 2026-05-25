@@ -7,6 +7,7 @@ set -euo pipefail
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/token-config.sh"
+source "$SCRIPT_DIR/llm-config.sh"
 
 # Colors
 GREEN='\033[0;32m'
@@ -27,50 +28,27 @@ log_error() {
     echo -e "${RED}[HAIKU-CLIENT]${NC} $1"
 }
 
-# Check if ANTHROPIC_AUTH_TOKEN is set
+# Check if API key is set (provider-agnostic)
 check_api_key() {
-    if [[ -z "${ANTHROPIC_AUTH_TOKEN:-}" ]]; then
-        log_error "ANTHROPIC_AUTH_TOKEN environment variable not set"
+    if [[ -z "${LLM_API_KEY:-}" ]]; then
+        log_error "LLM_API_KEY not set (provider: $LLM_PROVIDER)"
+        log_error "Set LLM_API_KEY or ANTHROPIC_AUTH_TOKEN environment variable"
         return 1
     fi
     return 0
 }
 
-# Call Haiku API
+# Call LLM API (provider-agnostic, delegates to llm-config.sh)
+# Backward-compatible wrapper — call_haiku_api still works
 call_haiku_api() {
     local prompt="$1"
-    local max_tokens=${2:-$HAIKU_MAX_TOKENS}
+    local max_tokens=${2:-$LLM_MAX_TOKENS}
 
     if ! check_api_key; then
         return 1
     fi
 
-    local response
-    response=$(curl -s --max-time "$HAIKU_TIMEOUT" \
-        https://api.anthropic.com/v1/messages \
-        -H "x-api-key: $ANTHROPIC_AUTH_TOKEN" \
-        -H "anthropic-version: 2023-06-01" \
-        -H "content-type: application/json" \
-        -d "{
-            \"model\": \"$HAIKU_MODEL\",
-            \"max_tokens\": $max_tokens,
-            \"messages\": [
-                {
-                    \"role\": \"user\",
-                    \"content\": $(echo "$prompt" | jq -Rs .)
-                }
-            ]
-        }")
-
-    # Check for API errors
-    if echo "$response" | jq -e '.error' >/dev/null 2>&1; then
-        local error_msg=$(echo "$response" | jq -r '.error.message')
-        log_error "Haiku API error: $error_msg"
-        return 1
-    fi
-
-    # Extract content from response
-    echo "$response" | jq -r '.content[0].text' 2>/dev/null || return 1
+    call_llm_api "$prompt" "" "$max_tokens"
 }
 
 # Load summarization prompt template

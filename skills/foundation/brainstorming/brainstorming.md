@@ -1,7 +1,7 @@
 ---
 name: brainstorming
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
-version: "2.0.0"
+version: "3.0.0"
 category: "foundation"
 origin: "superpowers"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -26,198 +26,135 @@ anti_patterns:
   - "Making assumptions without clarifying with user"
   - "Proposing single approach without alternatives"
 related_skills: [writing-plans, spec-driven-development, context-engineering]
+
+input_schema:
+  type: object
+  required: [topic]
+  properties:
+    topic:
+      type: string
+      description: "The problem, idea, or area to brainstorm about"
+    constraints:
+      type: array
+      items: { type: string }
+      description: "Known constraints or boundaries"
+    existing_solutions:
+      type: array
+      items: { type: string }
+      description: "What has been tried or considered"
+
+output_schema:
+  type: object
+  required: [status, design]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    design:
+      type: object
+      properties:
+        approaches:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              description: { type: string }
+              pros: { type: array, items: { type: string } }
+              cons: { type: array, items: { type: string } }
+              effort: { type: string, enum: [low, medium, high] }
+        recommendation: { type: string, description: "Recommended approach with reasoning" }
+        next_steps: { type: array, items: { type: string } }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
-# Brainstorming Ideas Into Designs
+[ROLE]
+Design explorer. Generate and evaluate multiple approaches to a problem.
 
-## Overview
+[OBJECTIVE]
+Produce 2-3 viable approaches with trade-offs. Recommend one. Define next steps. Get human approval before any implementation.
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+[RULES]
+1. <thought>Before proposing approaches, assess scope. If the request describes multiple independent subsystems, flag for decomposition before refining details.</thought>
+2. **Hard Gate: DO NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until the design is presented and the human has approved it.**
+3. DO NOT skip the design for "simple" projects. Every project gets a design. A 3-line design is fine for simple work, but zero design is never acceptable.
+4. DO NOT propose a single approach. Always present 2-3 alternatives with trade-offs.
+5. DO NOT combine multiple questions in one message. Ask one question at a time.
+6. DO NOT assume requirements. Clarify with the user first.
+7. DO NOT invoke any skill other than writing-plans after brainstorming completes. The terminal state is invoking writing-plans.
+8. When NOT to use: Requirements are already fully specified in an approved spec document.
+9. Apply YAGNI ruthlessly — every feature cut is a victory.
+10. In existing codebases, explore current structure before proposing changes. Follow existing patterns.
+11. Teach design thinking through each interaction — why multiple approaches build judgment, why YAGNI matters, why scope decomposition is critical.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+[PROCESS]
 
-## Hard Gate
+### Step 1: Explore Project Context
 
-**Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it.** This applies to EVERY project regardless of perceived simplicity.
+Check files, docs, recent commits to understand the current state.
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+### Step 2: Offer Visual Companion (if visual questions ahead)
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+If upcoming questions involve visual content (mockups, layouts, diagrams), offer browser-based visuals once. If declined, proceed text-only. Use browser only for layout/design questions — use text for requirements and tradeoff discussions.
 
-## Checklist
+### Step 3: Ask Clarifying Questions
 
-You MUST create a task for each of these items and complete them in order:
+- One question per message
+- Prefer multiple choice when possible
+- Focus on: purpose, constraints, success criteria
+- If project is too large for a single spec, decompose into sub-projects first
 
-1. **Explore project context** — check files, docs, recent commits
-2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+### Step 4: Propose 2-3 Approaches
 
-## Process Flow
+- Present options conversationally with trade-offs
+- Lead with recommended option and reasoning
+- Include effort estimate (low/medium/high) per approach
 
-```
-Explore project context
-        ↓
-Visual questions ahead? ──yes──→ Offer Visual Companion
-        ↓ no                    (own message, no other content)
-Ask clarifying questions
-        ↓
-Propose 2-3 approaches
-        ↓
-Present design sections
-        ↓
-User approves design? ──no──→ Revise and re-present
-        ↓ yes
-Write design doc
-        ↓
-Spec self-review (fix inline)
-        ↓
-User reviews spec? ──changes──→ Update doc and re-review
-        ↓ approved
-Invoke writing-plans skill
-```
+### Step 5: Present Design
 
-**The terminal state is invoking writing-plans.** Do NOT invoke any implementation skill directly. The ONLY skill you invoke after brainstorming is writing-plans.
-
-## The Process
-
-### Understanding the Idea
-
-- Check out the current project state first (files, docs, recent commits)
-- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
-- For appropriately-scoped projects, ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
-
-### Exploring Approaches
-
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
-
-### Presenting the Design
-
-- Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
-- Ask after each section whether it looks right so far
+- Scale each section to its complexity (few sentences if straightforward, up to 200-300 words if nuanced)
+- Ask after each section whether it looks right
 - Cover: architecture, components, data flow, error handling, testing
-- Be ready to go back and clarify if something doesn't make sense
+- Design for isolation: smaller units with one clear purpose, well-defined interfaces, independently testable
 
-### Design for Isolation and Clarity
+### Step 6: Write Design Doc
 
-- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
-- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
-- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
-- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
+Save validated design to `docs/specs/YYYY-MM-DD-<topic>-design.md` and commit. (User preferences for spec location override this default.)
 
-### Working in Existing Codebases
+### Step 7: Spec Self-Review
 
-- Explore the current structure before proposing changes. Follow existing patterns.
-- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
-- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
+1. **Placeholder scan:** Any TBD, TODO, incomplete sections? Fix them.
+2. **Internal consistency:** Do sections contradict each other? Does architecture match feature descriptions?
+3. **Scope check:** Focused enough for a single implementation plan?
+4. **Ambiguity check:** Could any requirement be interpreted two ways? Pick one, make it explicit.
 
-## After the Design
+Fix issues inline.
 
-### Documentation
+### Step 8: User Reviews Written Spec
 
-- Write the validated design (spec) to `docs/specs/YYYY-MM-DD-<topic>-design.md`
-  - (User preferences for spec location override this default)
-- Commit the design document to git
+> "Spec written and committed to `<path>`. Review it and let me know if you want changes before we start writing the implementation plan."
 
-### Spec Self-Review
+Wait for approval. If changes requested, update and re-review.
 
-After writing the spec document, look at it with fresh eyes:
+### Step 9: Transition to Implementation
 
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+Invoke writing-plans skill. No other skill.
 
-Fix any issues inline. No need to re-review — just fix and move on.
+[RESPONSE FORMAT]
+Return output conforming to `output_schema`. Set `status` to:
+- `DONE` — Design approved, spec written and committed, ready for writing-plans
+- `DONE_WITH_CONCERNS` — Design approved but open questions remain
+- `NEEDS_CONTEXT` — Cannot proceed without additional input from human
+- `BLOCKED` — External dependency prevents design completion
 
-### User Review Gate
-
-After the spec review loop passes, ask the user to review the written spec before proceeding:
-
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
-
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
-
-### Implementation
-
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
-
-## Key Principles
-
-- **One question at a time** - Don't overwhelm with multiple questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design, get approval before moving on
-- **Be flexible** - Go back and clarify when something doesn't make sense
-
-## Visual Companion
-
-A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
-
-### Offering the Companion
-
-When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
-
-> "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
-
-**This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
-
-### Per-Question Decision
-
-Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
-
-- **Use the browser** for content that IS visual — mockups, wireframes, layout comparisons, architecture diagrams, side-by-side visual designs
-- **Use the terminal** for content that is text — requirements questions, conceptual choices, tradeoff lists, A/B/C/D text options, scope decisions
-
-A question about a UI topic is not automatically a visual question. "What does personality mean in this context?" is a conceptual question — use the terminal. "Which wizard layout works better?" is a visual question — use the browser.
-
-## Common Rationalizations
-
-| Rationalization | Reality |
-|---|---|
-| "This is too simple to need a design" | Simple projects need simple designs, not zero designs. A 3-line design is fine. |
-| "I know what they want, I'll just build it" | You might be right 70% of the time. The other 30% requires complete rebuilds. |
-| "Design slows us down" | A 10-minute design prevents hours of rework. |
-| "They'll tell me if it's wrong" | By then you've wasted time building the wrong thing. |
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:** Every design decision should teach something about why it's the right choice.
-
-1. **Design before code is non-negotiable.** Even for simple projects, a brief design prevents wasted implementation. Teach your human partner that 10 minutes of design saves hours of rework.
-
-2. **Multiple approaches build judgment.** When proposing 2-3 approaches, explain the trade-offs explicitly. This helps the human develop their own design instincts over time.
-
-3. **Scope decomposition is a skill.** When a project is too large, show how to break it into independent pieces. This is one of the most valuable engineering skills to develop.
-
-4. **YAGNI as a design principle.** Every feature cut is a victory, not a loss. Teach your partner to defend simplicity ruthlessly.
-
-## Red Flags
-
-- Starting to implement without presenting a design
-- Writing code before the user approves the spec
-- Skipping the design review process
-- Implementing features not discussed in the design
-- Making assumptions without clarifying
-
-## Verification
-
-After completing brainstorming:
-
+[VERIFICATION]
 - [ ] Project context explored
 - [ ] Clarifying questions asked and answered
 - [ ] 2-3 approaches proposed with trade-offs
@@ -228,16 +165,11 @@ After completing brainstorming:
 - [ ] User reviewed and approved written spec
 - [ ] writing-plans skill invoked
 
-## Artifact Export
-
+[ARTIFACT EXPORT]
 When `EM_TEAM_ARTIFACT_EXPORT` is enabled ("true"):
 
-After completing this skill, export the brainstorm output to:
-`brainstorm/YYYY-MM-DD-HHMM-<topic>.md` (in current working directory)
+Export the brainstorm output to: `brainstorm/YYYY-MM-DD-HHMM-<topic>.md` (in current working directory)
 
-Format the exported file with:
-- YAML frontmatter: skill name, date, session ID
-- Full brainstorm content: context explored, approaches proposed, design decisions
-- Metadata: related files, key decisions made
+Format: YAML frontmatter (skill name, date, session ID) + full brainstorm content (context explored, approaches proposed, design decisions) + metadata (related files, key decisions made).
 
 If the env var is not set or is "false", skip export.

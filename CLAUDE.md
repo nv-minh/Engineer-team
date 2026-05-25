@@ -11,6 +11,64 @@ EM-Team is a comprehensive system of agents, skills, and workflows for fullstack
 - **gstack** (28 skills) - Team-in-a-box, velocity multiplier, browser-in-CLI
 - **superpowers** (16 skills) - Iron Laws, subagent-driven development, systematic debugging
 
+## Hermes Execution Protocol (v4.0.0)
+
+All agents, skills, and workflows follow the Hermes protocol for maximum steerability and tool precision.
+
+### Agent Structure
+Every agent file uses structured blocks instead of prose sections:
+- `[ROLE]` — Imperative role definition (1-2 sentences)
+- `[OBJECTIVE]` — End goal
+- `[RULES]` — Numbered imperative rules (includes `<thought>` instruction, Iron Laws, ABC coaching)
+- `[AVAILABLE SKILLS]` — Skills the agent can invoke
+- `[PROCESS]` — Concise execution steps
+- `[RESPONSE FORMAT]` — References `output_schema` in frontmatter
+- `[HANDOFF]` — Who receives output next
+
+### Skill JSON Schema
+Every skill has `input_schema`, `output_schema`, `error_schema` in YAML frontmatter:
+```yaml
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description: { type: string }
+output_schema:
+  type: object
+  required: [status, result]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+```
+
+### Workflow ReAct Protocol
+Every workflow stage uses Thought→Action→Observation loops with context pruning:
+```
+<thought>Observe → Analyze → Plan</thought>
+<action>type: invoke_agent, target: ..., params: ...</action>
+<observation>result → gate_status: PASS|FAIL</observation>
+```
+
+### LLM Provider Configuration
+Set `LLM_PROVIDER` to switch between endpoints:
+- `anthropic` (default) — Claude via api.anthropic.com
+- `openai` — GPT models via api.openai.com
+- `ollama` — Local models (Hermes 3, Llama, etc.) via localhost:11434
+- `vllm` — vLLM server via localhost:8000
+- `custom` — Any OpenAI-compatible endpoint
+
+Config: `LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL` env vars.
+
+### Validation
+```bash
+bash scripts/validate-hermes.sh          # Check all compliance
+bash scripts/validate-hermes.sh --verbose # Detailed output
+```
+
 ## Builder Ethos
 
 All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`):
@@ -47,7 +105,7 @@ em-team/
 │   ├── workflow/        # 7 workflow and automation skills
 │   └── additional/      # 5 product & discovery skills
 ├── agents/              # 35 agents (33 active + 2 deprecated)
-├── workflows/           # 25 end-to-end workflows
+├── workflows/           # 26 end-to-end workflows
 ├── .claude/
 │   ├── lib/             # Libraries (trace-store, session-audit, artifact-store)
 │   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
@@ -243,6 +301,11 @@ em-team/
 34. **spring-expert** - Spring Boot, JPA, security, microservices (trigger: `em-agent:spring-expert`)
 35. **rust-expert** - Rust systems, ownership, async tokio, FFI (trigger: `em-agent:rust-expert`)
 
+### Test Automation Agents (v3.8.0)
+36. **playwright-setup** - Playwright infrastructure setup for brownfield projects: auto-detects stack, installs browsers, generates config, scaffolds POM, generates auth config (4 strategies: none/credentials/oauth/storageState) (trigger: `em-agent:playwright-setup`)
+37. **brownfield-test-engineer** - Spec-to-test for existing codebases: asks clarifying questions when spec unclear, explores codebase, generates TC registry, writes and executes tests, hands to test-verifier (trigger: `em-agent:brownfield-test-engineer`)
+38. **test-verifier** - Double-checks test results with retry loop (max 3): re-runs only failed tests, applies fix suggestions per retry, outputs PASS with confidence score or FAIL with per-TC details + manual steps (trigger: `em-agent:test-verifier`)
+
 ## Workflow Categories
 
 ### Primary Workflows
@@ -251,38 +314,39 @@ em-team/
 3. **bug-fix** - Investigate and fix bugs
 4. **refactoring** - Improve code quality
 5. **security-audit** - Security assessment
+6. **qa-bug-hunter** - QA testing with human-gated GitHub issue creation (DISCOVER → EVIDENCE → PREPARE → HUMAN GATE → LOG)
 
 ### Support Workflows
-6. **project-setup** - Initialize new projects
-7. **documentation** - Generate and update docs
-8. **deployment** - Deploy and monitor
-9. **retro** - Learn and improve
-10. **ship-workflow** - Version bump, changelog, PR creation
-11. **canary-monitoring** - Post-deploy health monitoring
+7. **project-setup** - Initialize new projects
+8. **documentation** - Generate and update docs
+9. **deployment** - Deploy and monitor
+10. **retro** - Learn and improve
+11. **ship-workflow** - Version bump, changelog, PR creation
+12. **canary-monitoring** - Post-deploy health monitoring
 
 ### Master Workflow
-12. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
+13. **six-phase-lifecycle** - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (all workflows inherit this)
 
 ### Team Workflows (8 workflows)
-13. **team-review** - Full team review orchestrated by Team Lead
-14. **architecture-review** - Architecture review with Architect & Staff Engineer
-15. **design-review** - UI/UX design review with Frontend Expert & Product Manager
-16. **code-review-9axis** - Deep 9-axis code review with Code Reviewer (Deep mode) & Security
-17. **database-review** - Database schema & query review with Database Expert & Architect
-18. **product-review** - Product/spec review with Product Manager & Architect
-19. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
-20. **incident-response** - Production incident handling with Staff Engineer & Security
+14. **team-review** - Full team review orchestrated by Team Lead
+15. **architecture-review** - Architecture review with Architect & Staff Engineer
+16. **design-review** - UI/UX design review with Frontend Expert & Product Manager
+17. **code-review-9axis** - Deep 9-axis code review with Code Reviewer (Deep mode) & Security
+18. **database-review** - Database schema & query review with Database Expert & Architect
+19. **product-review** - Product/spec review with Product Manager & Architect
+20. **security-review-advanced** - Advanced security (OWASP + STRIDE) with Security & Staff
+21. **incident-response** - Production incident handling with Staff Engineer & Security
 
 ### Distributed Workflows (2 workflows)
-21. **distributed-investigation** - Parallel bug investigation across full stack
-22. **distributed-development** - Parallel feature development with multiple agents
+22. **distributed-investigation** - Parallel bug investigation across full stack
+23. **distributed-development** - Parallel feature development with multiple agents
 
 ### Product Workflows (2 workflows)
-23. **discovery-process** - Product discovery and validation
-24. **market-driven-feature** - Market-driven feature development
+24. **discovery-process** - Product discovery and validation
+25. **market-driven-feature** - Market-driven feature development
 
 ### Outsourcing Workflows (1 workflow)
-25. **japanese-outsourcing** - End-to-end Japanese outsourcing workflow with 基本設計, 詳細設計, 受け入れテスト, formal gates
+26. **japanese-outsourcing** - End-to-end Japanese outsourcing workflow with 基本設計, 詳細設計, 受け入れテスト, formal gates
 
 ### Incident Sub-Workflows (workflows/incident/)
 - **initial-triage** - First response and impact assessment
@@ -436,9 +500,9 @@ When adding new skills or agents:
 
 ## Version
 
-Current version: 3.7.0
-Last updated: 2026-05-22
-Changes: v3.7.0 — GitHub Management Suite: 4 new skills (github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager) + 12 commands (setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues). Total: 85 skills, 35 agents, 25 workflows. v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 85 skills, 35 agents, 25 workflows.
+Current version: 4.1.0
+Last updated: 2026-05-24
+Changes: v4.1.0 — QA Bug Hunter: New `qa-bug-hunter` workflow with human-gated GitHub issue creation. 7 stages: SETUP → DISCOVER → EVIDENCE → PREPARE → HUMAN GATE → LOG → SUMMARY. Per-bug loop with user verification before each issue is created. Reuses em:qa, flow-discovery, browser-testing, github-issue-manager skills. Total: 85 skills, 38 agents, 26 workflows. v4.0.0 — Hermes Protocol Refactor: Full codebase restructured following NousResearch Hermes philosophy for Absolute Steerability, Flawless Tool Use, and Local/Cloud Agnostic execution. All 38 agents restructured with [ROLE], [OBJECTIVE], [RULES], [AVAILABLE SKILLS], [PROCESS], [RESPONSE FORMAT], [HANDOFF] blocks + input_schema/output_schema in YAML frontmatter. All 85 skills upgraded with JSON Schema (input_schema, output_schema, error_schema) in frontmatter for strict function calling contracts. All 25 workflows converted to ReAct protocol (Thought→Action→Observation loops) with context pruning and state snapshots. Preambles rewritten as Hermes-native (imperative, structured blocks). LLM client made provider-agnostic via scripts/llm-config.sh — supports Anthropic, OpenAI, Ollama, vLLM, and custom endpoints via LLM_PROVIDER/LLM_BASE_URL/LLM_MODEL env vars. ChatML formatter included for local Hermes models. Validation script (scripts/validate-hermes.sh) checks schema presence, block structure, and language compliance. Total: 85 skills, 38 agents, 25 workflows. v3.10.0 — Feature Workspace: artifact-store.ts v3.0.0 with createWorkspace(), upsert() for living docs (SPEC.md, TC-REGISTRY.md updated in place), workspaceExport() for timestamped logs (test-executions, reviews, evidence). .em-feature-context tracks active feature across prompts for cross-iteration continuity. ITERATION-LOG.md auto-tracks what changed per iteration. artifact-register.sh adds workspace/context commands. All workflows updated with workspace creation instructions. Agents (brownfield-test-engineer, test-verifier) support workspace-first export with legacy fallback. Total: 85 skills, 38 agents, 25 workflows. v3.9.0 — Artifact Folder Structure + Playwright Auth Config: artifact-store.ts upgraded with workflowContext param for sub-folder routing (specs/new-feature/, test-reports/bug-fix/, etc.), new category mappings for agent outputs (test-reports, architecture). Playwright auth config system: 4 strategies (none, credentials, oauth, storageState) via e2e/config/auth.config.json, auto-generated by playwright-setup agent. Credentials from .env (never committed), OAuth uses manual-first storageState approach. All workflows (new-feature, bug-fix, refactoring, greenfield-app) updated with Artifact Export sections. artifact-register.sh updated for sub-folder scanning. New template: E2E-AUTH-CONFIG.template.md. Total: 85 skills, 38 agents, 25 workflows. v3.8.0 — Test Automation Chain: 3 new agents (playwright-setup, brownfield-test-engineer, test-verifier) + test-generation/e2e-testing/browser-testing wired into all VERIFY stages (greenfield-app Stage 10, new-feature Stage 5, bug-fix Stage 5, refactoring Stage 4, six-phase-lifecycle Phase 4). brownfield-test-engineer asks clarifying questions when spec unclear; test-verifier retries max 3 times with targeted fix suggestions per attempt. Total: 85 skills, 38 agents, 25 workflows. v3.7.0 — GitHub Management Suite: 4 new skills (github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager) + 12 commands (setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues). Total: 85 skills, 35 agents, 25 workflows. v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 85 skills, 35 agents, 25 workflows.
 
 ## Automation
 

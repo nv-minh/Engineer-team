@@ -333,7 +333,7 @@ Dispatch agents for specialized tasks:
 
 Workflows are end-to-end processes that combine multiple skills and agents to complete complex tasks.
 
-### Primary Workflows (5 workflows)
+### Primary Workflows (6 workflows)
 
 #### 1. Greenfield App Workflow *(v3.1.0, updated v3.6.0)*
 **Purpose:** Blank directory → shipped product
@@ -351,12 +351,20 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 **Usage:** `/em:bug-fix [bug description]`
 **Stages:** Investigate → Analyze → Hypothesize → Implement → Verify
 
-#### 4. Refactoring Workflow
+#### 4. QA Bug Hunter Workflow *(v4.1.0)*
+**Purpose:** QA test a feature, find bugs, and create GitHub issues — only after human approval
+**Usage:** `/em:qa-bug-hunter [url or feature]`
+**Stages (7):** Setup → Discover → Evidence → Prepare → **Human Gate** → Log → Summary
+**Key feature:** The **Human Gate** pauses for each bug found. You review the draft issue (title, steps to reproduce, evidence) and decide: APPROVE (create issue), REJECT (skip), or MODIFY (edit before creating). No false positives reach your GitHub issue tracker.
+**Skills used:** em:qa, em:flow-discovery, em:browser-testing, github-issue-manager
+**Modes:** `full` (all QA checks), `critical` (critical paths only), `smoke` (basic), `targeted` (specific feature with flow discovery)
+
+#### 5. Refactoring Workflow
 **Purpose:** Improve code quality safely
 **Usage:** `/em:refactor [refactoring goal]`
 **Stages:** Analyze → Plan → Refactor → Test → Verify
 
-#### 5. Security Audit Workflow
+#### 6. Security Audit Workflow
 **Purpose:** Comprehensive security assessment
 **Usage:** `/em:security-audit [system to audit]`
 **Stages:** Reconnaissance → Vulnerability Scan → Analysis → Reporting
@@ -413,6 +421,7 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 # Examples
 "Workflow: em-new-feature - Implement user authentication"
 "Workflow: em-bug-fix - Fix the login timeout bug"
+"Workflow: em-qa-bug-hunter - QA test http://localhost:5173 and log bugs"
 "Workflow: em-security-audit - Audit the payment system"
 ```
 

@@ -4,7 +4,7 @@ description: >
   Redux Toolkit patterns for global state management covering stores, slices,
   async thunks, RTK Query, selectors, and middleware. Use when managing complex
   application state, implementing async workflows, or structuring Redux architecture.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-react"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -29,28 +29,77 @@ anti_patterns:
   - "Storing non-serializable values or DOM references in the store"
   - "Performing async operations inside reducers instead of thunks or RTK Query"
 related_skills: ["react", "react-hooks", "frontend-patterns", "typescript-patterns"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Redux Toolkit
 
-## Overview
+[ROLE]
+Act as a Redux Toolkit expert. Deliver structured global state management with RTK slices, typed hooks, and RTK Query for API caching.
 
-Redux Toolkit (RTK) is the official, opinionated way to write Redux logic. It provides `createSlice`, `configureStore`, `createAsyncThunk`, and RTK Query to eliminate boilerplate and enforce best practices.
+[OBJECTIVE]
+Structure global application state with Redux Toolkit so state transitions are predictable, testable, and scalable across the application.
 
-## When to Use
+[RULES]
+1. <thought>Before adding Redux, ask: Is this truly global state shared by many components? Would React Context, useState, or React Query solve this more simply?</thought>
+2. Use Redux Toolkit exclusively — never write manual action types, switch statements, or createStore.
+3. Keep state flat and normalized — use entity adapters for collections.
+4. Reducers must be pure — no side effects, no async in reducers.
+5. Use createAsyncThunk or RTK Query for all async operations.
+6. Create typed hooks (`useAppDispatch`, `useAppSelector`) for type safety.
+7. DO NOT write Redux boilerplate manually — createSlice handles it.
+8. DO NOT store non-serializable values or DOM references in the store.
+9. DO NOT perform async operations inside reducers — use thunks or RTK Query.
+10. Split slices by domain — one slice per feature area (cart, user, products).
+11. ABC: RTK Query replaces the fetch-then-dispatch pattern — it manages caching, deduplication, and invalidation automatically. Prefer it for API data.
 
-- Managing complex global state that spans many components
-- Implementing async workflows (API calls with loading/error states)
-- Setting up API data caching with automatic invalidation (RTK Query)
-- Coordinating state across multiple feature domains
-
-## When NOT to Use
-
-- For simple local UI state -- use `useState` or `useReducer`
-- For server state only -- React Query or SWR may be simpler
-- For state shared by only 2-3 nearby components -- use React Context
-
-## Process
+[PROCESS]
 
 ### Step 1: Create a Slice
 
@@ -176,7 +225,7 @@ extraReducers: (builder) => {
 }
 ```
 
-## RTK Query (API Caching)
+### RTK Query (API Caching)
 
 ```typescript
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -200,23 +249,7 @@ export const api = createApi({
 export const { useGetUsersQuery, useCreateUserMutation } = api;
 ```
 
-## Best Practices
-
-1. **Use Redux Toolkit exclusively** -- never write manual action types, switch statements, or createStore
-2. **Keep state flat and normalized** -- use entity adapters for collections
-3. **Reducers must be pure** -- no side effects, no async in reducers
-4. **Use createAsyncThunk or RTK Query** for all async operations
-5. **Create typed hooks** (`useAppDispatch`, `useAppSelector`) for type safety
-6. **Only store serializable data** -- no functions, class instances, or DOM refs
-7. **Split slices by domain** -- one slice per feature area (cart, user, products)
-
-## Coaching Notes
-
-- **Redux Toolkit eliminated the boilerplate problem** -- if you find yourself writing `action.type` strings or switch/case reducers, you are not using RTK correctly. `createSlice` handles all of it.
-- **RTK Query replaces the fetch-then-dispatch pattern** -- instead of createAsyncThunk + manual loading/error state, RTK Query manages caching, deduplication, and invalidation automatically. Prefer it for API data.
-- **Normalized state scales, nested state does not** -- store entities by ID in a dictionary, keep an array of IDs for ordering. This makes lookups O(1) and avoids deep updates.
-
-## Verification
+### Verification
 
 - [ ] Store configured with `configureStore` (not `createStore`)
 - [ ] Slices created with `createSlice` (no manual action types)
@@ -226,9 +259,5 @@ export const { useGetUsersQuery, useCreateUserMutation } = api;
 - [ ] Only serializable data in store
 - [ ] Reducers are pure functions
 
-## Related Skills
-
-- **react** -- Core React patterns for components that consume Redux state
-- **react-hooks** -- Hook patterns including useSelector/useDispatch
-- **frontend-patterns** -- General UI patterns and data fetching alternatives
-- **typescript-patterns** -- TypeScript patterns for typed Redux
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing Redux patterns used, and `recommendations` for improvements.

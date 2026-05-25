@@ -1,13 +1,18 @@
 ---
 name: new-feature
 description: Complete workflow from idea to production for new features (ENHANCED with optional market validation)
-version: "2.0.0"
+version: "3.1.0"
 category: "primary"
 origin: "agent-skills"
+react_protocol: true
+context_pruning: true
+max_retries_per_stage: 3
 agents_used:
   - planner
   - executor
   - verifier
+  - test-engineer
+  - test-verifier
   - code-reviewer
   - market-intelligence
 skills_used:
@@ -20,6 +25,9 @@ skills_used:
   - git-workflow
   - alignment-session
   - issue-generator
+  - test-generation
+  - e2e-testing
+  - browser-testing
 related_skills:
   - alignment-session
   - spec-driven-development
@@ -27,134 +35,133 @@ related_skills:
 estimated_time: "1-3 days (simple) / 2-3 weeks (complex with market validation)"
 ---
 
-# New Feature Workflow
-
-## Overview
-
-The new feature workflow takes a feature from initial idea through to production deployment. It follows the complete development lifecycle with quality gates at each phase.
-
-**ENHANCED:** Now includes optional market validation stage for strategic features and market-driven decisions.
-
-## When to Use
-
-- Building new features
-- Adding functionality
-- Implementing user stories
-- Creating new capabilities
-- Entering new markets
-- Strategic feature planning
+# New Feature Workflow (Hermes ReAct Protocol)
 
 ## Lifecycle
 
 ```
 DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
-  (1)       (2)       (3)       (4)        (5)       (6)
-   │         │         │         │          │         │
-   ▼         ▼         ▼         ▼          ▼         ▼
- GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+  (1-2)      (3)      (4)      (5)        (5)       (6)
+   │          │        │        │           │         │
+   ▼          ▼        ▼        ▼           ▼         ▼
+ GATE 1    GATE 2   GATE 3   GATE 4      GATE 5    DONE
 ```
 
 ### Stage-to-Lifecycle Mapping
 
-| Workflow Stage | Lifecycle Phase | Description |
+| Workflow Stage | Lifecycle Phase | Gate |
 |---|---|---|
-| BRAINSTORM (Stage 1) | DEFINE | Explore ideas, clarify requirements, design approach |
-| MARKET VALIDATION (Stage 1.5) | DEFINE | Optional market research and competitive analysis |
-| DOMAIN MODELING (Stage 1.7) | DEFINE | Optional domain modeling for cross-context features |
-| SPEC (Stage 2) | DEFINE | Write structured specification with requirements |
-| PLAN (Stage 3) | PLAN | Break into tasks, estimate effort, map dependencies |
-| BUILD (Stage 4) | BUILD | Execute tasks with TDD and atomic commits |
-| VERIFY (Stage 5) | VERIFY | Test acceptance criteria, integration testing |
-| SHIP (Stage 6) | REVIEW + SHIP | Code review, PR, merge, deploy, monitor |
+| SETUP (Stage 0) | DEFINE | spec folder detected, branch naming rules checked, spec doc created, on branch with latest main |
+| BRAINSTORM (Stage 1) | DEFINE | Design approved, document written |
+| MARKET VALIDATION (Stage 1.5, optional) | DEFINE | Market opportunity confirmed, go/no-go decided |
+| DOMAIN MODELING (Stage 1.7, optional) | DEFINE | Entities documented, relationships mapped |
+| SPEC (Stage 2) | DEFINE | Spec covers all areas, user approved |
+| PLAN (Stage 3) | PLAN | All requirements have tasks, no placeholders |
+| BUILD (Stage 4) | BUILD | Tasks completed, tests passing, build succeeds |
+| VERIFY (Stage 5) | VERIFY + REVIEW | Spec coverage 100%, test-verifier PASS |
+| SHIP (Stage 6) | SHIP | PR merged, deployed, monitoring OK |
 
-### Verification Gates
+### Execution Paths
 
-#### Gate 1: Definition Complete
-- [ ] Design approved by user
-- [ ] Design document written
-- [ ] Technical approach decided
-- [ ] Market validated OR strategically justified (if Stage 1.5 completed)
-- [ ] Domain model updated OR skipped with justification (if Stage 1.7 triggered)
-PASS → proceed to PLAN | FAIL → return to DEFINE
-
-#### Gate 2: Plan Complete
-- [ ] All requirements have tasks
-- [ ] No placeholders in plan
-- [ ] Acceptance criteria defined
-- [ ] Verification steps specified
-- [ ] Market factors considered (if Stage 1.5 completed)
-PASS → proceed to BUILD | FAIL → return to PLAN
-
-#### Gate 3: Build Complete
-- [ ] Tasks completed
-- [ ] Tests passing
-- [ ] Code reviewed
-- [ ] Build succeeds
-PASS → proceed to VERIFY | FAIL → return to BUILD
-
-#### Gate 4: Verification Complete
-- [ ] Spec coverage 100%
-- [ ] Quality gates pass
-- [ ] Acceptance criteria met
-- [ ] Integration tests pass
-PASS → proceed to REVIEW | FAIL → return to BUILD
-
-#### Gate 5: Review Complete
-- [ ] Code review approved
-- [ ] PR merged
-- [ ] Deployed successfully
-- [ ] Monitoring OK
-PASS → proceed to SHIP | FAIL → return to BUILD
-
-## Workflow Stages
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                                                                      │
-│  BRAINSTORM → [MARKET VALIDATION] → SPEC → PLAN → BUILD → VERIFY → SHIP │
-│      1         (1.5 OPTIONAL)        2      3      4       5        6       │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
-
-                    ┌─────────────────────┐
-                    │ PARALLEL EXECUTION │
-                    │                     │
-         Stage 1.5 ───┤      Stage 2       ├──►
-       (Market Val)  │      (Spec)         │
-                    └─────────────────────┘
-```
-
-## Stage 1: Brainstorm
-
-**Agent:** None (Human + Brainstorming skill)
-
-**Process:**
-1. Explore project context
-2. Ask clarifying questions
-3. Propose 2-3 approaches
-4. Present design for approval
-5. Write design document
-
-**Enhanced Process:**
-- **Step 0.5: Quick Market Check** (NEW - Optional)
-  - Brief search for similar solutions
-  - Quick competitive scan
-  - Note any obvious market constraints
-  - Takes < 15 minutes
-
-**Output:**
-- Design document saved
-- User approval obtained
-- Initial market notes (if Step 0.5 completed)
-
-**Quality Gate:**
-- [ ] Design approved by user
-- [ ] Design document written
-- [ ] Technical approach decided
+| Path | Stages | Use When |
+|---|---|---|
+| Fast | 1 → 2 → 3 → 4 → 5 → 6 | Small features, clear requirements, internal tools |
+| Parallel | 1 → [1.5 ‖ 2] → 3 → 4 → 5 → 6 | Competitive features, quick/standard market validation |
+| Strategic | 1 → 1.5 → 2 → 3 → 4 → 5 → 6 | New markets, strategic initiatives (deep mode blocks spec) |
 
 ---
 
-## Stage 1.5: Market Validation (OPTIONAL) ⭐ NEW
+## Stage 0: SETUP (Git & Spec Bootstrap)
+
+> Sub-workflow: `workflows/_shared/stage-0-git-bootstrap.md`
+>
+> Parameters:
+> - `{doc_type}`: spec
+> - `{doc_prefix}`: FEAT
+> - `{slug_type}`: feature
+> - `{default_branch_pattern}`: feat/{slug} | fix/{slug} | refactor/{slug}
+> - `{artifact_name}`: spec_document_skeleton
+> - `{next_action}`: brainstorm
+
+**Feature spec template** (`{doc_template_body}`):
+
+```yaml
+---
+type: feature
+status: in-progress
+branch: {branch-name}
+date: {today}
+---
+# Feature: {title}
+
+## Product
+- **Goal**: {goal}
+- **User Benefit**: {benefit}
+- **Acceptance Criteria**:
+  - [ ] (to be filled in Stage 2: Spec)
+
+## Technical Scope
+- **Files affected**: (to be filled in Stage 3: Plan)
+- **API changes**: (to be filled in Stage 3: Plan)
+- **DB changes**: (to be filled in Stage 3: Plan)
+
+## Branch
+`{branch-name}`
+```
+
+Note: if project uses CR-based naming, use CR-{NNN}-{slug}.md format instead.
+
+---
+
+## Stage 1: Brainstorm (OPTIONAL)
+
+<thought>
+Observe: Feature idea received. No design document, no technical approach, no user approval.
+Analyze: Explore the idea, ask clarifying questions, propose 2-3 approaches, present for approval. Optional quick market check. Gate requires: design approved + document written + technical approach decided.
+Plan: Invoke brainstorming skill. Explore context, generate approaches, write design document.
+</thought>
+
+<action>
+type: invoke_skill
+target: brainstorming
+params:
+  input: feature_idea
+  tasks:
+    - explore_project_context
+    - ask_clarifying_questions
+    - propose_approaches
+    - present_for_approval
+    - write_design_document
+    - quick_market_check (optional, < 15 min)
+</action>
+
+<observation>
+result: Design document written, user approval obtained
+state_change: Feature concept defined with technical approach
+gate_status: PASS | FAIL
+</observation>
+
+**Gate 1a — Brainstorm Complete:**
+- [ ] Design approved by user
+- [ ] Design document written
+- [ ] Technical approach decided
+
+PASS → Stage 1.5 or Stage 1.7 or Stage 2 | FAIL → retry brainstorm
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DEFINE
+  stage_completed: brainstorm
+  artifacts:
+    - design_document
+    - user_approval
+  next_action: "market_validation | domain_modeling | spec"
+```
+
+---
+
+## Stage 1.5: Market Validation (OPTIONAL)
 
 **Agent:** market-intelligence
 
@@ -165,94 +172,61 @@ PASS → proceed to SHIP | FAIL → return to BUILD
 - Significant investment required
 - User explicitly requests market analysis
 
-**When to SKIP Stage 1.5:**
-- Small enhancements or tweaks
-- Clear requirements with no market ambiguity
-- Internal tools with no market competition
-- Technical optimizations
-- Time-critical fixes
+**Skip when:** Small enhancements, clear requirements, internal tools, technical optimizations, time-critical fixes.
 
 **Analysis Modes:**
 
-**Quick Mode** (< 1 hour):
-- Use for: Feature validation, competitive feature check
-- Process:
-  1. Quick market size estimation
-  2. Identify top 3 competitors
-  3. Feature parity check
-  4. Basic positioning assessment
-- Runs: Parallel with Stage 2 (Spec)
-- Output: Market validation summary
+| Mode | Duration | Execution | Use When |
+|---|---|---|---|
+| Quick | < 1 hour | Parallel with Stage 2 | Competitive feature check |
+| Standard | 1-2 hours | Parallel with Stage 2 | New feature in competitive market |
+| Deep | 3-4 hours | Sequential (blocks Stage 2) | New market, strategic initiative |
 
-**Standard Mode** (1-2 hours):
-- Use for: New features in competitive markets
-- Process:
-  1. Market sizing (TAM/SAM/SOM)
-  2. Competitive landscape mapping
-  3. Feature comparison matrix
-  4. Customer segment analysis
-- Runs: Parallel with Stage 2 (Spec)
-- Output: Market analysis report
+<thought>
+Observe: Design approved. Feature has strategic/competitive implications. No market data.
+Analyze: Determine analysis mode (Quick/Standard/Deep). Run market sizing, competitive analysis, customer validation. Gate requires: market opportunity confirmed + competitive landscape understood + go/no-go decided.
+Plan: Invoke market-intelligence agent. Mode determines parallel vs sequential execution with Stage 2.
+</thought>
 
-**Deep Mode** (3-4 hours):
-- Use for: New markets, strategic initiatives
-- Process:
-  1. Full market research and validation
-  2. Comprehensive competitive analysis
-  3. Customer development
-  4. Business case modeling
-  5. Go-to-market strategy
-- Runs: BEFORE Stage 2 (blocks Spec until complete)
-- Output: Strategic market report + business case
+<action>
+type: invoke_agent
+target: market-intelligence
+params:
+  mode: quick | standard | deep
+  input: design_document
+  tasks:
+    - market_sizing
+    - competitive_landscape
+    - feature_comparison_matrix
+    - customer_segment_analysis
+    - strategic_recommendations
+    - go_no_go_decision
+</action>
 
-**Process:**
-1. **Market Analysis**
-   - Market sizing and growth trends
-   - Market segmentation
-   - Market dynamics
+<observation>
+result: Market validation report, competitive intelligence, strategic recommendations
+state_change: Market opportunity confirmed or pivot needed
+gate_status: PASS | FAIL | SKIP
+</observation>
 
-2. **Competitive Intelligence**
-   - Feature comparison matrix
-   - Pricing analysis
-   - Positioning assessment
-
-3. **Customer Development**
-   - Customer jobs-to-be-done
-   - Pain point identification
-   - Value proposition validation
-
-4. **Feature Impact**
-   - Demand estimation
-   - Revenue impact modeling
-   - Strategic value assessment
-
-5. **Strategic Recommendations**
-   - Go-to-market considerations
-   - Competitive positioning
-   - Risk mitigation
-
-**Output:**
-- Market validation report
-- Competitive intelligence summary
-- Feature impact assessment
-- Strategic recommendations
-
-**Quality Gate:**
+**Gate 1b — Market Validation Complete:**
 - [ ] Market opportunity confirmed OR strategic pivot needed
 - [ ] Competitive landscape understood
 - [ ] Customer value validated
 - [ ] Go/no-go decision made
 
-**Integration with Stage 2:**
+PASS → Stage 2 (or parallel with Stage 2) | FAIL → pivot or cancel
 
+**State Snapshot:**
 ```yaml
-Parallel Execution (Quick/Standard Mode):
-  Stage 1.5 (Market Val): ──┐
-                            ├─► Combined insights
-  Stage 2 (Spec):       ──┘
-
-Sequential Execution (Deep Mode):
-  Stage 1.5 (Market Val) ──► Stage 2 (Spec) ──► Stage 3 (Plan)
+workflow_state:
+  current_phase: DEFINE
+  stage_completed: market_validation
+  artifacts:
+    - market_validation_report
+    - competitive_intelligence
+    - feature_impact_assessment
+  next_action: "spec"
 ```
 
 ---
@@ -267,157 +241,473 @@ Sequential Execution (Deep Mode):
 - Feature changes the conceptual model
 - User explicitly requests domain modeling
 
-**When to SKIP Stage 1.7:**
-- Small feature within a single bounded context
-- No new entities or relationships
-- Internal refactoring
-- Feature scope is well-understood with no conceptual ambiguity
+**Skip when:** Single bounded context, no new entities, internal refactoring, well-understood scope.
 
-**Process:**
-1. Invoke domain-modeling skill
-2. Identify affected bounded contexts
-3. Map new entities and relationships
-4. Update ubiquitous language glossary
-5. Validate against existing domain model (if any)
+<thought>
+Observe: Design approved. Feature crosses bounded contexts or introduces new entities.
+Analyze: Map new entities and relationships. Update ubiquitous language. Validate against existing domain model. Gate requires: entities documented + relationships mapped + language updated + user approved.
+Plan: Invoke domain-modeling skill. Identify affected contexts, map entities, update glossary.
+</thought>
 
-**Output:**
-- Updated `docs/domain-model.md` (or new if none exists)
-- Impact assessment on existing contexts
-- Entity-relationship diagram for new/changed entities
+<action>
+type: invoke_skill
+target: domain-modeling
+params:
+  input: design_document
+  tasks:
+    - identify_bounded_contexts
+    - map_entities_and_relationships
+    - update_ubiquitous_language
+    - validate_existing_model
+</action>
 
-**Quality Gate:**
+<observation>
+result: Domain model updated, impact assessment complete, entity-relationship diagram created
+state_change: Domain model reflects new feature entities
+gate_status: PASS | FAIL | SKIP
+</observation>
+
+**Gate 1c — Domain Modeling Complete:**
 - [ ] New entities documented with types (Aggregate Root / Entity / Value Object)
 - [ ] Relationships mapped with cardinality
 - [ ] Ubiquitous language updated (no synonyms)
 - [ ] User approved changes
 - [ ] Existing domain model integrity maintained
 
-**Integration with Stage 2:**
+PASS → Stage 2 | FAIL → revisit design
+
+**State Snapshot:**
 ```yaml
-Stage 1 (Brainstorm) → Stage 1.7 (Domain Model) → Stage 2 (Spec)
-                                                    ↓
-                                          Spec informed by domain model
-                                          Every entity maps to requirements
+workflow_state:
+  current_phase: DEFINE
+  stage_completed: domain_modeling
+  artifacts:
+    - domain_model
+    - impact_assessment
+    - er_diagram
+  next_action: "spec"
 ```
 
 ---
 
 ## Stage 2: Spec
 
-**Agent:** Planner
+<thought>
+Observe: Design approved. Market insights available (if Stage 1.5 completed). Domain model updated (if Stage 1.7 completed). No formal specification yet.
+Analyze: Write structured spec covering all requirement areas. Incorporate market insights and domain model if available. Gate requires: spec covers all areas + user approved + success criteria testable.
+Plan: Invoke planner agent with spec-driven-development skill. Read design document, integrate market/domain inputs, write SPEC.md.
+</thought>
 
-**Process:**
-1. Read design document
-2. **[ENHANCED]** Incorporate market insights from Stage 1.5 (if completed)
-3. Write structured spec
-4. Define requirements
-5. Set boundaries
-6. Document success criteria
+<action>
+type: invoke_skill
+target: spec-driven-development
+params:
+  input:
+    - design_document
+    - market_validation_report (if available)
+    - domain_model (if available)
+  tasks:
+    - read_design_document
+    - incorporate_market_insights (if Stage 1.5 completed)
+    - incorporate_domain_model (if Stage 1.7 completed)
+    - write_structured_spec
+    - define_requirements
+    - set_boundaries
+    - document_success_criteria
+    - update_project_spec_doc: fill in Acceptance Criteria and Technical Scope sections of {spec_folder}/FEAT-{slug}.md created in Stage 0
+</action>
 
-**Enhanced Requirements Gathering:**
+<observation>
+result: SPEC.md written with requirements, boundaries, success criteria
+state_change: Feature formally specified
+gate_status: PASS | FAIL
+</observation>
 
-**If Stage 1.5 completed:**
-- **Area 7. Market Analysis** (NEW)
-  - Market size and trends
-  - Competitive positioning
-  - Customer segments
-  - Differentiation strategy
-- **Area 8. Go-to-Market** (NEW - for major features)
-  - Launch timing considerations
-  - Channel strategy
-  - Marketing mix
-  - Success metrics
+**Enhanced Requirements (if Stage 1.5 completed):**
+- Area 7: Market Analysis (size, trends, positioning, segments)
+- Area 8: Go-to-Market (timing, channels, marketing, success metrics)
 
-**Output:**
-- SPEC.md document
-- Requirements defined
-- Success criteria set
-- Market insights integrated (if Stage 1.5 completed)
-
-**Quality Gate:**
+**Gate 1d — Spec Complete:**
 - [ ] Spec covers all 6 core areas (or 8 areas if Stage 1.5 completed)
 - [ ] User approved spec
 - [ ] Success criteria testable
 - [ ] Market-competitive OR strategically justified (if Stage 1.5 completed)
 
+PASS → Stage 3 | FAIL → revise spec
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DEFINE
+  stage_completed: spec
+  artifacts:
+    - spec_document
+    - requirements
+    - success_criteria
+  next_action: "plan"
+```
+
 ---
 
 ## Stage 3: Plan
 
-**Agent:** Planner
+<thought>
+Observe: Spec approved. Requirements defined. Success criteria set. No implementation plan yet.
+Analyze: Break spec into tasks, estimate effort, map dependencies, define verification steps. Incorporate market constraints if applicable. Gate requires: all requirements have tasks + no placeholders + acceptance criteria defined.
+Plan: Invoke planner agent with writing-plans skill. Generate PLAN.md with task breakdown.
+</thought>
 
-**Process:**
-1. Break down into tasks
-2. Estimate effort
-3. Identify dependencies
-4. Define verification steps
-5. Create implementation plan
+<action>
+type: invoke_agent
+target: planner
+params:
+  input: spec_document
+  tasks:
+    - break_into_tasks
+    - estimate_effort
+    - identify_dependencies
+    - define_verification_steps
+    - create_implementation_plan
+    - incorporate_market_constraints (if Stage 1.5 completed)
+</action>
 
-**Enhanced Planning:**
+<observation>
+result: PLAN.md created with task breakdown, dependencies, verification steps
+state_change: Implementation plan ready
+gate_status: PASS | FAIL
+</observation>
 
-**If Stage 1.5 completed:**
-- Incorporate market constraints
-- Consider competitive timeline pressures
-- Account for go-to-market requirements
-- Adjust based on market validation findings
-
-**Output:**
-- PLAN.md document
-- Task list created
-- Dependencies mapped
-- Market considerations integrated (if applicable)
-
-**Quality Gate:**
+**Gate 2 — Plan Complete:**
 - [ ] All requirements have tasks
 - [ ] No placeholders in plan
 - [ ] Acceptance criteria defined
 - [ ] Verification steps specified
 - [ ] Market factors considered (if Stage 1.5 completed)
 
+PASS → Stage 4 | FAIL → revise plan
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: PLAN
+  stage_completed: plan
+  artifacts:
+    - plan_document
+    - task_breakdown
+    - dependency_map
+  next_action: "build"
+```
+
 ---
 
 ## Stage 4: Build
 
-**Agent:** Executor
+<thought>
+Observe: Plan approved. Task breakdown ready. Dependencies mapped. No implementation yet.
+Analyze: Execute plan task-by-task. Follow TDD (RED-GREEN-REFACTOR). Atomic commits per task. Run quality gates after each task. Gate requires: tasks completed + tests passing + build succeeds.
+Plan: Invoke executor agent. Execute tasks sequentially, each with TDD cycle and atomic commit.
+</thought>
 
-**Process:**
-1. Execute plan task-by-task
-2. Follow TDD
-3. Make atomic commits
-4. Run quality gates
-5. Handle errors
+<action>
+type: invoke_agent
+target: executor
+params:
+  input: plan_document
+  tasks:
+    - execute_tasks_sequentially
+    - follow_tdd_per_task
+    - atomic_commit_per_task
+    - run_quality_gates
+    - handle_errors
+</action>
 
-**No changes** - Standard build process.
+<observation>
+result: All tasks completed, tests passing, build succeeds
+state_change: Feature implemented with test coverage
+gate_status: PASS | FAIL
+</observation>
+
+**Gate 3 — Build Complete:**
+- [ ] Tasks completed
+- [ ] Tests passing
+- [ ] Code reviewed
+- [ ] Build succeeds
+
+PASS → Stage 5 | FAIL → retry failed task (max 3)
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: BUILD
+  stage_completed: build
+  artifacts:
+    - implementation_commits
+    - unit_tests
+    - integration_tests
+  next_action: "verify"
+```
 
 ---
 
 ## Stage 5: Verify
 
-**Agent:** Verifier
+> **⛔ NON-SKIPPABLE STAGE.** Every step below is MANDATORY. Do NOT proceed to Stage 6 without completing ALL steps and producing ALL required artifacts. If Playwright is not set up, run `playwright-setup` agent first.
 
-**Process:**
-1. Verify spec coverage
-2. Run quality gates
-3. Test acceptance criteria
-4. Integration testing
-5. User acceptance testing
+<thought>
+Observe: Feature implemented. Unit tests pass. Build succeeds. No spec coverage verification, no E2E evidence, no test-verifier report.
+Analyze: Verify spec coverage. Generate test cases from SPEC.md. Run E2E tests with Playwright. Record video evidence for all test runs. Collect browser evidence (screenshots + video + traces). Double-check with test-verifier. Gate requires: spec coverage 100% + all acceptance criteria met + test-verifier PASS + evidence artifacts present.
+Plan: Execute 5 mandatory steps in sequence. Each step MUST produce its output before the next step begins. No step may be skipped.
+</thought>
 
-**No changes** - Standard verification process.
+### MANDATORY EXECUTION STEPS
+
+**Step 5.1 — Verify Spec Coverage (verifier agent)**
+
+Invoke the `verifier` agent. Compare every requirement in SPEC.md against the implementation. Produce a coverage map: requirement → file:line.
+
+<action>
+type: invoke_agent
+target: verifier
+params:
+  mode: verify
+  input: spec_document
+  tasks:
+    - verify_spec_coverage
+    - test_acceptance_criteria
+    - integration_testing
+</action>
+
+Required output: `verification_report` with spec coverage percentage. If coverage < 100%, list uncovered requirements. Do NOT proceed until coverage is addressed.
+
+---
+
+**Step 5.2 — Generate Test Case Registry (test-generation skill)**
+
+Invoke the `test-generation` skill. Read SPEC.md and source code. Generate a structured TC Registry with TC-IDs for every acceptance criterion.
+
+<action>
+type: invoke_skill
+target: test-generation
+params:
+  input:
+    - spec_document
+    - source_code
+  output: tc_registry
+  note: Ask clarifying questions if spec lacks acceptance criteria
+</action>
+
+Required output: `TC-REGISTRY.md` with entries in format `TC-UNIT-NNN`, `TC-INT-NNN`, `TC-E2E-NNN`. Each entry maps to a spec requirement.
+
+---
+
+**Step 5.3 — Ensure Playwright Setup**
+
+Before running E2E tests, verify Playwright is configured:
+
+```
+CHECK: Does playwright.config.ts exist?
+  YES → Verify it includes video: 'retain-on-failure' and trace: 'retain-on-failure'
+        If not, update the config to add these settings.
+  NO  → Invoke playwright-setup agent to bootstrap Playwright infrastructure.
+```
+
+Playwright config MUST include:
+```typescript
+use: {
+  video: 'retain-on-failure',    // Record video for every failing test
+  trace: 'retain-on-failure',    // Capture trace for every failing test
+  screenshot: 'only-on-failure', // Screenshot on every failure
+}
+```
+
+---
+
+**Step 5.4 — Run E2E Tests & Collect Evidence (e2e-testing + browser-testing skills)**
+
+Invoke `e2e-testing` skill to write Playwright E2E tests for all new user flows using Page Object Model. Then invoke `browser-testing` skill to execute tests and collect evidence.
+
+<action>
+type: invoke_skill
+target: e2e-testing
+params:
+  tool: playwright
+  scope: new_user_flows
+  pattern: page_object_model
+</action>
+
+<action>
+type: invoke_skill
+target: browser-testing
+params:
+  scope: new_feature_ui
+  evidence: screenshots_video_traces
+  regression_check: existing_ui
+</action>
+
+Execute tests:
+```bash
+npx playwright test --reporter=html,list
+```
+
+Required output — evidence directory with:
+```
+test-results/
+├── videos/          # .webm video for every failing test
+├── screenshots/     # .png screenshot for every failing test
+├── traces/          # .zip Playwright trace for every failing test
+└── reports/
+    └── playwright-report/index.html
+```
+
+If ANY test fails, collect evidence (video + screenshot + trace), then proceed to Step 5.5 for retry.
+
+---
+
+**Step 5.5 — Double-Check with Test Verifier (test-verifier agent)**
+
+Invoke `test-verifier` agent to re-run failed tests, apply targeted fixes, and produce a final verdict.
+
+<action>
+type: invoke_agent
+target: test-verifier
+params:
+  mode: double_check
+  max_retries: 3
+  input: all_test_results
+  evidence_required: true
+</action>
+
+Test verifier behavior:
+1. Re-run ONLY failed tests (not the full suite)
+2. Spot-check 3-5 passed tests for correctness
+3. If tests fail, apply targeted fix and retry (max 3 retries total)
+4. On each retry, Playwright records video + trace automatically (`retain-on-failure`)
+5. Output: PASS with confidence score OR FAIL with per-TC details + evidence paths
+
+Required output: `test-verifier-report.md` with:
+- Verdict: PASS or FAIL
+- Confidence score (based on retries used)
+- Evidence paths for all failures (screenshots, videos, traces)
+- Manual reproduction steps for any unresolved failures
+
+---
+
+<observation>
+result: Spec coverage verified, TC registry generated, E2E tests executed with Playwright evidence recorded, test-verifier report issued
+state_change: Full verification complete with evidence artifacts
+gate_status: PASS | FAIL
+</observation>
+
+**Gate 4+5 — Verification and Review Complete:**
+- [ ] Spec coverage verified (100%)
+- [ ] Test case registry generated (`TC-REGISTRY.md` with TC-IDs)
+- [ ] All acceptance criteria met
+- [ ] Integration tests pass
+- [ ] Playwright configured with `video: 'retain-on-failure'`
+- [ ] E2E tests cover all new user flows (Page Object Model)
+- [ ] E2E tests executed with `npx playwright test`
+- [ ] Browser test evidence collected (`test-results/videos/`, `test-results/screenshots/`, `test-results/traces/`)
+- [ ] **test-verifier PASS** (or FAIL report reviewed and signed off by user before proceeding)
+- [ ] User acceptance testing passed
+
+⛔ **DO NOT proceed to Stage 6 if ANY of the above items is unchecked.**
+
+PASS → Stage 6 | FAIL → return to Stage 4
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: VERIFY
+  stage_completed: verify
+  artifacts:
+    - tc_registry
+    - verification_report
+    - e2e_test_files
+    - e2e_evidence (videos, screenshots, traces)
+    - playwright_html_report
+    - test_verifier_report
+  next_action: "ship"
+```
+
+<!-- GATE:VERIFY:REQUIRED artifacts=[tc-registry,e2e-evidence,test-verifier-report] -->
 
 ---
 
 ## Stage 6: Ship
 
-**Agent:** Executor + Code-Reviewer
+<thought>
+Observe: Feature verified. All tests pass. test-verifier PASS. Evidence collected.
+Analyze: Final code review, create PR, merge, deploy, monitor. Gate requires: code review approved + PR merged + deployed + monitoring OK.
+Plan: Invoke executor for PR creation, code-reviewer for review. Deploy and monitor.
+</thought>
 
-**Process:**
-1. Final code review
-2. Create pull request
-3. Merge to main
-4. Deploy to production
-5. Monitor deployment
+<action>
+type: invoke_agent
+target: executor
+params:
+  mode: ship
+  tasks:
+    - final_code_review
+    - create_pull_request
+    - merge_to_main
+    - deploy_to_production
+    - monitor_deployment
+</action>
 
-**No changes** - Standard shipping process.
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  input: pull_request
+</action>
+
+<observation>
+result: Code reviewed, PR merged, deployed, monitoring healthy
+state_change: Feature shipped to production
+gate_status: PASS | FAIL
+</observation>
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: SHIP
+  stage_completed: ship
+  artifacts:
+    - pull_request
+    - code_review
+    - deployment_log
+  next_action: null
+  status: COMPLETE
+```
+
+---
+
+## Feature Workspace
+
+When `EM_TEAM_ARTIFACT_EXPORT=true`:
+
+Create workspace at Stage 2 (Spec) start — all subsequent artifacts route here:
+```
+artifactStore.createWorkspace('new-feature', featureName)
+```
+
+Living documents (updated in place across iterations):
+- `SPEC.md` → `artifactStore.upsert('SPEC.md', content)`
+- `TC-REGISTRY.md` → `artifactStore.upsert('TC-REGISTRY.md', content)`
+
+Timestamped logs (appended each run):
+- Test executions → `artifactStore.workspaceExport('test-executions', ...)`
+- Code reviews → `artifactStore.workspaceExport('reviews', ...)`
+- Evidence → `artifactStore.workspaceExport('evidence', ...)`
+
+Result: `.em-artifacts/new-feature/{feature-slug}/` with all artifacts grouped.
+When iterating (follow-up prompts), living docs are updated in place and ITERATION-LOG.md tracks changes.
+
+**Legacy export** (also writes to category folders for backward compatibility):
+- Spec → `specs/new-feature/`
+- Test report → `test-reports/new-feature/`
+- Code review → `reviews/new-feature/`
 
 ---
 
@@ -439,7 +729,7 @@ handoff:
     - requirements_defined
 ```
 
-### [NEW] Brainstorm → Domain Modeling
+### Brainstorm → Domain Modeling
 
 ```yaml
 handoff:
@@ -454,7 +744,7 @@ handoff:
     - impact_assessment
 ```
 
-### [NEW] Brainstorm → Market Validation
+### Brainstorm → Market Validation
 
 ```yaml
 handoff:
@@ -471,7 +761,7 @@ handoff:
     - strategic_recommendations
 ```
 
-### [NEW] Market Validation → Spec
+### Market Validation → Spec
 
 ```yaml
 handoff:
@@ -505,6 +795,44 @@ handoff:
 
 ---
 
+## Error Handling
+
+| Error Type | Trigger | Recovery |
+|---|---|---|
+| `SPEC_CONFLICT` | Acceptance criteria contradict each other or the design doc | Return to Stage 2. Flag conflict explicitly. Do not proceed until user resolves. |
+| `BUILD_DEADLOCK` | Same task fails 3× with different error messages (thrashing) | STOP. Invoke `systematic-debugging` skill before retrying. Debugging attempts do not consume `max_retries`. |
+| `TEST_ENV_FAILURE` | Test runner / Playwright fails with infrastructure error (not test logic) | Infrastructure failures do NOT consume `max_retries`. Fix environment, retry stage fresh. |
+| `CONTEXT_OVERFLOW` | Claude signals loss of earlier stage outputs mid-workflow | Run context pruning immediately. Re-read spec document and gate status. Resume from last completed gate — do not restart from Stage 0. |
+
+---
+
+## Context Pruning
+
+After each stage completes, prune context:
+- Drop raw brainstorm explorations (retain design document only)
+- Drop full market research data (retain summary + recommendations only)
+- Drop intermediate test output (retain pass/fail summary only)
+- Drop eliminated design approaches (retain chosen approach only)
+- Retain: design document, spec, plan, gate status, artifacts list
+
+---
+
+## Decision Framework: Market Validation Mode
+
+```yaml
+decision_tree:
+  small_enhancement: SKIP Stage 1.5
+  standard_feature:
+    competitive_market: Quick Mode (parallel with Stage 2)
+    no_competition: SKIP Stage 1.5
+  major_feature:
+    existing_market: Standard Mode (parallel with Stage 2)
+    new_market: Deep Mode (sequential, blocks Stage 2)
+  strategic_initiative: Deep Mode (sequential, blocks Stage 2)
+```
+
+---
+
 ## Quality Gates Summary
 
 ```yaml
@@ -512,38 +840,38 @@ quality_gates:
   brainstorm:
     - design_approved
     - design_document_written
-    - initial_market_notes_collected (optional)
 
-  market_validation:
+  market_validation (optional):
     - market_opportunity_confirmed
     - competitive_landscape_understood
     - customer_value_validated
     - go_no_go_decision_made
-    - (OPTIONAL: only if Stage 1.5 triggered)
+
+  domain_modeling (optional):
+    - entities_documented
+    - relationships_mapped
+    - ubiquitous_language_updated
 
   spec:
     - spec_complete
     - user_approved
     - success_criteria_testable
-    - market_competitive_or_strategic (if Stage 1.5 completed)
 
   plan:
     - requirements_mapped
     - tasks_defined
     - no_placeholders
-    - market_factors_considered (if Stage 1.5 completed)
 
   build:
     - tasks_completed
     - tests_passing
-    - code_reviewed
     - build_succeeds
 
   verify:
     - spec_coverage_100
-    - quality_gates_pass
-    - acceptance_criteria_met
-    - integration_tests_pass
+    - tc_registry_generated
+    - e2e_evidence_collected
+    - test_verifier_pass
 
   ship:
     - code_review_approved
@@ -551,8 +879,6 @@ quality_gates:
     - deployed_successfully
     - monitoring_ok
 ```
-
----
 
 ## Timeline Estimate
 
@@ -562,10 +888,10 @@ timeline:
   market_validation_quick: "< 1 hour (parallel with spec)"
   market_validation_standard: "1-2 hours (parallel with spec)"
   market_validation_deep: "3-4 hours (blocks spec)"
-  domain_modeling: "30-60 min (optional, recommended for cross-context features)"
+  domain_modeling: "30-60 min (optional)"
   spec: "1-2 hours"
   plan: "2-4 hours"
-  build: "1-3 days (depends on complexity)"
+  build: "1-3 days"
   verify: "2-4 hours"
   ship: "1-2 hours"
 
@@ -573,228 +899,3 @@ timeline:
   total_with_market_validation: "1.5-2.5 days"
   total_complex_with_market: "2-3 weeks"
 ```
-
----
-
-## Decision Framework: When to Use Market Validation
-
-```yaml
-decision_tree:
-  feature_proposed:
-    size_assessment:
-      small_enhancement:
-        action: SKIP Stage 1.5
-        reason: Quick win, low risk
-
-      standard_feature:
-        competitive_market: "yes"
-          action: Quick Mode (parallel)
-          reason: Validate competitiveness quickly
-
-        competitive_market: "no"
-          action: SKIP Stage 1.5
-          reason: Clear market, no competition
-
-      major_feature:
-        existing_market: "yes"
-          action: Standard Mode (parallel)
-          reason: Validate market fit in existing market
-
-        new_market: "yes"
-          action: Deep Mode (sequential)
-          reason: Full market research before investment
-
-      strategic_initiative:
-        action: Deep Mode (sequential)
-        reason: Comprehensive analysis needed
-```
-
----
-
-## Example Usage
-
-### Example 1: Standard Feature WITHOUT Market Validation
-
-```bash
-"Workflow: new-feature - Add dark mode toggle"
-
-# Executes:
-# 1. Brainstorming - Design dark mode implementation
-# 2. Spec - Write spec for dark mode
-# 3. Plan - Plan implementation
-# 4. Build - Implement dark mode
-# 5. Verify - Test dark mode
-# 6. Ship - Deploy dark mode
-
-# Stage 1.5 SKIPPED (small enhancement, no market impact)
-```
-
-### Example 2: Competitive Feature WITH Market Validation (Parallel)
-
-```bash
-"Workflow: new-feature - AI-powered code suggestions"
-
-# Executes:
-# 1. Brainstorming - Design AI code suggestion feature
-# 2. [PARALLEL] Stage 1.5: Market Validation (Quick Mode)
-#    - Competitive analysis (GitHub Copilot, Tabnine, CodeScene)
-#    - Feature comparison
-#    - Pricing benchmark
-# 3. [PARALLEL] Stage 2: Spec - Write spec
-#    - Incorporates competitive insights
-#    - Defines differentiation strategy
-# 4. Plan - Plan implementation
-# 5. Build - Implement feature
-# 6. Verify - Test feature
-# 7. Ship - Deploy feature
-
-# Stage 1.5: Quick Mode (1 hour) runs parallel with Spec
-# Market insights integrated into spec before planning
-```
-
-### Example 3: New Market Entry WITH Market Validation (Sequential)
-
-```bash
-"Workflow: new-feature - Enter healthcare market"
-
-# Executes:
-# 1. Brainstorming - Design healthcare product concept
-# 2. [SEQUENTIAL] Stage 1.5: Market Validation (Deep Mode)
-#    - Full market research (3-4 hours)
-#    - Competitive landscape analysis
-#    - Customer development
-#    - Business case modeling
-#    - Go-to-market strategy
-#    - OUTPUT: Strategic market report
-# 3. Stage 2: Spec - Write spec with market insights
-# 4. Plan - Plan implementation
-# 5. Build - Implement product
-# 6. Verify - Test product
-# 7. Ship - Deploy to healthcare market
-
-# Stage 1.5: Deep Mode BLOCKS Spec until complete
-# Ensures market viability before major investment
-```
-
----
-
-## Best Practices
-
-### When to Include Market Validation
-
-✅ **INCLUDE Stage 1.5:**
-- Features entering competitive markets
-- New market entries
-- Major strategic features
-- Features requiring significant investment
-- Features with unclear market demand
-- Differentiation-critical features
-- Features with strong competitors
-
-❌ **SKIP Stage 1.5:**
-- Small enhancements or tweaks
-- Internal tools with no market competition
-- Technical optimizations
-- Clear customer requirements
-- Time-critical fixes
-- Features with no competitive alternatives
-
-### Execution Modes
-
-**Quick Mode** (Parallel, < 1 hour):
-- Use when: Competitive feature check
-- Trigger: "How do competitors handle this?"
-- Execution: market-intelligence runs parallel with Spec
-- Integration: Spec waits for market insights
-
-**Standard Mode** (Parallel, 1-2 hours):
-- Use when: New feature in competitive market
-- Trigger: "Validate market opportunity for [feature]"
-- Execution: market-intelligence runs parallel with Spec
-- Integration: Spec incorporates competitive insights
-
-**Deep Mode** (Sequential, 3-4 hours):
-- Use when: New market or strategic initiative
-- Trigger: "Analyze market for [new market]"
-- Execution: market-intelligence runs FIRST, blocks Spec
-- Integration: Spec built on complete market analysis
-
-### Anti-Patterns to Avoid
-
-❌ **DON'T:**
-- Add market validation to EVERY feature
-- Use deep mode for small features
-- Let market analysis block progress on clear wins
-- Replace product-manager with market-intelligence
-- Use market-intelligence for technical decisions
-
-✅ **DO:**
-- Use market validation selectively and strategically
-- Match analysis depth to decision importance
-- Run parallel when possible to maintain velocity
-- Use market insights to inform, not replace, product decisions
-- Focus on strategic decisions, not tactical ones
-
----
-
-## Success Criteria
-
-A successful new feature workflow (with optional market validation):
-
-- [ ] Feature matches spec requirements
-- [ ] Market validated OR strategically justified (if Stage 1.5 completed)
-- [ ] Competitive differentiation clear (if Stage 1.5 completed)
-- [ ] All tests pass
-- [ ] Code is clean and maintainable
-- [ ] Documentation is complete
-- [ ] Feature is deployed
-- [ ] No regressions introduced
-- [ ] Users can use the feature
-- [ ] Monitoring shows healthy state
-- [ ] Market feedback positive (if applicable)
-
----
-
-## Integration Notes
-
-### Agent Collaboration
-
-**market-intelligence collaborates with:**
-- **planner**: Provides market data for Spec and Plan stages
-- **product-manager**: Provides competitive insights for requirements
-- **architect**: Provides market requirements for technical design
-
-**Trigger words for market-intelligence:**
-- "Analyze market for..."
-- "Compare with competitors..."
-- "What's the market demand for..."
-- "Should we prioritize feature A or B..."
-- "Size the market for..."
-- "Assess competitive landscape..."
-
-### Workflow Variants
-
-The new-feature workflow now has three execution paths:
-
-1. **Fast Path** (No market validation)
-   - Brainstorm → Spec → Plan → Build → Verify → Ship
-   - Use for: Small features, clear requirements, internal tools
-
-2. **Parallel Path** (Quick/Standard market validation)
-   - Brainstorm → [Market Val || Spec] → Plan → Build → Verify → Ship
-   - Use for: Competitive features, market validation needed
-
-3. **Strategic Path** (Deep market validation)
-   - Brainstorm → Market Val → Spec → Plan → Build → Verify → Ship
-   - Use for: New markets, strategic initiatives, major investments
-
----
-
-**Version:** 2.0.0
-**Last Updated:** 2026-04-19
-**Status:** ✅ Production Ready (Enhanced)
-**Enhancements:**
-- Added optional Stage 1.5: Market Validation
-- Integrated market-intelligence agent
-- Three execution paths for different scenarios
-- Decision framework for when to use market validation

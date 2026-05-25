@@ -1,7 +1,7 @@
 ---
 name: retro
 description: Engineering retrospective workflow for learning and improvement
-version: "2.0.0"
+version: "2.1.0"
 category: "support"
 origin: "agent-skills"
 agents_used:
@@ -14,184 +14,240 @@ related_skills:
   - documentation
   - writing-plans
 estimated_time: "6-12 hours (retro) / 1-2 weeks (execute actions)"
+react_protocol: true
+context_pruning: true
+max_retries_per_stage: 3
 ---
 
 # Retro Workflow
 
-## Overview
-
-The retro workflow conducts engineering retrospectives to learn from completed work, identify improvements, and continuously enhance processes.
-
-## When to Use
-
-- After project completion
-- End of iteration
-- After major milestones
-- Quarterly reviews
-- Process improvement
-
-## Lifecycle
-
 ```
-DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
-  (1)       (2)       (3)       (4)        (5)       (6)
-   │         │         │         │          │         │
-   ▼         ▼         ▼         ▼          ▼         ▼
- GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+COLLECT → ANALYZE → IDENTIFY → PLAN → EXECUTE
+   1          2          3        4        5
 ```
 
 ### Stage-to-Lifecycle Mapping
 
-| Workflow Stage | Lifecycle Phase | Description |
-|---|---|---|
-| COLLECT (Stage 1) | DEFINE | Gather commit metrics, quality metrics, and feedback |
-| ANALYZE (Stage 2) | DEFINE | Identify patterns, analyze trends, document findings |
-| IDENTIFY (Stage 3) | PLAN | Document successes, identify issues, prioritize improvements |
-| PLAN (Stage 4) | PLAN | Create action plan, assign owners, set timeline |
-| EXECUTE (Stage 5) | BUILD + VERIFY + SHIP | Implement improvements, update processes, track progress |
+| Workflow Stage | Lifecycle Phase |
+|---|---|
+| COLLECT (Stage 1) | DEFINE |
+| ANALYZE (Stage 2) | DEFINE |
+| IDENTIFY (Stage 3) | PLAN |
+| PLAN (Stage 4) | PLAN |
+| EXECUTE (Stage 5) | BUILD + VERIFY + SHIP |
 
-### Verification Gates
+---
 
-#### Gate 1: Definition Complete
+### Stage 1: COLLECT
+
+<thought>
+Observe: Project/iteration complete — need to gather retrospective data.
+Analyze: Must collect commit metrics, quality metrics, and team feedback. Gate requires data collected, metrics gathered, feedback compiled.
+Plan: Gather data from git logs, test reports, and team input.
+</thought>
+
+<action>
+type: invoke_skill
+target: documentation
+params:
+  task: collect_retro_data
+  outputs: [commit_metrics, quality_metrics, feedback]
+</action>
+
+<observation>
+result: Commit metrics collected, quality metrics gathered, feedback compiled
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Data collected
 - [ ] Metrics gathered
 - [ ] Feedback compiled
-PASS → proceed to PLAN | FAIL → return to DEFINE
 
-#### Gate 2: Plan Complete
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: COLLECT
+  completed: []
+  next_action: "ANALYZE"
+```
+
+---
+
+### Stage 2: ANALYZE
+
+<thought>
+Observe: Raw data collected — commit metrics, quality metrics, feedback.
+Analyze: Must identify patterns, analyze trends, document findings.
+Plan: Invoke code-reviewer agent to analyze data.
+</thought>
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  task: analyze_retro_data
+  input: [commit_metrics, quality_metrics, feedback]
+  outputs: [patterns, trends, findings]
+</action>
+
+<observation>
+result: Patterns identified, trends analyzed, findings documented
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
+- [ ] Patterns identified
+- [ ] Trends analyzed
+- [ ] Findings documented
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: ANALYZE
+  completed: [COLLECT]
+  next_action: "IDENTIFY"
+```
+
+---
+
+### Stage 3: IDENTIFY
+
+<thought>
+Observe: Analysis complete with patterns and trends.
+Analyze: Must document successes, identify issues, prioritize improvements.
+Plan: Categorize findings into successes and improvement areas.
+</thought>
+
+<action>
+type: invoke_skill
+target: writing-plans
+params:
+  task: identify_improvements
+  input: [patterns, trends, findings]
+  outputs: [successes, issues, prioritized_improvements]
+</action>
+
+<observation>
+result: Successes documented, issues identified, improvements prioritized
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Successes documented
 - [ ] Issues identified
 - [ ] Improvements prioritized
-- [ ] Plan created
-PASS → proceed to BUILD | FAIL → return to PLAN
 
-#### Gate 3: Build Complete
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: IDENTIFY
+  completed: [COLLECT, ANALYZE]
+  next_action: "PLAN"
+```
+
+---
+
+### Stage 4: PLAN
+
+<thought>
+Observe: Successes and issues identified, improvements prioritized.
+Analyze: Must create action plan with defined items, owners, and timelines.
+Plan: Create actionable improvement plan.
+</thought>
+
+<action>
+type: invoke_skill
+target: writing-plans
+params:
+  task: create_action_plan
+  input: prioritized_improvements
+  outputs: [action_plan, action_items, owners, timeline]
+</action>
+
+<observation>
+result: Action plan created, items defined, owners assigned, timeline set
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Action items defined
 - [ ] Owners assigned
 - [ ] Timeline set
-PASS → proceed to VERIFY | FAIL → return to BUILD
 
-#### Gate 4: Verification Complete
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: PLAN
+  completed: [COLLECT, ANALYZE, IDENTIFY]
+  next_action: "EXECUTE"
+```
+
+---
+
+### Stage 5: EXECUTE
+
+<thought>
+Observe: Action plan ready with owners and timelines.
+Analyze: Must implement improvements, update processes, inform team, track progress.
+Plan: Execute action items and track completion.
+</thought>
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  task: execute_improvements
+  input: action_plan
+  outputs: [actions_completed, processes_updated, team_informed, progress_tracked]
+</action>
+
+<observation>
+result: Actions completed, processes updated, team informed, progress tracked
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Actions completed
 - [ ] Processes updated
 - [ ] Team informed
-PASS → proceed to REVIEW | FAIL → return to BUILD
-
-#### Gate 5: Review Complete
 - [ ] Progress tracked
-- [ ] Improvements measurable
-- [ ] Team learns and improves
-PASS → proceed to SHIP | FAIL → return to BUILD
 
-## Workflow Stages
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│  COLLECT → ANALYZE → IDENTIFY → PLAN → EXECUTE        │
-│     1           2             3        4          5         │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
-
-## Retro Data Collection
-
-### Commit Metrics
-
+**State Snapshot:**
 ```yaml
-commit_metrics:
-  total_commits: 156
-  breakdown:
-    feature: 89
-    fix: 34
-    refactor: 18
-    docs: 12
-    chore: 3
+workflow_state:
+  current_phase: EXECUTE
+  completed: [COLLECT, ANALYZE, IDENTIFY, PLAN]
+  next_action: "DONE"
 ```
 
-### Quality Metrics
-
-```yaml
-quality_metrics:
-  test_coverage:
-    before: "75%"
-    after: "82%"
-    improvement: "+7%"
-```
+---
 
 ## Handoff Contracts
 
 ### Collect → Analyze
-
 ```yaml
 handoff:
   from: manual
   to: code-reviewer
-  provides:
-    - data_collected
-    - metrics_gathered
-    - feedback_compiled
-  expects:
-    - patterns_identified
-    - trends_analyzed
+  provides: [data_collected, metrics_gathered, feedback_compiled]
+  expects: [patterns_identified, trends_analyzed]
 ```
 
-## Quality Gates Summary
+## Error Handling
 
-```yaml
-quality_gates:
-  collect:
-    - data_collected
-    - metrics_gathered
-    - feedback_compiled
+| Error Type | Trigger | Recovery | Retry? |
+|---|---|---|---|
+| `CONTEXT_OVERFLOW` | Context window >80% | `/compact`, prune prior stages | No |
+| `BUILD_DEADLOCK` | Build/test loop >3 failures | Invoke systematic-debugging | Yes |
+| `TEST_ENV_FAILURE` | Infra/env issue, not code bug | Reset environment, retry | No |
+| `SPEC_CONFLICT` | Contradictory requirements found | Return to DEFINE stage | Yes |
 
-  analyze:
-    - patterns_identified
-    - trends_analyzed
-    - findings_documented
+`max_retries_per_stage: 2` — after 2 retries, escalate to human.
 
-  identify:
-    - successes_documented
-    - issues_identified
-    - improvements_prioritized
+## Context Pruning Protocol
 
-  plan:
-    - plan_created
-    - action_items_defined
-    - owners_assigned
-    - timeline_set
-
-  execute:
-    - actions_completed
-    - processes_updated
-    - team_informed
-    - progress_tracked
-```
-
-## Timeline Estimate
-
-```yaml
-timeline:
-  collect: "2-4 hours"
-  analyze: "2-4 hours"
-  identify: "1-2 hours"
-  plan: "1-2 hours"
-  execute: "Variable (1-2 weeks)"
-
-  total_retro: "6-12 hours"
-  total_execute: "As needed"
-```
-
-## Success Criteria
-
-A successful retro workflow:
-
-- [ ] Data collected comprehensively
-- [ ] Patterns identified and analyzed
-- [ ] Successes and failures documented
-- [ ] Action items created
-- [ ] Owners assigned
-- [ ] Timeline set
-- [ ] Improvements implemented
-- [ ] Processes updated
-- [ ] Team learns and improves
+After each stage observation:
+- RETAIN: current phase, gate status, blocking issues, artifacts produced
+- DISCARD: intermediate tool outputs, verbose logs
+- SUMMARIZE: completed stages into 1-2 sentences each

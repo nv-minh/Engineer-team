@@ -192,6 +192,84 @@ if [ -n "$LARGE_FILES" ]; then
     echo "   Consider using Git LFS for large files"
 fi
 
+# 5. Workflow Stage Artifact Checks
+# Verifies that workflow stages weren't skipped by checking for expected artifacts.
+# Control: EM_WORKFLOW_STRICT=strict to block commits, default is warn-only.
+echo ""
+echo "🔎 Checking workflow stage artifacts..."
+
+GATE_FAILED=false
+
+gate_warn() {
+    if [[ "${EM_WORKFLOW_STRICT:-warn}" == "strict" ]]; then
+        echo -e "${RED}✗ GATE BLOCKED: $1${NC}"
+        GATE_FAILED=true
+    else
+        echo -e "${YELLOW}⚠ GATE WARNING: $1${NC}"
+    fi
+}
+
+# 5a. DEFINE gate — Spec should exist if code changes are substantial
+SRC_COUNT=$(echo "$STAGED_FILES" | wc -l | tr -d ' ')
+if [[ "$SRC_COUNT" -gt 3 ]]; then
+    SPEC_EXISTS=false
+    for dir in spec specs docs/specs; do
+        if [[ -d "$dir" ]] && ls "$dir"/*.md >/dev/null 2>&1; then
+            SPEC_EXISTS=true
+            break
+        fi
+    done
+    if [[ "$SPEC_EXISTS" == "false" ]]; then
+        gate_warn "No spec found (spec/, specs/, docs/specs/) but $SRC_COUNT source files changed"
+        gate_warn "Iron Law: NO CODE WITHOUT SPEC (for features)"
+    fi
+fi
+
+# 5b. VERIFY gate — Test evidence should exist if spec exists
+SPEC_EXISTS=false
+for dir in spec specs docs/specs; do
+    if [[ -d "$dir" ]] && ls "$dir"/*.md >/dev/null 2>&1; then
+        SPEC_EXISTS=true
+        break
+    fi
+done
+
+if [[ "$SPEC_EXISTS" == "true" ]]; then
+    EVIDENCE_FOUND=false
+    for artifact in \
+        "test-results/tc-registry.md" \
+        "test-results" \
+        "playwright-report" \
+        "e2e/test-results"; do
+        if [[ -e "$artifact" ]]; then
+            EVIDENCE_FOUND=true
+            break
+        fi
+    done
+    if [[ "$EVIDENCE_FOUND" == "false" ]]; then
+        STAGED_TESTS=$(git diff --cached --name-only | grep -E '\.(test|spec)\.(ts|tsx|js|jsx|py)$|test_[^/]*\.py$|[^/]*_test\.(py|go)$' || true)
+        if [[ -z "$STAGED_TESTS" ]]; then
+            gate_warn "Spec exists but no test evidence found (tc-registry, test-results/, or test files in commit)"
+            gate_warn "VERIFY stage may have been skipped — see protocols/error-handling.md"
+        fi
+    fi
+fi
+
+# 5c. TDD gate — Source changes should include test changes
+STAGED_TESTS=$(git diff --cached --name-only | grep -E '\.(test|spec)\.(ts|tsx|js|jsx|py)$|test_[^/]*\.py$|[^/]*_test\.(py|go)$' || true)
+STAGED_SRC=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx|py|go|rs)$' | grep -vE '\.(test|spec)\.|test_|_test\.' || true)
+
+if [[ -n "$STAGED_SRC" ]] && [[ -z "$STAGED_TESTS" ]]; then
+    gate_warn "Source files changed but no test files in commit"
+    gate_warn "TDD Iron Law: NO PRODUCTION CODE WITHOUT FAILING TEST"
+fi
+
+if [[ "$GATE_FAILED" == "true" ]]; then
+    echo ""
+    echo -e "${RED}✗ Workflow gate checks failed. Set EM_WORKFLOW_STRICT=warn to downgrade to warnings.${NC}"
+    exit 1
+fi
+
 echo ""
 echo -e "${GREEN}✅ All pre-commit checks passed!${NC}"
 echo "   Ready to commit with atomic commit message"

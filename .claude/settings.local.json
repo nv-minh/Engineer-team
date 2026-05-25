@@ -308,7 +308,13 @@
       "Bash(ln -s github-issue-manager.md skills/workflow/github-issue-manager/SKILL.md)",
       "Bash(ln -s github-release-manager.md skills/workflow/github-release-manager/SKILL.md)",
       "Bash(ls -la skills/workflow/github-*/SKILL.md)",
-      "Bash(ls skills/workflow/github-*/)"
+      "Bash(ls skills/workflow/github-*/)",
+      "mcp__notebooklm-mcp__server_info",
+      "mcp__notebooklm-mcp__notebook_create",
+      "mcp__notebooklm-mcp__source_add",
+      "mcp__notebooklm-mcp__studio_create",
+      "mcp__notebooklm-mcp__studio_status",
+      "mcp__notebooklm-mcp__download_artifact"
     ]
   },
   "enableAllProjectMcpServers": true,

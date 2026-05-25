@@ -1,7 +1,7 @@
 ---
 name: six-phase-lifecycle
 description: "Master lifecycle workflow that all EM-Skill workflows inherit. Defines the 6 phases (DEFINE→PLAN→BUILD→VERIFY→REVIEW→SHIP) with verification gates."
-version: "2.0.0"
+version: "2.1.0"
 category: "primary"
 origin: "agent-skills"
 agents_used: [planner, executor, code-reviewer, verifier]
@@ -10,13 +10,12 @@ related_skills:
   - spec-driven-development
   - test-driven-development
 estimated_time: "Variable - depends on scope"
+react_protocol: true
+context_pruning: true
+max_retries_per_stage: 3
 ---
 
 # Six-Phase Lifecycle Workflow
-
-## Overview
-
-The master workflow that governs all EM-Skill development activities. Every workflow in the system follows these six phases with verification gates between each phase. This ensures consistent quality regardless of the specific task.
 
 ## The Lifecycle
 
@@ -28,29 +27,30 @@ DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──�
  GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
 ```
 
-Each phase has:
-- **Goal:** What it must accomplish
-- **Required output:** What must be produced
-- **Verification gate:** What must pass before proceeding
-- **Rollback:** What to do if the gate fails
+Each phase has: **Goal**, **Required output**, **Verification gate**, **Rollback**.
 
-## Phase Details
+---
 
 ### Phase 1: DEFINE
 
-**Goal:** Understand what needs to be built and why.
+<thought>
+Observe: No requirements, scope, or success criteria exist yet.
+Analyze: Must gather requirements, clarify scope, surface assumptions, identify risks. Gate requires documented requirements, defined scope boundaries, measurable success criteria, validated assumptions, and stakeholder alignment.
+Plan: Invoke planner agent to gather and structure requirements.
+</thought>
 
-**Activities:**
-- Gather requirements and context
-- Clarify scope and boundaries
-- Identify stakeholders and success criteria
-- Surface assumptions and risks
+<action>
+type: invoke_agent
+target: planner
+params:
+  task: gather_requirements
+  outputs: [requirements_doc, success_criteria, assumptions_list, risk_assessment]
+</action>
 
-**Required Output:**
-- Requirements document or clarified scope
-- Success criteria (measurable)
-- Assumptions list
-- Risk assessment
+<observation>
+result: Requirements documented, scope boundaries defined, success criteria measurable
+gate_status: PASS | FAIL
+</observation>
 
 **Gate 1: Definition Complete**
 - [ ] Requirements are documented and specific
@@ -59,25 +59,39 @@ Each phase has:
 - [ ] Assumptions are listed and validated
 - [ ] Stakeholders are aligned
 
-**PASS** → Proceed to PLAN
-**FAIL** → Return to DEFINE, resolve gaps
+**PASS** → Proceed to PLAN | **FAIL** → Return to DEFINE, resolve gaps
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DEFINE
+  completed: []
+  next_action: "PLAN if gate passes"
+```
+
+---
 
 ### Phase 2: PLAN
 
-**Goal:** Design the approach and break down into implementable tasks.
+<thought>
+Observe: Requirements documented, scope defined, success criteria set.
+Analyze: Must design architecture, break down into tasks, identify dependencies, assign agents, define verification criteria per task. Gate requires all requirements mapped to tasks, dependencies ordered, no TBDs, specific file paths.
+Plan: Invoke planner agent with writing-plans skill.
+</thought>
 
-**Activities:**
-- Design architecture and approach
-- Break down into bite-sized tasks
-- Identify dependencies and ordering
-- Assign agents and resources
-- Define verification criteria per task
+<action>
+type: invoke_agent
+target: planner
+params:
+  task: create_implementation_plan
+  input: requirements_doc
+  outputs: [PLAN.md, task_breakdown, file_structure_map, verification_criteria]
+</action>
 
-**Required Output:**
-- Implementation plan (PLAN.md)
-- Task breakdown with dependencies
-- File structure mapping
-- Verification criteria per task
+<observation>
+result: Implementation plan with task breakdown, dependencies, and verification criteria
+gate_status: PASS | FAIL
+</observation>
 
 **Gate 2: Plan Complete**
 - [ ] All requirements have corresponding tasks
@@ -86,23 +100,40 @@ Each phase has:
 - [ ] Each task has verification criteria
 - [ ] File paths are specific
 
-**PASS** → Proceed to BUILD
-**FAIL** → Return to PLAN, fill gaps
+**PASS** → Proceed to BUILD | **FAIL** → Return to PLAN, fill gaps
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: PLAN
+  completed: [DEFINE]
+  next_action: "BUILD if gate passes"
+```
+
+---
 
 ### Phase 3: BUILD
 
-**Goal:** Implement tasks following TDD and atomic commits.
+<thought>
+Observe: Plan complete with ordered tasks, dependencies mapped, verification criteria set.
+Analyze: Must implement tasks in dependency order following TDD, make atomic commits, self-review code. Gate requires all tasks implemented, tests written, all tests passing, conventions followed, no TODOs, atomic commits.
+Plan: Invoke executor agent with test-driven-development skill.
+</thought>
 
-**Activities:**
-- Implement tasks in dependency order
-- Follow TDD (RED-GREEN-REFACTOR) for each task
-- Make atomic commits after each task
-- Self-review code before marking complete
+<action>
+type: invoke_agent
+target: executor
+params:
+  task: implement_plan
+  methodology: TDD
+  commit_style: atomic
+  outputs: [working_code, tests, atomic_commits]
+</action>
 
-**Required Output:**
-- Working code with tests
-- Atomic commits with meaningful messages
-- Updated documentation (if applicable)
+<observation>
+result: All tasks implemented with tests, atomic commits made
+gate_status: PASS | FAIL
+</observation>
 
 **Gate 3: Build Complete**
 - [ ] All tasks implemented
@@ -112,49 +143,104 @@ Each phase has:
 - [ ] No TODO/FIXME remaining
 - [ ] Atomic commits made
 
-**PASS** → Proceed to VERIFY
-**FAIL** → Return to BUILD, fix issues
+**PASS** → Proceed to VERIFY | **FAIL** → Return to BUILD, fix issues
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: BUILD
+  completed: [DEFINE, PLAN]
+  next_action: "VERIFY if gate passes"
+```
+
+---
 
 ### Phase 4: VERIFY
 
-**Goal:** Validate that what was built matches what was specified.
+> **⛔ NON-SKIPPABLE PHASE.** All steps below are MANDATORY. Do NOT proceed to REVIEW without completing ALL steps and producing ALL required artifacts.
 
-**Activities:**
-- Run full test suite
-- Verify acceptance criteria
-- Test edge cases and error paths
-- Check performance benchmarks
-- Verify integration points
+<thought>
+Observe: Code implemented with tests passing, atomic commits made.
+Analyze: Must validate implementation against spec. Generate test cases, run full suite (unit/integration/E2E), execute Playwright E2E with video evidence recording, collect browser evidence (screenshots + video + traces), double-check with test-verifier. Gate requires all acceptance criteria met, TC registry generated, all tests passing, E2E verified with evidence, test-verifier PASS, no regressions.
+Plan: Execute 5 mandatory steps in sequence: (1) verify spec coverage, (2) generate TC registry, (3) ensure Playwright setup with `video: 'retain-on-failure'`, (4) run E2E tests and collect evidence, (5) double-check with test-verifier.
+</thought>
 
-**Required Output:**
-- Verification report
-- Test coverage report
-- Performance benchmarks (if applicable)
+**Mandatory Steps:**
+
+1. **Verify spec coverage** — Invoke `verifier` agent. Map every spec requirement to implementation. Coverage must be 100%.
+2. **Generate TC registry** — Invoke `test-generation` skill. Produce `TC-REGISTRY.md` with TC-IDs for all acceptance criteria.
+3. **Ensure Playwright setup** — Verify `playwright.config.ts` exists with `video: 'retain-on-failure'`, `trace: 'retain-on-failure'`, `screenshot: 'only-on-failure'`. If missing, invoke `playwright-setup` agent first.
+4. **Run E2E tests & collect evidence** — Invoke `e2e-testing` + `browser-testing` skills. Execute `npx playwright test --reporter=html,list`. Evidence artifacts must be present in `test-results/` (videos, screenshots, traces).
+5. **Double-check with test-verifier** — Invoke `test-verifier` agent. Re-run failed tests (max 3 retries). Produce verdict: PASS with confidence score or FAIL with per-TC details + evidence paths.
+
+<action>
+type: invoke_agent
+target: verifier
+params:
+  task: full_verification
+  skills: [test-generation, e2e-testing, browser-testing]
+  agents: [test-engineer, test-verifier]
+  outputs: [tc_registry, verification_report, coverage_report, e2e_evidence, test_verifier_report]
+  playwright_config:
+    video: 'retain-on-failure'
+    trace: 'retain-on-failure'
+    screenshot: 'only-on-failure'
+</action>
+
+<observation>
+result: All acceptance criteria met, E2E evidence collected, test-verifier PASS with confidence score
+gate_status: PASS | FAIL
+</observation>
 
 **Gate 4: Verification Complete**
 - [ ] All acceptance criteria met
+- [ ] Test case registry generated (spec requirements → TC-IDs)
 - [ ] All tests passing (unit, integration, e2e)
+- [ ] Playwright configured with `video: 'retain-on-failure'`
+- [ ] E2E test suite executed — critical user flows verified
+- [ ] Browser test evidence collected (`test-results/videos/`, `test-results/screenshots/`, `test-results/traces/`)
+- [ ] Playwright HTML report generated
+- [ ] **test-verifier PASS** (or failure report reviewed and signed off by user)
 - [ ] Edge cases handled
 - [ ] Performance benchmarks met
 - [ ] No regressions in existing tests
 
-**PASS** → Proceed to REVIEW
-**FAIL** → Return to BUILD, fix failures
+⛔ **DO NOT proceed to REVIEW if ANY item above is unchecked.**
+
+**PASS** → Proceed to REVIEW | **FAIL** → Return to BUILD, fix failures (use test-verifier failure report as input)
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: VERIFY
+  completed: [DEFINE, PLAN, BUILD]
+  artifacts: [tc_registry, verification_report, e2e_evidence, playwright_report, test_verifier_report]
+  next_action: "REVIEW if gate passes"
+```
+
+---
 
 ### Phase 5: REVIEW
 
-**Goal:** Ensure code quality through structured review.
+<thought>
+Observe: Verification complete, all tests passing, acceptance criteria met.
+Analyze: Must ensure code quality through structured review. Code review (5-axis or 9-axis), architecture review, security review, performance review as applicable. Gate requires no CRITICAL findings, no unaddressed HIGH findings.
+Plan: Invoke code-reviewer agent with code-review skill.
+</thought>
 
-**Activities:**
-- Code review (5-axis or 9-axis)
-- Architecture review (if applicable)
-- Security review (if applicable)
-- Performance review (if applicable)
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  task: structured_code_review
+  mode: standard_or_deep
+  outputs: [code_review_report, security_review_report, findings_list]
+</action>
 
-**Required Output:**
-- Code review report
-- Security review report (if applicable)
-- List of findings with severity
+<observation>
+result: Code review passed, no CRITICAL findings
+gate_status: PASS | FAIL
+</observation>
 
 **Gate 5: Review Complete**
 - [ ] No CRITICAL findings
@@ -163,24 +249,38 @@ Each phase has:
 - [ ] Security review passed (if applicable)
 - [ ] Architecture review passed (if applicable)
 
-**PASS** → Proceed to SHIP
-**FAIL** → Return to BUILD, address findings
+**PASS** → Proceed to SHIP | **FAIL** → Return to BUILD, address findings
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: REVIEW
+  completed: [DEFINE, PLAN, BUILD, VERIFY]
+  next_action: "SHIP if gate passes"
+```
+
+---
 
 ### Phase 6: SHIP
 
-**Goal:** Deliver the code to production safely.
+<thought>
+Observe: Review complete, no blocking findings, code quality verified.
+Analyze: Must deliver code safely. Final verification, version bump, changelog, PR creation, deploy, post-deploy monitoring.
+Plan: Invoke executor agent with git-workflow skill.
+</thought>
 
-**Activities:**
-- Final verification
-- Version bump and changelog
-- Create PR
-- Deploy (if applicable)
-- Post-deploy monitoring (canary)
+<action>
+type: invoke_agent
+target: executor
+params:
+  task: ship_to_production
+  outputs: [published_pr, deployment, health_check]
+</action>
 
-**Required Output:**
-- Published PR
-- Deployment (if applicable)
-- Post-deploy health check (if applicable)
+<observation>
+result: PR created, CI green, deployed successfully
+gate_status: PASS | FAIL
+</observation>
 
 **Completion Criteria:**
 - [ ] PR created and approved
@@ -189,9 +289,17 @@ Each phase has:
 - [ ] Post-deploy health check passed
 - [ ] Documentation updated
 
-## Phase Adaptability
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: SHIP
+  completed: [DEFINE, PLAN, BUILD, VERIFY, REVIEW]
+  next_action: "DONE"
+```
 
-Not every task requires all six phases. Adapt based on scope:
+---
+
+## Phase Adaptability
 
 | Task Type | Phases | Example |
 |---|---|---|
@@ -200,17 +308,23 @@ Not every task requires all six phases. Adapt based on scope:
 | Feature | Full lifecycle | New user dashboard |
 | Refactor | DEFINE → PLAN → BUILD → VERIFY → SHIP | Simplify auth module |
 | Documentation | DEFINE → BUILD → SHIP | Update API docs |
-| Security patch | DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP | Fix XSS vulnerability |
+| Security patch | Full lifecycle | Fix XSS vulnerability |
 | Greenfield app | Full lifecycle with extended DEFINE | New product from scratch |
 
-## Workflow Selection Guide
+## ReAct Action Types
 
-| Starting Point | Use Workflow | Key Difference |
+All workflows use these action types inside `<action>` blocks:
+
+| Type | Purpose | Example |
 |---|---|---|
-| Blank directory + idea | greenfield-app | Extended DEFINE with domain modeling |
-| Existing codebase + feature | new-feature | Brainstorm → Spec → Build |
-| Existing codebase + market opportunity | market-driven-feature | Market discovery first |
-| Technical bootstrapping only | project-setup | Scaffolding only |
+| `invoke_agent` | Dispatch work to a single agent | `target: executor`, `target: planner` |
+| `invoke_skill` | Invoke a skill within the current agent context | `target: brainstorming`, `target: code-review` |
+| `invoke_workflow` | Delegate to another complete workflow | `target: project-setup`, `target: ship-workflow` |
+| `setup_git_and_spec` | Bootstrap workspace (Stage 0) | See `workflows/_shared/stage-0-git-bootstrap.md` |
+
+**`invoke_workflow`** — used when a stage delegates its entire execution to another workflow (e.g., `greenfield-app.md` Stage 7 delegates to `project-setup`, Stage 12 delegates to `ship-workflow`). The calling workflow pauses until the invoked workflow completes and returns its gate status.
+
+---
 
 ## Rollback Protocol
 
@@ -230,3 +344,61 @@ This master lifecycle is inherited by:
 - `security-audit.md` — Lifecycle for security assessments
 - `greenfield-app.md` — Full lifecycle for new products from scratch
 - All team workflows — Lifecycle with multi-agent coordination
+
+## Handoff Contracts
+
+### DEFINE → PLAN
+```yaml
+handoff:
+  from: planner (define)
+  to: planner (plan)
+  provides: [requirements_doc, success_criteria, assumptions_list]
+  expects: [implementation_plan, task_breakdown, dependency_map]
+```
+
+### BUILD → VERIFY
+```yaml
+handoff:
+  from: executor
+  to: verifier
+  provides: [implementation_commits, unit_tests, build_artifacts]
+  expects: [verification_report, tc_registry, e2e_evidence]
+```
+
+### VERIFY → REVIEW
+```yaml
+handoff:
+  from: verifier
+  to: code-reviewer
+  provides: [verification_report, test_verifier_pass, e2e_evidence]
+  expects: [code_review_report, assessment (APPROVE | REQUEST_CHANGES)]
+```
+
+### REVIEW → SHIP
+```yaml
+handoff:
+  from: code-reviewer
+  to: executor
+  provides: [review_approved, all_gates_passed]
+  expects: [pr_merged, deployed, monitoring_healthy]
+```
+
+---
+
+## Error Handling
+
+| Error Type | Trigger | Recovery | Retry? |
+|---|---|---|---|
+| `CONTEXT_OVERFLOW` | Context window >80% | `/compact`, prune prior stages | No |
+| `BUILD_DEADLOCK` | Build/test loop >3 failures | Invoke systematic-debugging | Yes |
+| `TEST_ENV_FAILURE` | Infra/env issue, not code bug | Reset environment, retry | No |
+| `SPEC_CONFLICT` | Contradictory requirements found | Return to DEFINE stage | Yes |
+
+`max_retries_per_stage: 2` — after 2 retries, escalate to human.
+
+## Context Pruning Protocol
+
+After each stage observation:
+- RETAIN: current phase, gate status, blocking issues, artifacts produced
+- DISCARD: intermediate tool outputs, verbose logs
+- SUMMARIZE: completed stages into 1-2 sentences each

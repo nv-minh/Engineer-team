@@ -1,7 +1,7 @@
 ---
 name: systematic-debugging
 description: "Systematic root-cause debugging using scientific method. Use when tests fail, builds break, behavior doesn't match expectations, or you encounter any unexpected error."
-version: "2.0.0"
+version: "3.0.0"
 category: "foundation"
 origin: "superpowers"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -28,96 +28,127 @@ anti_patterns:
   - "Skipping failing tests instead of fixing them"
   - "Making multiple unrelated changes while debugging"
 related_skills: [test-driven-development, writing-plans, context-engineering]
+
+input_schema:
+  type: object
+  required: [symptoms]
+  properties:
+    symptoms:
+      type: array
+      items: { type: string }
+      description: "Observable errors, failures, or unexpected behaviors"
+    reproduction_steps:
+      type: string
+      description: "Steps to reproduce the issue"
+    error_messages:
+      type: array
+      items: { type: string }
+    affected_area:
+      type: string
+      description: "Component, module, or feature affected"
+
+output_schema:
+  type: object
+  required: [status, investigation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    investigation:
+      type: object
+      properties:
+        root_cause: { type: string }
+        evidence: { type: array, items: { type: string } }
+        hypotheses_tested:
+          type: array
+          items:
+            type: object
+            properties:
+              hypothesis: { type: string }
+              result: { type: string, enum: [confirmed, eliminated] }
+              evidence: { type: string }
+        fix_recommendation: { type: string }
+        regression_test: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
-# Systematic Debugging
+[ROLE]
+Systematic debugger. Apply scientific method to isolate root causes.
 
-## Overview
+[OBJECTIVE]
+Identify root cause through hypothesis-evidence testing. Provide fix with regression test.
 
-Systematic debugging with structured triage using the scientific method. When something breaks, stop adding features, preserve evidence, and follow a structured process to find and fix the root cause. Guessing wastes time. The triage checklist works for test failures, build errors, runtime bugs, and production incidents.
+[RULES]
+1. <thought>Before proposing any fix, enumerate hypotheses and identify which evidence supports or eliminates each one.</thought>
+2. **Debugging Iron Law: NO FIXES WITHOUT ROOT CAUSE.** Never apply a fix without understanding and documenting the root cause.
+3. **Stop-the-Line:** When anything unexpected happens — STOP adding features, PRESERVE evidence, DIAGNOSE using the 4-phase process, FIX the root cause, GUARD against recurrence, RESUME only after verification passes.
+4. DO NOT guess at fixes without reproducing the bug first.
+5. DO NOT fix symptoms instead of root causes. Ask "Why does this happen?" until you reach the actual cause.
+6. DO NOT skip failing tests to work on new features. Errors compound.
+7. DO NOT make multiple unrelated changes while debugging — this contaminates the fix.
+8. DO NOT claim "it works now" without understanding what changed.
+9. Every bug fix MUST include a regression test that fails without the fix and passes with it.
+10. When NOT to use: The error message is self-explanatory and the fix is a single-character typo.
+11. Teach the scientific method through each debugging session — hypothesis, test, conclude.
 
-## When to Use
-
-- Tests fail after a code change
-- The build breaks
-- Runtime behavior doesn't match expectations
-- A bug report arrives
-- An error appears in logs or console
-- Something worked before and stopped working
-
-## The Iron Law
-
-**NO FIXES WITHOUT ROOT CAUSE**
-
-Never apply a fix without understanding and documenting the root cause. Symptom fixes create technical debt and recurring bugs.
-
-## The Stop-the-Line Rule
-
-When anything unexpected happens:
-
-```
-1. STOP adding features or making changes
-2. PRESERVE evidence (error output, logs, repro steps)
-3. DIAGNOSE using the triage checklist
-4. FIX the root cause
-5. GUARD against recurrence
-6. RESUME only after verification passes
-```
-
-**Don't push past a failing test or broken build to work on the next feature.** Errors compound. A bug in Step 3 that goes unfixed makes Steps 4-10 wrong.
-
-## The 4-Phase Debugging Process
+[PROCESS]
 
 ### Phase 1: Investigate
 
 Gather symptoms and evidence systematically.
 
 **Gather these symptoms:**
-1. **Expected behavior** - What should happen?
-2. **Actual behavior** - What happens instead?
-3. **Error messages** - Any errors? (paste or describe)
-4. **Timeline** - When did this start? Ever worked?
-5. **Reproduction** - How do you trigger it?
+1. **Expected behavior** — What should happen?
+2. **Actual behavior** — What happens instead?
+3. **Error messages** — Any errors? (paste or describe)
+4. **Timeline** — When did this start? Ever worked?
+5. **Reproduction** — How do you trigger it?
 
 **Make the failure reproducible:**
 
+```
 Can you reproduce the failure?
 ├── YES → Proceed to Phase 2
 └── NO
     ├── Gather more context (logs, environment details)
     ├── Try reproducing in a minimal environment
     └── If truly non-reproducible, document conditions and monitor
+```
 
-**When a bug is non-reproducible:**
+**Non-reproducible bug triage:**
 
+```
 Cannot reproduce on demand:
 ├── Timing-dependent?
-│   ├── Add timestamps to logs around the suspected area
-│   ├── Try with artificial delays (setTimeout, sleep) to widen race windows
-│   └── Run under load or concurrency to increase collision probability
+│   ├── Add timestamps to logs around suspected area
+│   ├── Try with artificial delays to widen race windows
+│   └── Run under load/concurrency to increase collision probability
 ├── Environment-dependent?
-│   ├── Compare Node/browser versions, OS, environment variables
-│   ├── Check for differences in data (empty vs populated database)
-│   └── Try reproducing in CI where the environment is clean
+│   ├── Compare Node/browser versions, OS, env vars
+│   ├── Check for data differences (empty vs populated database)
+│   └── Try reproducing in CI (clean environment)
 ├── State-dependent?
-│   ├── Check for leaked state between tests or requests
-│   ├── Look for global variables, singletons, or shared caches
-│   └── Run the failing scenario in isolation vs after other operations
+│   ├── Check for leaked state between tests/requests
+│   ├── Look for globals, singletons, shared caches
+│   └── Run failing scenario in isolation vs after other operations
 └── Truly random?
-    ├── Add defensive logging at the suspected location
-    ├── Set up an alert for the specific error signature
-    └── Document the conditions observed and revisit when it recurs
+    ├── Add defensive logging at suspected location
+    ├── Set up alert for specific error signature
+    └── Document conditions and revisit on recurrence
+```
 
 For test failures:
 ```bash
-# Run the specific failing test
-npm test -- --grep "test name"
-
-# Run with verbose output
-npm test -- --verbose
-
-# Run in isolation (rules out test pollution)
-npm test -- --testPathPattern="specific-file" --runInBand
+npm test -- --grep "test name"        # Run specific failing test
+npm test -- --verbose                  # Verbose output
+npm test -- --testPathPattern="file" --runInBand  # Isolation (rules out test pollution)
 ```
 
 ### Phase 2: Analyze
@@ -126,6 +157,7 @@ Narrow down WHERE the failure happens and form hypotheses.
 
 **Localize the failure:**
 
+```
 Which layer is failing?
 ├── UI/Frontend     → Check console, DOM, network tab
 ├── API/Backend     → Check server logs, request/response
@@ -133,47 +165,37 @@ Which layer is failing?
 ├── Build tooling   → Check config, dependencies, environment
 ├── External service → Check connectivity, API changes, rate limits
 └── Test itself     → Check if the test is correct (false negative)
+```
 
 **Use bisection for regression bugs:**
 ```bash
-# Find which commit introduced the bug
 git bisect start
-git bisect bad                    # Current commit is broken
-git bisect good <known-good-sha> # This commit worked
-# Git will checkout midpoint commits; run your test at each
+git bisect bad
+git bisect good <known-good-sha>
 git bisect run npm test -- --grep "failing test"
 ```
 
-**Form hypotheses:**
-
-Based on the evidence, form specific, testable hypotheses:
+**Form hypotheses** — each must be specific, testable, and falsifiable:
 - "The bug occurs when the user object is null"
 - "The race condition happens when two requests arrive simultaneously"
 - "The error is caused by missing environment variable in production"
 
-Each hypothesis should be falsifiable — you can design a test to prove it wrong.
-
 ### Phase 3: Hypothesize
 
-Create the minimal failing case and test your hypotheses.
+Create the minimal failing case and test hypotheses.
 
 **Reduce to minimal case:**
-
 - Remove unrelated code/config until only the bug remains
-- Simplify the input to the smallest example that triggers the failure
+- Simplify input to the smallest example that triggers the failure
 - Strip the test to the bare minimum that reproduces the issue
 
-A minimal reproduction makes the root cause obvious and prevents fixing symptoms instead of causes.
-
 **Test each hypothesis:**
-
-For each hypothesis:
 1. Design a test that would fail if the hypothesis is true
 2. Run the test
 3. If it passes, reject the hypothesis
 4. If it fails, investigate deeper
 
-Continue until you find a hypothesis that explains all the evidence.
+Continue until a hypothesis explains all the evidence.
 
 ### Phase 4: Implement
 
@@ -184,19 +206,15 @@ Fix the root cause and guard against recurrence.
 ```
 Symptom: "The user list shows duplicate entries"
 
-Symptom fix (bad):
+Symptom fix (wrong):
   → Deduplicate in the UI component: [...new Set(users)]
 
-Root cause fix (good):
+Root cause fix (correct):
   → The API endpoint has a JOIN that produces duplicates
-  → Fix the query, add a DISTINCT, or fix the data model
+  → Fix the query, add DISTINCT, or fix the data model
 ```
 
-Ask: "Why does this happen?" until you reach the actual cause, not just where it manifests.
-
-**Guard against recurrence:**
-
-Write a test that catches this specific failure:
+**Write a regression test:**
 
 ```typescript
 // The bug: task titles with special characters broke the search
@@ -208,132 +226,43 @@ it('finds tasks with special characters in title', async () => {
 });
 ```
 
-This test will prevent the same bug from recurring. It should fail without the fix and pass with it.
-
 **Verify end-to-end:**
-
-After fixing, verify the complete scenario:
-
 ```bash
-# Run the specific test
-npm test -- --grep "specific test"
-
-# Run the full test suite (check for regressions)
-npm test
-
-# Build the project (check for type/compilation errors)
-npm run build
-
-# Manual spot check if applicable
-npm run dev  # Verify in browser
+npm test -- --grep "specific test"   # Specific test passes
+npm test                              # Full suite passes (no regressions)
+npm run build                         # Build succeeds
 ```
 
-## Error-Specific Patterns
-
-### Test Failure Triage
+**Error-specific triage patterns:**
 
 ```
 Test fails after code change:
-├── Did you change code the test covers?
-│   └── YES → Check if the test or the code is wrong
-│       ├── Test is outdated → Update the test
-│       └── Code has a bug → Fix the code
-├── Did you change unrelated code?
-│   └── YES → Likely a side effect → Check shared state, imports, globals
-└── Test was already flaky?
-    └── Check for timing issues, order dependence, external dependencies
-```
+├── Changed code the test covers? → Check if test or code is wrong
+├── Changed unrelated code? → Likely side effect → Check shared state, imports, globals
+└── Test was already flaky? → Check timing issues, order dependence, external deps
 
-### Build Failure Triage
-
-```
 Build fails:
-├── Type error → Read the error, check the types at the cited location
-├── Import error → Check the module exists, exports match, paths are correct
-├── Config error → Check build config files for syntax/schema issues
+├── Type error → Read error, check types at cited location
+├── Import error → Check module exists, exports match, paths correct
+├── Config error → Check build config for syntax/schema issues
 ├── Dependency error → Check package.json, run npm install
 └── Environment error → Check Node version, OS compatibility
-```
 
-### Runtime Error Triage
-
-```
 Runtime error:
-├── TypeError: Cannot read property 'x' of undefined
-│   └── Something is null/undefined that shouldn't be
-│       → Check data flow: where does this value come from?
-├── Network error / CORS
-│   └── Check URLs, headers, server CORS config
-├── Render error / White screen
-│   └── Check error boundary, console, component tree
-└── Unexpected behavior (no error)
-    └── Add logging at key points, verify data at each step
+├── TypeError: Cannot read property 'x' of undefined → Check data flow
+├── Network error / CORS → Check URLs, headers, server config
+├── Render error / White screen → Check error boundary, console, component tree
+└── Unexpected behavior (no error) → Add logging at key points, verify data at each step
 ```
 
-## Safe Fallback Patterns
+[RESPONSE FORMAT]
+Return output conforming to `output_schema`. Set `status` to:
+- `DONE` — Root cause identified, fix applied, regression test passes
+- `DONE_WITH_CONCERNS` — Fix applied but related risks remain
+- `NEEDS_CONTEXT` — Cannot reproduce or insufficient information to diagnose
+- `BLOCKED` — External dependency or access prevents investigation
 
-When under time pressure, use safe fallbacks:
-
-```typescript
-// Safe default + warning (instead of crashing)
-function getConfig(key: string): string {
-  const value = process.env[key];
-  if (!value) {
-    console.warn(`Missing config: ${key}, using default`);
-    return DEFAULTS[key] ?? '';
-  }
-  return value;
-}
-
-// Graceful degradation (instead of broken feature)
-function renderChart(data: ChartData[]) {
-  if (data.length === 0) {
-    return <EmptyState message="No data available for this period" />;
-  }
-  try {
-    return <Chart data={data} />;
-  } catch (error) {
-    console.error('Chart render failed:', error);
-    return <ErrorState message="Unable to display chart" />;
-  }
-}
-```
-
-## Common Rationalizations
-
-| Rationalization | Reality |
-|---|---|
-| "I know what the bug is, I'll just fix it" | You might be right 70% of the time. The other 30% costs hours. Reproduce first. |
-| "The failing test is probably wrong" | Verify that assumption. If the test is wrong, fix the test. Don't just skip it. |
-| "It works on my machine" | Environments differ. Check CI, check config, check dependencies. |
-| "I'll fix it in the next commit" | Fix it now. The next commit will introduce new bugs on top of this one. |
-| "This is a flaky test, ignore it" | Flaky tests mask real bugs. Fix the flakiness or understand why it's intermittent. |
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:** Every debugging session is a teaching opportunity about how systems fail.
-
-1. **The Iron Law teaches discipline.** "No fixes without root cause" is the most important debugging principle. Teach your human partner that symptom fixes create recurring bugs and technical debt.
-
-2. **Scientific method applies to code.** Hypothesis → Test → Conclude. This isn't just for debugging — it's a general engineering thinking framework. Every debugging session reinforces it.
-
-3. **Bisection is a superpower.** `git bisect` finds the exact commit that introduced a bug in O(log n) time. Teach this technique early — it saves hours of manual investigation.
-
-4. **Non-reproducible bugs teach resilience.** When a bug can't be reproduced, the systematic approach (timing? environment? state?) teaches how to think about complex systems.
-
-## Red Flags
-
-- Skipping a failing test to work on new features
-- Guessing at fixes without reproducing the bug
-- Fixing symptoms instead of root causes
-- "It works now" without understanding what changed
-- No regression test added after a bug fix
-- Multiple unrelated changes made while debugging (contaminating the fix)
-
-## Verification
-
-After fixing a bug:
-
+[VERIFICATION]
 - [ ] Root cause is identified and documented
 - [ ] Fix addresses the root cause, not just symptoms
 - [ ] A regression test exists that fails without the fix

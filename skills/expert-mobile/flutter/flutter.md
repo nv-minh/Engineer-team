@@ -3,30 +3,19 @@ name: flutter
 description: >
   Flutter cross-platform development — widgets, state management, navigation,
   platform channels, performance optimization, and hot reload workflow.
-  Use when building mobile, web, or desktop apps with Flutter/Dart.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-mobile"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
-triggers:
-  - "flutter"
-  - "dart"
-  - "cross-platform mobile"
-  - "flutter widget"
-  - "flutter state management"
-  - "flutter navigation"
-  - "flutter hot reload"
+triggers: ["flutter", "dart", "cross-platform mobile", "flutter widget", "flutter state management", "flutter navigation", "flutter hot reload"]
 intent: >
   Guide Flutter development from project setup through production. Covers widget
   composition, state management strategies, navigation patterns, platform interop,
   and performance tuning.
 scenarios:
   - "Building cross-platform mobile apps with shared Dart codebase"
-  - "Implementing reactive UI with StatelessWidget and StatefulWidget"
   - "Choosing and applying state management (Provider, Riverpod, Bloc)"
-  - "Setting up declarative routing with GoRouter or Navigator 2.0"
   - "Calling native platform APIs via platform channels"
-  - "Optimizing widget rebuilds and profiling performance"
 best_for: "Cross-platform mobile/web/desktop apps, Material and Cupertino UI, reactive widget trees"
 estimated_time: "10-60 min"
 anti_patterns:
@@ -36,88 +25,91 @@ anti_patterns:
   - "Not testing on both iOS and Android — platform differences matter"
   - "Synchronous platform channel calls — use async MethodChannel"
 related_skills: ["react-native", "android-kotlin", "ios-swift"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Flutter
 
-## Overview
+[ROLE]
+Act as a Flutter expert. Deliver composable widget trees with `const` constructors, consistent state management, and platform-aware navigation.
 
-Flutter development for cross-platform mobile, web, and desktop applications using Dart. Widget-based UI framework with hot reload for rapid iteration. Supports Material Design and Cupertino (iOS-style) widgets.
+[OBJECTIVE]
+Build Flutter applications where widgets are small and focused, state management is consistent (one approach per project), and platform channels handle native integration asynchronously.
 
-## When to Use
+[RULES]
+1. <thought>Before writing any widget, determine: Is this Stateless or Stateful? Can it use const? What state management approach does this project use?</thought>
+2. Split large widgets into small, focused, reusable components.
+3. Use `const` constructors everywhere possible — they are free performance.
+4. Choose ONE state management approach per project (Provider, Riverpod, or Bloc).
+5. Test on both iOS and Android — handle platform differences with `Platform.isIOS`.
+6. DO NOT write giant build() methods — extract sub-widgets.
+7. DO NOT use setState for app-wide state — use Provider/Riverpod/Bloc.
+8. DO NOT ignore const constructors.
+9. Use Keys on list items for correct reconciliation — `ValueKey` for data-driven lists.
+10. Avoid expensive operations in `build()` — move to `initState` or compute providers.
+11. Use `RepaintBoundary` for frequently updating sub-trees.
+12. ABC: Widget vs Element vs RenderObject — Widgets are blueprints, Elements are instances, RenderObjects paint. Understanding this makes debugging layout issues faster.
 
-- Building cross-platform apps from a single Dart codebase
-- Creating reactive UIs with composable widgets
-- Implementing complex state management flows
-- Calling native platform APIs (camera, sensors, storage)
-- Prototyping UI rapidly with hot reload
+[PROCESS]
 
-## When NOT to Use
-
-- Pure native performance-critical apps (use android-kotlin or ios-swift)
-- Apps requiring heavy native UI components not available in Flutter
-- When team has no Dart expertise and React Native is a better fit
-
-## Process
-
-### 1. Project Setup
-
-```bash
-flutter create my_app --org com.example --platforms android,ios
-cd my_app
-flutter run  # Hot reload enabled
-```
-
-### 2. Widget Composition
-
-**StatelessWidget** — immutable, rebuilds when parent changes:
+### Widget Composition
 
 ```dart
 class UserCard extends StatelessWidget {
   final String name;
-  final String email;
-  const UserCard({super.key, required this.name, required this.email});
-
+  const UserCard({super.key, required this.name});
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.person),
-        title: Text(name),
-        subtitle: Text(email),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Card(child: ListTile(title: Text(name)));
 }
 ```
 
-**StatefulWidget** — mutable, manages own state:
-
-```dart
-class CounterPage extends StatefulWidget {
-  const CounterPage({super.key});
-  @override
-  State<CounterPage> createState() => _CounterPageState();
-}
-
-class _CounterPageState extends State<CounterPage> {
-  int _count = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Counter')),
-      body: Center(child: Text('Count: $_count')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() => _count++),
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-```
-
-### 3. State Management Strategy
+### State Management
 
 | Scale | Solution | Use Case |
 |-------|----------|----------|
@@ -126,96 +118,29 @@ class _CounterPageState extends State<CounterPage> {
 | Medium | `Riverpod` | Type-safe, testable state |
 | Complex | `Bloc/Cubit` | Event-driven, enterprise apps |
 
-**Provider example:**
+### Navigation (GoRouter)
 
 ```dart
-// Define
-final counterProvider = StateProvider<int>((ref) => 0);
-
-// Consume (Riverpod)
-class CounterWidget extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(counterProvider);
-    return Text('$count');
-  }
-}
+final router = GoRouter(routes: [
+  GoRoute(path: '/', builder: (_, __) => const HomePage()),
+  GoRoute(path: '/details/:id', builder: (_, state) => DetailsPage(id: state.pathParameters['id']!)),
+]);
 ```
 
-### 4. Navigation
-
-**Named routes (simple):**
+### Platform Channels
 
 ```dart
-MaterialApp(
-  routes: {
-    '/': (context) => const HomePage(),
-    '/details': (context) => const DetailsPage(),
-  },
-);
-Navigator.pushNamed(context, '/details');
-```
-
-**GoRouter (recommended for complex apps):**
-
-```dart
-final router = GoRouter(
-  routes: [
-    GoRoute(path: '/', builder: (_, __) => const HomePage()),
-    GoRoute(path: '/details/:id', builder: (_, state) =>
-      DetailsPage(id: state.pathParameters['id']!)),
-  ],
-);
-```
-
-### 5. Platform Channels
-
-```dart
-// Dart side
 const platform = MethodChannel('com.example/channel');
 final result = await platform.invokeMethod('getBatteryLevel');
-
-// Android (Kotlin)
-override fun onMethodCall(call: MethodCall, result: Result) {
-  if (call.method == "getBatteryLevel") {
-    result.success(batteryLevel)
-  }
-}
 ```
 
-### 6. Performance
-
-- Use `const` constructors to enable widget caching
-- Use `Keys` on list items for correct reconciliation
-- Avoid expensive operations in `build()` — move to `initState` or compute providers
-- Use `RepaintBoundary` for frequently updating sub-trees
-- Profile with `flutter run --profile` and DevTools
-
-## Best Practices
-
-- Split large widgets into small, focused, reusable components
-- Choose ONE state management approach per project and stick with it
-- Test on both iOS and Android; handle platform differences with `Platform.isIOS`
-- Use `ThemeData` for consistent styling across the app
-- Keep widget trees shallow — extract sub-trees into separate widgets
-
-## Coaching Notes
-
-- **const is free performance**: Every `const` constructor call is cached at compile time
-- **Widget vs Element vs RenderObject**: Widgets are blueprints, Elements are instances, RenderObjects paint. Understanding this triage makes debugging layout issues faster
-- **Hot reload vs Hot restart**: Hot reload preserves state; hot restart resets it. Use hot reload for UI tweaks, hot restart for state changes
-- **Key discipline**: Always use `Key` in `ListView.builder` items; `ValueKey` for data-driven lists, `ObjectKey` for objects
-
-## Verification
+### Verification
 
 - [ ] All widgets use `const` constructors where possible
-- [ ] State management is consistent (not mixing setState with Provider without reason)
-- [ ] Navigation handles back button correctly on both platforms
+- [ ] State management is consistent across the project
+- [ ] Navigation handles back button on both platforms
 - [ ] No expensive operations in `build()` methods
-- [ ] App runs on both iOS and Android without platform errors
+- [ ] App runs on both iOS and Android
 
-## Related Skills
-
-- **react-native** — Alternative cross-platform framework (React-based)
-- **android-kotlin** — Native Android for platform channel implementation
-- **ios-swift** — Native iOS for platform channel implementation
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation`, `patterns_applied`, and `recommendations`.

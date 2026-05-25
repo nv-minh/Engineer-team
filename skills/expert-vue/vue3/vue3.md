@@ -4,7 +4,7 @@ description: >
   Vue 3 patterns covering Composition API, reactivity system (ref, reactive, computed),
   templates, components, lifecycle hooks, provide/inject, and TypeScript integration.
   Use when building Vue 3 applications with modern patterns.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-vue"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -29,30 +29,81 @@ anti_patterns:
   - "Mutating props directly instead of emitting events"
   - "Using reactive() for primitive values (use ref instead)"
 related_skills: ["pinia", "vue-router", "frontend-patterns", "typescript-patterns"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Vue 3
 
-## Overview
+[ROLE]
+Act as a Vue 3 expert. Deliver idiomatic Composition API code with reactive primitives, TypeScript, and composable functions.
 
-Vue 3 introduces the Composition API, a reactivity system based on proxies, and first-class TypeScript support. This skill covers the core patterns for building Vue 3 applications with `<script setup>` and composable functions.
+[OBJECTIVE]
+Build Vue 3 applications using the Composition API, `<script setup>`, and composable functions for maintainable, scalable component architecture.
 
-## When to Use
+[RULES]
+1. <thought>Before writing a component, determine: Is this a simple display (template only), stateful logic (composable), or complex form (reactive state machine)?</thought>
+2. Use `<script setup lang="ts">` always — it is the recommended syntax for SFCs in Vue 3.
+3. Prefer `ref` over `reactive` — ref works with any value type and is explicit with `.value`.
+4. Name composables with `use` prefix — `useFetch`, `useAuth`, `usePagination`.
+5. Never mutate props — emit events to the parent instead.
+6. Clean up side effects in `onUnmounted` — timers, subscriptions, event listeners.
+7. Use `computed` for derived state — never compute values in the template.
+8. DO NOT use Options API in new Vue 3 projects — Composition API is the standard.
+9. DO NOT mutate props directly — emit events.
+10. DO NOT use reactive() for primitive values — use ref instead.
+11. ABC: Vue's reactivity is fine-grained — unlike React's render-everything model, Vue only re-renders components that depend on the changed data, so less manual memoization is needed.
 
-- Building new Vue applications (prefer Composition API + `<script setup>`)
-- Implementing reactive data flows with ref, reactive, computed, and watchers
-- Creating reusable composable functions
-- Integrating TypeScript with Vue components
+[PROCESS]
 
-## When NOT to Use
+### Reactivity Fundamentals
 
-- For Vue 2 projects -- use Options API patterns specific to Vue 2
-- For state management -- use the `pinia` skill
-- For routing -- use the `vue-router` skill
-
-## Reactivity Fundamentals
-
-### ref (Primitives and Any Value)
+#### ref (Primitives and Any Value)
 
 ```typescript
 const count = ref(0);
@@ -63,7 +114,7 @@ const user = ref<User | null>(null);
 count.value++;
 ```
 
-### reactive (Objects)
+#### reactive (Objects)
 
 ```typescript
 const state = reactive({
@@ -77,7 +128,7 @@ state.loading = true;
 state.items.push(newItem);
 ```
 
-### computed (Derived State)
+#### computed (Derived State)
 
 ```typescript
 const fullName = computed(() => `${first.value} ${last.value}`);
@@ -94,9 +145,9 @@ const fullName = computed({
 });
 ```
 
-## Component Patterns
+### Component Patterns
 
-### Script Setup (Recommended)
+#### Script Setup (Recommended)
 
 ```vue
 <script setup lang="ts">
@@ -137,18 +188,18 @@ onMounted(() => {
 </template>
 ```
 
-### Provide/Inject (Deep Prop Passing)
+#### Provide/Inject (Deep Prop Passing)
 
 ```typescript
 // Provider
 const theme = ref('dark');
-provide('theme', theme); // reactive injection key
+provide('theme', theme);
 
 // Consumer
 const theme = inject<Ref<string>>('theme');
 ```
 
-## Composable Functions (Reusable Logic)
+### Composable Functions (Reusable Logic)
 
 ```typescript
 // composables/useFetch.ts
@@ -179,43 +230,26 @@ export function useFetch<T>(url: string) {
 const { data: users, loading } = useFetch<User[]>('/api/users');
 ```
 
-## Watchers
+### Watchers
 
 ```typescript
-// Watch a single ref
-watch(selectedId, (newId, oldId) => {
-  fetchUser(newId);
-});
-
-// Watch multiple sources
-watch([firstName, lastName], ([first, last]) => {
-  console.log(`Name changed to ${first} ${last}`);
-});
-
-// Watch a reactive property with getter
-watch(
-  () => state.page,
-  (newPage) => loadPage(newPage),
-);
-
-// Immediate + deep watch
+watch(selectedId, (newId, oldId) => { fetchUser(newId); });
+watch([firstName, lastName], ([first, last]) => { console.log(`${first} ${last}`); });
+watch(() => state.page, (newPage) => loadPage(newPage));
 watch(source, callback, { immediate: true, deep: true });
 ```
 
-## Lifecycle Hooks
+### Lifecycle Hooks
 
 ```typescript
 onMounted(() => { /* DOM is ready */ });
 onUpdated(() => { /* Reactive data changed, DOM updated */ });
 onUnmounted(() => { /* Cleanup: timers, subscriptions */ });
-onBeforeMount(() => { /* Before DOM insertion */ });
-onBeforeUnmount(() => { /* Before component removal */ });
 ```
 
-## TypeScript Integration
+### TypeScript Integration
 
 ```typescript
-// Typed props with defaults
 interface Props {
   modelValue: string;
   items: Item[];
@@ -223,30 +257,11 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
-  'update:modelValue': [value: string];
-}>();
-
-// Typed template refs
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
 const inputRef = useTemplateRef<HTMLInputElement>('input');
 ```
 
-## Best Practices
-
-1. **Use `<script setup>` always** -- it is the recommended syntax for SFCs in Vue 3
-2. **Prefer `ref` over `reactive`** -- ref works with any value type and is explicit with `.value`
-3. **Name composables with `use` prefix** -- `useFetch`, `useAuth`, `usePagination`
-4. **Never mutate props** -- emit events to the parent instead
-5. **Clean up side effects in `onUnmounted`** -- timers, subscriptions, event listeners
-6. **Use `computed` for derived state** -- never compute values in the template
-
-## Coaching Notes
-
-- **Composition API is about code organization, not just syntax** -- composables let you group related state, computed, and methods by feature rather than by option type. This scales better than Options API for complex components.
-- **ref vs reactive is a common confusion point** -- use `ref` as the default. Only use `reactive` when you need to destructure an object's properties in the template without `.value`.
-- **Vue's reactivity is fine-grained** -- unlike React's render-everything model, Vue only re-renders the components that actually depend on the changed data. This means less manual memoization is needed.
-
-## Verification
+### Verification
 
 - [ ] Components use `<script setup lang="ts">`
 - [ ] Composables follow `use` naming convention
@@ -255,9 +270,5 @@ const inputRef = useTemplateRef<HTMLInputElement>('input');
 - [ ] Side effects cleaned up in `onUnmounted`
 - [ ] Computed used for derived state instead of template expressions
 
-## Related Skills
-
-- **pinia** -- Vue 3 state management with Pinia stores
-- **vue-router** -- Routing with Vue Router 4
-- **frontend-patterns** -- General UI patterns applicable to Vue
-- **typescript-patterns** -- TypeScript patterns for Vue applications
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing Vue 3 patterns used, and `recommendations` for improvements.

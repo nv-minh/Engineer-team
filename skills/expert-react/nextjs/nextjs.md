@@ -4,7 +4,7 @@ description: >
   Next.js patterns covering App Router, Pages Router, routing, data fetching,
   SSR/SSG/ISR, caching, middleware, and deployment. Use when building
   Next.js applications, configuring routing, or implementing server-side rendering.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-react"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -31,27 +31,79 @@ anti_patterns:
   - "Making all components client components ('use client') unnecessarily"
   - "Fetching data in client components when server components can do it directly"
 related_skills: ["react", "react-hooks", "redux", "frontend-patterns", "typescript-patterns"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Next.js
 
-## Overview
+[ROLE]
+Act as a Next.js expert. Deliver production-ready Next.js code using the correct routing, rendering, and caching strategies for each page's requirements.
 
-Next.js provides a full-stack React framework with file-based routing, multiple rendering strategies (SSR, SSG, ISR), and built-in optimizations. The App Router (Next.js 13+) is the recommended approach for new projects.
+[OBJECTIVE]
+Build Next.js applications with optimal rendering strategy per page (SSR, SSG, ISR, CSR), server components by default, and proper client boundaries.
 
-## When to Use
+[RULES]
+1. <thought>Before writing any page, determine: Does this need SSR (dynamic/personalized), SSG (static), ISR (semi-dynamic), or CSR (real-time)? Can this be a server component or does it need 'use client'?</thought>
+2. Default to Server Components — only add `'use client'` when you need interactivity (useState, useEffect, event handlers).
+3. Push data fetching to the server — avoid client-side fetching when server components can do it directly.
+4. DO NOT use Pages Router for new projects — App Router is the standard.
+5. DO NOT make all components client components (`'use client'`) unnecessarily.
+6. DO NOT fetch data in client components when server components can do it directly.
+7. Use ISR with `revalidate` for semi-dynamic content (blogs, product pages, docs).
+8. Colocate loading and error UI — `loading.tsx` and `error.tsx` provide instant feedback.
+9. Use middleware for cross-cutting concerns — auth checks, redirects, locale detection.
+10. Always use `next/image` for automatic image optimization and lazy loading.
+11. ABC: `'use client'` is a boundary, not a switch — components imported by a client component become client components too. Keep the client boundary as low in the tree as possible.
 
-- Building React applications with server-side rendering or static generation
-- Implementing file-based routing with App Router or Pages Router
-- Configuring caching, middleware, or deployment pipelines
-- Using React Server Components for data fetching at the component level
+[PROCESS]
 
-## When NOT to Use
-
-- For client-only React apps -- use Vite or CRA with the `react` skill
-- For non-React frameworks -- see `vue3` or other framework skills
-
-## Rendering Strategies
+### Rendering Strategies
 
 | Strategy | Function | Use Case |
 |---|---|---|
@@ -60,9 +112,9 @@ Next.js provides a full-stack React framework with file-based routing, multiple 
 | ISR | `revalidate` option | Blog posts, product pages |
 | CSR | `'use client'` + SWR | Dashboard, real-time data |
 
-## App Router (Recommended)
+### App Router (Recommended)
 
-### Route Structure
+#### Route Structure
 
 ```
 app/
@@ -78,11 +130,10 @@ app/
     layout.tsx      # Users layout
 ```
 
-### Server Components (Default)
+#### Server Components (Default)
 
 ```typescript
 // app/users/page.tsx -- Server Component (default)
-// Can directly access databases, file system, env vars
 async function UsersPage() {
   const users = await db.user.findMany();
   return (
@@ -93,10 +144,10 @@ async function UsersPage() {
 }
 ```
 
-### Client Components
+#### Client Components
 
 ```typescript
-'use client'; // Opt into client rendering
+'use client';
 
 import { useState } from 'react';
 
@@ -106,7 +157,7 @@ export function Counter() {
 }
 ```
 
-### Data Fetching with Caching
+#### Data Fetching with Caching
 
 ```typescript
 // Static (SSG) - cached at build time
@@ -128,7 +179,7 @@ async function DashboardPage() {
 }
 ```
 
-### Layouts and Templates
+#### Layouts and Templates
 
 ```typescript
 // app/layout.tsx -- persists across navigation
@@ -144,7 +195,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### Route Handlers (API Routes)
+#### Route Handlers (API Routes)
 
 ```typescript
 // app/api/users/route.ts
@@ -162,7 +213,7 @@ export async function POST(request: Request) {
 }
 ```
 
-### Middleware
+#### Middleware
 
 ```typescript
 // middleware.ts (root)
@@ -181,7 +232,7 @@ export const config = {
 };
 ```
 
-## Pages Router (Legacy)
+### Pages Router (Legacy)
 
 ```typescript
 // pages/index.tsx
@@ -197,22 +248,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 ```
 
-## Best Practices
-
-1. **Default to Server Components** -- only add `'use client'` when you need interactivity (useState, useEffect, event handlers)
-2. **Push data fetching to the server** -- avoid client-side fetching when server components can do it directly
-3. **Use ISR for semi-dynamic content** -- blogs, product pages, docs that update periodically
-4. **Colocate loading and error UI** -- `loading.tsx` and `error.tsx` provide instant feedback
-5. **Use middleware for cross-cutting concerns** -- auth checks, redirects, locale detection
-6. **Optimize images** -- always use `next/image` for automatic optimization and lazy loading
-
-## Coaching Notes
-
-- **Server Components are a paradigm shift** -- they run on the server and can access databases directly. This eliminates the need for API routes for many data-fetching patterns. Before creating an API route, ask: can a server component fetch this data directly?
-- **'use client' is a boundary, not a switch** -- it marks where the server-client boundary is. Components imported by a client component become client components too. Keep the client boundary as low in the tree as possible.
-- **App Router vs Pages Router** -- for new projects, always use App Router. For existing Pages Router projects, migrate incrementally (they coexist).
-
-## Verification
+### Verification
 
 - [ ] App Router used for new pages (or Pages Router documented for legacy)
 - [ ] Server components used where no interactivity is needed
@@ -221,10 +257,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 - [ ] Middleware configured for auth and routing guards
 - [ ] Images use next/image for optimization
 
-## Related Skills
-
-- **react** -- Core React patterns (components, JSX, state)
-- **react-hooks** -- Hook patterns used in client components
-- **redux** -- Global state for complex client-side state
-- **frontend-patterns** -- General UI patterns and data fetching
-- **typescript-patterns** -- TypeScript patterns for Next.js
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing Next.js patterns used, and `recommendations` for improvements.

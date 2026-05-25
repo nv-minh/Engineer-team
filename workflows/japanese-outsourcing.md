@@ -1,7 +1,7 @@
 ---
 name: japanese-outsourcing
 description: "End-to-end workflow for Japanese outsourcing projects. Maps the EM-Team 6-phase lifecycle to Japanese software development standards (基本設計, 詳細設計, 受け入れテスト) with formal sign-off gates, weekly progress reporting, and change management."
-version: "1.0.0"
+version: "1.1.0"
 category: "workflow"
 triggers:
   - "Japanese outsourcing"
@@ -11,13 +11,27 @@ triggers:
   - "formal sign-off"
   - "受け入れテスト"
 intent: "Deliver software projects that meet Japanese client quality standards: formally documented, traceably reviewed, and client-signed at each phase gate."
+agents_used:
+  - planner
+  - architect
+  - executor
+  - verifier
+skills_used:
+  - project-setup
+  - alignment-session
+  - spec-driven-development
+  - domain-modeling
+  - basic-design
+  - detailed-design
+  - writing-plans
+  - uat-process
+  - progress-reporting
+react_protocol: true
+context_pruning: true
+max_retries_per_stage: 3
 ---
 
 # Japanese Outsourcing Workflow (日本向け受託開発ワークフロー)
-
-## Overview
-
-This workflow extends the standard 6-phase lifecycle with the formal documentation, review gates, and client communication cadences required for Japanese outsourcing contracts. It maps EM-Team's capabilities to the standard Japanese software development deliverables:
 
 | EM-Team Phase | Japanese Deliverable | Gate |
 |---|---|---|
@@ -25,322 +39,392 @@ This workflow extends the standard 6-phase lifecycle with the formal documentati
 | PLAN | 基本設計 + 詳細設計 (Basic & Detailed Design) | Gate 2a + 2b: Design sign-off |
 | BUILD | 実装 (Implementation) | Gate 3: Code review approval |
 | VERIFY | テスト (Testing: System + UAT) | Gate 4: UAT sign-off |
-| REVIEW | — (integrated into gates) | — |
 | SHIP | リリース (Release & Delivery) | Acceptance checklist sign-off |
-
----
 
 ## Prerequisites
 
-Before starting this workflow, confirm:
-- [ ] Project contract specifies formal sign-off requirements
-- [ ] Client has designated a technical contact and PM contact
-- [ ] Communication channel agreed (email, Slack, etc.)
-- [ ] Weekly reporting cadence agreed (day of week, distribution list)
-- [ ] Document storage location agreed (shared drive, project management tool)
+- [ ] Contract specifies formal sign-off requirements
+- [ ] Client designated technical and PM contacts
+- [ ] Communication channel agreed
+- [ ] Weekly reporting cadence agreed
+- [ ] Document storage location agreed
 
 ---
 
 ## Stage 1: Kickoff (プロジェクト開始)
 
-**Owner:** Project Manager + Tech Lead
-**Duration:** 1-2 days
+<thought>
+Observe: New Japanese outsourcing project starting — no project structure or agreements in place.
+Analyze: Must initialize project directory, create all tracking documents, conduct kickoff meeting covering scope, timeline, communication, gate schedule, change management, UAT process. Gate requires project initialized, kickoff completed, gate register set up.
+Plan: Initialize project structure and conduct kickoff.
+</thought>
 
-### 1.1 Project Initialization
-- [ ] Create project directory structure
-- [ ] Initialize PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
-- [ ] Initialize ISSUE-REGISTER.md
-- [ ] Initialize CHANGE-LOG.md
-- [ ] Initialize WBS.md (draft)
-- [ ] Set up `docs/` structure: `docs/uat/`, `docs/detailed-design/`, `docs/changes/`, `docs/gates/`
-- [ ] Configure `reports/progress/` directory for weekly reports
-- [ ] Set up git repository with branch protection on main
+<action>
+type: invoke_skill
+target: project-setup
+params:
+  task: japanese_project_init
+  documents: [PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, WBS.md, ISSUE-REGISTER.md, CHANGE-LOG.md]
+  directories: [docs/uat/, docs/detailed-design/, docs/changes/, docs/gates/, reports/progress/]
+  outputs: [project_structure, kickoff_minutes, GATE-STATUS.md]
+</action>
 
-### 1.2 Kickoff Meeting
-Agenda:
-1. Project scope walkthrough (REQUIREMENTS.md review)
-2. Timeline agreement (WBS.md walkthrough)
-3. Communication protocol: weekly report day, escalation contacts
-4. Review gate schedule (when will Gate 1, 2, 3, 4 occur?)
-5. Change management process explained
-6. Introduce UAT process (client will participate in Gate 4)
+<observation>
+result: Project initialized, kickoff completed, gate register created
+gate_status: PASS | FAIL
+</observation>
 
-**Output:** Meeting minutes saved to `docs/kickoff-minutes.md`
-
-### 1.3 Gate Register Setup
-Create `docs/GATE-STATUS.md` with planned dates for all 4 gates.
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: KICKOFF
+  completed: []
+  next_action: "REQUIREMENTS"
+```
 
 ---
 
 ## Stage 2: Requirements (要件定義) → Gate 1
 
-**Owner:** PM + Architect
-**Skills:** `spec-driven-development`, `domain-modeling`, `brainstorming`
-**Duration:** 2-5 days
+<thought>
+Observe: Project initialized, kickoff complete.
+Analyze: Must run alignment session, produce REQUIREMENTS.md with FR-*/NFR-* and acceptance criteria, run domain modeling, update WBS. Gate 1 requires client sign-off on requirements.
+Plan: Invoke planner + architect agents with alignment-session, spec-driven-development, domain-modeling skills.
+</thought>
 
-### Process
-1. Run `alignment-session` skill to surface assumptions and clarify scope
-2. Produce REQUIREMENTS.md (all FR-* and NFR-* with acceptance criteria)
-3. Run `domain-modeling` skill to identify bounded contexts and entities
-4. Update WBS.md with Phase 1 estimates
-5. Schedule Gate 1 review with client
+<action>
+type: invoke_agent
+target: planner
+params:
+  supporting_agent: architect
+  skills: [alignment-session, spec-driven-development, domain-modeling]
+  task: requirements_definition
+  outputs: [REQUIREMENTS.md, DOMAIN-MODEL.md, WBS.md]
+</action>
 
-### Gate 1: Requirements Sign-Off
+<observation>
+result: Requirements documented with acceptance criteria, domain model complete, WBS drafted
+gate_status: PENDING (awaiting client sign-off)
+</observation>
+
+**Gate 1: Requirements Sign-Off**
 - Present REQUIREMENTS.md to client
-- Confirm scope boundaries (in/out)
-- Get written sign-off using Gate 1 template in `protocols/review-gates.md`
-- Save sign-off to `docs/gates/gate1-signoff.md`
+- Confirm scope boundaries
+- Get written sign-off → `docs/gates/gate1-signoff.md`
 
-**Output:** REQUIREMENTS.md v1.0 (signed), DOMAIN-MODEL.md, WBS.md draft
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: REQUIREMENTS
+  completed: [KICKOFF]
+  next_action: "BASIC_DESIGN after Gate 1 PASS"
+```
 
 ---
 
 ## Stage 3: Basic Design (基本設計) → Gate 2a
 
-**Owner:** Architect + Tech Lead
-**Skills:** `basic-design`, `diagram`, `api-interface-design`
-**Duration:** 2-4 days
+<thought>
+Observe: Requirements signed off by client.
+Analyze: Must produce BASIC-DESIGN.md covering system context, architecture, ER diagram, API interfaces, NFRs, error handling. Internal review by architect + tech lead + backend expert before client presentation. Gate 2a requires client technical contact sign-off.
+Plan: Invoke architect agent with basic-design, diagram, api-interface-design skills.
+</thought>
 
-### Process
-1. Run `basic-design` skill to produce BASIC-DESIGN.md
-2. Include: system context, architecture, ER diagram, API interfaces, NFRs, error handling
-3. Internal review: architect + tech lead + backend expert
-4. Schedule Gate 2a review with client
+<action>
+type: invoke_agent
+target: architect
+params:
+  skills: [basic-design, diagram, api-interface-design]
+  task: basic_design
+  internal_review: [architect, tech_lead, backend_expert]
+  outputs: [BASIC-DESIGN.md]
+</action>
 
-### Gate 2a: Basic Design Sign-Off
+<observation>
+result: Basic design document complete, internal review passed
+gate_status: PENDING (awaiting client sign-off)
+</observation>
+
+**Gate 2a: Basic Design Sign-Off**
 - Present BASIC-DESIGN.md to client technical contact
 - Walk through architecture, API interfaces, data model
-- Get written sign-off using Gate 2a template in `protocols/review-gates.md`
-- Save sign-off to `docs/gates/gate2a-signoff.md`
+- Get written sign-off → `docs/gates/gate2a-signoff.md`
 
-**Output:** BASIC-DESIGN.md v1.0 (signed)
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: BASIC_DESIGN
+  completed: [KICKOFF, REQUIREMENTS]
+  next_action: "DETAILED_DESIGN after Gate 2a PASS"
+```
 
 ---
 
 ## Stage 4: Detailed Design (詳細設計) → Gate 2b
 
-**Owner:** Dev Lead
-**Skills:** `detailed-design`, `writing-plans`
-**Duration:** 1-3 days per module
+<thought>
+Observe: Basic design signed off.
+Analyze: Must produce detailed design per complex module — class diagrams, function specs, data flows, exception tables, test designs. Internal review by tech lead + QA lead. Update WBS with detailed breakdown. Gate 2b requires tech lead + QA sign-off.
+Plan: Invoke executor agent with detailed-design, writing-plans skills.
+</thought>
 
-### Process
-1. For each complex module identified in Basic Design:
-   - Run `detailed-design` skill
-   - Include: class diagrams, function specs, data flows, exception tables, test designs
-2. Internal review: tech lead + QA lead
-3. Update WBS.md with detailed task breakdown
-4. Schedule Gate 2b review with tech lead (client optional)
+<action>
+type: invoke_agent
+target: executor
+params:
+  skills: [detailed-design, writing-plans]
+  task: detailed_design_per_module
+  internal_review: [tech_lead, qa_lead]
+  outputs: [docs/detailed-design/*.md, WBS.md_updated]
+</action>
 
-### Gate 2b: Detailed Design Sign-Off
+<observation>
+result: Detailed designs for all modules complete, test designs included, WBS updated
+gate_status: PENDING (awaiting tech lead + QA sign-off)
+</observation>
+
+**Gate 2b: Detailed Design Sign-Off**
 - Tech lead and QA lead review all module designs
-- Verify test designs are complete (test cases from spec, not from code)
-- Get written sign-off using Gate 2b template
-- Save sign-off to `docs/gates/gate2b-signoff.md`
+- Verify test designs complete (from spec, not code)
+- Get written sign-off → `docs/gates/gate2b-signoff.md`
 
-**Output:** `docs/detailed-design/*.md` (all modules, signed)
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DETAILED_DESIGN
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN]
+  next_action: "IMPLEMENTATION after Gate 2b PASS"
+```
 
 ---
 
 ## Stage 5: Implementation (実装)
 
-**Owner:** Dev team
-**Skills:** `test-driven-development`, `incremental-implementation`, `git-workflow`
-**Duration:** Per WBS
+<thought>
+Observe: Detailed designs signed off, WBS finalized.
+Analyze: Must execute WBS tasks with TDD, atomic commits referencing task IDs, daily STATE.md updates, weekly progress reports. Any scope changes go through change management — do NOT implement until CR approved.
+Plan: Invoke executor agent with TDD, incremental-implementation, git-workflow skills.
+</thought>
 
-### Process
-1. Load Project DNA (CLAUDE.md + rules)
-2. Execute WBS tasks with TDD (RED-GREEN-REFACTOR)
-3. Atomic commits referencing WBS task IDs
-4. Daily: update STATE.md with completed tasks
-5. Weekly: produce progress report using `progress-reporting` skill
+<action>
+type: invoke_agent
+target: executor
+params:
+  skills: [test-driven-development, incremental-implementation, git-workflow]
+  task: implement_wbs
+  weekly: progress-reporting
+  change_protocol: protocols/change-management.md
+  outputs: [working_code, tests, weekly_reports, CHANGE-LOG.md]
+</action>
 
-### Weekly Progress Reporting Cadence
-Every [agreed day]:
-1. Run `progress-reporting` skill
-2. Update: completion %, quality metrics, blockers, risks, schedule
-3. Send to distribution list
-4. Client responds to Q&A items within 3 business days
+<observation>
+result: WBS tasks implemented with TDD, weekly reports produced, change log maintained
+gate_status: PASS | FAIL
+</observation>
 
-### Change Management During Implementation
-Any scope change request:
-1. Developer or PM identifies potential change
-2. Create CR using `protocols/change-management.md`
-3. Do NOT implement until CR is approved
-4. Update CHANGE-LOG.md and WBS.md after approval
+**Weekly Progress Reporting:**
+- Run `progress-reporting` skill every agreed day
+- Include: completion %, quality metrics, blockers, risks, schedule
+- Client responds to Q&A within 3 business days
 
-**Output:** Working code, tests, updated WBS, weekly reports, CHANGE-LOG.md
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: IMPLEMENTATION
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN, DETAILED_DESIGN]
+  next_action: "INTERNAL_TESTING"
+```
 
 ---
 
 ## Stage 6: Internal Testing (内部テスト)
 
-**Owner:** QA team + Dev team
-**Skills:** `e2e-testing`, `security-audit`, `performance-optimization`
-**Duration:** 2-5 days
+<thought>
+Observe: Implementation complete.
+Analyze: Must run system testing against acceptance criteria, performance testing against NFRs, security audit (OWASP Top 10), fix all Critical/High defects, code review (9-axis), architecture review against BASIC-DESIGN.md. Gate 3 requires tech lead + security reviewer sign-off.
+Plan: Invoke verifier, security-reviewer, code-reviewer agents.
+</thought>
 
-### Process
-1. System testing against acceptance criteria in REQUIREMENTS.md
-2. Performance testing against NFR targets
-3. Security audit (OWASP Top 10)
-4. Fix all Critical and High defects found
-5. Log all defects in ISSUE-REGISTER.md
-6. Code review for all modules using `code-review` skill (9-axis)
-7. Architecture review: implementation matches BASIC-DESIGN.md
+<action>
+type: invoke_agent
+target: verifier
+params:
+  agents: [security-reviewer, code-reviewer]
+  task: internal_testing
+  checks: [system_test, performance_test, security_audit, code_review_9axis, architecture_review]
+  outputs: [system_test_report, security_audit_report, code_review_report]
+</action>
 
-### Gate 3: Code Review Approval
+<observation>
+result: System tests pass, security audit clean, code review approved
+gate_status: PENDING (awaiting sign-off)
+</observation>
+
+**Gate 3: Code Review Approval**
 - Tech lead verifies: all acceptance criteria implemented, all tests passing
 - Code reviewer sign-off (no Critical/High findings)
 - Security reviewer sign-off
-- Get written sign-off using Gate 3 template
-- Save to `docs/gates/gate3-signoff.md`
+- Get written sign-off → `docs/gates/gate3-signoff.md`
 
-**Output:** System test report, security audit report, Gate 3 sign-off
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: INTERNAL_TESTING
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN, DETAILED_DESIGN, IMPLEMENTATION]
+  next_action: "UAT after Gate 3 PASS"
+```
 
 ---
 
 ## Stage 7: UAT (受け入れテスト) → Gate 4
 
-**Owner:** QA team + Client tester
-**Skills:** `uat-process`
-**Duration:** 3-7 days
+<thought>
+Observe: Internal testing passed, Gate 3 signed.
+Analyze: Must run formal UAT — create test plan (client reviews), create numbered test cases (client reviews), execute with client tester, log results/defects, fix Critical/High defects and re-test, produce UAT completion report. Gate 4 requires 0 Critical defects open, all High resolved or risk-accepted.
+Plan: Invoke executor agent with uat-process skill.
+</thought>
 
-### Process
-1. Run `uat-process` skill:
-   - Create UAT test plan (client reviews and approves)
-   - Create numbered test cases (client reviews before execution)
-   - Execute UAT with client tester present (or coordinated)
-   - Log all results in execution log
-   - Log defects in defect log
-   - Fix Critical and High defects, re-test
-2. Produce UAT Completion Report
+<action>
+type: invoke_skill
+target: uat-process
+params:
+  task: formal_uat
+  client_participation: required
+  outputs: [uat_test_plan, uat_test_cases, execution_log, defect_log, uat_completion_report]
+</action>
 
-### Gate 4: UAT Sign-Off
-- Confirm: 0 Critical defects open, all High resolved or risk-accepted
+<observation>
+result: UAT executed with client, 0 Critical defects, all High resolved
+gate_status: PENDING (awaiting client sign-off)
+</observation>
+
+**Gate 4: UAT Sign-Off**
+- 0 Critical defects open, all High resolved or risk-accepted
 - Present UAT report to client
-- Get written sign-off on UAT-SIGNOFF.md
-- Save to `docs/gates/gate4-signoff.md`
+- Get written sign-off → `docs/gates/gate4-signoff.md`
 
-**Output:** UAT test cases, execution log, defect log, UAT sign-off
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: UAT
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN, DETAILED_DESIGN, IMPLEMENTATION, INTERNAL_TESTING]
+  next_action: "DELIVERY after Gate 4 PASS"
+```
 
 ---
 
 ## Stage 8: Delivery & Deployment (納品・リリース)
 
-**Owner:** PM + DevOps + Dev Lead
-**Skills:** `ship-workflow`, `documentation`, `ci-cd-automation`
-**Duration:** 1-2 days
+<thought>
+Observe: UAT signed off, all gates passed.
+Analyze: Must complete ACCEPTANCE-CHECKLIST.md, prepare delivery package (source, docs, test results, release notes, deployment guide), deploy if in scope, monitor 24h, get final acceptance signature.
+Plan: Invoke executor agent with ship-workflow, documentation skills.
+</thought>
 
-### Process
-1. Complete ACCEPTANCE-CHECKLIST.md (all items verified)
-2. Prepare delivery package:
-   - Source code (with access credentials or archive)
-   - All documentation (`docs/` directory)
-   - Test results (system test + UAT)
-   - Release notes
-   - Deployment guide
-3. Deploy to production (if in scope)
-4. Post-deploy monitoring (24h)
-5. Client reviews ACCEPTANCE-CHECKLIST.md
-6. Get final acceptance signature on ACCEPTANCE-CHECKLIST.md
-7. Send formal delivery notification
+<action>
+type: invoke_agent
+target: executor
+params:
+  skills: [ship-workflow, documentation, ci-cd-automation]
+  task: deliver_and_deploy
+  outputs: [ACCEPTANCE-CHECKLIST.md, delivery_package, deployment, acceptance_signature]
+</action>
 
-### Final Delivery Email Template
+<observation>
+result: Delivery package prepared, deployed, client signed acceptance checklist
+gate_status: PASS | FAIL
+</observation>
+
+**Final Delivery:** Send formal notification with features delivered, UAT result, delivery package location, support contact.
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DELIVERY
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN, DETAILED_DESIGN, IMPLEMENTATION, INTERNAL_TESTING, UAT]
+  next_action: "POST_DELIVERY_SUPPORT"
 ```
-Subject: [Project Name] v[X.X] — 納品完了通知
-
-Dear [Client Name],
-
-We are pleased to notify you that [Project Name] v[X.X] delivery is complete.
-
-Delivery summary:
-- Features delivered: [N] features as agreed in REQUIREMENTS.md v[X.X]
-- UAT result: [N]% pass rate, 0 Critical defects
-- Delivery package: [location/link]
-- Production deployment: [URL or "per separate deployment plan"]
-
-Please review and sign the Acceptance Checklist at [link/location].
-
-Support period: YYYY-MM-DD to YYYY-MM-DD
-Support contact: [Name] — [email]
-
-Best regards,
-[PM Name]
-```
-
-**Output:** Signed ACCEPTANCE-CHECKLIST.md, deployment confirmation, delivery notification
 
 ---
 
 ## Stage 9: Post-Delivery Support (アフターサポート)
 
-**Owner:** Dev Lead + PM
-**Duration:** Per contract (typically 1-3 months)
+<thought>
+Observe: Delivery accepted, support period active.
+Analyze: Must respond to issues within agreed SLA, log production defects, provide warranty fixes at no charge, route enhancement requests through CR process, conduct knowledge transfer if agreed.
+Plan: Support per contract terms.
+</thought>
 
-### Process
-1. Support contact responds to issues within [agreed SLA]
-2. Defects from production logged in ISSUE-REGISTER.md
-3. Warranty fixes (defects in delivered scope) at no additional charge
-4. Enhancement requests go through CR process (change-management.md)
-5. Knowledge transfer session (if agreed): session recorded and documented
-6. End of support: notify client, confirm handoff
+<action>
+type: invoke_agent
+target: executor
+params:
+  task: post_delivery_support
+  sla: per_contract
+  outputs: [issue_responses, warranty_fixes, knowledge_transfer]
+</action>
+
+<observation>
+result: Support period complete, all issues resolved, handoff confirmed
+gate_status: PASS | FAIL
+</observation>
+
+**Completion Marker:** **JAPANESE_OUTSOURCING_WORKFLOW_COMPLETE**
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: POST_DELIVERY
+  completed: [KICKOFF, REQUIREMENTS, BASIC_DESIGN, DETAILED_DESIGN, IMPLEMENTATION, INTERNAL_TESTING, UAT, DELIVERY]
+  next_action: "DONE"
+```
 
 ---
 
 ## Document Register (ドキュメント一覧)
 
-| Document | Location | Produced at Stage | Sign-off Required |
+| Document | Location | Stage | Sign-off |
 |---|---|---|---|
-| PROJECT.md | Root | Stage 1 | No |
-| REQUIREMENTS.md | Root | Stage 2 | Gate 1 ✅ |
-| WBS.md | templates/ | Stage 2 | No (reviewed) |
-| BASIC-DESIGN.md | docs/ | Stage 3 | Gate 2a ✅ |
-| Detailed Design (per module) | docs/detailed-design/ | Stage 4 | Gate 2b ✅ |
-| Weekly Progress Reports | reports/progress/ | Stages 5-7 | No |
-| CHANGE-LOG.md | docs/changes/ | Ongoing | Per CR |
-| ISSUE-REGISTER.md | Root | Ongoing | No |
-| System Test Report | docs/uat/ | Stage 6 | Gate 3 ✅ |
-| UAT Test Plan | docs/uat/ | Stage 7 | Client review |
-| UAT Test Cases | docs/uat/ | Stage 7 | Client review |
-| UAT Execution Log | docs/uat/ | Stage 7 | No |
-| UAT Sign-off | docs/uat/ | Stage 7 | Gate 4 ✅ |
-| ACCEPTANCE-CHECKLIST.md | docs/ | Stage 8 | Final sign-off ✅ |
-| Release Notes | docs/ | Stage 8 | No |
-| GATE-STATUS.md | docs/gates/ | Ongoing | No |
+| REQUIREMENTS.md | Root | Stage 2 | Gate 1 |
+| BASIC-DESIGN.md | docs/ | Stage 3 | Gate 2a |
+| Detailed Design | docs/detailed-design/ | Stage 4 | Gate 2b |
+| System Test Report | docs/uat/ | Stage 6 | Gate 3 |
+| UAT Sign-off | docs/uat/ | Stage 7 | Gate 4 |
+| ACCEPTANCE-CHECKLIST.md | docs/ | Stage 8 | Final |
 
----
+## Communication Cadence
 
-## Communication Cadence (コミュニケーション)
+| Event | Frequency | Owner |
+|---|---|---|
+| Weekly Progress Report | Every agreed day | PM |
+| Gate Reviews | At each gate | PM + Tech Lead |
+| Escalation | When RED status | PM (same-day) |
+| Change Request response | Within 3 business days | PM |
 
-| Event | Frequency | Owner | Format |
-|---|---|---|---|
-| Weekly Progress Report | Every [Mon] | PM | Email + `reports/progress/*.md` |
-| Gate Reviews | At each gate | PM + Tech Lead | Meeting + sign-off doc |
-| Escalation | When RED status | PM | Same-day email + call |
-| Change Request response | Within 3 business days | PM | Written decision in CR |
-| Q&A response (client) | Within 3 business days | Client PM | Email or CR |
+## Risk Mitigations
 
----
-
-## Risk & Quality Summary
-
-| Risk | Mitigation in this Workflow |
+| Risk | Mitigation |
 |---|---|
-| Scope creep | Change management protocol (every change needs a CR) |
+| Scope creep | Change management protocol (every change needs CR) |
 | Design disputes | Gates 2a + 2b: client sign-off before coding |
 | Late defect discovery | Gate 3 blocks staging; Gate 4 blocks delivery |
 | "I never agreed to that" | Written sign-off at every gate |
-| Poor client communication | Weekly reports + response SLA |
-| Vendor non-performance | Quality metrics in weekly reports; escalation criteria |
+| Poor communication | Weekly reports + response SLA |
 
----
+## Error Handling
 
-## Handoff Contract
+| Error Type | Trigger | Recovery | Retry? |
+|---|---|---|---|
+| `CONTEXT_OVERFLOW` | Context window >80% | `/compact`, prune prior stages | No |
+| `BUILD_DEADLOCK` | Build/test loop >3 failures | Invoke systematic-debugging | Yes |
+| `TEST_ENV_FAILURE` | Infra/env issue, not code bug | Reset environment, retry | No |
+| `SPEC_CONFLICT` | Contradictory requirements found | Return to DEFINE stage | Yes |
 
-This workflow is complete when:
-- [ ] All 4 gates passed and signed
-- [ ] ACCEPTANCE-CHECKLIST.md signed by client
-- [ ] All documents committed to repository
-- [ ] Support contact confirmed
-- [ ] Delivery notification sent
+`max_retries_per_stage: 2` — after 2 retries, escalate to human.
 
-**JAPANESE_OUTSOURCING_WORKFLOW_COMPLETE**
+## Context Pruning Protocol
+
+After each stage observation:
+- RETAIN: current phase, gate status, blocking issues, artifacts produced
+- DISCARD: intermediate tool outputs, verbose logs
+- SUMMARIZE: completed stages into 1-2 sentences each

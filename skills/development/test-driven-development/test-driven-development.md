@@ -1,7 +1,7 @@
 ---
 name: test-driven-development
 description: Test-Driven Development (TDD) using RED-GREEN-REFACTOR cycle. Use when writing any production code, adding new features, or fixing bugs.
-version: "2.0.0"
+version: "3.0.0"
 category: "development"
 origin: "superpowers"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -17,475 +17,283 @@ anti_patterns:
   - "Writing production code first and retrofitting tests afterward"
   - "Skipping the REFACTOR phase and leaving hard-coded values in place"
   - "Testing implementation details instead of observable behavior"
-related_skills: ["code-review", "systematic-debugging", "spec-driven-development"]
+related_skills: ["code-review", "systematic-debugging", "spec-driven-development", "test-generation", "browser-testing"]
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description: { type: string, description: "What to implement or analyze" }
+    context: { type: object, description: "Project context" }
+output_schema:
+  type: object
+  required: [status, result]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    result: { type: object, description: "TDD cycle output with test files, implementation files, and coverage" }
+    artifacts: { type: array, items: { type: string }, description: "Generated file paths" }
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Test-Driven Development
 
-## Overview
+[ROLE]
+You are a TDD enforcer. Drive every line of production code from a failing test using the RED-GREEN-REFACTOR cycle.
 
-Test-Driven Development (TDD) is a development process where you write tests before writing production code. The TDD cycle (RED-GREEN-REFACTOR) ensures that code is tested, maintainable, and meets requirements.
+[OBJECTIVE]
+Produce tested, clean production code where every behavior is justified by a failing test that preceded it.
 
-## The Iron Law
+[RULES]
+1. **NO PRODUCTION CODE WITHOUT FAILING TEST.** This is the Iron Law. Never write production code without first writing a failing test that justifies its existence.
+2. <thought>Before writing any test, identify the behavior being tested, the expected outcome, and the simplest assertion that proves it.</thought>
+3. Test behavior, not implementation details. Tests that break on refactoring are testing the wrong thing.
+4. DO NOT skip the REFACTOR phase. Hard-coded values left in GREEN must be generalized.
+5. DO NOT write tests that are always green (false positives) or flaky (unreliable).
+6. DO NOT test multiple behaviors in one test. One test, one assertion of one behavior.
+7. Use AAA pattern (Arrange-Act-Assert) in every test.
+8. Run tests after every change. If a test goes red unexpectedly, stop and investigate.
+9. ABC: The failing test IS the spec. If you cannot write a failing test, you do not understand the requirement. Stop and clarify.
 
-**NO PRODUCTION CODE WITHOUT FAILING TEST**
+[PROCESS]
 
-Never write production code without first writing a failing test that justifies its existence. This is the foundation of TDD.
+### When to Use TDD
 
-## When to Use
+- Implementing any new logic or behavior
+- Fixing any bug (the Prove-It Pattern — see below)
+- Modifying existing functionality
+- Adding edge case handling
+- Any change that could break existing behavior
 
-- Writing any new feature or functionality
-- Fixing bugs (write regression test first)
-- Refactoring existing code
-- Adding new methods or functions
-- Modifying existing behavior
+**When NOT to use:** Pure configuration changes, documentation updates, or static content changes that have no behavioral impact.
 
-**When NOT to use:** Configuration files, documentation, or simple data structures that don't contain logic.
+### The Prove-It Pattern (Bug Fixes)
 
-## The TDD Cycle: RED-GREEN-REFACTOR
+When a bug is reported, **do not start by trying to fix it.** Start by writing a test that reproduces it.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│    RED ──→ GREEN ──→ REFACTOR ──→ (repeat)            │
-│      ↓         ↓           ↓                           │
-│   Write      Make         Clean                        │
-│  failing   it pass    up code                         │
-│    test                                            │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+Bug report arrives
+       │
+       ▼
+  Write a test that demonstrates the bug
+       │
+       ▼
+  Test FAILS (confirming the bug exists)
+       │
+       ▼
+  Implement the fix
+       │
+       ▼
+  Test PASSES (proving the fix works)
+       │
+       ▼
+  Run full test suite (no regressions)
 ```
 
-### Phase 1: RED - Write a Failing Test
-
-Write a test that fails because the functionality doesn't exist yet.
-
-**Guidelines:**
-- Write the **minimum** test needed to drive new functionality
-- Test **behavior**, not implementation details
-- Use **descriptive** test names that explain what is being tested
-- Run the test and confirm it fails with the expected error
-
-**Example:**
 ```typescript
-// RED: Write failing test
+// Bug: "Completing a task doesn't update the completedAt timestamp"
+// Step 1: Write reproduction test (it should FAIL)
+it('sets completedAt when task is completed', async () => {
+  const task = await taskService.createTask({ title: 'Test' });
+  const completed = await taskService.completeTask(task.id);
+  expect(completed.status).toBe('completed');
+  expect(completed.completedAt).toBeInstanceOf(Date);  // FAILS → bug confirmed
+});
+// Step 2: Fix the code, test passes → bug fixed, regression guarded
+```
+
+### Phase 1: RED — Write a Failing Test
+1. Write the minimum test needed to drive new functionality.
+2. Use descriptive test names: "should return 404 when user not found."
+3. Run the test — confirm it fails with the expected error.
+
+```typescript
 describe('UserService', () => {
   it('should create a new user with valid data', async () => {
-    const userData = {
-      name: 'John Doe',
-      email: 'john@example.com'
-    };
-
-    const user = await createUser(userData);
-
-    expect(user).toBeDefined();
+    const user = await createUser({ name: 'John', email: 'john@example.com' });
     expect(user.id).toBeDefined();
-    expect(user.name).toBe('John Doe');
-    expect(user.email).toBe('john@example.com');
+    expect(user.name).toBe('John');
   });
 });
 ```
 
-**Run and confirm failure:**
-```bash
-npm test -- --grep "should create a new user"
-# Expected: FAIL - "createUser is not defined"
+### Phase 2: GREEN — Make the Test Pass
+1. Write the simplest code that makes the test pass.
+2. Hardcode values if needed — you will generalize in REFACTOR.
+3. Run the test — confirm it passes.
+
+### Phase 3: REFACTOR — Clean Up
+1. Remove duplication, extract constants, improve names.
+2. Keep tests green throughout refactoring.
+3. Run tests after each small change.
+
+### From Acceptance Criterion to Failing Test
+
+Each acceptance criterion in the spec becomes a test name and assertion:
+
+| Spec Criterion | Test Name | Key Assertion |
+|---|---|---|
+| "API returns 404 for non-existent user" | `should return 404 when user not found` | `expect(response.status).toBe(404)` |
+| "Dashboard LCP < 2.5s on 4G" | `should load dashboard under 2.5s` | `expect(lcp).toBeLessThan(2500)` |
+| "Duplicate title rejected with error" | `should reject duplicate task title` | `expect(response.body.error).toContain('duplicate')` |
+| "Filter shows only matching priority" | `should display only high-priority tasks when filtered` | `expect(visibleTasks.every(t => t.priority === 'high')).toBe(true)` |
+
+**30-second rule:** If you can't translate a criterion into a test name in 30 seconds, the criterion is too vague → go back to the spec and rewrite it using the 4-question testability check.
+
+## The Test Pyramid
+
+```
+          ╱╲
+         ╱  ╲         E2E Tests (~5%)
+        ╱    ╲        Full user flows, real browser
+       ╱──────╲
+      ╱        ╲      Integration Tests (~15%)
+     ╱          ╲     Component interactions, API boundaries
+    ╱────────────╲
+   ╱              ╲   Unit Tests (~80%)
+  ╱                ╲  Pure logic, isolated, milliseconds each
+ ╱──────────────────╲
 ```
 
-### Phase 2: GREEN - Make the Test Pass
+**The Beyonce Rule:** If you liked it, you should have put a test on it. Your tests are responsible for catching your bugs — not infrastructure, not refactoring, not migrations.
 
-Write the **minimum** production code needed to make the test pass.
+### Test Sizes (Resource Model)
 
-**Guidelines:**
-- Write the **simplest** code that makes the test pass
-- Don't worry about code quality yet (that comes in refactoring)
-- Hardcode values if needed (you'll generalize in refactor)
-- Run the test frequently to see it pass
+| Size | Constraints | Speed | Example |
+|------|------------|-------|---------|
+| **Small** | Single process, no I/O, no network, no DB | ms | Pure function, data transform |
+| **Medium** | Multi-process OK, localhost only | seconds | API with test DB, component tests |
+| **Large** | External services allowed | minutes | E2E, performance benchmarks |
 
-**Example:**
-```typescript
-// GREEN: Write minimal implementation
-export async function createUser(userData: UserData): Promise<User> {
-  return {
-    id: '1',
-    name: userData.name,
-    email: userData.email
-  };
-}
+Small tests should make up the vast majority of your suite.
+
+### Decision Guide
+
+```
+Is it pure logic with no side effects?
+  → Unit test (small)
+
+Does it cross a boundary (API, database, file system)?
+  → Integration test (medium)
+
+Is it a critical user flow that must work end-to-end?
+  → E2E test (large) — limit these to critical paths
 ```
 
-**Run and confirm success:**
-```bash
-npm test -- --grep "should create a new user"
-# Expected: PASS
-```
+## Writing Good Tests
 
-### Phase 3: REFACTOR - Clean Up the Code
+### Test State, Not Interactions
 
-Improve the code structure and quality while keeping tests green.
-
-**Guidelines:**
-- Remove duplication
-- Extract magic values to named constants
-- Improve names and structure
-- **Keep tests green** throughout refactoring
-- Run tests after each small refactoring
-
-**Example:**
-```typescript
-// REFACTOR: Improve code quality
-const generateId = (): string => crypto.randomUUID();
-
-export async function createUser(userData: UserData): Promise<User> {
-  const user: User = {
-    id: generateId(),
-    name: userData.name,
-    email: userData.email
-  };
-
-  return user;
-}
-```
-
-**Run and confirm still passing:**
-```bash
-npm test -- --grep "should create a new user"
-# Expected: PASS (still green after refactoring)
-```
-
-## Test Organization
-
-### Test Structure (AAA Pattern)
-
-Organize tests using Arrange-Act-Assert pattern:
+Assert on the *outcome* of an operation, not on which methods were called internally.
 
 ```typescript
-it('should calculate total with tax', () => {
-  // Arrange: Set up the test data
-  const price = 100;
-  const taxRate = 0.1;
-
-  // Act: Execute the function being tested
-  const total = calculateTotal(price, taxRate);
-
-  // Assert: Verify the result
-  expect(total).toBe(110);
+// Good: Tests what the function does (state-based)
+it('returns tasks sorted by creation date, newest first', async () => {
+  const tasks = await listTasks({ sortBy: 'createdAt', sortOrder: 'desc' });
+  expect(tasks[0].createdAt.getTime())
+    .toBeGreaterThan(tasks[1].createdAt.getTime());
 });
-```
 
-### Test Descriptions
-
-Write test descriptions that answer:
-1. What is being tested?
-2. Under what conditions?
-3. What is the expected outcome?
-
-```
-✅ Good: "should return 404 when user not found"
-✅ Good: "should validate email format"
-❌ Bad: "test 1"
-❌ Bad: "it works"
-```
-
-### Test Files Organization
-
-```
-src/
-├── services/
-│   └── userService.ts
-└── services.test.ts          # Co-located tests
-
-OR
-
-tests/
-└── unit/
-    └── services/
-        └── userService.test.ts  # Separate test directory
-```
-
-## Testing Best Practices
-
-### DO ✅
-
-- Test behavior, not implementation
-- Write descriptive test names
-- Use AAA (Arrange-Act-Assert) pattern
-- Test edge cases and error conditions
-- Keep tests independent and isolated
-- Use test doubles (mocks, stubs) appropriately
-- Keep tests fast and focused
-
-### DON'T ❌
-
-- Test implementation details
-- Write brittle tests that break on refactoring
-- Test multiple things in one test
-- Duplicate implementation logic in tests
-- Over-mock (tests become tests of mocks)
-- Write tests that are too complex
-
-## Test Coverage
-
-### Coverage Goals
-
-- **Critical paths:** 100% coverage
-- **Business logic:** 90%+ coverage
-- **Utilities/helpers:** 95%+ coverage
-- **Configuration:** 50%+ coverage
-
-### Coverage Types
-
-1. **Line Coverage:** Percentage of code lines executed
-2. **Branch Coverage:** Percentage of conditional branches taken
-3. **Function Coverage:** Percentage of functions called
-4. **Statement Coverage:** Percentage of statements executed
-
-### Coverage Tools
-
-```bash
-# Generate coverage report
-npm test -- --coverage
-
-# View coverage in browser
-open coverage/lcov-report/index.html
-```
-
-## Testing Patterns
-
-### Parameterized Tests
-
-Test multiple scenarios with one test:
-
-```typescript
-describe('calculateDiscount', () => {
-  const cases = [
-    { amount: 100, discount: 0.1, expected: 90 },
-    { amount: 100, discount: 0.2, expected: 80 },
-    { amount: 100, discount: 0.5, expected: 50 }
-  ];
-
-  test.each(cases)(
-    'should calculate discount for amount $amount with discount $discount',
-    ({ amount, discount, expected }) => {
-      expect(calculateDiscount(amount, discount)).toBe(expected);
-    }
+// Bad: Tests how the function works internally (interaction-based)
+it('calls db.query with ORDER BY', async () => {
+  await listTasks({ sortBy: 'createdAt', sortOrder: 'desc' });
+  expect(db.query).toHaveBeenCalledWith(
+    expect.stringContaining('ORDER BY created_at DESC')
   );
 });
 ```
 
-### Async Tests
+### DAMP Over DRY in Tests
 
-Handle asynchronous code properly:
+In production code, DRY is usually right. In tests, **DAMP (Descriptive And Meaningful Phrases)** is better. Each test should tell a complete story without requiring the reader to trace through shared helpers.
 
 ```typescript
-it('should fetch user data', async () => {
-  const user = await fetchUser('1');
+// DAMP: Each test is self-contained and readable
+it('rejects tasks with empty titles', () => {
+  const input = { title: '', assignee: 'user-1' };
+  expect(() => createTask(input)).toThrow('Title is required');
+});
 
-  expect(user).toBeDefined();
-  expect(user.id).toBe('1');
+it('trims whitespace from titles', () => {
+  const input = { title: '  Buy groceries  ', assignee: 'user-1' };
+  const task = createTask(input);
+  expect(task.title).toBe('Buy groceries');
 });
 ```
 
-### Error Testing
+Duplication in tests is acceptable when it makes each test independently understandable.
 
-Test error conditions:
+### Prefer Real Implementations Over Mocks
 
-```typescript
-it('should throw error for invalid input', () => {
-  expect(() => {
-    calculateTotal(-100, 0.1);
-  }).toThrow('Amount must be positive');
-});
 ```
+Preference order (most to least preferred):
+1. Real implementation  → Highest confidence, catches real bugs
+2. Fake                 → In-memory version of a dependency (e.g., fake DB)
+3. Stub                 → Returns canned data, no behavior
+4. Mock (interaction)   → Verifies method calls — use sparingly
+```
+
+Use mocks only when: the real implementation is too slow, non-deterministic, or has side effects you can't control.
 
 ## Common Rationalizations
 
 | Rationalization | Reality |
 |---|---|
-| "I'll write tests later" | Tests written later are rarely written. Write them first. |
-| "This is too simple to test" | Simple code breaks too. Tests prevent regressions. |
-| "Tests take too long" | Tests save debugging time. They're an investment, not a cost. |
-| "I know this works" | You might know it works now. Will you know in 6 months? |
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:** TDD teaches you to think in terms of desired behavior before implementation, making every line of code intentional and verified.
-
-1. **The failing test is the spec:** If you cannot write a failing test that describes what you want, you do not yet understand the requirement. Stop and clarify before coding.
-2. **Small steps compound fast:** A RED-GREEN-REFACTOR cycle that takes two minutes beats a thirty-minute coding binge every time. Tiny steps keep the feedback loop tight and mistakes cheap to fix.
-3. **Refactor with green safety:** The REFACTOR phase only works because the tests are green. If you skip it, you accumulate hard-coded hacks. If you refactor without tests, you break things silently. Green tests are your safety net -- use it.
+| "I'll write tests after the code works" | You won't. Tests written after test implementation, not behavior. |
+| "This is too simple to test" | Simple code gets complicated. The test documents expected behavior. |
+| "Tests slow me down" | Tests slow you down now. They speed you up every time you change the code later. |
+| "I tested it manually" | Manual testing doesn't persist. Tomorrow's change might break it silently. |
+| "The code is self-explanatory" | Tests ARE the specification. They document what code should do, not what it does. |
+| "It's just a prototype" | Prototypes become production code. Tests from day one prevent the "test debt" crisis. |
 
 ## Red Flags
 
-- Writing code without a failing test
-- Tests that are too complex to understand
-- Tests that test implementation details
-- Skipping tests to save time
-- Tests that are always green (false positives)
-- Tests that are flaky (unreliable)
+- Writing code without any corresponding tests
+- Tests that pass on the first run (they may not be testing what you think)
+- "All tests pass" but no tests were actually run
+- Bug fixes without reproduction tests (Prove-It Pattern violation)
+- Tests that test framework behavior instead of application behavior
+- Test names that don't describe the expected behavior
+- Skipping tests to make the suite pass
+- Running the same test command twice in a row without any code change between
 
-## Auto-Retry Loop Mechanism
-
-EM-Team includes an automatic retry mechanism that captures test failures and feeds them back to the AI for fixing, implementing the RED-GREEN-REFACTOR cycle with intelligent retry logic.
-
-### How It Works
-
+### Auto-Retry Loop
 When a test fails, the system automatically:
+1. Captures error context to `.claude/tdd-context/` as JSON (exit code, output, git context).
+2. Implements exponential backoff (1s, 2s, 4s). Max 3 retries.
+3. Formats failure details for AI consumption.
 
-1. **Captures Error Context**
-   - Saves test output to JSON file
-   - Records exit code, timestamp, and retry count
-   - Stores git context (branch, commit)
-   - Persists in `.claude/tdd-context/` directory
-
-2. **Implements Exponential Backoff**
-   - Retry 1: Wait 1 second
-   - Retry 2: Wait 2 seconds
-   - Retry 3: Wait 4 seconds
-   - Max retries: 3 (then requires manual intervention)
-
-3. **Provides AI-Friendly Output**
-   - Formats failure details for AI consumption
-   - Includes test command, exit code, and error output
-   - Displays clear next steps for fixing the issue
-
-### Exit Codes
-
-The retry wrapper uses structured exit codes:
-
-- **0**: Success (tests passed)
-- **42**: Retry requested (test failed, will retry)
-- **43**: Max retries exceeded (manual intervention required)
-
-### Usage in Pre-Commit Hook
-
-The pre-commit hook automatically uses the retry wrapper:
+Exit codes: 0 = success, 42 = retry requested, 43 = max retries exceeded.
 
 ```bash
-# 3. Unit Tests with TDD Auto-Retry
-if command_exists npm && npm run test:unit >/dev/null 2>&1; then
-    echo "🧪 Running unit tests with TDD auto-retry..."
-
-    # Source TDD retry wrapper
-    if [[ -f "./tests/tdd-retry-wrapper.sh" ]]; then
-        source "./tests/tdd-retry-wrapper.sh"
-
-        # Run tests with retry logic
-        if run_tdd_with_retry "npm run test:unit -- --passWithNoTests" 3; then
-            echo "✓ Unit tests passed"
-        else
-            local exit_code=$?
-            case $exit_code in
-                42)
-                    echo "⚠ Tests failed - retry available"
-                    echo "   Error context has been saved for AI to fix"
-                    exit 1
-                    ;;
-                43)
-                    echo "✗ Tests failed - max retries exceeded"
-                    echo "   Manual intervention required"
-                    exit 1
-                    ;;
-            esac
-        fi
-    fi
-fi
-```
-
-### Manual Usage
-
-You can also use the retry wrapper manually:
-
-```bash
-# Run tests with retry
+# Manual usage
 ./tests/tdd-retry-wrapper.sh run "npm test" 3
-
-# Check retry status
 ./tests/tdd-context-manager.sh status
-
-# Format latest failure for AI
 ./tests/tdd-context-manager.sh format
-
-# Reset retry context
 ./tests/tdd-context-manager.sh reset
 ```
 
-### AI Feedback Loop
+### Coverage Goals
+- Critical paths: 100%
+- Business logic: 90%+
+- Utilities/helpers: 95%+
 
-The system creates a seamless feedback loop for AI agents:
+[RESPONSE FORMAT]
+Return output matching `output_schema`: status, result (test files created, implementation files, coverage metrics), and artifacts (file paths).
 
-1. **RED Phase**: Test fails → Wrapper captures error → Saves to JSON
-2. **AI Analysis**: AI reads JSON → Understands failure → Generates fix
-3. **GREEN Phase**: AI applies fix → Re-runs test → Wrapper checks result
-4. **Success**: Tests pass → Counter resets → Cycle complete
-
-### Error Context Format
-
-Failures are saved as JSON:
-
-```json
-{
-  "timestamp": "2026-04-19T13:00:00Z",
-  "retry_count": 1,
-  "max_retries": 3,
-  "exit_code": 1,
-  "test_command": "npm run test:unit -- --passWithNoTests",
-  "output": "Full test output with colors and formatting...",
-  "working_directory": "/Users/abc/Desktop/EM-Team",
-  "git_branch": "feature/tdd-auto-retry",
-  "git_commit": "abc123def456"
-}
-```
-
-### Benefits
-
-- **No Manual Copy-Paste**: Error context automatically captured
-- **Exponential Backoff**: Reduces noise from flaky tests
-- **AI-Friendly Format**: Structured JSON for easy parsing
-- **Persistent Context**: Survives bash session restarts
-- **Clear Feedback**: Color-coded status messages
-
-### Troubleshooting
-
-**Problem**: Tests keep failing with same error
-
-**Solution**:
-```bash
-# Check the error details
-./tests/tdd-context-manager.sh format
-
-# Reset retry counter to start fresh
-./tests/tdd-context-manager.sh reset
-```
-
-**Problem**: Max retries exceeded
-
-**Solution**:
-```bash
-# View all failure files
-./tests/tdd-context-manager.sh list
-
-# Manual intervention required
-# Fix the issue manually, then reset
-./tests/tdd-context-manager.sh reset
-```
-
-**Problem**: Stale error context
-
-**Solution**:
-```bash
-# Clean up old failure files
-./tests/tdd-context-manager.sh cleanup
-```
-
-## Verification
-
-After completing TDD cycle:
-
+[VERIFICATION]
 - [ ] Test written first (RED phase)
 - [ ] Minimal code written to pass (GREEN phase)
 - [ ] Code refactored while keeping tests green (REFACTOR phase)
 - [ ] All tests pass
-- [ ] Code is clean and follows conventions
+- [ ] Bug fixes include reproduction test that failed before fix (Prove-It)
+- [ ] Test names describe the behavior being verified
+- [ ] No tests were skipped or disabled
+- [ ] Tests assert state/outcome, not internal interactions
 - [ ] No duplication or code smells
 - [ ] Coverage meets requirements

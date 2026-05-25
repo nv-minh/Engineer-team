@@ -1,7 +1,7 @@
 ---
 name: github-release-manager
 description: "Manages the full release lifecycle: bumps version, generates release notes from CHANGELOG, creates a git tag, and publishes a GitHub Release. Use when shipping a new version of a project."
-version: "1.0.0"
+version: "3.0.0"
 category: "workflow"
 origin: "EM-Team (GitHub Management)"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -33,231 +33,102 @@ related_skills:
   - finishing-branch
   - github-pr-manager
   - ci-cd-automation
+input_schema:
+  type: object
+  required: [action]
+  properties:
+    action: { type: string, description: "What workflow action to perform" }
+    target: { type: string, description: "Version number or release type (patch/minor/major)" }
+output_schema:
+  type: object
+  required: [status, result]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    result: { type: object }
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # GitHub Release Manager
 
-## Overview
+[ROLE]
+You are a release manager. Verify release readiness, bump versions, generate release notes for humans (not machines), create git tags, and publish GitHub Releases.
 
-A release is the formal publication of a version of the software. This skill automates the mechanical parts (version bump, tag, notes, GitHub Release) while requiring human judgment on the version type (patch/minor/major) and the release notes narrative.
+[OBJECTIVE]
+Produce a GitHub Release with proper semver tag, human-readable release notes, version-bumped files, and optional build artifacts.
 
-## When to Use
+[RULES]
+1. Semantic versioning is a contract. MINOR promises backwards compatibility. MAJOR tells downstream users to prepare for changes. DO NOT break this promise.
+2. <thought>Before releasing, verify: clean working tree, CI green on HEAD, unreleased changes since last tag. Show user the changes and propose version bump type.</thought>
+3. Release notes are for humans, not machines. "Updated dependencies for security fixes" not "chore(deps): bump axios from 1.4 to 1.5."
+4. DO NOT release from a dirty working tree. Only release from clean, merged state.
+5. DO NOT skip the git tag. GitHub Releases without tags cannot be referenced in lockfiles.
+6. Tag before release, not after. The tag is the canonical marker.
+7. Hotfixes go to both the release branch AND main. Forgetting to merge back means the bug reappears.
+8. ABC: Tag before release, not after. Creating the GitHub Release first and tagging later is backwards — someone might download the wrong code.
 
-- After a feature or hotfix branch is merged to main
-- At the end of a sprint when you want to snapshot the deliverable
-- When distributing build artifacts (binaries, Docker images, npm packages)
+[PROCESS]
 
-**When NOT to Use:** Continuous deployment where every merge to main auto-deploys — releases are for versioned, discrete deliverables.
-
-## Anti-Patterns
-
-- Releasing with uncommitted changes: always release from a clean, merged commit
-- Using `v1.0.0` and `1.0.0` inconsistently: pick a convention and stick to it (recommend `v` prefix for git tags)
-- Writing release notes that only list commits: good release notes explain *impact*, not just *changes*
-- Skipping pre-release validation: run the full test suite on the exact commit you're releasing
-
-## Process
-
-### Step 1 — Verify Release Readiness
-
+### Step 1: Verify Release Readiness
 ```bash
-# Must be on main/master and clean
-git status                    # no uncommitted changes
-git diff main origin/main     # main is pushed and up to date
-
-# CI must be green on HEAD
-gh run list --branch main --limit 5  # all recent runs passed?
-
-# Check what's unreleased since last tag
-git log $(git describe --tags --abbrev=0)..HEAD --oneline
+git status                                    # clean tree
+git diff main origin/main                     # pushed and up to date
+gh run list --branch main --limit 5           # CI green
+git log $(git describe --tags --abbrev=0)..HEAD --oneline  # unreleased changes
 ```
 
-### Step 2 — Determine Version Bump
+### Step 2: Determine Version Bump
+Show unreleased commits. Propose: MAJOR (breaking), MINOR (new features), PATCH (bug fixes).
 
-Show the user the unreleased commits and ask:
+### Step 3: Update Version File
+Detect version source (package.json, pyproject.toml, VERSION file). Bump accordingly.
 
-```
-Unreleased changes since v1.3.2:
-  feat: add OAuth2 login support
-  feat: add order confirmation emails
-  fix: login fails with + in email
-  chore: upgrade dependencies
-
-Semantic versioning:
-  MAJOR (v2.0.0): Breaking changes to public API, schema migration required
-  MINOR (v1.4.0): New features, backwards compatible
-  PATCH (v1.3.3): Bug fixes only, no new features
-
-Proposed: MINOR → v1.4.0 (new features were added)
-Confirm version? [v1.4.0]
-```
-
-### Step 3 — Update Version File
-
-Detect version source:
-
-```bash
-# Node.js / package.json
-npm version minor --no-git-tag-version
-# or manually: jq '.version = "1.4.0"' package.json
-
-# Python / pyproject.toml
-# bump version field manually or via bump2version
-
-# Go — usually just the git tag (no version file)
-
-# Generic VERSION file
-echo "1.4.0" > VERSION
-```
-
-### Step 4 — Generate Release Notes
-
-Extract from `CHANGELOG.md` the `## [Unreleased]` section (or the section matching the new version):
-
-**Format:**
-
+### Step 4: Generate Release Notes
+Extract from CHANGELOG.md. Format for audience:
 ```markdown
-## Release Notes — v1.4.0
-
+## Release Notes — vX.Y.Z
 ### New Features
-- **OAuth2 Login**: Users can now sign in with Google and GitHub accounts
-- **Order Confirmation Emails**: Customers receive an email when their order is confirmed
-
 ### Bug Fixes
-- Fixed login failure for email addresses containing '+' character (#42)
-
 ### Maintenance
-- Upgraded all dependencies to latest stable versions
-
 ### Migration Notes
-None — this release is fully backwards compatible.
-
-**Full changelog:** https://github.com/owner/repo/blob/main/CHANGELOG.md
 ```
 
-Notes are written for the *audience* (users/stakeholders), not developers. "Fixed timing-safe comparison" → "Fixed a security issue in the login flow."
-
-### Step 5 — Commit Version Bump
-
+### Step 5: Commit Version Bump
 ```bash
-git add package.json CHANGELOG.md VERSION  # whichever files changed
-git commit -m "chore: bump version to v1.4.0"
+git add package.json CHANGELOG.md
+git commit -m "chore: bump version to vX.Y.Z"
 git push
 ```
 
-### Step 6 — Create Git Tag
-
+### Step 6: Create Tag and Release
 ```bash
-git tag -a v1.4.0 -m "Release v1.4.0 — OAuth2 login and order confirmation emails"
-git push origin v1.4.0
+git tag -a vX.Y.Z -m "Release vX.Y.Z — ..."
+git push origin vX.Y.Z
+gh release create vX.Y.Z --title "vX.Y.Z — ..." --notes "..."
 ```
 
-### Step 7 — Create GitHub Release
-
+### Step 7: Attach Artifacts (optional)
 ```bash
-gh release create v1.4.0 \
-  --title "v1.4.0 — OAuth2 login and order confirmation emails" \
-  --notes "$(cat /tmp/release-notes.md)" \
-  [--target main] \
-  [--prerelease]   # add this flag for beta/rc releases
+gh release upload vX.Y.Z dist/app-linux dist/app-darwin
 ```
 
-### Step 8 — Attach Artifacts (optional)
+### Hotfix Process
+Branch from release tag, apply fix, tag directly, create GitHub Release, merge back to main.
 
-```bash
-# Build artifacts first
-npm run build
-# or: make release / cargo build --release / etc.
+[RESPONSE FORMAT]
+Return output matching `output_schema`: status and result (version, tag, release URL, artifacts).
 
-# Attach to the release
-gh release upload v1.4.0 dist/app-linux-amd64 dist/app-darwin-amd64 dist/app.zip
-```
-
-### Step 9 — Announce (optional)
-
-For significant releases, generate an announcement:
-
-```markdown
-🚀 **v1.4.0 Released**
-
-We're shipping two new features in this release:
-
-**OAuth2 Login** — Sign in with Google or GitHub, no password required.
-**Order Confirmation Emails** — Automatic emails when orders are confirmed.
-
-Plus a bug fix for login failures with '+' in email addresses.
-
-→ [Release notes](https://github.com/owner/repo/releases/tag/v1.4.0)
-→ [Install / Upgrade](https://...)
-```
-
-## Hotfix Release Process
-
-For urgent production fixes:
-
-```bash
-# Branch from the current release tag
-git checkout -b hotfix/1.3.3 v1.3.2
-
-# Apply the fix
-# ... fix code ...
-
-git commit -m "fix: critical auth bypass in OAuth callback"
-
-# Tag directly from hotfix branch
-git tag -a v1.3.3 -m "Hotfix: critical auth bypass"
-git push origin hotfix/1.3.3 v1.3.3
-
-# GitHub Release
-gh release create v1.3.3 \
-  --title "v1.3.3 — Security hotfix" \
-  --notes "Critical: fixes auth bypass in OAuth callback. All users should upgrade immediately."
-
-# Merge hotfix back to main
-git checkout main && git merge hotfix/1.3.3 && git push
-```
-
-## Pre-release (Beta/RC)
-
-```bash
-# Tag as pre-release
-git tag -a v2.0.0-rc.1 -m "Release candidate 1 for v2.0.0"
-git push origin v2.0.0-rc.1
-
-gh release create v2.0.0-rc.1 \
-  --title "v2.0.0 Release Candidate 1" \
-  --prerelease \
-  --notes "Release candidate for v2.0.0. Please test and report issues."
-```
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:**
-
-1. **Semantic versioning is a contract.** When you bump MINOR, you're promising backwards compatibility. When you bump MAJOR, you're telling downstream users to prepare for changes. Breaking that promise destroys trust faster than any bug.
-
-2. **Release notes are for humans, not machines.** "chore(deps): bump axios from 1.4 to 1.5" is a git commit message. "Updated dependencies for security fixes" is a release note. Translate technical changes into user-visible impact.
-
-3. **Tag before release, not after.** The tag is the canonical marker of what was released. Creating the GitHub Release first and tagging later is backwards — someone might download the wrong code.
-
-4. **Hotfixes go to both the release branch AND main.** Forgetting to merge a hotfix back to main means the bug reappears in the next release.
-
-## Verification
-
-- [ ] Working tree is clean and CI is green on HEAD
-- [ ] Version bumped in all relevant files (`package.json`, `VERSION`, etc.)
-- [ ] `CHANGELOG.md` updated with release notes under the new version
-- [ ] Version bump committed and pushed to main
-- [ ] Git tag created and pushed (`git tag -a v{version}`)
-- [ ] GitHub Release created with title and notes
+[VERIFICATION]
+- [ ] Working tree clean, CI green
+- [ ] Version bumped in all relevant files
+- [ ] CHANGELOG.md updated
+- [ ] Version bump committed and pushed
+- [ ] Git tag created and pushed
+- [ ] GitHub Release created with notes
 - [ ] Build artifacts attached (if applicable)
-- [ ] Release visible at `https://github.com/owner/repo/releases/tag/v{version}`
-
-## Artifact Export
-
-When `EM_TEAM_ARTIFACT_EXPORT` is enabled:
-
-After release, export to:
-`plans/YYYY-MM-DD-HHMM-release-v{version}.md`
-
-Include: version, release type (major/minor/patch/hotfix), release notes, tag SHA, artifact list.

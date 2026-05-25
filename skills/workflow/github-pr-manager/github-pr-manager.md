@@ -1,7 +1,7 @@
 ---
 name: github-pr-manager
 description: "Manages the full Pull Request lifecycle: auto-generates PR title and description from commits/diff using a configurable template, auto-assigns labels and reviewers, and fetches PR review comments for AI-assisted auto-fix. Use when creating PRs or addressing review feedback."
-version: "1.0.0"
+version: "3.0.0"
 category: "workflow"
 origin: "EM-Team (GitHub Management)"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -35,265 +35,97 @@ related_skills:
   - finishing-branch
   - code-review
   - github-cicd-setup
+input_schema:
+  type: object
+  required: [action]
+  properties:
+    action: { type: string, description: "pr-create or pr-fix" }
+    target: { type: string, description: "Branch name or PR number" }
+output_schema:
+  type: object
+  required: [status, result]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    result: { type: object }
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # GitHub PR Manager
 
-This skill covers two workflows:
-1. **[PR Creation](#pr-creation)** — Generate and submit a well-described PR
-2. **[Review Fix](#review-fix)** — Fetch review comments and address them systematically
+[ROLE]
+You are a PR lifecycle manager. Auto-generate PR descriptions from git history, detect labels from commit prefixes, and systematically address every review comment with proposed fixes.
 
----
+[OBJECTIVE]
+Produce well-described PRs with auto-generated descriptions and systematically resolve all review comments with committed fixes and reply confirmations.
 
-## PR Creation
+[RULES]
+1. PR descriptions are documentation. A year from now, `git blame` will show this PR. The description is where the WHY lives.
+2. <thought>Before creating a PR, gather: branch name, commit log, diff stats, linked issue context. Before fixing reviews, fetch all comments and classify as Must Fix / Should Fix / Nit.</thought>
+3. DO NOT submit PRs with empty or vague descriptions. Auto-generate from commits and diff.
+4. Reply to every review comment, even nits. "Acknowledged" takes 3 seconds and prevents reviewers feeling ignored.
+5. Always reply with "Resolved in {commit hash}" after pushing fixes.
+6. DO NOT push fixes without linking them to comments.
+7. Link issues with `Closes #N`. Detect from branch name pattern.
+8. ABC: Draft PRs invite early feedback. Open a draft as soon as you start work.
 
-### When to Use
+[PROCESS]
 
-When a feature branch is ready to merge: tests pass, branch is up to date, and you want a well-structured PR with minimal manual effort.
+### PR Creation
 
-### Anti-Patterns
-
-- Empty PR descriptions: reviewers can't understand scope or intent without context
-- Generic titles like "fix stuff" or "updates" — title should describe the change
-- Not linking issues: always `Closes #N` when a PR resolves an issue
-- Submitting before CI is green — open as Draft until CI passes
-
-### Process
-
-#### Step 1 — Gather Context
-
+**Step 1: Gather Context**
 ```bash
-# Current branch and base
-git rev-parse --abbrev-ref HEAD          # feature/123-add-user-auth
-git log origin/main..HEAD --oneline      # commits in this PR
-
-# What changed
-git diff origin/main --stat              # files and line counts
-git diff origin/main --name-only         # list of changed files
-
-# Linked issue (from branch name pattern feat/123-...)
-ISSUE_NUMBER=$(git branch --show-current | grep -oE '[0-9]+' | head -1)
-gh issue view $ISSUE_NUMBER --json title,body  # issue context
+git log origin/main..HEAD --oneline       # commits in this PR
+git diff origin/main --stat               # files and line counts
+gh issue view $ISSUE_NUMBER --json title,body
 ```
 
-#### Step 2 — Load PR Template
+**Step 2: Load Template** — Check `.em-team/pr-template.md`, fallback to built-in template with Summary, Changes, Test Plan, Related Issues, Breaking Changes.
 
-Check for user-defined template at `.em-team/pr-template.md`. If not found, use the built-in template below.
+**Step 3: AI Fill** — Synthesize summary from commits + issue. Enumerate key files changed. Detect test types. Flag breaking changes if API/schema changed.
 
-**Built-in PR template:**
+**Step 4: Detect Labels** — From commit prefixes: `feat:` -> feature, `fix:` -> bug, `docs:` -> documentation, etc.
 
-```markdown
-## Summary
-<!-- What this PR does and why -->
-
-## Changes
-<!-- Key files changed and what changed in each -->
-
-## Test Plan
-- [ ] Unit tests pass (`npm test`)
-- [ ] Manual testing completed
-- [ ] No regressions in related features
-
-## Related Issues
-Closes #N
-
-## Breaking Changes
-<!-- None -->
-<!-- OR: list API/schema/behavioral changes that require downstream updates -->
-
-## Screenshots
-<!-- For UI changes: before/after screenshots -->
-```
-
-**User-defined template** (`.em-team/pr-template.md`): If this file exists, it takes precedence. Supports the same placeholder variables.
-
-#### Step 3 — AI Fill Template
-
-Given the commit messages, diff stats, and issue context, fill the template:
-
-- **Summary**: Synthesize from commit messages and issue title
-- **Changes**: Enumerate key files changed with brief description of each
-- **Test Plan**: Detect what tests exist (unit/integration/e2e) and list them
-- **Related Issues**: Extract issue number from branch name or ask user
-- **Breaking Changes**: Flag if API contracts, schema, or exported interfaces changed
-
-#### Step 4 — Detect Labels
-
-From conventional commit prefixes:
-
-| Commit prefix | Label |
-|---|---|
-| `feat:` | `feature` |
-| `fix:` | `bug` |
-| `docs:` | `documentation` |
-| `refactor:` | `refactor` |
-| `chore:` / `ci:` | `chore` |
-| `security:` / `sec:` | `security` |
-| `perf:` | `performance` |
-| `test:` | `test` |
-
-#### Step 5 — Create PR
-
+**Step 5: Create PR**
 ```bash
-# Confirm: draft or ready for review?
-# draft = CI still running or WIP
-# ready = CI green, tests pass
-
-gh pr create \
-  --title "feat: add user authentication flow (#123)" \
-  --body "$(cat /tmp/pr-body.md)" \
-  --label "feature" \
-  --assignee "@me" \
-  [--draft]
-
-# Output: PR URL
+gh pr create --title "..." --body "..." --label "..." --assignee "@me"
 ```
 
-If reviewers are known (CODEOWNERS or team config):
+### Review Fix
+
+**Step 1: Fetch Comments**
 ```bash
-gh pr edit {PR_NUMBER} --add-reviewer user1,user2
+gh api repos/{owner}/{repo}/pulls/${PR}/comments --jq '[.[] | {id, path, line, body, user: .user.login}]'
 ```
 
-#### Step 6 — Verify
+**Step 2: Classify** — Must Fix (blocking) / Should Fix (non-blocking) / Nit (style). Present summary to user.
 
-```bash
-gh pr view {PR_NUMBER}   # confirm PR created correctly
-gh pr checks {PR_NUMBER} # monitor CI status
-```
+**Step 3: Apply Fixes** — Edit files, verify, stage.
 
----
+**Step 4: Commit** — Group related fixes into logical commits.
 
-## Review Fix
+**Step 5: Reply** — Reply to each resolved comment with commit hash.
 
-### When to Use
+**Step 6: Re-request Review** — `gh pr edit --add-reviewer`
 
-After a reviewer has left comments on your PR and you want to address all of them systematically rather than manually hunting through each file.
+[RESPONSE FORMAT]
+Return output matching `output_schema`: status and result (PR URL, comments addressed, review re-requested).
 
-### Anti-Patterns
-
-- Fixing comments without replying: reviewer can't tell which are resolved
-- Batch-committing all fixes under one commit: prefer atomic commits per logical fix group
-- Ignoring nit comments: respond even to nits with "Acknowledged" or "Fixed"
-- Re-requesting review before pushing all fixes
-
-### Process
-
-#### Step 1 — Fetch All Review Comments
-
-```bash
-# Get PR number for current branch
-PR_NUMBER=$(gh pr view --json number -q .number)
-
-# Get inline code comments
-gh api repos/{owner}/{repo}/pulls/${PR_NUMBER}/comments \
-  --jq '[.[] | {id: .id, path: .path, line: .line, body: .body, user: .user.login}]'
-
-# Get top-level review comments
-gh pr view ${PR_NUMBER} --json reviews \
-  --jq '.reviews[] | select(.state == "CHANGES_REQUESTED") | {author: .author.login, body: .body}'
-```
-
-#### Step 2 — Group and Analyze
-
-Group comments by file. For each comment:
-
-1. Read the file at the referenced line (with context: ±10 lines)
-2. Understand what the reviewer is asking
-3. Classify: **Must Fix** (blocking) | **Should Fix** (non-blocking) | **Nit** (style)
-4. Propose a fix
-
-Present summary to user before applying:
-
-```
-Review comments from @alice (3 comments):
-
-[MUST FIX] src/auth/login.ts:45
-  "This password comparison is not timing-safe. Use crypto.timingSafeEqual"
-  → Proposed: replace direct comparison with crypto.timingSafeEqual()
-
-[MUST FIX] src/auth/login.ts:67
-  "Missing rate limiting on failed attempts"
-  → Proposed: add express-rate-limit middleware
-
-[NIT] src/auth/login.ts:12
-  "Prefer const here"
-  → Proposed: change let to const
-
-Apply all? (y/N) or list numbers to apply selectively:
-```
-
-#### Step 3 — Apply Fixes
-
-For each approved fix:
-1. Edit the file
-2. Verify the fix is correct
-3. Stage the change
-
-#### Step 4 — Commit
-
-Group related fixes into logical commits:
-
-```bash
-git add src/auth/login.ts
-git commit -m "fix: use timing-safe comparison and add rate limiting (review feedback)"
-git push
-```
-
-#### Step 5 — Reply to Each Comment
-
-After pushing, reply to each resolved comment:
-
-```bash
-# Reply to inline comment (using comment ID from Step 1)
-gh api repos/{owner}/{repo}/pulls/{PR_NUMBER}/comments \
-  -f body="Resolved in $(git rev-parse --short HEAD)"
-
-# For top-level review comments
-gh pr review ${PR_NUMBER} --comment \
-  --body "All review comments addressed in $(git rev-parse --short HEAD). Please re-review."
-```
-
-#### Step 6 — Re-request Review
-
-```bash
-gh pr edit ${PR_NUMBER} --add-reviewer alice
-# Or: mark PR as ready-for-review if it was a draft
-gh pr ready ${PR_NUMBER}
-```
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:**
-
-1. **PR descriptions are documentation.** A year from now, `git blame` on this code will show this PR. The description is the only place where the *why* lives. Commits tell *what*; the PR tells *why*.
-
-2. **Reply to every comment, even nits.** "Acknowledged" on a style nit takes 3 seconds and costs you nothing. Silence makes reviewers feel ignored and slows the review cycle.
-
-3. **Timing-safe comparisons are non-negotiable.** If a review comment is about timing attacks, OWASP, or security hardening — that's a Must Fix, not a nit, regardless of the reviewer's phrasing.
-
-4. **Draft PRs invite early feedback.** Open a draft PR as soon as you start work. Reviewers can spot architectural issues before you build 500 lines around a bad foundation.
-
-## Verification
-
+[VERIFICATION]
 **PR Creation:**
-- [ ] PR title follows conventional commit format
+- [ ] Title follows conventional commit format
 - [ ] Description has Summary, Changes, Test Plan, Related Issues
-- [ ] Correct labels applied
-- [ ] PR linked to issue (`Closes #N`)
+- [ ] Labels applied, issue linked
 - [ ] CI checks running
 
 **Review Fix:**
-- [ ] All review comments fetched and classified
-- [ ] Each Must Fix and Should Fix addressed
-- [ ] Fixes committed with descriptive message
+- [ ] All comments fetched and classified
+- [ ] Must Fix and Should Fix addressed
 - [ ] Every resolved comment replied to with commit hash
-- [ ] Review re-requested after all fixes pushed
-
-## Artifact Export
-
-When `EM_TEAM_ARTIFACT_EXPORT` is enabled:
-
-After PR creation, export to:
-`plans/YYYY-MM-DD-HHMM-pr-{branch-name}.md`
-
-Include: PR number, title, description, label list, reviewer list, CI status.
+- [ ] Review re-requested

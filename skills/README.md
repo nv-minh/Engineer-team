@@ -1,6 +1,6 @@
 # EM-Team - Fullstack Engineering Skill System
 
-**A comprehensive system of 75 skills, 33 active agents, and 24 workflows for fullstack engineering.**
+**A comprehensive system of 75 skills, 33 active agents, and 25 workflows for fullstack engineering.**
 
 ---
 
@@ -34,8 +34,8 @@
 
 > **Note:** `senior-code-reviewer` and `security-auditor` are deprecated in v3.1.0. Use `code-reviewer` (Deep mode) and `security-reviewer` (Audit mode) instead.
 
-### Workflows (24 total)
-- **Primary** (5): new-feature, greenfield-app, bug-fix, refactoring, security-audit
+### Workflows (25 total)
+- **Primary** (6): new-feature, greenfield-app, bug-fix, qa-bug-hunter, refactoring, security-audit
 - **Support** (6): project-setup, documentation, deployment, retro, ship-workflow, canary-monitoring
 - **Team** (8): team-review, architecture-review, design-review, code-review-9axis, etc.
 - **Distributed** (2): distributed-investigation, distributed-development
@@ -52,5 +52,5 @@
 
 ---
 
-**Version:** 3.1.0
-**Last Updated:** 2026-05-08
+**Version:** 4.1.0
+**Last Updated:** 2026-05-24

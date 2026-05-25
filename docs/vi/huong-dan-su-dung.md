@@ -28,7 +28,7 @@ EM-Team v3.7.0 cung cấp 149+ commands được tổ chức thành 3 danh mục
 |-------------|----------|-------|--------------|
 | **Skills** | 85 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
 | **Agents** | 35 | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
-| **Workflows** | 25 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
+| **Workflows** | 26 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
 
 ---
 
@@ -656,6 +656,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 # Ví dụ thực tế
 /em:new-feature Implement user authentication from idea to production
 /em:bug-fix Fix login timeout bug systematically
+/em:qa-bug-hunter QA test http://localhost:5173 and log bugs to GitHub
 /em:refactoring Refactor authentication code for better maintainability
 /em:security-audit Audit payment system for vulnerabilities
 /em:distributed-investigation Investigate authentication failure across full stack
@@ -808,6 +809,77 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #   - Fix confirmed
 #   - No regressions
 #   - Performance OK
+```
+
+### Use Case Chi tiết: QA Bug Hunter Workflow *(v4.1.0)*
+
+#### Workflow: QA Bug Hunter
+
+```bash
+/em:qa-bug-hunter QA test http://localhost:5173/projects with targeted mode
+
+# Workflow sẽ đi qua 7 stages:
+
+# STAGE 0: SETUP
+# ==============================
+# Process:
+#   1. Validate target URL accessible
+#   2. Detect GitHub repo từ git remote
+#   3. Tạo evidence directory
+#   4. Verify gh CLI authenticated
+
+# STAGE 1: DISCOVER
+# ==============================
+# Skills: em:qa, em:flow-discovery
+# Process:
+#   1. Chạy QA testing (critical paths, console errors,
+#      network failures, performance, responsive, accessibility)
+#   2. Compile danh sách bug candidates
+#   3. Phân loại severity (P0-P3)
+# Output: Bug candidate list
+
+# STAGE 2: EVIDENCE (per bug)
+# ==============================
+# Skill: em:browser-testing
+# Process:
+#   1. Reproduce bug trong browser
+#   2. Chụp screenshot tại điểm lỗi
+#   3. Thu thập console errors, network failures
+# Output: Evidence files (screenshots, logs)
+
+# STAGE 3: PREPARE (per bug)
+# ==============================
+# Process:
+#   1. Draft GitHub issue body
+#   2. Format steps to reproduce
+#   3. Attach evidence paths
+#   ⛔ KHÔNG tạo issue - chỉ chuẩn bị draft
+
+# STAGE 4: HUMAN GATE (per bug) ← ĐIỂM KHÁC BIỆT
+# ==============================
+# Process:
+#   1. Trình bày bug report cho bạn review
+#   2. Bạn quyết định:
+#      (A) APPROVE — Tạo issue trên GitHub
+#      (B) REJECT  — Bỏ qua, không phải bug thật
+#      (M) MODIFY  — Sửa trước khi tạo
+# ➜ Chỉ tạo issue khi bạn xác nhận là bug thật!
+
+# STAGE 5: LOG (per bug)
+# ==============================
+# Skill: github-issue-manager
+# Process:
+#   1. Nếu APPROVE/MODIFY → gh issue create
+#   2. Nếu REJECT → ghi lý do vào report
+# Output: GitHub issue URL (hoặc rejection logged)
+
+# STAGE 6: SUMMARY
+# ==============================
+# Output: QA-BUG-HUNTER-REPORT.md với:
+#   - Tổng số bugs found
+#   - Số approved / rejected / modified
+#   - Danh sách issue URLs
+#   - Evidence directory path
 ```
 
 ---

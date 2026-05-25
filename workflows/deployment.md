@@ -1,7 +1,7 @@
 ---
 name: deployment
 description: Deployment workflow with testing, monitoring, and rollback
-version: "2.0.0"
+version: "2.1.0"
 category: "support"
 origin: "agent-skills"
 agents_used:
@@ -17,183 +17,219 @@ related_skills:
   - finishing-branch
   - performance-optimization
 estimated_time: "3-8 hours"
+react_protocol: true
+context_pruning: true
+max_retries_per_stage: 3
 ---
 
 # Deployment Workflow
 
-## Overview
-
-The deployment workflow manages safe, tested deployments with monitoring and rollback capabilities. It ensures reliable production releases.
-
-## When to Use
-
-- Deploying to production
-- Deploying to staging
-- Rolling out features
-- Emergency deployments
-- Infrastructure updates
-
-## Lifecycle
-
 ```
-DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──→ SHIP
-  (1)       (2)       (3)       (4)        (5)       (6)
-   │         │         │         │          │         │
-   ▼         ▼         ▼         ▼          ▼         ▼
- GATE 1    GATE 2    GATE 3    GATE 4     GATE 5    DONE
+PREP → DEPLOY → TEST → MONITOR → FINALIZE
+  1       2        3       4          5
 ```
 
 ### Stage-to-Lifecycle Mapping
 
-| Workflow Stage | Lifecycle Phase | Description |
-|---|---|---|
-| PREP (Stage 1) | DEFINE + PLAN | Run tests, verify build, create tag, backup |
-| DEPLOY (Stage 2) | BUILD | Execute deployment strategy (blue-green, canary, rolling) |
-| TEST (Stage 3) | VERIFY | Run smoke tests, check critical paths, verify error rates |
-| MONITOR (Stage 4) | REVIEW | Monitor metrics, check error rates, verify performance |
-| FINALIZE (Stage 5) | SHIP | Update documentation, notify team, record deployment |
+| Workflow Stage | Lifecycle Phase |
+|---|---|
+| PREP (Stage 1) | DEFINE + PLAN |
+| DEPLOY (Stage 2) | BUILD |
+| TEST (Stage 3) | VERIFY |
+| MONITOR (Stage 4) | REVIEW |
+| FINALIZE (Stage 5) | SHIP |
 
-### Verification Gates
+---
 
-#### Gate 1: Definition Complete
+### Stage 1: PREP
+
+<thought>
+Observe: Code ready for deployment — must verify readiness.
+Analyze: Must run tests, verify build, create tag, backup, select deployment strategy (blue-green/canary/rolling). Gate requires tests pass, build succeeds, tag created, backup complete.
+Plan: Invoke executor agent.
+</thought>
+
+<action>
+type: invoke_agent
+target: executor
+params:
+  task: prepare_deployment
+  outputs: [tests_passed, build_verified, tag_created, backup_complete, strategy_selected]
+</action>
+
+<observation>
+result: Tests pass, build succeeds, tag created, backup complete, strategy selected
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Tests pass
 - [ ] Build succeeds
 - [ ] Tag created
 - [ ] Backup complete
 - [ ] Deployment strategy selected
-PASS → proceed to PLAN | FAIL → return to DEFINE
 
-#### Gate 2: Plan Complete
-- [ ] Deployment steps documented
-- [ ] Rollback plan ready
-- [ ] Monitoring configured
-- [ ] Stakeholders notified
-PASS → proceed to BUILD | FAIL → return to PLAN
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: PREP
+  completed: []
+  next_action: "DEPLOY"
+```
 
-#### Gate 3: Build Complete
+---
+
+### Stage 2: DEPLOY
+
+<thought>
+Observe: Deployment preparation complete.
+Analyze: Must execute deployment using selected strategy. Gate requires staging tests pass, deployment successful, smoke tests pass.
+Plan: Invoke executor agent with ci-cd-automation skill.
+</thought>
+
+<action>
+type: invoke_agent
+target: executor
+params:
+  skill: ci-cd-automation
+  task: execute_deployment
+  strategy: selected_strategy
+  outputs: [deployment_result, smoke_test_results]
+</action>
+
+<observation>
+result: Deployment successful, smoke tests passing
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Staging tests pass
 - [ ] Deployment successful
 - [ ] Smoke tests pass
 - [ ] Traffic shifted (if applicable)
-PASS → proceed to VERIFY | FAIL → return to BUILD
 
-#### Gate 4: Verification Complete
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: DEPLOY
+  completed: [PREP]
+  next_action: "TEST"
+```
+
+---
+
+### Stage 3: TEST
+
+<thought>
+Observe: Deployment live, smoke tests passing.
+Analyze: Must run smoke tests on production, check critical paths, verify error rates, check performance. Gate requires smoke tests pass, critical paths work, error rates acceptable.
+Plan: Invoke verifier agent.
+</thought>
+
+<action>
+type: invoke_agent
+target: verifier
+params:
+  task: post_deploy_testing
+  outputs: [smoke_results, critical_path_results, error_rates, performance_metrics]
+</action>
+
+<observation>
+result: Smoke tests pass, critical paths work, error rates acceptable
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Smoke tests pass
 - [ ] Critical paths work
 - [ ] Error rates acceptable
 - [ ] Performance acceptable
-PASS → proceed to REVIEW | FAIL → return to BUILD
 
-#### Gate 5: Review Complete
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: TEST
+  completed: [PREP, DEPLOY]
+  next_action: "MONITOR"
+```
+
+---
+
+### Stage 4: MONITOR
+
+<thought>
+Observe: Post-deploy tests passed.
+Analyze: Must monitor metrics (response time, error rate, CPU, memory), check for anomalies over monitoring period (30-60 min). Trigger rollback if thresholds exceeded.
+Plan: Invoke verifier agent with performance-optimization skill.
+</thought>
+
+<action>
+type: invoke_agent
+target: verifier
+params:
+  task: monitor_deployment
+  duration: "30-60 minutes"
+  rollback_triggers: [error_rate_gt_1pct, p95_gt_2x_baseline, critical_errors]
+  outputs: [monitoring_report, anomalies]
+</action>
+
+<observation>
+result: Metrics normal, error rates low, no critical errors
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
 - [ ] Metrics normal
 - [ ] Error rates low
+- [ ] Performance acceptable
 - [ ] No critical errors
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: MONITOR
+  completed: [PREP, DEPLOY, TEST]
+  next_action: "FINALIZE"
+```
+
+---
+
+### Stage 5: FINALIZE
+
+<thought>
+Observe: Monitoring period complete, all metrics healthy.
+Analyze: Must update documentation, notify team, record deployment.
+Plan: Invoke executor agent.
+</thought>
+
+<action>
+type: invoke_agent
+target: executor
+params:
+  task: finalize_deployment
+  outputs: [documentation_updated, team_notified, deployment_recorded]
+</action>
+
+<observation>
+result: Documentation updated, team notified, deployment recorded
+gate_status: PASS | FAIL
+</observation>
+
+**Quality Gate:**
+- [ ] Deployment successful
 - [ ] Documentation updated
 - [ ] Team notified
-PASS → proceed to SHIP | FAIL → return to BUILD
+- [ ] Deployment recorded
 
-## Workflow Stages
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│  PREP → DEPLOY → TEST → MONITOR → FINALIZE            │
-│    1        2         3         4          5            │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
-
-## Deployment Strategies
-
-### Blue-Green Deployment
-
+**State Snapshot:**
 ```yaml
-strategy: blue_green
-description: "Maintain two production environments"
-
-steps:
-  - name: "Deploy to green"
-    action: "Deploy new version to green environment"
-
-  - name: "Test green"
-    action: "Run smoke tests on green"
-
-  - name: "Switch traffic"
-    action: "Update load balancer to point to green"
-
-  - name: "Monitor"
-    action: "Monitor for issues for 30 minutes"
-
-  - name: "Cleanup"
-    action: "If successful, blue becomes new green"
+workflow_state:
+  current_phase: FINALIZE
+  completed: [PREP, DEPLOY, TEST, MONITOR]
+  next_action: "DONE"
 ```
 
-### Canary Deployment
-
-```yaml
-strategy: canary
-description: "Gradually roll out to subset of users"
-
-steps:
-  - name: "Deploy canary"
-    action: "Deploy to 10% of servers"
-
-  - name: "Monitor canary"
-    action: "Monitor metrics for 15 minutes"
-
-  - name: "Check metrics"
-    action: "If error rate < threshold, proceed"
-
-  - name: "Rollout to rest"
-    action: "Deploy to remaining 90%"
-
-  - name: "Final monitoring"
-    action: "Monitor for 1 hour"
-```
-
-### Rolling Deployment
-
-```yaml
-strategy: rolling
-description: "Gradually replace instances"
-
-steps:
-  - name: "Deploy to first batch"
-    action: "Deploy to 25% of servers"
-
-  - name: "Monitor first batch"
-    action: "Monitor for 5 minutes"
-
-  - name: "Continue rollout"
-    action: "Deploy to next 25%"
-
-  - name: "Repeat"
-    action: "Continue until all deployed"
-```
-
-## Monitoring Metrics
-
-```yaml
-metrics:
-  application:
-    - "Response time (p50, p95, p99)"
-    - "Error rate (%)"
-    - "Request rate (req/s)"
-    - "CPU usage (%)"
-    - "Memory usage (%)"
-
-  business:
-    - "Active users"
-    - "Conversion rate"
-    - "Transaction volume"
-    - "Revenue"
-
-  infrastructure:
-    - "Server health"
-    - "Database connections"
-    - "Cache hit rate"
-    - "Network latency"
-```
+---
 
 ## Rollback Plan
 
@@ -204,80 +240,52 @@ rollback:
     - "Response time p95 > 2x baseline"
     - "Critical errors detected"
     - "Manual trigger"
-
   steps:
-    - name: "Trigger rollback"
-      action: "Execute rollback procedure"
-
-    - name: "Verify rollback"
-      action: "Verify old version is live"
-
-    - name: "Investigate"
-      action: "Investigate what went wrong"
-
-    - name: "Document"
-      action: "Document incident and resolution"
+    - Execute rollback procedure
+    - Verify old version is live
+    - Investigate root cause
+    - Document incident
 ```
 
-## Quality Gates Summary
+## Handoff Contracts
 
+### Pre-deploy → Deploy
 ```yaml
-quality_gates:
-  prepare:
-    - tests_pass
-    - build_succeeds
-    - tag_created
-    - backup_complete
-
-  deploy:
-    - staging_tests_pass
-    - deployment_successful
-    - smoke_tests_pass
-    - traffic_shifted
-
-  test:
-    - smoke_tests_pass
-    - critical_paths_work
-    - error_rates_acceptable
-    - performance_acceptable
-
-  monitor:
-    - metrics_normal
-    - error_rates_low
-    - performance_acceptable
-    - no_critical_errors
-
-  finalize:
-    - deployment_successful
-    - documentation_updated
-    - team_notified
-    - deployment_recorded
+handoff:
+  from: executor
+  to: verifier
+  provides: [tests_passed, build_artifacts, deployment_plan]
+  expects: [smoke_test_results, environment_health]
 ```
 
-## Timeline Estimate
-
+### Deploy → Post-deploy
 ```yaml
-timeline:
-  prepare: "30 min - 1 hour"
-  deploy: "30 min - 2 hours"
-  test: "30 min - 1 hour"
-  monitor: "1-4 hours"
-  finalize: "30 min - 1 hour"
-
-  total: "3-8 hours"
+handoff:
+  from: verifier
+  to: executor
+  provides: [smoke_results, monitoring_baseline]
+  expects: [deployment_documented, team_notified]
 ```
 
-## Success Criteria
+---
 
-A successful deployment workflow:
+## Error Handling
 
-- [ ] All tests pass before deployment
-- [ ] Deployment completes successfully
-- [ ] Smoke tests pass
-- [ ] Critical paths working
-- [ ] Error rates acceptable
-- [ ] Performance within targets
-- [ ] No regressions
-- [ ] Monitoring active
-- [ ] Rollback plan ready
-- [ ] Documentation updated
+| Error Type | Trigger | Recovery | Retry? |
+|---|---|---|---|
+| `CONTEXT_OVERFLOW` | Context window >80% | `/compact`, prune prior stages | No |
+| `BUILD_DEADLOCK` | Build/test loop >3 failures | Invoke systematic-debugging | Yes |
+| `TEST_ENV_FAILURE` | Infra/env issue, not code bug | Reset environment, retry | No |
+| `SPEC_CONFLICT` | Contradictory requirements found | Return to DEFINE stage | Yes |
+| `DEPLOY_FAILURE` | Deployment to target environment fails | Check logs, verify config, rollback | Yes |
+| `ROLLBACK_FAILURE` | Rollback to previous version fails | Manual intervention, escalate | No |
+| `HEALTH_CHECK_FAILED` | Post-deploy health check unhealthy | Check app logs, rollback if critical | Yes |
+
+`max_retries_per_stage: 2` — after 2 retries, escalate to human.
+
+## Context Pruning Protocol
+
+After each stage observation:
+- RETAIN: current phase, gate status, blocking issues, artifacts produced
+- DISCARD: intermediate tool outputs, verbose logs
+- SUMMARIZE: completed stages into 1-2 sentences each

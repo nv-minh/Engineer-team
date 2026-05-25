@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: Comprehensive 5-axis code review framework. Use when reviewing pull requests, before merging code, or when ensuring code quality.
-version: "2.0.0"
+version: "3.0.0"
 category: "quality"
 origin: "agent-skills"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -18,421 +18,163 @@ anti_patterns:
   - "Rubber-stamping approvals without actually reading the code"
   - "Giving vague feedback like 'this is bad' without explaining why or suggesting alternatives"
 related_skills: ["code-simplification", "security-audit", "security-hardening"]
+
+input_schema:
+  type: object
+  required: [target]
+  properties:
+    target:
+      type: string
+      description: "PR URL, file path, git diff, or branch to review"
+    axes:
+      type: array
+      items: { type: string, enum: [correctness, readability, architecture, security, performance] }
+      default: [correctness, readability, architecture, security, performance]
+      description: "Which review axes to evaluate"
+    depth:
+      type: string
+      enum: [standard, deep]
+      default: standard
+      description: "Standard (5-axis) or Deep (9-axis) review"
+    focus:
+      type: string
+      description: "Optional focus area for targeted review"
+
+output_schema:
+  type: object
+  required: [status, assessment, findings]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    assessment: { type: string, enum: [APPROVE, REQUEST_CHANGES, COMMENT] }
+    findings:
+      type: array
+      items:
+        type: object
+        required: [axis, severity, issue, location, fix]
+        properties:
+          axis: { type: string, enum: [correctness, readability, architecture, security, performance] }
+          severity: { type: string, enum: [CRITICAL, HIGH, MEDIUM, LOW] }
+          issue: { type: string }
+          location: { type: string, description: "file:line format" }
+          impact: { type: string }
+          fix: { type: string, description: "Specific fix with code example" }
+    summary:
+      type: object
+      properties:
+        total_findings: { type: integer }
+        by_severity: { type: object }
+        recommendation: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
-# Code Review
+[ROLE]
+Senior code reviewer. 5-axis review framework: Correctness, Readability, Architecture, Security, Performance.
 
-## Overview
+[OBJECTIVE]
+Review code changes. Identify issues with severity classification. Provide actionable fixes with code examples.
 
-Code review is a systematic process to ensure code quality, maintainability, and correctness. The 5-axis review framework evaluates code across correctness, readability, architecture, security, and performance.
+[RULES]
+1. <thought>Before writing findings, read the full diff and understand the context — PR description, requirements, related issues. Evaluate architecture before style.</thought>
+2. Evaluate ALL 5 axes for every review. Do not skip axes.
+3. Every finding MUST include: axis, severity, issue description, file:line location, and a specific fix with code example.
+4. DO NOT nitpick formatting/style issues that a linter handles. Focus on substance.
+5. DO NOT rubber-stamp approvals. Read every line of the diff.
+6. DO NOT give vague feedback ("this is bad"). Explain what, why, and provide the fix.
+7. DO NOT delay reviews. Review promptly to unblock progress.
+8. When NOT to use: Auto-generated code, vendor files, or lock files.
+9. Severity classification: CRITICAL = data loss/security breach, HIGH = bug in production path, MEDIUM = maintainability concern, LOW = improvement suggestion.
+10. **Standard mode** = 5 axes (correctness, readability, architecture, security, performance). **Deep mode** = 9 axes (adds error handling, testing, observability, documentation).
+11. Teach through every comment — either the code improves from the suggestion, or the author's understanding improves from the explanation.
 
-## When to Use
+[PROCESS]
 
-- Reviewing pull requests
-- Before merging code
-- Ensuring code quality
-- Teaching best practices
-- Maintaining code standards
+### Step 1: Understand Context
 
-## The 5-Axis Review Framework
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│  1. Correctness   ──→ Does it work?                    │
-│  2. Readability   ──→ Is it understandable?            │
-│  3. Architecture  ──→ Is it well-structured?           │
-│  4. Security      ──→ Is it secure?                   │
-│  5. Performance   ──→ Is it efficient?                │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
-
-## Axis 1: Correctness
-
-### Does the code work as intended?
-
-**Checklist:**
-- [ ] Code implements the requirements
-- [ ] Edge cases are handled
-- [ ] Error handling is comprehensive
-- [ ] Tests cover the functionality
-- [ ] No obvious bugs
-
-**Example Review:**
-
-```typescript
-// ❌ Bad: Missing edge case handling
-function divide(a: number, b: number): number {
-  return a / b;
-}
-
-// ✅ Good: Handles edge cases
-function divide(a: number, b: number): number {
-  if (b === 0) {
-    throw new Error('Division by zero');
-  }
-  return a / b;
-}
-```
-
-**Common Issues:**
-- Null/undefined not handled
-- Array bounds not checked
-- Error cases not covered
-- Race conditions in async code
-
-## Axis 2: Readability
-
-### Is the code easy to understand?
-
-**Checklist:**
-- [ ] Names are descriptive and clear
-- [ ] Complex logic is explained
-- [ ] Code follows consistent style
-- [ ] Magic numbers are replaced with constants
-- [ ] Functions are small and focused
-
-**Example Review:**
-
-```typescript
-// ❌ Bad: Unclear naming and magic numbers
-function calc(d: number, r: number): number {
-  return d * (1 + r / 100) * 0.8;
-}
-
-// ✅ Good: Clear naming and constants
-const TAX_RATE = 0.2;
-const DISCOUNT_MULTIPLIER = 0.8;
-
-function calculatePriceWithDiscount(
-  days: number,
-  rate: number
-): number {
-  const dailyRate = days * rate;
-  const discountedRate = dailyRate * DISCOUNT_MULTIPLIER;
-  return discountedRate * (1 + TAX_RATE);
-}
-```
-
-**Common Issues:**
-- Abbreviations in names
-- Magic numbers
-- Long functions (>50 lines)
-- Deeply nested code
-- Unclear variable names
-
-## Axis 3: Architecture
-
-### Is the code well-structured?
-
-**Checklist:**
-- [ ] Separation of concerns
-- [ ] Single responsibility principle
-- [ ] DRY (Don't Repeat Yourself)
-- [ ] Proper abstractions
-- [ ] Dependency injection
-
-**Example Review:**
-
-```typescript
-// ❌ Bad: Mixed concerns
-async function handleUserRegistration(req: Request) {
-  // Validation
-  if (!req.body.email || !req.body.password) {
-    throw new Error('Invalid input');
-  }
-
-  // Database operation
-  const user = await db.users.create({
-    email: req.body.email,
-    password: hash(req.body.password)
-  });
-
-  // Email sending
-  await sendEmail(user.email, 'Welcome!');
-
-  // Response
-  return user;
-}
-
-// ✅ Good: Separated concerns
-class UserRegistrationService {
-  constructor(
-    private validator: Validator,
-    private userRepository: UserRepository,
-    private emailService: EmailService
-  ) {}
-
-  async register(data: RegisterData): Promise<User> {
-    this.validator.validate(data);
-    const hashedPassword = await this.hashPassword(data.password);
-    const user = await this.userRepository.create({
-      email: data.email,
-      password: hashedPassword
-    });
-    await this.emailService.sendWelcome(user.email);
-    return user;
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
-  }
-}
-```
-
-**Common Issues:**
-- God classes/functions
-- Tight coupling
-- Code duplication
-- Poor separation of concerns
-- Violation of SOLID principles
-
-## Axis 4: Security
-
-### Is the code secure?
-
-**Checklist:**
-- [ ] Input validation
-- [ ] Output encoding
-- [ ] Authentication/authorization
-- [ ] No hardcoded secrets
-- [ ] SQL injection prevention
-- [ ] XSS prevention
-
-**Example Review:**
-
-```typescript
-// ❌ Bad: SQL injection vulnerability
-async function getUserByEmail(email: string): Promise<User> {
-  const query = `SELECT * FROM users WHERE email = '${email}'`;
-  return db.query(query);
-}
-
-// ✅ Good: Parameterized query
-async function getUserByEmail(email: string): Promise<User> {
-  return db.query('SELECT * FROM users WHERE email = $1', [email]);
-}
-
-// ❌ Bad: Hardcoded secret
-const API_KEY = 'sk_live_1234567890abcdef';
-
-// ✅ Good: Environment variable
-const API_KEY = process.env.STRIPE_API_KEY!;
-
-// ❌ Bad: XSS vulnerability
-function renderComment(text: string): string {
-  return `<div>${text}</div>`;
-}
-
-// ✅ Good: Output encoding
-import DOMPurify from 'dompurify';
-
-function renderComment(text: string): string {
-  const sanitized = DOMPurify.sanitize(text);
-  return `<div>${sanitized}</div>`;
-}
-```
-
-**Common Issues:**
-- SQL injection
-- XSS vulnerabilities
-- Hardcoded secrets
-- Missing authorization
-- No input validation
-- Insecure dependencies
-
-## Axis 5: Performance
-
-### Is the code efficient?
-
-**Checklist:**
-- [ ] No unnecessary computations
-- [ ] Efficient data structures
-- [ ] Proper caching
-- [ ] Database query optimization
-- [ ] No memory leaks
-
-**Example Review:**
-
-```typescript
-// ❌ Bad: Inefficient array operations
-function findUserById(users: User[], id: string): User | undefined {
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].id === id) {
-      return users[i];
-    }
-  }
-}
-
-// ✅ Good: Using Map for O(1) lookup
-function createUserMap(users: User[]): Map<string, User> {
-  return new Map(users.map(user => [user.id, user]));
-}
-
-function findUserById(userMap: Map<string, User>, id: string): User | undefined {
-  return userMap.get(id);
-}
-
-// ❌ Bad: Unnecessary re-renders
-function ExpensiveComponent() {
-  const data = expensiveComputation(props.data);
-  return <div>{data}</div>;
-}
-
-// ✅ Good: Memoized computation
-function ExpensiveComponent({ data }: { data: Data[] }) {
-  const computed = useMemo(() => expensiveComputation(data), [data]);
-  return <div>{computed}</div>;
-}
-```
-
-**Common Issues:**
-- Unnecessary loops
-- Missing memoization
-- Inefficient queries (N+1)
-- Memory leaks
-- Blocking operations
-
-## Review Process
-
-### 1. Understand the Context
-
-Before reviewing:
 - Read the PR description
 - Understand the requirements
 - Check related issues/tickets
 - Review the test plan
 
-### 2. Review the Code
+### Step 2: Evaluate Each Axis
 
-Go through each axis:
-1. Check correctness first
-2. Review readability
-3. Evaluate architecture
-4. Assess security
-5. Analyze performance
+**Axis 1: Correctness** — Does it work?
+- Code implements the requirements
+- Edge cases handled (null, empty, boundary values)
+- Error handling is comprehensive
+- Tests cover the functionality
 
-### 3. Provide Feedback
+**Axis 2: Readability** — Is it understandable?
+- Names are descriptive
+- Magic numbers replaced with constants
+- Functions are small and focused
+- Complex logic is explained
 
-Give constructive feedback:
-- Explain what and why
-- Provide examples
-- Suggest improvements
-- Ask questions
+**Axis 3: Architecture** — Is it well-structured?
+- Separation of concerns
+- Single responsibility principle
+- DRY (no code duplication)
+- Proper abstractions and dependency injection
 
-**Good Feedback Example:**
-
-```
-❌ Bad: "This code is bad."
-
-✅ Good: "I noticed that the `divide` function doesn't handle division by zero.
-This could cause a runtime error. Consider adding a check:
+**Axis 4: Security** — Is it secure?
+- Input validation on all external data
+- Output encoding (XSS prevention)
+- Parameterized queries (SQL injection prevention)
+- No hardcoded secrets
+- Proper authentication/authorization
 
 ```typescript
-function divide(a: number, b: number): number {
-  if (b === 0) {
-    throw new Error('Division by zero');
-  }
-  return a / b;
-}
+// SQL injection vulnerability:
+const query = `SELECT * FROM users WHERE email = '${email}'`;
+
+// Fixed — parameterized query:
+db.query('SELECT * FROM users WHERE email = $1', [email]);
 ```
 
-Also, consider adding a test case for this scenario."
-```
+**Axis 5: Performance** — Is it efficient?
+- No unnecessary computations
+- Efficient data structures (Map for O(1) lookup vs array scan)
+- Proper caching and memoization
+- No N+1 queries
+- No memory leaks
 
-### 4. Follow Up
+### Step 3: Classify and Report
 
-- Address review comments
-- Verify fixes
-- Approve when satisfied
+Assign severity per Rule 9. Report each finding with axis, severity, location (file:line), and a specific fix with code example.
 
-## Review Template
+### Step 4: Provide Assessment
 
-```markdown
-## Code Review
+- **APPROVE** — No CRITICAL/HIGH findings, code is production-ready
+- **REQUEST_CHANGES** — CRITICAL or HIGH findings that must be fixed
+- **COMMENT** — Only MEDIUM/LOW findings, approve at author's discretion
 
-### Summary
-[Brief summary of changes]
+[RESPONSE FORMAT]
+Return output conforming to `output_schema`. Set `status` to:
+- `DONE` — Review complete, all axes evaluated
+- `DONE_WITH_CONCERNS` — Review complete but some areas could not be fully evaluated
+- `NEEDS_CONTEXT` — Insufficient information to complete review
+- `BLOCKED` — Cannot access the code or dependencies
 
-### Correctness
-- [ ] Code implements requirements
-- [ ] Edge cases handled
-- [ ] Tests comprehensive
-- Issues: [List any correctness issues]
-
-### Readability
-- [ ] Names are clear
-- [ ] Code is well-structured
-- [ ] Comments where needed
-- Issues: [List any readability issues]
-
-### Architecture
-- [ ] Good separation of concerns
-- [ ] Follows SOLID principles
-- [ ] No code duplication
-- Issues: [List any architecture issues]
-
-### Security
-- [ ] Input validation
-- [ ] No hardcoded secrets
-- [ ] Proper authorization
-- Issues: [List any security issues]
-
-### Performance
-- [ ] Efficient algorithms
-- [ ] Proper caching
-- [ ] No memory leaks
-- Issues: [List any performance issues]
-
-### Overall Assessment
-- [ ] Approve
-- [ ] Request changes
-- [ ] Comment
-
-### Additional Notes
-[Any other feedback or suggestions]
-```
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:** A great code review teaches the author something new, not just catches bugs.
-
-1. **Lead with Questions, Not Commands:** Ask "What happens when this receives null?" instead of stating "This will crash on null." Questions invite thinking; commands invite resentment.
-2. **Review the Architecture Before the Semicolons:** If the overall approach is wrong, detailed style feedback is wasted effort. Evaluate correctness and architecture first, then readability and performance.
-3. **Every Comment Should Leave the Code Better:** Either the code improves from your suggestion, or the author's understanding improves from your explanation. If neither happens, the comment was noise.
-
-## Common Review Anti-Patterns
-
-| Anti-Pattern | Problem | Solution |
-|---|---|---|
-| Nitpicking style | Focuses on minor issues | Use linters for style |
-| Rubber stamping | No actual review | Thoroughly review code |
-| Delaying reviews | Blocks progress | Review promptly |
-- Harsh feedback | Demotivates | Be constructive |
-| No explanation | Unclear why | Explain your reasoning |
-
-## Verification
-
-After code review:
-
+[VERIFICATION]
 - [ ] All 5 axes evaluated
-- [ ] Feedback is constructive
-- [ ] Examples provided for issues
-- [ ] Suggestions for improvement
-- [ ] Overall assessment given
-- [ ] Follow-up on fixes
+- [ ] Every finding has axis, severity, location, and fix with code example
+- [ ] Assessment (APPROVE/REQUEST_CHANGES/COMMENT) is justified
+- [ ] Summary includes total findings by severity
+- [ ] Feedback is constructive and actionable
 
-## Artifact Export
-
+[ARTIFACT EXPORT]
 When `EM_TEAM_ARTIFACT_EXPORT` is enabled ("true"):
 
-After completing this skill, export the review report to:
-`reviews/YYYY-MM-DD-HHMM-<component>.md` (in current working directory)
+Export the review report to: `reviews/YYYY-MM-DD-HHMM-<component>.md` (in current working directory)
 
-Format the exported file with:
-- YAML frontmatter: skill name, date, session ID
-- Full review report: all 5 axes with issues and suggestions
-- Metadata: files reviewed, overall assessment
+Format: YAML frontmatter (skill name, date, session ID) + full review report (all 5 axes with issues and suggestions) + metadata (files reviewed, overall assessment).
 
 If the env var is not set or is "false", skip export.

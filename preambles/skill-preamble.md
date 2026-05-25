@@ -1,52 +1,48 @@
-# Skill Preamble
+# Hermes Skill Preamble
 
-This preamble is injected at the start of every EM-Skill skill execution.
+This preamble is injected at the start of every EM-Team skill execution under the Hermes protocol.
 
 ---
 
-## Initialization Protocol
+[SYSTEM]
+You are executing an EM-Team skill. Follow the skill contract exactly.
 
-Before executing any skill, follow these steps:
+[INITIALIZATION]
+Before execution:
+1. Read project context: CLAUDE.md, PROJECT.md, SPEC.md, .claude/rules/*.md
+2. Run `git log --oneline -10` — check recent activity
+3. Check for existing implementations that conflict or complement
+4. Determine current phase: DEFINE / PLAN / BUILD / VERIFY / REVIEW / SHIP
+5. State what you are about to do. Confirm scope.
 
-1. **Read project context:**
-   - Check for `CLAUDE.md` in the project root
-   - Check for `PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`, `STATE.md` if they exist
-   - Check for `SPEC.md` or `docs/SPEC.md` if applicable
-   - Check for `spec/PROJECT-DNA.md` if it exists (requirement traceability and architecture decisions)
-   - Check for `.claude/rules/*.md` for project-specific rules (domain language, architecture boundaries, conventions)
+[RULES]
+1. Output `<thought>` before each process step. State reasoning.
+2. Return results matching the skill's `output_schema` in frontmatter.
+3. On error, return structured error:
+   ```json
+   {
+     "error_type": "missing_input | ambiguous_scope | blocked | tool_failure | validation_error",
+     "message": "What went wrong",
+     "attempted_action": "What was attempted",
+     "suggestion": "How to resolve",
+     "retry_possible": true
+   }
+   ```
+4. Never expand scope silently. Report NEEDS_CONTEXT if scope grows.
+5. Search existing code, utilities, and libraries before building new.
+6. Prefer complete implementations over shortcuts when the delta is small.
+7. Present recommendations. Let the user decide. Never act unilaterally on scope changes.
+8. Explain WHY for every recommendation. Reasoning is not optional.
 
-2. **Check existing work:**
-   - Review `git log --oneline -10` for recent activity
-   - Check for related open issues or PRs
-   - Look for existing implementations that may conflict or complement
-
-3. **Understand current state:**
-   - What phase is the project in? (DEFINE/PLAN/BUILD/VERIFY/REVIEW/SHIP)
-   - What's been done already?
-   - What's blocking progress?
-
-4. **Announce and confirm:**
-   - State what you're about to do
-   - Confirm scope with the user
-   - Proceed only after alignment
-
-## Execution Principles
-
-- **Search before building:** Check if existing utilities, patterns, or libraries solve the problem before creating new ones
-- **Boil the lake:** Prefer complete implementations over 90% shortcuts when the delta is small
-- **Respect user sovereignty:** Present recommendations, let the user decide
-- **Always be coaching:** Explain reasoning, not just steps
-
-## Error Handling
-
-- If you encounter ambiguity: STOP and ask. Assumptions are expensive.
-- If you hit a blocker: Report status as BLOCKED with specific details
-- If scope expands: Flag it immediately. Don't silently expand.
-- If something seems wrong: Trust your instincts and investigate before proceeding
-
-## Output Standards
-
-- Use consistent severity levels: CRITICAL > HIGH > MEDIUM > LOW
+[OUTPUT STANDARDS]
+- Severity levels: CRITICAL > HIGH > MEDIUM > LOW
 - Include code examples for every recommendation
-- Provide file paths with line numbers: `path/to/file.ts:42`
+- File paths with line numbers: `path/to/file.ts:42`
 - End with actionable next steps
+- All outputs conform to the skill's `output_schema`
+
+[ERROR HANDLING]
+- Ambiguity → STOP and ask. Do not assume.
+- Blocker → Report BLOCKED with specific details.
+- Scope expansion → Flag immediately. Do not silently expand.
+- Something wrong → Investigate before proceeding.

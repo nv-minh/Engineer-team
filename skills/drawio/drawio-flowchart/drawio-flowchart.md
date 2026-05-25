@@ -3,69 +3,101 @@ name: drawio-flowchart
 description: >
   Create flowcharts, swim lane diagrams, decision trees, and business process
   diagrams using Draw.io XML. Covers standard shapes, connectors, auto-layout,
-  and export to PNG/SVG/PDF. Use when visualizing workflows, processes, or
-  decision logic.
-version: "1.0.0"
+  and export to PNG/SVG/PDF.
+version: "3.0.0"
 category: "drawio"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
-triggers:
-  - "drawio flowchart"
-  - "flowchart"
-  - "swim lane diagram"
-  - "decision tree"
-  - "business process diagram"
-  - "workflow diagram"
-  - "process flow"
+triggers: ["drawio flowchart", "flowchart", "swim lane diagram", "decision tree", "business process diagram", "workflow diagram", "process flow"]
 intent: >
   Generate Draw.io XML for flowcharts and business process diagrams. Supports
-  standard flowchart shapes, swim lane diagrams for cross-team processes,
-  decision trees, and workflow visualization with auto-layout.
+  standard flowchart shapes, swim lane diagrams, decision trees, and workflow visualization.
 scenarios:
   - "Creating business process flowcharts with standard shapes"
   - "Designing swim lane diagrams showing responsibilities across teams"
   - "Visualizing decision trees with conditional branching"
-  - "Documenting approval workflows and escalation paths"
-  - "Exporting process diagrams for documentation or presentations"
 best_for: "Business process flowcharts, swim lane diagrams, decision trees, approval workflows"
 estimated_time: "5-20 min"
 anti_patterns:
   - "Inconsistent flow direction — pick top-to-bottom or left-to-right and stick with it"
   - "Unlabeled decision branches — always label Yes/No or conditions"
   - "Complex multi-process diagrams — split into sub-processes"
-  - "Non-standard shapes — use rectangles, diamonds, ovals per convention"
   - "Missing start/end nodes in the flow"
 related_skills: ["diagram", "drawio-architecture"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Draw.io Flowchart
 
-## Overview
+[ROLE]
+Act as a flowchart diagram expert. Generate Draw.io XML for business process flowcharts, swim lane diagrams, and decision trees using standard shapes and consistent flow direction.
 
-Create flowcharts, swim lane diagrams, and business process diagrams using Draw.io (diagrams.net) XML format. Standard shapes: rectangles for processes, diamonds for decisions, ovals for start/end. Supports auto-layout for clean alignment and export to PNG/SVG/PDF.
+[OBJECTIVE]
+Produce Draw.io flowcharts where flow direction is consistent, decision branches are labeled, start/end nodes are present, and swim lanes clarify ownership boundaries.
 
-## When to Use
+[RULES]
+1. <thought>Before creating a flowchart, determine: What is the happy path? What decision points exist? Are multiple teams involved (swim lanes)? Should sub-processes be separate diagrams?</thought>
+2. Pick one flow direction (top-to-bottom or left-to-right) and maintain throughout.
+3. Use standard shapes — rectangles for processes, diamonds for decisions, ovals for start/end.
+4. Label all decision branches with Yes/No or condition text.
+5. Include start and end nodes in every flow.
+6. DO NOT mix flow directions in the same diagram.
+7. DO NOT leave decision branches unlabeled.
+8. DO NOT create complex multi-process diagrams — split into sub-processes.
+9. DO NOT omit start/end nodes.
+10. Use swim lanes when multiple teams or systems are involved.
+11. Color with purpose — green for success paths, red for error/rejection, blue for standard, yellow for decisions.
+12. ABC: Start with the happy path first, then add error/exception branches. Swim lanes make responsibility boundaries explicit.
 
-- Visualizing business processes and workflows
-- Creating swim lane diagrams for cross-team responsibilities
-- Designing decision trees with conditional logic
-- Documenting approval flows and escalation paths
-- Mapping technical workflows for system documentation
+[PROCESS]
 
-## When NOT to Use
-
-- System architecture or deployment diagrams (use drawio-architecture)
-- Quick inline diagrams in Markdown (use Mermaid via diagram skill)
-- Data models or ER diagrams (use diagram skill with Mermaid)
-
-## Process
-
-### 1. Choose Flow Direction
-
-- **Top-to-bottom** — most common for processes
-- **Left-to-right** — for timelines and sequential flows
-
-### 2. Standard Shapes
+### Standard Shapes
 
 | Shape | Meaning | Draw.io Style |
 |-------|---------|---------------|
@@ -73,91 +105,50 @@ Create flowcharts, swim lane diagrams, and business process diagrams using Draw.
 | Rectangle | Process step | `rounded=0` |
 | Diamond | Decision point | `rhombus` |
 | Parallelogram | Input/Output | `shape=parallelogram` |
-| Circle | Connector/jump | `ellipse` |
 
-### 3. Order Processing Flowchart Example
+### Flowchart Example
 
 ```xml
 <mxGraphModel>
   <root>
     <mxCell id="0"/>
     <mxCell id="1" parent="0"/>
-    <!-- Start -->
     <mxCell id="2" value="Order Received" style="ellipse;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
       <mxGeometry x="200" y="20" width="120" height="40" as="geometry"/>
     </mxCell>
-    <!-- Decision -->
     <mxCell id="3" value="In Stock?" style="rhombus;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
       <mxGeometry x="200" y="100" width="120" height="60" as="geometry"/>
     </mxCell>
-    <!-- Process: Ship -->
-    <mxCell id="4" value="Ship Order" style="rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+    <mxCell id="4" value="Ship Order" style="rounded=0;fillColor=#dae8fc;" vertex="1" parent="1">
       <mxGeometry x="100" y="200" width="120" height="40" as="geometry"/>
     </mxCell>
-    <!-- Process: Backorder -->
-    <mxCell id="5" value="Backorder" style="rounded=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+    <mxCell id="5" value="Backorder" style="rounded=0;fillColor=#f8cecc;" vertex="1" parent="1">
       <mxGeometry x="300" y="200" width="120" height="40" as="geometry"/>
     </mxCell>
-    <!-- End -->
-    <mxCell id="6" value="Complete" style="ellipse;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-      <mxGeometry x="140" y="280" width="120" height="40" as="geometry"/>
-    </mxCell>
-    <!-- Arrows -->
     <mxCell id="7" style="" edge="1" source="2" target="3" parent="1"/>
-    <mxCell id="8" value="Yes" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="3" target="4" parent="1"/>
-    <mxCell id="9" value="No" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="3" target="5" parent="1"/>
-    <mxCell id="10" style="" edge="1" source="4" target="6" parent="1"/>
+    <mxCell id="8" value="Yes" edge="1" source="3" target="4" parent="1"/>
+    <mxCell id="9" value="No" edge="1" source="3" target="5" parent="1"/>
   </root>
 </mxGraphModel>
 ```
 
-### 4. Swim Lane Diagrams
-
-For cross-team processes:
+### Swim Lane Diagrams
 
 ```xml
-<!-- Pool with lanes -->
-<mxCell id="pool" value="Order Process" style="shape=mxgraph.flowchart.pool;horizontal=1;startSize=30;" vertex="1" parent="1">
+<mxCell id="pool" value="Order Process" style="shape=mxgraph.flowchart.pool;horizontal=1;" vertex="1" parent="1">
   <mxGeometry x="40" y="40" width="600" height="300" as="geometry"/>
 </mxCell>
-<mxCell id="lane1" value="Sales" style="shape=mxgraph.flowchart.lane;horizontal=0;startSize=30;" vertex="1" parent="pool">
-  <mxGeometry y="30" width="600" height="135" as="geometry"/>
-</mxCell>
-<mxCell id="lane2" value="Warehouse" style="shape=mxgraph.flowchart.lane;horizontal=0;startSize=30;" vertex="1" parent="pool">
-  <mxGeometry y="165" width="600" height="135" as="geometry"/>
-</mxCell>
+<mxCell id="lane1" value="Sales" style="shape=mxgraph.flowchart.lane;" vertex="1" parent="pool"/>
+<mxCell id="lane2" value="Warehouse" style="shape=mxgraph.flowchart.lane;" vertex="1" parent="pool"/>
 ```
 
-### 5. Auto-Layout
+### Verification
 
-- Use Format > Layout > Vertical/Horizontal Tree for automatic alignment
-- Apply after adding all shapes and connections
-- Fine-tune spacing manually after auto-layout
-
-## Best Practices
-
-1. **Consistent flow direction** — pick one direction and maintain throughout
-2. **Standard shapes only** — rectangles for processes, diamonds for decisions, ovals for start/end
-3. **Label all decision branches** — always add Yes/No or condition text
-4. **One process per diagram** — split complex flows into sub-processes with connectors
-5. **Include a legend** — explain shape meanings and color coding
-6. **Color with purpose** — green for success paths, red for error/rejection, blue for standard, yellow for decisions
-
-## Coaching Notes
-
-- **Start with the happy path**: Map the successful flow first, then add error/exception branches
-- **Swim lanes clarify ownership**: If multiple teams or systems are involved, swim lanes make responsibility boundaries explicit
-- **Sub-processes for depth**: When a box needs more than a sentence, it should be a sub-process (linked diagram)
-
-## Verification
-
-- [ ] Flow direction is consistent (all top-to-bottom or all left-to-right)
-- [ ] All decision branches labeled (Yes/No or condition text)
+- [ ] Flow direction is consistent
+- [ ] All decision branches labeled
 - [ ] Start and end nodes present
-- [ ] No orphaned shapes (all connected to the flow)
+- [ ] No orphaned shapes (all connected)
 - [ ] `.drawio` source file saved for version control
 
-## Related Skills
-
-- **diagram** — Excalidraw/Mermaid/SVG for general diagramming
-- **drawio-architecture** — Architecture and deployment diagrams with Draw.io
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with Draw.io XML, `patterns_applied`, and `recommendations`.

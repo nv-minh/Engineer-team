@@ -4,7 +4,7 @@ description: >
   Spring Boot application development — auto-configuration, dependency injection,
   REST APIs, JPA data access, Spring Security, testing, Actuator monitoring, and
   deployment. Use when building Java backend services with Spring Boot.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-spring"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -35,38 +35,85 @@ anti_patterns:
   - "Ignoring @Transactional on service methods that modify data"
   - "Not configuring Actuator endpoints for production monitoring"
 related_skills: ["backend-patterns", "api-interface-design"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # Spring Boot
 
-## Overview
+[ROLE]
+Act as a Spring Boot expert. Deliver production-grade Java backend services using constructor injection, thin controllers, JPA repositories, and Actuator monitoring.
 
-Spring Boot backend development for Java applications. Provides auto-configuration, embedded servers, and production-ready features. Standard stack: Spring Web for REST APIs, Spring Data JPA for persistence, Spring Security for auth, and Actuator for monitoring.
+[OBJECTIVE]
+Build Spring Boot services with proper layering (controller -> service -> repository), constructor injection, transactional boundaries, and production-ready security and monitoring.
 
-## When to Use
+[RULES]
+1. <thought>Before writing any Spring component, determine: Is this a controller (HTTP), service (business logic), or repository (data access)? Use constructor injection for all dependencies.</thought>
+2. Use constructor injection exclusively — never `@Autowired` on fields.
+3. Keep controllers thin — validate input, call service, return DTO. No business logic.
+4. Apply `@Transactional` on all service methods that modify data.
+5. Set `spring.jpa.open-in-view=false` to avoid lazy loading outside transactions.
+6. Use `ddl-auto=validate` in production — never update/create.
+7. Return DTOs from controllers, not entities.
+8. DO NOT use field injection with @Autowired — use constructor injection.
+9. DO NOT place business logic in controllers.
+10. DO NOT ignore Actuator endpoint configuration for production.
+11. Use Flyway/Liquibase for schema changes in production, not ddl-auto.
+12. Use Testcontainers for integration tests with real databases instead of H2.
+13. ABC: The thin controller pattern means controller validates input, calls service, returns DTO. All business logic belongs in @Service classes.
 
-- Building REST APIs and microservices in Java
-- Enterprise applications needing DI, AOP, and transaction management
-- Apps requiring rapid setup with auto-configuration
-- Production services needing health checks and metrics
+[PROCESS]
 
-## When NOT to Use
-
-- Lightweight serverless functions (consider plain Java or Kotlin functions)
-- Real-time applications (consider Vert.x or WebFlux for reactive)
-- Non-Java projects (use Python/Go/Rust patterns skills instead)
-
-## Process
-
-### 1. Project Setup
-
-Create via Spring Initializr (https://start.spring.io) or CLI:
+### Project Setup
 
 ```bash
 spring init --dependencies=web,data-jpa,postgresql,security,actuator my-project
 ```
-
-**Project structure:**
 
 ```
 src/main/java/com/example/
@@ -79,13 +126,10 @@ src/main/java/com/example/
   └── exception/     # Custom exceptions + handler
 ```
 
-### 2. Auto-Configuration
+### Auto-Configuration
 
 ```yaml
-# application.yml
 spring:
-  application:
-    name: my-app
   datasource:
     url: jdbc:postgresql://localhost:5432/mydb
     username: postgres
@@ -94,22 +138,15 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
-  server:
-    port: 8080
 ```
 
-### 3. Dependency Injection (Constructor Injection)
+### Dependency Injection
 
 ```java
 @Service
-@RequiredArgsConstructor  // Lombok generates constructor
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
-    public User findById(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
-    }
 
     @Transactional
     public User save(User user) {
@@ -118,7 +155,7 @@ public class UserService {
 }
 ```
 
-### 4. REST API
+### REST API
 
 ```java
 @RestController
@@ -126,17 +163,6 @@ public class UserService {
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.findAll().stream()
-            .map(UserResponse::from).toList();
-    }
-
-    @GetMapping("/{id}")
-    public UserResponse getById(@PathVariable Long id) {
-        return UserResponse.from(userService.findById(id));
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -146,7 +172,7 @@ public class UserController {
 }
 ```
 
-### 5. JPA Data Access
+### JPA Data Access
 
 ```java
 @Entity
@@ -154,24 +180,17 @@ public class UserController {
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(nullable = false) private String name;
+    @Column(unique = true, nullable = false) private String email;
 }
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
-
-    @Query("SELECT u FROM User u WHERE u.name ILIKE :name")
-    List<User> searchByName(@Param("name") String name);
 }
 ```
 
-### 6. Security Configuration
+### Security Configuration
 
 ```java
 @Configuration
@@ -179,18 +198,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/actuator/health").permitAll()
-                .anyRequest().authenticated())
+        http.authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/public/**").permitAll()
+            .requestMatchers("/actuator/health").permitAll()
+            .anyRequest().authenticated())
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }
 ```
 
-### 7. Testing
+### Testing
 
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -207,7 +225,7 @@ class UserControllerTest {
 }
 ```
 
-### 8. Actuator and Monitoring
+### Actuator
 
 ```yaml
 management:
@@ -215,28 +233,9 @@ management:
     web:
       exposure:
         include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: when-authorized
 ```
 
-## Best Practices
-
-- Use constructor injection (not `@Autowired` field injection)
-- Keep controllers thin — delegate to service layer
-- Use `@ConfigurationProperties` for type-safe config binding
-- Set `spring.jpa.open-in-view=false` to avoid lazy loading outside transactions
-- Use `ddl-auto=validate` in production (never update/create)
-- Return DTOs from controllers, not entities
-
-## Coaching Notes
-
-- **Thin controller pattern**: Controller validates input, calls service, returns DTO. No business logic in controllers
-- **Flyway/Liquibase over ddl-auto**: Use database migration tools for schema changes in production
-- **Record types for DTOs**: Java 16+ records reduce DTO boilerplate dramatically
-- **Testcontainers**: Use Testcontainers for integration tests with real databases instead of H2
-
-## Verification
+### Verification
 
 - [ ] All dependencies use constructor injection (no `@Autowired` on fields)
 - [ ] Controllers are thin — business logic in `@Service` classes
@@ -244,7 +243,5 @@ management:
 - [ ] Security configuration explicitly defines public and protected endpoints
 - [ ] Actuator endpoints configured and secured for production
 
-## Related Skills
-
-- **backend-patterns** — General backend API and database patterns
-- **api-interface-design** — Contract-first API design principles
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing Spring Boot patterns used, and `recommendations` for improvements.

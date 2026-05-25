@@ -2,205 +2,144 @@
 name: react-native
 description: >
   React Native cross-platform mobile development — components, React Navigation,
-  platform-specific code, native modules, Expo vs bare workflow, and performance
-  optimization. Use when building mobile apps with React/TypeScript.
-version: "1.0.0"
+  platform-specific code, native modules, Expo vs bare workflow, and performance optimization.
+version: "3.0.0"
 category: "expert-mobile"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
-triggers:
-  - "react native"
-  - "react-native"
-  - "mobile react"
-  - "expo"
-  - "native modules"
-  - "react navigation"
+triggers: ["react native", "react-native", "mobile react", "expo", "native modules", "react navigation"]
 intent: >
   Guide React Native development from project creation through production. Covers
-  core components, navigation patterns, platform-specific code, native module
-  bridging, and list performance optimization.
+  core components, navigation patterns, platform-specific code, and list performance.
 scenarios:
   - "Building cross-platform mobile apps with React and TypeScript"
   - "Setting up React Navigation for stack, tab, and drawer navigation"
-  - "Writing platform-specific code for iOS and Android differences"
-  - "Creating native modules for platform APIs not in React Native core"
-  - "Choosing between Expo managed and bare workflow"
   - "Optimizing FlatList performance for large data sets"
-best_for: "Cross-platform mobile apps with React ecosystem, TypeScript mobile development, Expo rapid prototyping"
+best_for: "Cross-platform mobile apps with React ecosystem, TypeScript mobile development"
 estimated_time: "10-60 min"
 anti_patterns:
   - "Using ScrollView for long lists — use FlatList instead"
   - "Heavy computation on JS thread — offload to native modules"
   - "Ignoring Platform.select for platform differences"
-  - "Mismatched native dependency versions with React Native version"
   - "Not testing on both iOS and Android early"
 related_skills: ["flutter", "react", "android-kotlin", "ios-swift"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # React Native
 
-## Overview
+[ROLE]
+Act as a React Native expert. Deliver cross-platform mobile code with FlatList optimization, React Navigation typing, platform-specific handling, and Expo/bare workflow guidance.
 
-React Native development for cross-platform mobile apps using React and TypeScript. Compiles to native components with a bridge architecture. Supports Expo (managed) and bare workflows.
+[OBJECTIVE]
+Build React Native applications where FlatList handles all dynamic lists, navigation params are typed, platform differences use Platform.select, and performance is monitored on both platforms.
 
-## When to Use
+[RULES]
+1. <thought>Before starting a React Native project, determine: Expo managed or bare workflow? What navigation patterns are needed? What platform-specific differences exist?</thought>
+2. Always use `FlatList` over `ScrollView` for dynamic lists with `keyExtractor`.
+3. Use `StyleSheet.create` for memoized, optimized style objects.
+4. Test on both platforms from day one — platform quirks surface early.
+5. Use TypeScript for type-safe props, state, and navigation params.
+6. DO NOT use ScrollView for long lists — use FlatList.
+7. DO NOT ignore `Platform.select` for platform differences.
+8. DO NOT put heavy computation on the JS thread — use native modules.
+9. Enable Hermes engine for faster startup and smaller APK.
+10. Use `react-native-reanimated` for UI-thread animations.
+11. Keep native dependency versions aligned with React Native version.
+12. ABC: The JS-to-native bridge is async and serial. Batch bridge calls when possible. For heavy computation, write native modules.
 
-- Building cross-platform mobile apps with React/TypeScript
-- Leveraging React ecosystem knowledge for mobile development
-- Rapid prototyping with Expo managed workflow
-- Apps that share logic between web (React) and mobile
+[PROCESS]
 
-## When NOT to Use
-
-- Apps requiring pixel-perfect native UI that differs significantly per platform
-- Performance-critical apps needing 60fps animations (consider Flutter or native)
-- When the team has no React/web experience (consider Flutter)
-
-## Process
-
-### 1. Project Setup
-
-```bash
-# Expo managed (recommended for most projects)
-npx create-expo-app MyApp --template expo-template-blank-typescript
-
-# Bare React Native
-npx react-native init MyApp --template react-native-template-typescript
-```
-
-**Expo vs Bare decision:**
-
-| Factor | Expo Managed | Bare Workflow |
-|--------|-------------|---------------|
-| Setup speed | Minutes | Longer |
-| Native modules | Limited to Expo SDK | Full access |
-| OTA updates | Supported | Supported |
-| Custom native code | Requires config plugin | Direct access |
-| Build | EAS Build | Local or CI |
-
-### 2. Core Components
+### Core Components
 
 ```tsx
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-
-interface User { id: string; name: string; }
-
-export function UserList({ users }: { users: User[] }) {
-  return (
-    <FlatList
-      data={users}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity style={styles.item} onPress={() => handlePress(item)}>
-          <Text style={styles.name}>{item.name}</Text>
-        </TouchableOpacity>
-      )}
-    />
-  );
-}
-
-const styles = StyleSheet.create({
-  item: { padding: 16, borderBottomWidth: 1, borderBottomColor: '#eee' },
-  name: { fontSize: 16, fontWeight: '600' },
-});
+<FlatList
+  data={users}
+  keyExtractor={item => item.id}
+  renderItem={({ item }) => <Text>{item.name}</Text>}
+  getItemLayout={(data, index) => ({ length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index })}
+  removeClippedSubviews={true}
+  maxToRenderPerBatch={10}
+/>
 ```
 
-### 3. Navigation (React Navigation)
+### Navigation
 
 ```tsx
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-const Stack = createNativeStackNavigator();
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-// Navigate
-navigation.navigate('Details', { id: '123' });
+<NavigationContainer>
+  <Stack.Navigator>
+    <Stack.Screen name="Home" component={HomeScreen} />
+    <Stack.Screen name="Details" component={DetailsScreen} />
+  </Stack.Navigator>
+</NavigationContainer>
 ```
 
-### 4. Platform-Specific Code
-
-**Inline selection:**
+### Platform-Specific Code
 
 ```tsx
-import { Platform, StyleSheet } from 'react-native';
-
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === 'ios' ? 44 : 0,
     ...Platform.select({
-      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 } },
+      ios: { shadowColor: '#000' },
       android: { elevation: 4 },
     }),
   },
 });
 ```
 
-**Platform-specific files:**
-- `Component.ios.tsx` and `Component.android.tsx` — bundler auto-selects
-
-### 5. Native Modules
-
-```tsx
-// TypeScript bridge
-import { NativeModules } from 'react-native';
-const { BatteryModule } = NativeModules;
-const level = await BatteryModule.getLevel();
-```
-
-### 6. FlatList Performance
-
-```tsx
-<FlatList
-  data={items}
-  keyExtractor={item => item.id}
-  getItemLayout={(data, index) => ({
-    length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
-    index,
-  })}
-  removeClippedSubviews={true}
-  maxToRenderPerBatch={10}
-  windowSize={5}
-  renderItem={renderItem}
-/>
-```
-
-## Best Practices
-
-- Always use `FlatList` over `ScrollView` for dynamic lists
-- Use `StyleSheet.create` for memoized, optimized style objects
-- Test on both platforms from day one — platform quirks surface early
-- Use TypeScript for type-safe props, state, and API responses
-- Keep native dependency versions aligned with React Native version
-
-## Coaching Notes
-
-- **Bridge bottleneck**: The JS-to-native bridge is async and serial. Batch bridge calls when possible. For heavy computation, write native modules
-- **Reanimated over Animated**: `react-native-reanimated` runs animations on the UI thread, avoiding bridge overhead
-- **Flipper for debugging**: Use Flipper for network inspection, layout debugging, and performance profiling
-- **Hermes engine**: Enable Hermes for faster startup, smaller APK size, and better memory usage
-
-## Verification
+### Verification
 
 - [ ] FlatList used for all dynamic lists with `keyExtractor`
-- [ ] Platform-specific differences handled with `Platform.select` or file extensions
-- [ ] Navigation types are defined (nested screen params)
-- [ ] No inline style objects — all styles in `StyleSheet.create`
-- [ ] App tested on both iOS and Android simulators/devices
+- [ ] Platform differences handled with `Platform.select`
+- [ ] All styles in `StyleSheet.create`
+- [ ] App tested on both iOS and Android
 
-## Related Skills
-
-- **flutter** — Alternative cross-platform framework (Dart-based)
-- **android-kotlin** — Native Android for native module implementation
-- **ios-swift** — Native iOS for native module implementation
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation`, `patterns_applied`, and `recommendations`.

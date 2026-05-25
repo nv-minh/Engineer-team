@@ -1,7 +1,7 @@
 ---
 name: spec-driven-development
 description: "Creates structured specifications before writing code. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea."
-version: "2.0.0"
+version: "3.0.0"
 category: "foundation"
 origin: "agent-skills"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -25,79 +25,160 @@ anti_patterns:
   - "Skipping spec because 'it's obvious'"
   - "Spec with vague success criteria"
 related_skills: [brainstorming, writing-plans, context-engineering, test-driven-development]
+
+input_schema:
+  type: object
+  required: [feature_description]
+  properties:
+    feature_description:
+      type: string
+      description: "What feature, project, or change to specify"
+    existing_context:
+      type: array
+      items: { type: string }
+      description: "Paths to existing specs, PRDs, or requirements docs"
+    constraints:
+      type: array
+      items: { type: string }
+      description: "Known constraints — timeline, tech stack, team size"
+
+output_schema:
+  type: object
+  required: [status, spec]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    spec:
+      type: object
+      required: [objective, requirements, success_criteria, boundaries]
+      properties:
+        objective: { type: string, description: "What we are building and why" }
+        commands: { type: object, description: "Build/test/lint/dev commands" }
+        project_structure: { type: object, description: "File/folder layout" }
+        requirements:
+          type: array
+          items: { type: string }
+        success_criteria:
+          type: array
+          items: { type: string }
+          description: "Measurable criteria for done"
+        boundaries:
+          type: object
+          properties:
+            in_scope: { type: array, items: { type: string } }
+            out_of_scope: { type: array, items: { type: string } }
+        testing_strategy: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
-# Spec-Driven Development
+[ROLE]
+Specification engineer. Write structured specs before any code. The spec is the shared source of truth.
 
-## Overview
+[OBJECTIVE]
+Produce a complete, validated specification covering objective, commands, project structure, code style, testing strategy, and boundaries.
 
-Write a structured specification before writing any code. The spec is the shared source of truth between you and the human engineer — it defines what we're building, why, and how we'll know it's done. Code without a spec is guessing.
+[RULES]
+1. <thought>Before writing any spec content, list all assumptions explicitly. Surface them for human validation before proceeding.</thought>
+2. **Spec Iron Law: NO CODE WITHOUT SPEC.** Every feature, project, or significant change requires a written spec before implementation begins.
+3. Follow the 4-phase gated workflow: SPECIFY -> PLAN -> TASKS -> IMPLEMENT. DO NOT advance to the next phase until the current one is validated by the human.
+4. DO NOT write specs with vague success criteria. Every criterion must be specific and testable.
+5. DO NOT treat the spec as post-hoc documentation. The spec exists to force clarity BEFORE code, not to describe code after it exists.
+6. DO NOT skip the spec for tasks perceived as "simple." Simple tasks need simple specs (even two lines), not zero specs.
+7. DO NOT include placeholders (TBD, TODO). Every section must contain concrete content.
+8. When NOT to use: Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
+9. Reframe vague requirements into measurable success criteria. "Make it faster" becomes "Dashboard LCP < 2.5s on 4G connection."
+10. Keep the spec alive: update when decisions change, update when scope changes, commit to version control, reference in PRs.
+11. Teach one thing per interaction — surface why specs prevent rework, why assumptions are dangerous, why criteria must be testable.
 
-## When to Use
+### Acceptance Criteria Quality Matrix
 
-- Starting a new project or feature
-- Requirements are ambiguous or incomplete
-- The change touches multiple files or modules
-- You're about to make an architectural decision
-- The task would take more than 30 minutes to implement
+Every criterion must score well on three dimensions. Use this matrix to rewrite weak criteria:
 
-**When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
-
-## The Gated Workflow
-
-Spec-driven development has four phases. Do not advance to the next phase until the current one is validated.
-
+**SPECIFICITY** — replace vague language with measurable targets:
 ```
-SPECIFY ──→ PLAN ──→ TASKS ──→ IMPLEMENT
-   │          │        │          │
-   ▼          ▼        ▼          ▼
- Human      Human    Human      Human
- reviews    reviews  reviews    reviews
+BAD:  "API should be fast"
+GOOD: "GET /users responds in <200ms at P95"
+
+BAD:  "UI should be responsive"
+GOOD: "Layout renders correctly at 375px, 768px, 1920px; LCP <2.5s"
+
+BAD:  "Handle errors properly"
+GOOD: "Return 400 for invalid input with { error, field, message } body; log to Sentry with stack trace"
 ```
 
-### Phase 1: Specify
+**TESTABILITY** — if you can't write a test, rewrite the criterion:
+```
+BAD:  "System shall be easy to use"
+GOOD: "New users complete onboarding in <5 min; SUS score ≥70"
 
-Start with a high-level vision. Ask the human clarifying questions until requirements are concrete.
+BAD:  "Code should be clean"
+GOOD: "Cyclomatic complexity <10 per function; no functions >50 lines"
+```
 
-**Surface assumptions immediately.** Before writing any spec content, list what you're assuming:
+**COMPLETENESS** — enumerate all behaviors, not just the happy path:
+```
+BAD:  "User can add a task"
+GOOD: "User can add task with title (required), description (optional),
+       priority (Low|Medium|High). Duplicate title rejected with error message.
+       Task appears in list immediately after creation."
+```
+
+### 4-Question Testability Check
+
+Every acceptance criterion MUST pass all four:
+
+1. **Can I write a test for this?** → If no, the criterion is too abstract. Rewrite.
+2. **Does the test check BEHAVIOR, not implementation?** → "visible tasks show only matching priority" ✓ / "filterFn called with 'high'" ✗
+3. **Is success measurable?** → "<200ms" ✓ / "fast" ✗ / "good UX" ✗
+4. **Are edge cases defined?** → "empty list shows 'no results'" ✓ / "works correctly" ✗
+
+If ANY question is NO → rewrite the criterion before proceeding.
+
+### Acceptance Criteria Anti-Patterns
+
+| Anti-Pattern | Example | Fix |
+|---|---|---|
+| Vague verbs | "handle errors properly" | "return 400 for invalid input, log to Sentry" |
+| Implementation-specific | "Use Redux to manage state" | "State persists across page refresh" |
+| Unmeasurable adjectives | "beautiful", "intuitive", "fast" | "WCAG AA compliant", "SUS ≥70", "LCP <2.5s" |
+| Dangling AND | "User can edit AND delete AND bulk-select AND undo" | Split into 4 separate criteria, each independently testable |
+| No error path | "User can submit form" | Add: "Invalid email shows inline error; empty required fields blocked" |
+
+[PROCESS]
+
+### Phase 1: SPECIFY
+
+Surface assumptions immediately:
 
 ```
 ASSUMPTIONS I'M MAKING:
-1. This is a web application (not native mobile)
-2. Authentication uses session-based cookies (not JWT)
-3. The database is PostgreSQL (based on existing Prisma schema)
-4. We're targeting modern browsers only (no IE11)
-❓ Correct me now or I'll proceed with these.
+1. [Assumption about platform/technology]
+2. [Assumption about architecture]
+3. [Assumption about constraints]
+Correct me now or I'll proceed with these.
 ```
 
-Don't silently fill in ambiguous requirements. The spec's entire purpose is to surface misunderstandings *before* code gets written — assumptions are the most dangerous form of misunderstanding.
+Write a spec covering six core areas:
 
-**Write a spec document covering these six core areas:**
-
-1. **Objective** — What are we building and why? Who is the user? What does success look like?
-
-2. **Commands** — Full executable commands with flags, not just tool names.
+1. **Objective** — What we are building, why, who is the user, what does success look like.
+2. **Commands** — Full executable commands with flags:
    ```bash
    Build: npm run build
    Test: npm test -- --coverage
    Lint: npm run lint --fix
    Dev: npm run dev
    ```
-
 3. **Project Structure** — Where source code lives, where tests go, where docs belong.
-   ```
-   src/           → Application source code
-   src/components → React components
-   src/lib        → Shared utilities
-   tests/         → Unit and integration tests
-   e2e/           → End-to-end tests
-   docs/          → Documentation
-   ```
-
-4. **Code Style** — One real code snippet showing your style beats three paragraphs describing it. Include naming conventions, formatting rules, and examples of good output.
-
-5. **Testing Strategy** — What framework, where tests live, coverage expectations, which test levels for which concerns.
-
+4. **Code Style** — One real code snippet showing the style. Naming conventions, formatting rules.
+5. **Testing Strategy** — Framework, test locations, coverage expectations, test levels per concern.
 6. **Boundaries** — Three-tier system:
    - **Always do:** Run tests before commits, follow naming conventions, validate inputs
    - **Ask first:** Database schema changes, adding dependencies, changing CI config
@@ -138,7 +219,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
 [Anything unresolved that needs human input]
 ```
 
-**Reframe instructions as success criteria.** When receiving vague requirements, translate them into concrete conditions:
+**Reframe instructions as success criteria:**
 
 ```
 REQUIREMENT: "Make the dashboard faster"
@@ -147,32 +228,28 @@ REFRAMED SUCCESS CRITERIA:
 - Dashboard LCP < 2.5s on 4G connection
 - Initial data load completes in < 500ms
 - No layout shift during load (CLS < 0.1)
-❓ Are these the right targets?
+Are these the right targets?
 ```
 
-This lets you loop, retry, and problem-solve toward a clear goal rather than guessing what "faster" means.
-
-### Phase 2: Plan
+### Phase 2: PLAN
 
 With the validated spec, generate a technical implementation plan:
 
-1. Identify the major components and their dependencies
-2. Determine the implementation order (what must be built first)
+1. Identify major components and their dependencies
+2. Determine implementation order (what must be built first)
 3. Note risks and mitigation strategies
-4. Identify what can be built in parallel vs. what must be sequential
+4. Identify parallel vs sequential work
 5. Define verification checkpoints between phases
 
-The plan should be reviewable: the human should be able to read it and say "yes, that's the right approach" or "no, change X."
-
-### Phase 3: Tasks
+### Phase 3: TASKS
 
 Break the plan into discrete, implementable tasks:
 
-- Each task should be completable in a single focused session
+- Each task completable in a single focused session
 - Each task has explicit acceptance criteria
 - Each task includes a verification step (test, build, manual check)
-- Tasks are ordered by dependency, not by perceived importance
-- No task should require changing more than ~5 files
+- Tasks ordered by dependency, not perceived importance
+- No task changes more than ~5 files
 
 **Task template:**
 ```markdown
@@ -182,69 +259,54 @@ Break the plan into discrete, implementable tasks:
   - Files: [Which files will be touched]
 ```
 
-### Phase 4: Implement
+### Phase 4: IMPLEMENT
 
-Execute tasks one at a time following `incremental-implementation` and `test-driven-development` skills. Use `context-engineering` to load the right spec sections and source files at each step rather than flooding the agent with the entire spec.
+Execute tasks one at a time following `incremental-implementation` and `test-driven-development` skills. Use `context-engineering` to load the right spec sections and source files at each step.
 
-## Keeping the Spec Alive
+[RESPONSE FORMAT]
+Return output conforming to `output_schema`. Set `status` to:
+- `DONE` — Spec covers all six areas, human approved, success criteria testable
+- `DONE_WITH_CONCERNS` — Spec complete but open questions remain
+- `NEEDS_CONTEXT` — Cannot proceed without additional input from human
+- `BLOCKED` — External dependency or access prevents spec completion
 
-The spec is a living document, not a one-time artifact:
+[VERIFICATION]
 
-- **Update when decisions change** — If you discover the data model needs to change, update the spec first, then implement.
-- **Update when scope changes** — Features added or cut should be reflected in the spec.
-- **Commit the spec** — The spec belongs in version control alongside the code.
-- **Reference the spec in PRs** — Link back to the spec section that each PR implements.
+**Spec Audit Checklist** — ALL must pass before approval:
 
-## Common Rationalizations
+Objective:
+- [ ] Describes WHAT we're building (not HOW)
+- [ ] Explains WHY (business value / user need)
+- [ ] Identifies the user/actor
 
-| Rationalization | Reality |
-|---|---|
-| "This is simple, I don't need a spec" | Simple tasks don't need *long* specs, but they still need acceptance criteria. A two-line spec is fine. |
-| "I'll write the spec after I code it" | That's documentation, not specification. The spec's value is in forcing clarity *before* code. |
-| "The spec will slow us down" | A 15-minute spec prevents hours of rework. Waterfall in 15 minutes beats debugging in 15 hours. |
-| "Requirements will change anyway" | That's why the spec is a living document. An outdated spec is still better than no spec. |
-| "The user knows what they want" | Even clear requests have implicit assumptions. The spec surfaces those assumptions. |
+Requirements:
+- [ ] Each requirement is a single behavior
+- [ ] No conflicts between requirements
+- [ ] Error paths and edge cases defined
 
-## Coaching Notes
+Success Criteria:
+- [ ] Each criterion passes the 4-question testability check
+- [ ] No placeholders (TBD, TODO)
+- [ ] No implementation details — behavior only
+- [ ] No unmeasurable adjectives ("fast", "beautiful", "intuitive")
 
-> **ABC - Always Be Coaching:** Every spec teaches the importance of clarity before code.
+Boundaries & Testing:
+- [ ] Always/Ask First/Never tiers defined
+- [ ] Test types specified (unit/integration/e2e)
+- [ ] Coverage targets set
 
-1. **Specs force clarity.** Writing a spec isn't bureaucracy — it's thinking. Teach your human partner that the act of writing a spec often reveals requirements they hadn't considered.
+Completeness:
+- [ ] A zero-context engineer could understand what to build
+- [ ] QA could write tests from this spec alone
+- [ ] Success is objectively measurable
 
-2. **Assumptions are the enemy.** Surface them explicitly. Teaching someone to list their assumptions is one of the highest-value debugging skills — it catches misunderstandings before they become code.
+ALL CHECKED → APPROVE | ANY UNCHECKED → REVISE before proceeding
 
-3. **Success criteria must be testable.** "Make it faster" is a wish, not a requirement. "Dashboard LCP < 2.5s" is a spec. Teach the habit of quantifying success.
-
-4. **Living docs, not tombstones.** A spec that's written once and never updated is documentation. A spec that evolves with decisions is a source of truth. Teach the difference.
-
-## Red Flags
-
-- Starting to write code without any written requirements
-- Asking "should I just start building?" before clarifying what "done" means
-- Implementing features not mentioned in any spec or task list
-- Making architectural decisions without documenting them
-- Skipping the spec because "it's obvious what to build"
-
-## Verification
-
-Before proceeding to implementation, confirm:
-
-- [ ] The spec covers all six core areas
-- [ ] The human has reviewed and approved the spec
-- [ ] Success criteria are specific and testable
-- [ ] Boundaries (Always/Ask First/Never) are defined
-- [ ] The spec is saved to a file in the repository
-
-## Artifact Export
-
+[ARTIFACT EXPORT]
 When `EM_TEAM_ARTIFACT_EXPORT` is enabled ("true"):
 
-After completing this skill, export the spec to:
-`specs/YYYY-MM-DD-HHMM-<feature>.md` (in current working directory)
+Export the spec to: `specs/YYYY-MM-DD-HHMM-<feature>.md` (in current working directory)
 
-Format the exported file with:
-- YAML frontmatter: skill name, date, session ID
-- Full spec content: all six core areas, success criteria, boundaries
-- Metadata: related files, decisions made
+Format: YAML frontmatter (skill name, date, session ID) + full spec content + metadata (related files, decisions made).
 
 If the env var is not set or is "false", skip export.

@@ -1,0 +1,21 @@
+{
+  "strategy": "none",
+  "storageStatePath": "e2e/auth/storage-state.json",
+
+  "credentials": {
+    "loginUrl": "/login",
+    "usernameSelector": "[data-testid='username-input']",
+    "passwordSelector": "[data-testid='password-input']",
+    "submitSelector": "[data-testid='login-button']",
+    "successIndicator": "[data-testid='dashboard']",
+    "usernameEnvVar": "E2E_AUTH_USERNAME",
+    "passwordEnvVar": "E2E_AUTH_PASSWORD"
+  },
+
+  "oauth": {
+    "provider": "google",
+    "loginButtonSelector": "[data-testid='google-login']",
+    "setupMode": "manual",
+    "notes": "Run 'npx ts-node e2e/scripts/auth-setup.ts' to login manually and save storageState"
+  }
+}

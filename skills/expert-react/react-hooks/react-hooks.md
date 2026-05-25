@@ -4,7 +4,7 @@ description: >
   React Hooks patterns covering useState, useEffect, useCallback, useMemo,
   useRef, useContext, useReducer, and custom hooks. Use when implementing
   hook-based state logic, managing side effects, or creating reusable hooks.
-version: "1.0.0"
+version: "3.0.0"
 category: "expert-react"
 origin: "full-stack-skills + EM-Team"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -31,37 +31,81 @@ anti_patterns:
   - "Missing dependencies in useEffect arrays causing stale closures"
   - "Using useMemo/useCallback everywhere without measurable benefit"
 related_skills: ["react", "redux", "frontend-patterns", "typescript-patterns"]
+
+input_schema:
+  type: object
+  required: [task_description]
+  properties:
+    task_description:
+      type: string
+      description: "What to implement, review, or investigate"
+    context:
+      type: object
+      description: "Project context — existing code, tech stack, constraints"
+    mode:
+      type: string
+      enum: [implement, review, investigate, advise]
+      default: implement
+      description: "Execution mode"
+
+output_schema:
+  type: object
+  required: [status, implementation]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    implementation:
+      type: object
+      description: "Implementation details, code, or analysis results"
+    patterns_applied:
+      type: array
+      items: { type: string }
+      description: "Patterns and best practices used"
+    recommendations:
+      type: array
+      items:
+        type: object
+        properties:
+          priority: { type: string, enum: [high, medium, low] }
+          action: { type: string }
+          reasoning: { type: string }
+
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    attempted_action: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # React Hooks
 
-## Overview
+[ROLE]
+Act as a React hooks expert. Deliver correct, performant hook implementations with exhaustive dependency arrays and proper cleanup.
 
-Hooks let functional components manage state, side effects, and reusable logic. This skill covers the built-in hooks and the patterns for composing them into custom hooks.
+[OBJECTIVE]
+Produce hook-based React code where state transitions are predictable, side effects are cleaned up, and reusable logic is extracted into custom hooks.
 
-## When to Use
+[RULES]
+1. <thought>Before choosing a hook, ask: Is this simple state (useState), complex related state (useReducer), a side effect (useEffect), a cached computation (useMemo), or reusable logic (custom hook)?</thought>
+2. Only call hooks at the top level — never inside conditions, loops, or nested functions.
+3. Only call hooks from React functions — components or custom hooks.
+4. Name custom hooks with `use` prefix — `useAuth`, `useFetch`, `useToggle`.
+5. Exhaust dependency arrays — use `react-hooks/exhaustive-deps` ESLint rule.
+6. DO NOT call hooks inside conditions, loops, or nested functions.
+7. DO NOT omit dependencies in useEffect arrays — this causes stale closures.
+8. DO NOT use useMemo/useCallback everywhere without measurable profiling benefit.
+9. Every subscription, timer, or fetch in useEffect requires cleanup. No exceptions.
+10. Use useReducer over multiple useState when state values are related and transitions follow a pattern.
+11. ABC: Teach the user that the dependency array is their contract — missing dependencies cause stale closures that are extremely hard to debug.
 
-- Managing component state (useState, useReducer)
-- Handling side effects like data fetching and subscriptions (useEffect)
-- Optimizing performance with memoization (useMemo, useCallback)
-- Sharing stateful logic across components via custom hooks
+[PROCESS]
 
-## When NOT to Use
+### Core Hooks
 
-- For class component lifecycle methods -- refactor to functional components instead
-- For global state management -- use Redux or Zustand for cross-component state
-- For server state -- use React Query or SWR instead of hand-rolled fetch hooks
-
-## Rules of Hooks (Non-Negotiable)
-
-1. **Only call hooks at the top level** -- never inside conditions, loops, or nested functions
-2. **Only call hooks from React functions** -- components or custom hooks
-3. **Name custom hooks with `use` prefix** -- `useAuth`, `useFetch`, `useToggle`
-4. **Exhaust dependency arrays** -- use `react-hooks/exhaustive-deps` ESLint rule
-
-## Core Hooks
-
-### useState
+#### useState
 
 ```typescript
 const [value, setValue] = useState<string>('');
@@ -69,7 +113,7 @@ const [value, setValue] = useState<string>('');
 setCount(prev => prev + 1);
 ```
 
-### useEffect
+#### useEffect
 
 ```typescript
 // Data fetching with cancellation
@@ -88,7 +132,7 @@ useEffect(() => {
 }, [userId]); // Include all dependencies
 ```
 
-### useReducer (Complex State)
+#### useReducer (Complex State)
 
 ```typescript
 type State = { count: number; step: number };
@@ -108,32 +152,24 @@ function reducer(state: State, action: Action): State {
 const [state, dispatch] = useReducer(reducer, { count: 0, step: 1 });
 ```
 
-### useMemo and useCallback
+#### useMemo and useCallback
 
 ```typescript
-// Memoize expensive computation
 const filtered = useMemo(() => items.filter(i => i.name.includes(filter)), [items, filter]);
-
-// Memoize callback to prevent child re-renders
-const handleSelect = useCallback((id: string) => {
-  console.log('Selected:', id);
-}, []);
+const handleSelect = useCallback((id: string) => { console.log('Selected:', id); }, []);
 ```
 
-### useRef
+#### useRef
 
 ```typescript
-// DOM reference
 const inputRef = useRef<HTMLInputElement>(null);
 inputRef.current?.focus();
-
-// Mutable value that persists across renders (no re-render on change)
-const timerRef = useRef<number>(0);
+const timerRef = useRef<number>(0); // Mutable value, no re-render on change
 ```
 
-## Custom Hook Patterns
+### Custom Hook Patterns
 
-### Data Fetching Hook
+#### Data Fetching Hook
 
 ```typescript
 function useFetch<T>(url: string) {
@@ -155,7 +191,7 @@ function useFetch<T>(url: string) {
 }
 ```
 
-### Toggle Hook
+#### Toggle Hook
 
 ```typescript
 function useToggle(initial = false): [boolean, () => void] {
@@ -165,7 +201,7 @@ function useToggle(initial = false): [boolean, () => void] {
 }
 ```
 
-### Debounce Hook
+#### Debounce Hook
 
 ```typescript
 function useDebounce<T>(value: T, delay: number): T {
@@ -178,7 +214,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 ```
 
-## Hook Selection Guide
+### Hook Selection Guide
 
 | Need | Hook |
 |---|---|
@@ -191,13 +227,7 @@ function useDebounce<T>(value: T, delay: number): T {
 | Shared context value | `useContext` |
 | Reusable stateful logic | Custom hook |
 
-## Coaching Notes
-
-- **The dependency array is your contract** -- missing dependencies cause stale closures that are extremely hard to debug. Always use the ESLint plugin.
-- **Cleanup is not optional** -- every subscription, timer, or fetch in useEffect needs cleanup. Without it, you get memory leaks and state updates on unmounted components.
-- **useReducer over multiple useState** -- when state values are related and transitions follow a pattern, useReducer makes the logic explicit and testable.
-
-## Verification
+### Verification
 
 - [ ] No hooks called inside conditions, loops, or nested functions
 - [ ] All useEffect dependency arrays are exhaustive
@@ -206,9 +236,5 @@ function useDebounce<T>(value: T, delay: number): T {
 - [ ] Memoization hooks are used only where profiling shows benefit
 - [ ] No stale closure bugs in async operations
 
-## Related Skills
-
-- **react** -- Component patterns, Context API, and performance optimization
-- **redux** -- Global state management with Redux Toolkit
-- **frontend-patterns** -- Broader UI patterns (forms, data fetching)
-- **typescript-patterns** -- TypeScript patterns for React hooks
+[RESPONSE FORMAT]
+Return results conforming to `output_schema`. Include `status`, `implementation` with code and explanation, `patterns_applied` listing hooks used, and `recommendations` for improvements.

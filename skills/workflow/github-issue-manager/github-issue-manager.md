@@ -1,7 +1,7 @@
 ---
 name: github-issue-manager
 description: "Manages GitHub Issues lifecycle: creates well-structured issues from current context (bugs, features, tasks), triages open issues with labels and priority, and plans sprints by grouping issues into GitHub Milestones. Use for issue creation, backlog grooming, and sprint planning."
-version: "1.0.0"
+version: "3.0.0"
 category: "workflow"
 origin: "EM-Team (GitHub Management)"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -36,356 +36,73 @@ related_skills:
   - writing-plans
   - spec-driven-development
   - github-pr-manager
+input_schema:
+  type: object
+  required: [action]
+  properties:
+    action: { type: string, description: "issue-create, issue-triage, or sprint-plan" }
+    target: { type: string, description: "Issue context, milestone name, or sprint goal" }
+output_schema:
+  type: object
+  required: [status, result]
+  properties:
+    status: { type: string, enum: [DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED] }
+    result: { type: object }
+error_schema:
+  type: object
+  required: [error_type, message]
+  properties:
+    error_type: { type: string, enum: [missing_input, ambiguous_scope, blocked, tool_failure, validation_error] }
+    message: { type: string }
+    suggestion: { type: string }
+    retry_possible: { type: boolean }
 ---
 
 # GitHub Issue Manager
 
-This skill covers three workflows:
-1. **[Issue Creation](#issue-creation)** — Create a well-structured issue from current context
-2. **[Issue Triage](#issue-triage)** — Organize and prioritize the open backlog
-3. **[Sprint Planning](#sprint-planning)** — Group issues into a sprint milestone
-
----
-
-## Issue Creation
-
-### When to Use
-
-When you want to capture a bug, feature request, or task as a GitHub Issue with enough structure that any team member can understand and act on it.
-
-### Anti-Patterns
-
-- Vague titles: "Fix login" is bad; "Login fails with 401 when email contains '+' character" is good
-- Missing reproduction steps for bugs: developers can't fix what they can't reproduce
-- Missing acceptance criteria for features: implementation ends when criteria are met, not when dev feels done
-- Combining multiple issues: makes tracking impossible and PRs hard to scope
-
-### Process
-
-#### Step 1 — Determine Issue Type
-
-Ask or detect from context:
-- **Bug**: Something is broken — need reproduction steps + expected/actual behavior
-- **Feature**: New functionality — need user story + acceptance criteria
-- **Task / Chore**: Technical work (refactor, upgrade, infra) — need description + definition of done
-- **Epic**: Large initiative grouping multiple issues
-
-#### Step 2 — Load Issue Template
-
-Check `.em-team/issue-template.md` or `.github/ISSUE_TEMPLATE/`. If not found, use built-in templates:
-
-**Bug template:**
-```markdown
-## Bug Report
-
-**Summary:** [One-line description of the bug]
-
-**Environment:**
-- OS: [e.g. macOS 14, Ubuntu 22.04]
-- Browser/Runtime: [e.g. Chrome 124, Node 20]
-- Version: [app version or commit hash]
-
-**Steps to Reproduce:**
-1. Go to '...'
-2. Click on '...'
-3. Enter '...'
-4. See error
-
-**Expected Behavior:**
-[What should happen]
-
-**Actual Behavior:**
-[What actually happens]
-
-**Error Logs / Screenshots:**
-[Paste error message or attach screenshot]
-
-**Possible Root Cause:**
-[Optional: any hypothesis about what's causing this]
-```
-
-**Feature template:**
-```markdown
-## Feature Request
-
-**User Story:**
-As a [type of user], I want [goal] so that [reason/value].
-
-**Acceptance Criteria:**
-- [ ] [Specific, testable criterion 1]
-- [ ] [Specific, testable criterion 2]
-- [ ] [Specific, testable criterion 3]
-
-**Out of Scope:**
-[What this feature explicitly does NOT include]
-
-**Design Notes:**
-[Wireframes, API contracts, schema changes if applicable]
-
-**Dependencies:**
-[Other issues that must be completed first]
-```
-
-**Task template:**
-```markdown
-## Technical Task
-
-**Summary:**
-[What needs to be done and why]
-
-**Definition of Done:**
-- [ ] [Measurable outcome 1]
-- [ ] [Measurable outcome 2]
-
-**Approach:**
-[Proposed implementation approach]
-
-**Risk:**
-[Any risks or unknowns]
-```
-
-#### Step 3 — AI Fill from Context
-
-If invoked with context (error log, spec, conversation), AI fills the template automatically:
-- Extract error message → fills Steps to Reproduce and Error Logs
-- Extract feature description → fills User Story and Acceptance Criteria
-- Suggest labels from content: `bug`, `feature`, `chore`, `security`, `performance`, `documentation`
-- Suggest milestone if sprint is active
-
-#### Step 4 — Create Issue
-
-```bash
-gh issue create \
-  --title "Login fails with 401 when email contains '+' character" \
-  --body "$(cat /tmp/issue-body.md)" \
-  --label "bug,P1" \
-  --assignee "@me" \
-  [--milestone "Sprint 3"]
-```
-
----
-
-## Issue Triage
-
-### When to Use
-
-Weekly (or before sprint planning): review all open issues, assign labels, set priorities, and identify blockers.
-
-### Anti-Patterns
-
-- Triaging issues individually without grouping similar ones: spot duplicates first
-- Assigning priority without considering dependencies: P1 issues blocked by P2 work are effectively P2
-- Triaging without ownership: every triaged issue needs an owner
-
-### Process
-
-#### Step 1 — Fetch Open Issues
-
-```bash
-gh issue list --state open --limit 100 \
-  --json number,title,labels,assignees,createdAt,updatedAt,milestone \
-  | jq 'sort_by(.createdAt)'
-```
-
-#### Step 2 — AI Analysis
-
-For each issue, AI analyzes title + body to determine:
-
-**Labels:**
-| Content signal | Label |
-|---|---|
-| "error", "exception", "fail", "broken" | `bug` |
-| "add", "support", "implement", "new" | `feature` |
-| "upgrade", "migrate", "refactor", "cleanup" | `chore` |
-| "SQL injection", "XSS", "auth bypass" | `security` |
-| "slow", "timeout", "memory", "performance" | `performance` |
-| "docs", "README", "missing documentation" | `documentation` |
-
-**Priority (P0-P3):**
-| Criteria | Priority |
-|---|---|
-| Production down, data loss, security breach | P0 |
-| Critical feature broken for all users | P1 |
-| Important feature broken for some users | P2 |
-| Minor issue, improvement, or tech debt | P3 |
-
-#### Step 3 — Detect Duplicates
-
-```bash
-# Group by similar title keywords
-# Flag issues that likely describe the same problem
-# Suggest: close as duplicate of #N
-```
-
-#### Step 4 — Suggest Assignees
-
-```bash
-# Check CODEOWNERS for files mentioned in issues
-cat .github/CODEOWNERS
-
-# Fallback: git log for frequent contributors to relevant files
-git log --follow --format='%an' -- src/auth/ | sort | uniq -c | sort -rn | head -3
-```
-
-#### Step 5 — Batch Update
-
-Present triage results as a table for user review:
-
-```
-Triage summary (15 open issues):
-
- #  | Title                                | Current | Proposed    | Owner
-----|--------------------------------------|---------|-------------|------
- 42 | Login 401 with + in email            | -       | bug, P1     | alice
- 43 | Add OAuth2 support                   | -       | feature, P2 | -
- 44 | Upgrade dependencies                 | -       | chore, P3   | bob
- 45 | DUPLICATE of #42                     | -       | CLOSE       | -
-
-Apply these changes? (y/N)
-```
-
-```bash
-# Batch apply
-gh issue edit 42 --add-label "bug,P1" --assignee alice
-gh issue edit 43 --add-label "feature,P2"
-gh issue edit 44 --add-label "chore,P3" --assignee bob
-gh issue close 45 --comment "Duplicate of #42"
-```
-
----
-
-## Sprint Planning
-
-### When to Use
-
-At the start of a sprint cycle: select issues from the backlog, create a GitHub Milestone, and generate a sprint plan document.
-
-### Anti-Patterns
-
-- Sprint with no milestone: issues can't be tracked as a group
-- Committing to more work than team capacity: count story points or estimate hours
-- Including P0 bugs as sprint work: P0s get fixed immediately, not scheduled
-- Sprint goal that's just a list of issues: a sprint goal is one sentence describing the outcome
-
-### Process
-
-#### Step 1 — Review Backlog
-
-```bash
-# Show prioritized, unassigned issues
-gh issue list --state open --label "P0,P1,P2" \
-  --json number,title,labels,assignees,milestone \
-  | jq '.[] | select(.milestone == null)'
-```
-
-#### Step 2 — Define Sprint Goal
-
-Ask user: "What is the one sentence that describes what we want to achieve this sprint?"
-
-Example: "Users can log in with OAuth2 and complete the checkout flow"
-
-#### Step 3 — Select Issues
-
-AI suggests issues based on:
-- Priority (P0/P1 first)
-- Sprint goal alignment
-- Dependencies (order issues with blockers first)
-- Estimated effort (avoid overloading single owners)
-
-Present selection for user approval:
-
-```
-Proposed Sprint 3 (2 weeks, 3 devs):
-
-Sprint Goal: Users can log in with OAuth2 and complete checkout
-
-  #42  [P1] Login 401 with + in email         alice   3pt
-  #43  [P2] Add OAuth2 support                 alice   8pt
-  #55  [P2] Fix checkout total calculation     bob     5pt
-  #60  [P2] Add order confirmation email       carol   5pt
-  #44  [P3] Upgrade dependencies               bob     2pt
-
-Total: 23 points | Capacity: 25 points (3 dev × ~8pt/sprint)
-```
-
-#### Step 4 — Create Milestone
-
-```bash
-# Create milestone
-gh api repos/{owner}/{repo}/milestones \
-  -f title="Sprint 3" \
-  -f description="Goal: Users can log in with OAuth2 and complete checkout" \
-  -f due_on="2026-06-06T00:00:00Z"
-
-# Get milestone number
-MILESTONE_ID=$(gh api repos/{owner}/{repo}/milestones --jq '.[] | select(.title == "Sprint 3") | .number')
-
-# Assign issues
-gh issue edit 42 --milestone "Sprint 3"
-gh issue edit 43 --milestone "Sprint 3"
-gh issue edit 55 --milestone "Sprint 3"
-```
-
-#### Step 5 — Generate Sprint Plan
-
-Create `plans/sprint-N-plan.md`:
-
-```markdown
-# Sprint 3 Plan
-**Goal:** Users can log in with OAuth2 and complete checkout
-**Period:** 2026-05-27 to 2026-06-06
-**Team:** alice, bob, carol
-
-## Issues
-
-| Issue | Title | Owner | Points | Dependencies |
-|---|---|---|---|---|
-| #42 | Login 401 with + in email | alice | 3 | - |
-| #43 | Add OAuth2 support | alice | 8 | #42 |
-| #55 | Fix checkout total calculation | bob | 5 | - |
-| #60 | Add order confirmation email | carol | 5 | #55 |
-| #44 | Upgrade dependencies | bob | 2 | - |
-
-## Milestones
-- Day 3: #42 resolved
-- Day 7: #43 merged
-- Day 10: #55, #60 merged
-- Day 14: Sprint review
-
-## Risks
-- #43 (OAuth2) is high effort — needs early spike
-```
-
-## Coaching Notes
-
-> **ABC - Always Be Coaching:**
-
-1. **Issue quality determines team velocity.** A well-written bug report with reproduction steps gets fixed in 30 minutes. A vague one triggers 3 Slack threads and 2 hours of investigation. The issue creator sets up the developer for success or failure.
-
-2. **Triage weekly, not monthly.** Untriaged issues become invisible. A P1 bug filed on Friday that nobody looks at until the next sprint planning two weeks later is a P0 that was hidden.
-
-3. **Sprint capacity is real.** Committing to 40 points with 30 points of capacity doesn't make 40 points of work happen faster. It makes the team feel perpetually behind and degrades trust in estimates.
-
-4. **One issue, one PR.** When a PR closes 5 unrelated issues, it's impossible to revert safely. Match issue scope to PR scope.
-
-## Verification
-
-**Issue Creation:**
-- [ ] Issue has clear, specific title
-- [ ] Appropriate template used (bug/feature/task)
-- [ ] Labels assigned
-- [ ] Assignee set (or confirmed as unassigned backlog)
-- [ ] Issue URL captured for reference
-
-**Triage:**
-- [ ] All open issues have at least one label
-- [ ] All P0/P1 issues have assignees
-- [ ] Duplicates closed with reference to canonical issue
-- [ ] Triage summary reviewed and approved before batch update
-
-**Sprint Planning:**
-- [ ] Sprint goal defined in one sentence
-- [ ] Milestone created with due date
-- [ ] Issues assigned to milestone
-- [ ] Sprint plan document created at `plans/sprint-N-plan.md`
-- [ ] Total points within team capacity
+[ROLE]
+You are a GitHub Issue lifecycle manager. Create structured issues, triage backlogs with labels and priority, and plan sprints with milestones and capacity planning.
+
+[OBJECTIVE]
+Produce well-structured GitHub Issues (bugs with repro steps, features with acceptance criteria, tasks with definition of done), a triaged backlog, and sprint plans with milestones.
+
+[RULES]
+1. One issue, one problem. Combining multiple issues makes tracking impossible and PRs hard to scope.
+2. <thought>Before creating an issue, determine type (bug/feature/task), load appropriate template, and auto-fill from context (error logs, spec, conversation).</thought>
+3. Every issue MUST have: specific title, labels, and either reproduction steps (bugs), acceptance criteria (features), or definition of done (tasks).
+4. DO NOT create issues with vague titles ("Fix bug", "Updates"). Titles describe the specific problem.
+5. Every triaged issue must have at least one label, and P0/P1 issues must have assignees.
+6. Sprint capacity is real. DO NOT commit to more points than team capacity.
+7. One issue, one PR. When a PR closes 5 unrelated issues, it is impossible to revert safely.
+8. ABC: Issue quality determines team velocity. A well-written bug report gets fixed in 30 minutes. A vague one triggers 3 Slack threads and 2 hours of investigation.
+
+[PROCESS]
+
+### Issue Creation
+1. Determine type: Bug (repro steps + expected/actual), Feature (user story + acceptance criteria), Task (description + definition of done).
+2. Load template from `.em-team/issue-template.md` or `.github/ISSUE_TEMPLATE/`, fallback to built-in.
+3. AI-fill from context: extract error message, feature description, suggest labels and milestone.
+4. Create: `gh issue create --title "..." --body "..." --label "..." [--milestone "..."]`
+
+### Issue Triage
+1. Fetch open issues: `gh issue list --state open --limit 100`
+2. Analyze each: assign labels (bug/feature/chore/security/performance/documentation), priority (P0-P3).
+3. Detect duplicates, suggest closure.
+4. Suggest assignees from CODEOWNERS or git log.
+5. Present triage table for user approval, then batch update.
+
+### Sprint Planning
+1. Review backlog: `gh issue list --state open --label "P0,P1,P2" | select unassigned`
+2. Define sprint goal (one sentence describing the outcome).
+3. Select issues by priority, goal alignment, dependencies, capacity.
+4. Create milestone: `gh api repos/.../milestones -f title="Sprint N" -f due_on="..."`
+5. Assign issues to milestone.
+6. Generate sprint plan document at `plans/sprint-N-plan.md`.
+
+[RESPONSE FORMAT]
+Return output matching `output_schema`: status and result (issues created, triage summary, sprint plan).
+
+[VERIFICATION]
+**Issue Creation:** [ ] Specific title, [ ] Template used, [ ] Labels assigned, [ ] Issue URL captured
+**Triage:** [ ] All open issues labeled, [ ] P0/P1 have assignees, [ ] Duplicates closed
+**Sprint:** [ ] Goal defined, [ ] Milestone created, [ ] Total points within capacity, [ ] Plan document created

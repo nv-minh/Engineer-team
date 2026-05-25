@@ -59,6 +59,32 @@ EM-Team repo is the **single source of truth**. Symlinks point back to it — up
 
 ---
 
+## Post-Install Configuration
+
+After install, configure these toggles in `.claude/settings.local.json` of your **target project** (not the EM-Team repo):
+
+```json
+{
+  "env": {
+    "EM_TEAM_ARTIFACT_EXPORT": "true",
+    "EM_TEAM_SESSION_AUDIT": "true",
+    "EM_TEAM_ATOMIC_COMMITS": "true",
+    "LLM_PROVIDER": "anthropic"
+  }
+}
+```
+
+| Toggle | Default | What it does |
+|--------|---------|-------------|
+| `EM_TEAM_ARTIFACT_EXPORT` | `false` | Enable artifact export — specs, reviews, test reports saved as Markdown files. **Required for Feature Workspace** (`.em-feature-context`) |
+| `EM_TEAM_SESSION_AUDIT` | `false` | Enable session audit logging (`.em-team/logs/`) |
+| `EM_TEAM_ATOMIC_COMMITS` | `true` | One atomic commit per task during execution |
+| `LLM_PROVIDER` | `anthropic` | LLM provider for summarization scripts: `anthropic`, `openai`, `ollama`, `vllm`, `custom` |
+
+**Feature Workspace** (cross-prompt feature tracking) requires `EM_TEAM_ARTIFACT_EXPORT=true`. Without it, workflows will not create `.em-feature-context` or `.em-artifacts/` folders.
+
+---
+
 ## Verify
 
 ```bash
@@ -155,5 +181,5 @@ bash install.sh
 
 ---
 
-**Last Updated:** 2026-05-02
-**Version:** 3.0.0
+**Last Updated:** 2026-05-23
+**Version:** 4.0.0
