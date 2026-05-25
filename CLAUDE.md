@@ -83,7 +83,7 @@ All EM-Skill agents and skills follow these principles (see `preambles/ethos.md`
 
 ```
 em-team/
-├── skills/              # 85 skills
+├── skills/              # 86 skills
 │   ├── foundation/      # 10 core foundational skills
 │   ├── development/     # 12 methodology skills (TDD, architecture, debugging, etc.)
 │   ├── expert-react/    # 4 React skills (react, react-hooks, nextjs, redux)
@@ -102,10 +102,12 @@ em-team/
 │   ├── drawio/          # 2 Drawio skills (architecture, flowchart)
 │   ├── tauri/           # 1 Tauri skill (tauri)
 │   ├── quality/         # 13 quality assurance skills
-│   ├── workflow/        # 7 workflow and automation skills
+│   ├── workflow/        # 12 workflow and automation skills
 │   └── additional/      # 5 product & discovery skills
-├── agents/              # 35 agents (33 active + 2 deprecated)
+├── agents/              # 38 agents (36 active + 2 deprecated)
+│   └── _shared/         # Shared preambles (expert-preamble for 7 expert agents)
 ├── workflows/           # 26 end-to-end workflows
+│   └── _shared/         # Reusable sub-stages (stage-0-git-bootstrap)
 ├── .claude/
 │   ├── lib/             # Libraries (trace-store, session-audit, artifact-store)
 │   ├── mcp-servers/     # Custom MCP servers (GitHub enhanced, Project context)
@@ -114,7 +116,7 @@ em-team/
 │   ├── context-artifacts/ # PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, WBS.md, ISSUE-REGISTER.md, CHANGE-LOG.md, ACCEPTANCE-CHECKLIST.md
 │   └── project-dna/      # Templates for generated agent guidance (CLAUDE.md, rules, traceability)
 ├── preambles/           # Shared initialization (ethos, skill preamble, agent preamble)
-├── protocols/           # Communication standards (writing-style, delegation, distributed-messaging, change-management, review-gates)
+├── protocols/           # Communication & error standards (writing-style, delegation, distributed-messaging, change-management, review-gates, error-handling, naming-convention, report-format)
 ├── references/          # Shared reference docs (security, testing, code-quality, API, verification)
 ├── hooks/              # Automation hooks (pre-commit, post-commit, session-handoff)
 ├── commands/           # CLI commands
@@ -139,7 +141,7 @@ em-team/
 9. **basic-design** - Formal 基本設計 (Basic Design Document) for Japanese outsourcing
 10. **detailed-design** - Formal 詳細設計 (Detailed Design) per module before implementation
 
-### Development Skills (11 methodology skills)
+### Development Skills (12 methodology skills)
 7. **test-driven-development** - TDD RED-GREEN-REFACTOR
 8. **incremental-implementation** - Vertical slice development
 9. **subagent-driven-development** - Fresh context per task + two-stage review
@@ -232,7 +234,7 @@ em-team/
 63. **test-generation** - Automated test generation strategies
 64. **uat-process** - Formal 受け入れテスト (User Acceptance Testing) with sign-off
 
-### Workflow Skills (11 skills)
+### Workflow Skills (12 skills)
 65. **git-workflow** - Atomic commits
 66. **ci-cd-automation** - Feature flags, quality gates
 67. **documentation** - ADRs, API docs
@@ -244,13 +246,14 @@ em-team/
 73. **github-pr-manager** - PR creation with template auto-fill + review comment AI-assisted fix
 74. **github-issue-manager** - Issue creation, triage (labels/priority/duplicates), sprint planning with milestones
 75. **github-release-manager** - Version bump, release notes, git tag, GitHub Release with artifacts
+76. **github-issue-fix** - Browse GitHub issues, select one, and hand off to em:bug-fix workflow with full issue context
 
 ### Additional Skills (5 skills)
-76. **jobs-to-be-done** - JTBD framework for understanding user needs
-77. **lean-ux-canvas** - Lean UX hypothesis testing
-78. **opportunity-solution-tree** - Product opportunity mapping
-79. **pol-probe** - Product opportunity probe
-80. **office-hours** - YC-style brainstorming and idea validation
+77. **jobs-to-be-done** - JTBD framework for understanding user needs
+78. **lean-ux-canvas** - Lean UX hypothesis testing
+79. **opportunity-solution-tree** - Product opportunity mapping
+80. **pol-probe** - Product opportunity probe
+81. **office-hours** - YC-style brainstorming and idea validation
 
 ## Agent Categories
 
@@ -431,6 +434,29 @@ DEFINE → PLAN → BUILD → VERIFY → REVIEW → SIMPLIFY → SHIP
 - Track project conventions
 - Build knowledge base
 
+## Protocols
+
+The `protocols/` directory contains 8 communication and process standards:
+
+| Protocol | Purpose |
+|----------|---------|
+| **writing-style.md** | Active voice, severity levels, executive summary first |
+| **delegation-protocol.md** | Agent-to-agent delegation rules |
+| **distributed-messaging.md** | Messaging format for distributed agents |
+| **change-management.md** | Change request and approval process |
+| **review-gates.md** | Verification gate definitions between phases |
+| **error-handling.md** | Standardized error taxonomy (CONTEXT_OVERFLOW, BUILD_DEADLOCK, etc.) with retry policy (`max_retries_per_stage: 2`) |
+| **naming-convention.md** | Entry point naming rules for `.claude/skills/` (`em:{name}`, `em:skill:{name}`) |
+| **report-format.md** | Standard report output format |
+
+## Shared Components
+
+### Agent Shared (`agents/_shared/`)
+- **expert-preamble.md** — Shared input/output schemas, response format rules, and Iron Law references for all 7 expert domain agents (react-expert, vue-expert, nestjs-expert, devops-expert, mobile-expert, spring-expert, rust-expert)
+
+### Workflow Shared (`workflows/_shared/`)
+- **stage-0-git-bootstrap.md** — Reusable Stage 0 (SETUP) for workflows that need git branch creation and spec document bootstrapping. Used by `new-feature` and `bug-fix`. Parameterized with `{doc_type}`, `{branch_pattern}`, `{next_action}`.
+
 ## Code Conventions
 
 - All skills use enriched YAML frontmatter (name, description, version, category, origin, triggers, intent, scenarios, anti_patterns, related_skills)
@@ -502,7 +528,7 @@ When adding new skills or agents:
 
 Current version: 4.1.0
 Last updated: 2026-05-24
-Changes: v4.1.0 — QA Bug Hunter: New `qa-bug-hunter` workflow with human-gated GitHub issue creation. 7 stages: SETUP → DISCOVER → EVIDENCE → PREPARE → HUMAN GATE → LOG → SUMMARY. Per-bug loop with user verification before each issue is created. Reuses em:qa, flow-discovery, browser-testing, github-issue-manager skills. Total: 85 skills, 38 agents, 26 workflows. v4.0.0 — Hermes Protocol Refactor: Full codebase restructured following NousResearch Hermes philosophy for Absolute Steerability, Flawless Tool Use, and Local/Cloud Agnostic execution. All 38 agents restructured with [ROLE], [OBJECTIVE], [RULES], [AVAILABLE SKILLS], [PROCESS], [RESPONSE FORMAT], [HANDOFF] blocks + input_schema/output_schema in YAML frontmatter. All 85 skills upgraded with JSON Schema (input_schema, output_schema, error_schema) in frontmatter for strict function calling contracts. All 25 workflows converted to ReAct protocol (Thought→Action→Observation loops) with context pruning and state snapshots. Preambles rewritten as Hermes-native (imperative, structured blocks). LLM client made provider-agnostic via scripts/llm-config.sh — supports Anthropic, OpenAI, Ollama, vLLM, and custom endpoints via LLM_PROVIDER/LLM_BASE_URL/LLM_MODEL env vars. ChatML formatter included for local Hermes models. Validation script (scripts/validate-hermes.sh) checks schema presence, block structure, and language compliance. Total: 85 skills, 38 agents, 25 workflows. v3.10.0 — Feature Workspace: artifact-store.ts v3.0.0 with createWorkspace(), upsert() for living docs (SPEC.md, TC-REGISTRY.md updated in place), workspaceExport() for timestamped logs (test-executions, reviews, evidence). .em-feature-context tracks active feature across prompts for cross-iteration continuity. ITERATION-LOG.md auto-tracks what changed per iteration. artifact-register.sh adds workspace/context commands. All workflows updated with workspace creation instructions. Agents (brownfield-test-engineer, test-verifier) support workspace-first export with legacy fallback. Total: 85 skills, 38 agents, 25 workflows. v3.9.0 — Artifact Folder Structure + Playwright Auth Config: artifact-store.ts upgraded with workflowContext param for sub-folder routing (specs/new-feature/, test-reports/bug-fix/, etc.), new category mappings for agent outputs (test-reports, architecture). Playwright auth config system: 4 strategies (none, credentials, oauth, storageState) via e2e/config/auth.config.json, auto-generated by playwright-setup agent. Credentials from .env (never committed), OAuth uses manual-first storageState approach. All workflows (new-feature, bug-fix, refactoring, greenfield-app) updated with Artifact Export sections. artifact-register.sh updated for sub-folder scanning. New template: E2E-AUTH-CONFIG.template.md. Total: 85 skills, 38 agents, 25 workflows. v3.8.0 — Test Automation Chain: 3 new agents (playwright-setup, brownfield-test-engineer, test-verifier) + test-generation/e2e-testing/browser-testing wired into all VERIFY stages (greenfield-app Stage 10, new-feature Stage 5, bug-fix Stage 5, refactoring Stage 4, six-phase-lifecycle Phase 4). brownfield-test-engineer asks clarifying questions when spec unclear; test-verifier retries max 3 times with targeted fix suggestions per attempt. Total: 85 skills, 38 agents, 25 workflows. v3.7.0 — GitHub Management Suite: 4 new skills (github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager) + 12 commands (setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues). Total: 85 skills, 35 agents, 25 workflows. v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 85 skills, 35 agents, 25 workflows.
+Changes: v4.1.0 — QA Bug Hunter: New `qa-bug-hunter` workflow with human-gated GitHub issue creation. 7 stages: SETUP → DISCOVER → EVIDENCE → PREPARE → HUMAN GATE → LOG → SUMMARY. Per-bug loop with user verification before each issue is created. Reuses em:qa, flow-discovery, browser-testing, github-issue-manager skills. New `github-issue-fix` skill bridges GitHub Issues to em:bug-fix workflow. Added `protocols/error-handling.md` (standardized error taxonomy), `protocols/naming-convention.md` (entry point naming rules), `agents/_shared/expert-preamble.md` (shared schemas for expert agents), `workflows/_shared/stage-0-git-bootstrap.md` (reusable git bootstrap), `scripts/benchmark-quality.sh` (quality scoring). Total: 86 skills, 38 agents, 26 workflows. v4.0.0 — Hermes Protocol Refactor: Full codebase restructured following NousResearch Hermes philosophy for Absolute Steerability, Flawless Tool Use, and Local/Cloud Agnostic execution. All 38 agents restructured with [ROLE], [OBJECTIVE], [RULES], [AVAILABLE SKILLS], [PROCESS], [RESPONSE FORMAT], [HANDOFF] blocks + input_schema/output_schema in YAML frontmatter. All 85 skills upgraded with JSON Schema (input_schema, output_schema, error_schema) in frontmatter for strict function calling contracts. All 25 workflows converted to ReAct protocol (Thought→Action→Observation loops) with context pruning and state snapshots. Preambles rewritten as Hermes-native (imperative, structured blocks). LLM client made provider-agnostic via scripts/llm-config.sh — supports Anthropic, OpenAI, Ollama, vLLM, and custom endpoints via LLM_PROVIDER/LLM_BASE_URL/LLM_MODEL env vars. ChatML formatter included for local Hermes models. Validation script (scripts/validate-hermes.sh) checks schema presence, block structure, and language compliance. Total: 85 skills, 38 agents, 25 workflows. v3.10.0 — Feature Workspace: artifact-store.ts v3.0.0 with createWorkspace(), upsert() for living docs (SPEC.md, TC-REGISTRY.md updated in place), workspaceExport() for timestamped logs (test-executions, reviews, evidence). .em-feature-context tracks active feature across prompts for cross-iteration continuity. ITERATION-LOG.md auto-tracks what changed per iteration. artifact-register.sh adds workspace/context commands. All workflows updated with workspace creation instructions. Agents (brownfield-test-engineer, test-verifier) support workspace-first export with legacy fallback. Total: 85 skills, 38 agents, 25 workflows. v3.9.0 — Artifact Folder Structure + Playwright Auth Config: artifact-store.ts upgraded with workflowContext param for sub-folder routing (specs/new-feature/, test-reports/bug-fix/, etc.), new category mappings for agent outputs (test-reports, architecture). Playwright auth config system: 4 strategies (none, credentials, oauth, storageState) via e2e/config/auth.config.json, auto-generated by playwright-setup agent. Credentials from .env (never committed), OAuth uses manual-first storageState approach. All workflows (new-feature, bug-fix, refactoring, greenfield-app) updated with Artifact Export sections. artifact-register.sh updated for sub-folder scanning. New template: E2E-AUTH-CONFIG.template.md. Total: 85 skills, 38 agents, 25 workflows. v3.8.0 — Test Automation Chain: 3 new agents (playwright-setup, brownfield-test-engineer, test-verifier) + test-generation/e2e-testing/browser-testing wired into all VERIFY stages (greenfield-app Stage 10, new-feature Stage 5, bug-fix Stage 5, refactoring Stage 4, six-phase-lifecycle Phase 4). brownfield-test-engineer asks clarifying questions when spec unclear; test-verifier retries max 3 times with targeted fix suggestions per attempt. Total: 85 skills, 38 agents, 25 workflows. v3.7.0 — GitHub Management Suite: 4 new skills (github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager) + 12 commands (setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues). Total: 85 skills, 35 agents, 25 workflows. v3.6.0 — Codebase architecture intelligence: new `codebase-architecture` skill researches modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), presents 2-3 best-fit options with project-specific file structures and trade-offs, generates 3 architecture-specific rule files (boundaries, conventions, patterns). New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md. Greenfield Stage 6 upgraded to use `codebase-architecture` skill. v3.5.0 — Japanese outsourcing support. Total: 85 skills, 35 agents, 25 workflows.
 
 ## Automation
 
@@ -546,6 +572,16 @@ Changes: v4.1.0 — QA Bug Hunter: New `qa-bug-hunter` workflow with human-gated
 - **project-context.js** - Codebase analysis: structure tree, dependencies, agent config, LOC metrics, recent git changes
 - Requires: `npm install` (installs @modelcontextprotocol/sdk, @octokit/rest)
 - Requires env vars: `GITHUB_TOKEN`, `REPOSITORY=owner/repo`
+
+### Quality Benchmark (scripts/benchmark-quality.sh)
+- Scores every skill, agent, and workflow against 5 quality rubrics (B1–B5)
+- B1: Skill instruction quality (frontmatter, sections, coaching notes)
+- B2: Agent structure quality (Hermes blocks, schemas, handoff)
+- B3: Workflow protocol quality (ReAct, gates, error handling)
+- B4: Cross-reference integrity (related_skills, agent→skill refs)
+- B5: Consistency & hygiene (naming, versioning, no duplicates)
+- Grades: A+ (95+), A (90+), B+ (85+), B (80+), C+ (75+), C (70+), D (<70)
+- Usage: `bash scripts/benchmark-quality.sh` or `bash scripts/benchmark-quality.sh --verbose`
 
 ### Operational Rules (.claude/rules/)
 - **mistakes.md** - Mistake ledger recording past failures and prevention patterns

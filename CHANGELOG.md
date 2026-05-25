@@ -5,6 +5,174 @@ All notable changes to EM-Team system will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-05-24
+
+### Added
+- **qa-bug-hunter** workflow — QA testing with human-gated GitHub issue creation (7 stages: SETUP → DISCOVER → EVIDENCE → PREPARE → HUMAN GATE → LOG → SUMMARY)
+- **github-issue-fix** skill — Browse GitHub issues, select one, hand off to em:bug-fix workflow with full issue context
+- **protocols/error-handling.md** — Standardized error taxonomy with universal + domain-specific types and retry policy
+- **protocols/naming-convention.md** — Entry point naming rules for `.claude/skills/`
+- **agents/_shared/expert-preamble.md** — Shared input/output schemas for 7 expert domain agents
+- **workflows/_shared/stage-0-git-bootstrap.md** — Reusable Stage 0 for new-feature, bug-fix, refactoring workflows
+- **scripts/benchmark-quality.sh** — Quality scoring system (B1–B5 rubrics, grades A+ to D)
+
+### Changed
+- Standardized testing skills (test-driven-development, browser-testing, test-generation) per addyosmani/agent-skills reference
+- Enforced mandatory test generation & Playwright evidence recording in VERIFY stages
+- Total: 86 skills, 38 agents, 26 workflows
+
+---
+
+## [4.0.0] - 2026-05-24
+
+### Changed (Major Refactor: Hermes Protocol)
+- Full codebase restructured following NousResearch Hermes philosophy for Absolute Steerability, Flawless Tool Use, and Local/Cloud Agnostic execution
+- All 38 agents restructured with `[ROLE]`, `[OBJECTIVE]`, `[RULES]`, `[AVAILABLE SKILLS]`, `[PROCESS]`, `[RESPONSE FORMAT]`, `[HANDOFF]` blocks + `input_schema`/`output_schema` in YAML frontmatter
+- All 85 skills upgraded with JSON Schema (`input_schema`, `output_schema`, `error_schema`) in frontmatter
+- All 25 workflows converted to ReAct protocol (Thought→Action→Observation loops) with context pruning and state snapshots
+- Preambles rewritten as Hermes-native (imperative, structured blocks)
+- ~70% context reduction (~55K → ~16K lines)
+
+### Added
+- **scripts/llm-config.sh** — Provider-agnostic LLM client (Anthropic, OpenAI, Ollama, vLLM, custom endpoints)
+- **scripts/validate-hermes.sh** — Validation script checking schema presence, block structure, and language compliance
+- ChatML formatter for local Hermes models
+
+### System
+- Total: 85 skills, 38 agents, 25 workflows
+
+---
+
+## [3.10.0] - 2026-05-23
+
+### Added
+- **Feature Workspace** — artifact-store.ts v3.0.0 with `createWorkspace()`, `upsert()` for living docs (SPEC.md, TC-REGISTRY.md updated in place)
+- `workspaceExport()` for timestamped logs (test-executions, reviews, evidence)
+- `.em-feature-context` tracks active feature across prompts for cross-iteration continuity
+- ITERATION-LOG.md auto-tracks what changed per iteration
+- `artifact-register.sh` adds workspace/context commands
+
+### Changed
+- All workflows updated with workspace creation instructions
+- Agents (brownfield-test-engineer, test-verifier) support workspace-first export with legacy fallback
+
+---
+
+## [3.9.0] - 2026-05-23
+
+### Added
+- **Artifact Folder Structure** — artifact-store.ts with `workflowContext` param for sub-folder routing (specs/new-feature/, test-reports/bug-fix/, etc.)
+- **Playwright Auth Config** — 4 strategies (none, credentials, oauth, storageState) via `e2e/config/auth.config.json`
+- New template: E2E-AUTH-CONFIG.template.md
+
+### Changed
+- All workflows (new-feature, bug-fix, refactoring, greenfield-app) updated with Artifact Export sections
+- `artifact-register.sh` updated for sub-folder scanning
+
+---
+
+## [3.8.0] - 2026-05-23
+
+### Added
+- **Test Automation Chain** — 3 new agents:
+  - **playwright-setup** — Auto-detects stack, installs browsers, generates config, scaffolds POM, generates auth config (4 strategies)
+  - **brownfield-test-engineer** — Spec-to-test for existing codebases; asks clarifying questions when spec unclear
+  - **test-verifier** — Double-checks test results with retry loop (max 3 retries with targeted fix suggestions)
+
+### Changed
+- test-generation, e2e-testing, browser-testing wired into all VERIFY stages (greenfield-app Stage 10, new-feature Stage 5, bug-fix Stage 5, refactoring Stage 4, six-phase-lifecycle Phase 4)
+
+---
+
+## [3.7.0] - 2026-05-22
+
+### Added
+- **GitHub Management Suite** — 4 new skills:
+  - **github-cicd-setup** — Detect stack, auto-generate `.github/workflows/ci.yml`
+  - **github-pr-manager** — PR creation with template auto-fill + review comment AI-assisted fix
+  - **github-issue-manager** — Issue creation, triage, sprint planning with milestones
+  - **github-release-manager** — Version bump, release notes, git tag, GitHub Release with artifacts
+- 12 new commands: setup-cicd, pr-create, pr-fix, issue-create, issue-triage, issue-sprint, release, pr-merge, pr-review, branch-create, dep-review, stale-issues
+
+---
+
+## [3.6.0] - 2026-05-22
+
+### Added
+- **codebase-architecture** skill — Research modern architecture patterns (Clean/Hexagonal/Modular Monolith/FSD/Vertical Slice/CQRS), present 2-3 best-fit options with trade-offs, generate architecture-specific rule files
+- New templates: design-system.template.md, architecture-conventions.template.md, architecture-patterns.template.md
+
+### Changed
+- Greenfield Stage 6 upgraded to use `codebase-architecture` skill
+
+---
+
+## [3.5.0] - 2026-05-22
+
+### Added
+- **Japanese outsourcing support** — End-to-end 9-stage outsourcing workflow with formal gates:
+  - **basic-design** skill (基本設計 — Basic Design Document)
+  - **detailed-design** skill (詳細設計 — Detailed Design per module)
+  - **uat-process** skill (受け入れテスト — User Acceptance Testing)
+  - **progress-reporting** skill (進捗報告 — weekly progress reports)
+  - **japanese-outsourcing** workflow (9 stages with formal gates)
+
+---
+
+## [3.4.0] - 2026-05-21
+
+### Added
+- Integrated UI/UX design into greenfield workflow with new Stage 5
+
+---
+
+## [3.2.0] - 2026-05-09
+
+### Added
+- **Session Audit Logging** — session-audit.ts: append-only JSONL audit log for user-AI conversations
+- **Artifact Export** — artifact-store.ts: export skill outputs (specs, plans, reviews) as Markdown
+- `EM_TEAM_ATOMIC_COMMITS` toggle to disable atomic commits
+
+### Changed
+- Updated README and CLAUDE.md for v3.2.0
+
+---
+
+## [3.1.0] - 2026-05-08
+
+### Added
+- **greenfield-app** workflow — From blank directory to shipped application (12 stages, includes UI/UX design)
+- **domain-modeling** skill — Bounded contexts, entities, relationships, ubiquitous language
+- Agent consolidation and skill symlink improvements
+
+### Changed
+- Install script rewritten as GSD-style copy+command installer
+
+---
+
+## [3.0.0] - 2026-05-02
+
+### Added (Major Release: Expert Agents)
+- **7 Expert Agents** — Domain-specialized agents with deep framework knowledge:
+  - **react-expert** — React/Next.js, hooks, state management, SSR
+  - **vue-expert** — Vue 3, Composition API, Pinia, Vue Router
+  - **nestjs-expert** — NestJS, TypeScript backend, GraphQL, microservices
+  - **devops-expert** — Docker, Kubernetes, Terraform, CI/CD, cloud
+  - **mobile-expert** — Flutter, React Native, Android, iOS
+  - **spring-expert** — Spring Boot, JPA, security, microservices
+  - **rust-expert** — Rust systems, ownership, async tokio, FFI
+- **diagram** skill — Excalidraw, Mermaid, SVG diagram generation
+- **figma-design** skill — Figma-to-code conversion via MCP
+- Agent Trace Store (trace-store.ts) for code provenance tracking
+- Custom MCP servers (github-enhanced.js, project-context.js)
+- CI pipeline (.github/workflows/validate.yml) for skill/agent validation
+
+### Changed
+- Expert group restructuring — skills reorganized into `expert-*` directories
+- 49 missing skill wrappers added for slash command visibility
+
+---
+
 ## [2.2.0] - 2026-05-01
 
 ### Added

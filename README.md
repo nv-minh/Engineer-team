@@ -1,6 +1,6 @@
 # EM-Team - Fullstack Engineering Agent System
 
-> 85 skills, 38 agents, 26 workflows. Powered by Hermes Protocol v4.0.0.
+> 86 skills, 38 agents, 26 workflows. Powered by Hermes Protocol v4.0.0.
 
 ## What is EM-Team?
 
@@ -24,7 +24,7 @@ The entire codebase has been restructured following the [Hermes philosophy](http
 ### What Changed
 
 - **38 agents**: Restructured with `[ROLE]`, `[OBJECTIVE]`, `[RULES]`, `[AVAILABLE SKILLS]`, `[PROCESS]`, `[RESPONSE FORMAT]`, `[HANDOFF]` blocks + `input_schema`/`output_schema` in frontmatter
-- **85 skills**: Added `input_schema`, `output_schema`, `error_schema` (JSON Schema in YAML frontmatter)
+- **86 skills**: Added `input_schema`, `output_schema`, `error_schema` (JSON Schema in YAML frontmatter)
 - **26 workflows**: Converted to ReAct protocol (Thought→Action→Observation) with context pruning and state snapshots
 - **Preambles**: Rewritten as imperative Hermes-native blocks
 - **LLM client**: `scripts/llm-config.sh` supports 5 providers via env vars
@@ -69,7 +69,7 @@ Uninstall: `bash uninstall.sh`
 
 ## Quick Start
 
-### Skills (85)
+### Skills (86)
 
 ```bash
 /em:skill:spec-driven-development    # Write spec before coding
@@ -118,7 +118,7 @@ Uninstall: `bash uninstall.sh`
 | **Development Skills** | 12 | TDD, architecture-improvement, codebase-architecture, diagram |
 | **Expert Skills** | 34 | React, Vue, Go, NestJS, Python, Database, DevOps, Mobile, Rust, TypeScript |
 | **Quality Skills** | 13 | code-review, e2e-testing, security-audit, test-generation, ux-audit |
-| **Workflow Skills** | 11 | git-workflow, ci-cd-automation, github-pr-manager, github-release-manager |
+| **Workflow Skills** | 12 | git-workflow, ci-cd-automation, github-pr-manager, github-release-manager, github-issue-fix |
 | **Additional Skills** | 5 | jobs-to-be-done, lean-ux-canvas, office-hours |
 | **Core Agents** | 8 | planner, executor, code-reviewer, debugger, test-engineer, verifier |
 | **Specialized Agents** | 21 | architect, team-lead, staff-engineer, product-manager, iron-law-enforcer |
@@ -263,18 +263,20 @@ bash scripts/validate-hermes.sh --verbose  # Detailed output
 ```
 em-team/
 ├── agents/          # 38 agents (Hermes block structure)
-├── skills/          # 85 skills (JSON Schema in frontmatter)
+│   └── _shared/     # Shared preambles (expert-preamble for 7 expert agents)
+├── skills/          # 86 skills (JSON Schema in frontmatter)
 │   ├── foundation/  # 10 core skills
 │   ├── development/ # 12 methodology skills
 │   ├── quality/     # 13 QA skills
-│   ├── workflow/    # 11 workflow skills
+│   ├── workflow/    # 12 workflow skills
 │   ├── expert-*/    # 34 expert skills (React, Vue, Go, Python, etc.)
 │   └── additional/  # 5 product skills
 ├── workflows/       # 26 workflows (ReAct protocol)
+│   └── _shared/     # Reusable sub-stages (stage-0-git-bootstrap)
 ├── preambles/       # Hermes preambles (agent, skill, ethos)
-├── protocols/       # Communication standards
+├── protocols/       # Communication & error standards (8 protocols)
 ├── templates/       # Reusable templates + Hermes schema references
-├── scripts/         # Runtime scripts (llm-config, validation, orchestration)
+├── scripts/         # Runtime scripts (llm-config, validation, benchmark, orchestration)
 ├── distributed/     # Distributed agent orchestration (tmux-based)
 ├── .claude/         # Libraries, MCP servers, rules
 ├── docs/            # Documentation
@@ -335,6 +337,26 @@ test-reports/bug-fix/    # Test reports by workflow
 reviews/refactoring/     # Code reviews
 architecture/greenfield/ # Architecture decisions
 ```
+
+### Protocols & Shared Components
+
+**8 protocols** in `protocols/` standardize communication and error handling across the system:
+- **error-handling.md** — Standardized error taxonomy (`CONTEXT_OVERFLOW`, `BUILD_DEADLOCK`, `SPEC_CONFLICT`, etc.) with `max_retries_per_stage: 2` policy
+- **naming-convention.md** — Entry point naming rules for `.claude/skills/` (`em:{name}`, `em:skill:{name}`)
+- Plus: writing-style, delegation, distributed-messaging, change-management, review-gates, report-format
+
+**Shared components** reduce duplication:
+- `agents/_shared/expert-preamble.md` — Shared schemas for 7 expert domain agents
+- `workflows/_shared/stage-0-git-bootstrap.md` — Reusable git/spec bootstrap for new-feature, bug-fix workflows
+
+### Quality Benchmark
+
+```bash
+bash scripts/benchmark-quality.sh           # Score all skills, agents, workflows (B1-B5)
+bash scripts/benchmark-quality.sh --verbose  # Detailed per-file scoring
+```
+
+Grades: A+ (95+), A (90+), B+ (85+), B (80+), C+ (75+), C (70+), D (<70)
 
 ---
 
