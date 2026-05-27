@@ -807,7 +807,7 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 ---
 
-**Need help?** Check [Troubleshooting](../troubleshooting.md) or [GitHub Issues](https://github.com/nv-minh/agent-team/issues)
+**Need help?** Check [Troubleshooting](#troubleshooting) or [GitHub Issues](https://github.com/nv-minh/Engineer-team/issues)
 
 ---
 

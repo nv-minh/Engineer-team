@@ -1616,29 +1616,29 @@ cat /tmp/em-team-test-logs/latest.log
 ### 🔄 Catalog Workflow
 
 - [Workflows Overview](../workflows/overview.md) - Tổng quan workflows
-- [New Feature Workflow](../workflows/new-feature.md) - Workflow triển khai feature
-- [Bug Fix Workflow](../workflows/bug-fix.md) - Workflow fix bug
-- [Distributed Investigation](../workflows/distributed-investigation.md) - Workflow điều tra phân tán
+- [New Feature Workflow](../guides/new-feature-workflow.md) - Workflow triển khai feature
+- [Bug Fix Workflow](../workflows/reference.md#em-wfbug-fix) - Workflow fix bug
+- [Distributed Investigation](../workflows/reference.md#em-wfdistributed-investigation) - Workflow điều tra phân tán
 
 ### 📖 Reference Skill
 
 - [Skills Overview](../skills/overview.md) - Tổng quan skills
-- [Foundation Skills](../skills/foundation/) - Skills nền tảng
-- [Development Skills](../skills/development/) - Skills phát triển
-- [Quality Skills](../skills/quality/) - Skills chất lượng
+- [Foundation Skills](../skills/overview.md#foundation-skills-11-skills) - Skills nền tảng
+- [Development Skills](../skills/overview.md#development-skills-12-skills) - Skills phát triển
+- [Quality Skills](../skills/overview.md#quality-skills-14-skills) - Skills chất lượng
 
 ### 🤖 Reference Agent
 
 - [Agents Overview](../agents/overview.md) - Tổng quan agents
-- [Core Agents](../agents/core/) - Core agents (8 agents)
-- [Specialized Agents](../agents/specialized/) - Specialized agents (14 agents)
+- [Core Agents](../agents/reference.md#core-agents) - Core agents (5 agents)
+- [Specialized Agents](../agents/reference.md#specialized-agents) - Specialized agents (15 agents)
 
 ### 🧪 Test Suite
 
 - [Test Documentation](../tests/README.md) - Tổng quan test suite
-- [E2E Tests](../tests/e2e/) - Tests end-to-end
-- [Unit Tests](../tests/unit/) - Tests đơn vị
-- [Integration Tests](../tests/integration/) - Tests tích hợp
+- [E2E Tests](../tests/README.md) - Tests end-to-end
+- [Unit Tests](../tests/README.md) - Tests đơn vị
+- [Integration Tests](../tests/README.md) - Tests tích hợp
 
 ### 📕 Feature Documentation
 
@@ -1648,9 +1648,9 @@ cat /tmp/em-team-test-logs/latest.log
 
 ### 🌐 Community
 
-- [GitHub Issues](https://github.com/nv-minh/agent-team/issues) - Báo cáo issues
-- [GitHub Discussions](https://github.com/nv-minh/agent-team/discussions) - Thảo luận
-- [Contributing Guide](CONTRIBUTING.md) - Đóng góp dự án
+- [GitHub Issues](https://github.com/nv-minh/Engineer-team/issues) - Báo cáo issues
+- [GitHub Discussions](https://github.com/nv-minh/Engineer-team/discussions) - Thảo luận
+- [Contributing Guide](https://github.com/nv-minh/Engineer-team/blob/main/CONTRIBUTING.md) - Đóng góp dự án
 
 ---
 
@@ -1662,4 +1662,4 @@ cat /tmp/em-team-test-logs/latest.log
 - Kiểm tra [Xử lý sự cố](#xử-lý-sự-cố)
 - Đọc [Best Practices](#best-practices)
 - Xem [Use Cases](#use-cases-chi-tiết)
-- Report bugs tại [GitHub Issues](https://github.com/nv-minh/agent-team/issues)
+- Report bugs tại [GitHub Issues](https://github.com/nv-minh/Engineer-team/issues)

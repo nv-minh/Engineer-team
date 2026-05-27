@@ -92,7 +92,7 @@ The entire codebase has been restructured following the [Hermes philosophy](http
 ## Installation
 
 ```bash
-git clone https://github.com/nv-minh/agent-team.git
+git clone https://github.com/nv-minh/Engineer-team.git
 cd agent-team
 bash install.sh
 ```

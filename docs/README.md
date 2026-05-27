@@ -104,7 +104,7 @@ Documentation is available in:
 ## 🔗 External Resources
 
 - [Main README](../README.md) - Project overview
-- [GitHub Repository](https://github.com/nv-minh/agent-team) - Source code
+- [GitHub Repository](https://github.com/nv-minh/Engineer-team) - Source code
 - [CLAUDE.md](../CLAUDE.md) - System configuration (read by Claude Code)
 
 ---
@@ -114,7 +114,7 @@ Documentation is available in:
 Need help?
 
 - 📖 Read the [Usage Guide](guides/usage-guide.md)
-- 🐛 Check [GitHub Issues](https://github.com/nv-minh/agent-team/issues)
+- 🐛 Check [GitHub Issues](https://github.com/nv-minh/Engineer-team/issues)
 
 ---
 

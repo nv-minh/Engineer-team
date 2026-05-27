@@ -16,7 +16,7 @@ Get up and running with EM-Team in 5 minutes.
 
 ```bash
 # Clone the repository
-git clone https://github.com/nv-minh/agent-team.git
+git clone https://github.com/nv-minh/Engineer-team.git
 cd agent-team
 
 # Install
@@ -318,8 +318,8 @@ cd tests
 ## 📞 Getting Help
 
 - 📖 [Full Documentation](../README.md)
-- 🐛 [Report Issues](https://github.com/nv-minh/agent-team/issues)
-- 💬 [Community Discussions](https://github.com/nv-minh/agent-team/discussions)
+- 🐛 [Report Issues](https://github.com/nv-minh/Engineer-team/issues)
+- 💬 [Community Discussions](https://github.com/nv-minh/Engineer-team/discussions)
 
 ---
 
