@@ -19,6 +19,23 @@
 | `src/[context]/domain/user.ts` | `tests/unit/[context]/domain/user.test.ts` | Mirror src/ structure |
 | `src/[context]/application/register.ts` | `tests/integration/[context]/register.test.ts` | Integration tests |
 | Critical user path | `tests/e2e/[path-name].spec.ts` | E2E tests |
+| Abuse / security probe | `tests/abuse/[surface].abuse.test.ts` | Abuse / security |
+| Performance benchmark | `tests/perf/[scope].perf.test.ts` | Perf |
+| Accessibility | `tests/a11y/[surface].a11y.test.ts` | A11y |
+| Internationalization | `tests/i18n/[surface].i18n.test.ts` | I18n |
+
+## TC-REGISTRY Format
+
+All TC registries follow `templates/TC-REGISTRY.template.md` (12 columns: TC-ID, Title, Type, Technique, Oracle, Risk, Priority, Preconditions, Input, Steps, Expected Output, Tags).
+
+## Risk-Calibrated Negative + Abuse + Non-Functional Floors
+
+| risk_tier | positive | negative | abuse | non_functional |
+|-----------|----------|----------|-------|----------------|
+| P0        | <=40%    | >=35%    | >=15% | >=10%          |
+| P1        | <=50%    | >=30%    | >=10% | >=10%          |
+| P2        | <=60%    | >=25%    | >=5%  | >=5%           |
+| P3        | <=70%    | >=25%    | optional | optional    |
 
 ## Coverage Requirements
 
@@ -28,6 +45,19 @@
 | Domain layer | [e.g., 95%] | [e.g., 100%] |
 | Application layer | [e.g., 85%] | [e.g., 95%] |
 | Infrastructure layer | [e.g., 70%] | [e.g., 80%] |
+| Critical paths (auth, payments, data integrity) | 100% | 100% |
+
+## Required Test-Design Techniques
+
+For every non-trivial feature, apply at least 4 of: BVA, EP, DT, ST, Pairwise, RBT. See `skills/quality/test-case-design/test-case-design.md`.
+
+## Mandatory Oracle Specification
+
+Every TC names its oracle from: state, interaction, property, snapshot, metamorphic, contract-schema, differential, human-judgment. No oracle = vacuous test.
+
+## Mutation Sanity Gate
+
+Before sign-off, every TC must name a plausible mutation it catches in its Rationale / Expected Output column.
 
 ## Test Structure
 

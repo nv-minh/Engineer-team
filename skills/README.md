@@ -11,10 +11,10 @@
 "Use the brainstorming skill to explore this idea"
 
 # Use an agent
-"Agent: em:planner - Create implementation plan"
+"Agent: em-agent:planner - Create implementation plan"
 
 # Use a workflow
-"Workflow: em:new-feature - Implement from idea to production"
+"Workflow: em-wf:new-feature - Implement from idea to production"
 ```
 
 ## What's Available

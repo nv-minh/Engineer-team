@@ -1,7 +1,7 @@
 ---
 name: six-phase-lifecycle
 description: "Master lifecycle workflow that all EM-Skill workflows inherit. Defines the 6 phases (DEFINE→PLAN→BUILD→VERIFY→REVIEW→SHIP) with verification gates."
-version: "2.1.0"
+version: "2.2.0"
 category: "primary"
 origin: "agent-skills"
 agents_used: [planner, executor, code-reviewer, verifier]
@@ -162,16 +162,27 @@ workflow_state:
 <thought>
 Observe: Code implemented with tests passing, atomic commits made.
 Analyze: Must validate implementation against spec. Generate test cases, run full suite (unit/integration/E2E), execute Playwright E2E with video evidence recording, collect browser evidence (screenshots + video + traces), double-check with test-verifier. Gate requires all acceptance criteria met, TC registry generated, all tests passing, E2E verified with evidence, test-verifier PASS, no regressions.
-Plan: Execute 5 mandatory steps in sequence: (1) verify spec coverage, (2) generate TC registry, (3) ensure Playwright setup with `video: 'retain-on-failure'`, (4) run E2E tests and collect evidence, (5) double-check with test-verifier.
+Plan: Execute 6 mandatory steps in sequence: (0) code-review diff scan, (1) verify spec coverage, (2) generate TC registry, (3) ensure Playwright setup with `video: 'retain-on-failure'`, (4) run E2E tests and collect evidence, (5) double-check with test-verifier. Code-review runs FIRST so any fixes are validated by the test suite.
 </thought>
 
 **Mandatory Steps:**
 
+0. **Code-review diff scan** — Invoke `code-reviewer` agent (mode: standard, focus: diff_review). Gate: no CRITICAL/HIGH findings before proceeding. If FAIL → return to BUILD.
 1. **Verify spec coverage** — Invoke `verifier` agent. Map every spec requirement to implementation. Coverage must be 100%.
 2. **Generate TC registry** — Invoke `test-generation` skill. Produce `TC-REGISTRY.md` with TC-IDs for all acceptance criteria.
-3. **Ensure Playwright setup** — Verify `playwright.config.ts` exists with `video: 'retain-on-failure'`, `trace: 'retain-on-failure'`, `screenshot: 'only-on-failure'`. If missing, invoke `playwright-setup` agent first.
-4. **Run E2E tests & collect evidence** — Invoke `e2e-testing` + `browser-testing` skills. Execute `npx playwright test --reporter=html,list`. Evidence artifacts must be present in `test-results/` (videos, screenshots, traces).
+3. **Ensure Playwright setup with dual-mode evidence switch** — Verify `playwright.config.ts` exists with the `EVIDENCE_MODE` switch (CI default: `video: 'retain-on-failure'`, `trace: 'on-first-retry'`, `screenshot: 'only-on-failure'`; Evidence mode override when `EVIDENCE_MODE=on`: `video/trace/screenshot: 'on'`). If missing or stale, invoke `playwright-setup` agent (v2.1.0+).
+4. **Run E2E tests & collect evidence (VERIFY phase — evidence mode ON)** — Invoke `e2e-testing` + `browser-testing` skills. Execute `EVIDENCE_MODE=on npx playwright test --reporter=html,list` (or `pnpm test:e2e:evidence`). Evidence artifacts must be present in `test-results/` (videos, screenshots, traces) for EVERY TC, not just failures.
 5. **Double-check with test-verifier** — Invoke `test-verifier` agent. Re-run failed tests (max 3 retries). Produce verdict: PASS with confidence score or FAIL with per-TC details + evidence paths.
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: diff_review
+  inputs: [changed_files_list, spec_requirements]
+  outputs: [diff_review_report]
+</action>
 
 <action>
 type: invoke_agent
@@ -193,6 +204,7 @@ gate_status: PASS | FAIL
 </observation>
 
 **Gate 4: Verification Complete**
+- [ ] Code-review diff scan PASS (no CRITICAL, no unaddressed HIGH)
 - [ ] All acceptance criteria met
 - [ ] Test case registry generated (spec requirements → TC-IDs)
 - [ ] All tests passing (unit, integration, e2e)
@@ -201,6 +213,7 @@ gate_status: PASS | FAIL
 - [ ] Browser test evidence collected (`test-results/videos/`, `test-results/screenshots/`, `test-results/traces/`)
 - [ ] Playwright HTML report generated
 - [ ] **test-verifier PASS** (or failure report reviewed and signed off by user)
+- [ ] TC-code coverage = 100% per layer: every TC-ID in TC-REGISTRY has a `test()` block (unautomated → `test.todo()`)
 - [ ] Edge cases handled
 - [ ] Performance benchmarks met
 - [ ] No regressions in existing tests

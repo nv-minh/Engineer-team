@@ -2,12 +2,12 @@
 
 ## Overview
 
-EM-Team provides a unified skill system containing **75 skills** across **21 category directories**. Skills are the building blocks that give agents and workflows their domain expertise -- covering everything from foundational development practices to language-specific patterns, quality assurance, and workflow automation.
+EM-Team provides a unified skill system containing **90 skills** across **20 category directories**. Skills are the building blocks that give agents and workflows their domain expertise -- covering everything from foundational development practices to language-specific patterns, quality assurance, and workflow automation.
 
 Each skill is a self-contained Markdown file with YAML frontmatter metadata and structured body sections. Skills are installed globally via `bash install.sh`, which creates symlinks in `~/.claude/skills/` so they are available in any Claude Code project.
 
-**Version:** 3.1.0
-**Last Updated:** 2026-05-08
+**Version:** 5.4.0
+**Last Updated:** 2026-05-27
 
 ---
 
@@ -15,8 +15,8 @@ Each skill is a self-contained Markdown file with YAML frontmatter metadata and 
 
 ```
 skills/
-├── foundation/          # 7 skills  — Core methodology and planning
-├── development/         # 11 skills — Development workflows and architecture
+├── foundation/          # 11 skills — Core methodology and planning
+├── development/         # 12 skills — Development workflows and architecture
 ├── expert-react/        # 4 skills  — React ecosystem (React, Hooks, Next.js, Redux)
 ├── expert-vue/          # 3 skills  — Vue ecosystem (Vue 3, Pinia, Vue Router)
 ├── expert-go/           # 1 skill   — Go patterns
@@ -32,8 +32,8 @@ skills/
 ├── expert-typescript/   # 1 skill   — TypeScript patterns
 ├── drawio/              # 2 skills  — Architecture and flowchart diagrams
 ├── tauri/               # 1 skill   — Tauri desktop/mobile framework
-├── quality/             # 12 skills — Code review, testing, security, UX audit
-├── workflow/            # 6 skills  — Git, CI/CD, documentation, style switching
+├── quality/             # 14 skills — Code review, testing, security, UX audit
+├── workflow/            # 14 skills — Git, CI/CD, documentation, GitHub management, brownfield impact
 └── additional/          # 5 skills  — Product discovery and strategy
 ```
 
@@ -128,18 +128,18 @@ Cross-references to complementary skills.
 Running `bash install.sh` from the EM-Team root performs three steps:
 
 1. **Configures `~/.claude/config.json`** -- sets the skills path to the EM-Team repo
-2. **Creates wrapper symlinks in `~/.claude/skills/`** -- each skill gets a directory like `~/.claude/skills/em:skill:brainstorming/SKILL.md`
+2. **Creates wrapper symlinks in `~/.claude/skills/`** -- each skill gets a directory like `~/.claude/skills/em-skill:brainstorming/SKILL.md`
 3. **Cleans up orphaned entries** -- removes broken or outdated symlinks from previous installs
 
 ### Symlink Layout
 
 ```
 ~/.claude/skills/
-├── em:skill:brainstorming/
+├── em-skill:brainstorming/
 │   └── SKILL.md  ->  /path/to/em-team/skills/foundation/brainstorming/brainstorming.md
-├── em:skill:test-driven-development/
+├── em-skill:test-driven-development/
 │   └── SKILL.md  ->  /path/to/em-team/skills/development/test-driven-development/test-driven-development.md
-├── em:skill:react/
+├── em-skill:react/
 │   └── SKILL.md  ->  /path/to/em-team/skills/expert-react/react/react.md
 ├── em:code-review/         # Agent wrappers also live here
 │   └── SKILL.md  ->  /path/to/em-team/.claude/skills/em-code-review.md
@@ -158,7 +158,7 @@ Use the react skill to build the dashboard component
 
 ## When to Use Each Category
 
-### Foundation (6 skills)
+### Foundation (11 skills)
 
 **The starting point for any work.** These skills establish shared understanding and prevent wasted effort.
 
@@ -170,8 +170,13 @@ Use the react skill to build the dashboard component
 | spec-driven-development | Writing specifications before writing code |
 | systematic-debugging | Investigating bugs methodically (4-phase process) |
 | writing-plans | Breaking work into structured, executable tasks |
+| domain-modeling | Mapping bounded contexts, entities, relationships |
+| project-dna | Crystallizing decisions into CLAUDE.md and rule files |
+| basic-design | Creating formal 基本設計 documents (Japanese outsourcing) |
+| detailed-design | Creating formal 詳細設計 per module |
+| brownfield-onboarding | First time on a brownfield codebase — scan to build module-based business context (.em-brownfield/) |
 
-### Development (11 skills)
+### Development (12 skills)
 
 **Process-oriented skills for building software.** Apply regardless of tech stack.
 
@@ -188,8 +193,9 @@ Use the react skill to build the dashboard component
 | source-driven-development | Building from official documentation |
 | subagent-driven-development | Using fresh subagent context per task |
 | test-driven-development | Following the RED-GREEN-REFACTOR TDD cycle |
+| codebase-architecture | Researching architecture patterns for greenfield projects |
 
-### Expert Skills (29 skills across 12 directories)
+### Expert Skills (34 skills across 15 directories)
 
 **Technology-specific patterns and best practices.** Use when working within a particular framework or language.
 
@@ -207,26 +213,28 @@ Use the react skill to build the dashboard component
 - **expert-rust/** -- Ownership, traits, async tokio, FFI
 - **expert-typescript/** -- Type system patterns, async, React/Next.js TS
 
-### Quality (12 skills)
+### Quality (14 skills)
 
 **Verification, testing, and audit.** Ensure correctness, security, and usability.
 
 | Skill | Use When |
 |-------|----------|
-| api-testing | Integration testing of API endpoints |
-| browser-testing | Visual QA with DevTools MCP integration |
+| test-case-design | Designing test cases systematically (BVA/EP/DT/ST/Pairwise/RBT + abuse + non-functional) — run BEFORE test-generation/api-testing/e2e-testing/browser-testing *(v5.1.0)* |
+| api-testing | Integration testing of API endpoints with OWASP API Top 10 + TC-code coverage gate |
+| browser-testing | Visual QA with DevTools MCP integration, UI State Matrix, a11y/i18n |
 | code-review | 5-axis code review framework |
 | code-simplification | Reducing complexity and improving readability |
-| e2e-testing | End-to-end testing with Playwright |
+| e2e-testing | End-to-end testing with Playwright + user-journey edge-case matrix |
 | flow-discovery | Mapping application flows and user journeys |
 | performance-optimization | Measure-first performance tuning |
 | plan-tune | Learning and tuning output preferences over time |
 | security-audit | Vulnerability assessment and OWASP evaluation |
 | security-common | Security reference checklist |
-| test-generation | Generating test suites for existing code |
+| test-generation | Generating test suites for existing code with TC-code coverage gate |
+| uat-process | Formal 受け入れテスト (User Acceptance Testing) with sign-off |
 | ux-audit | Behavioral UX audit with scored dimensions |
 
-### Workflow (6 skills)
+### Workflow (13 skills)
 
 **Automation, git, and communication.** Support the development lifecycle.
 
@@ -238,6 +246,13 @@ Use the react skill to build the dashboard component
 | finishing-branch | Making merge/PR decisions and cleanup |
 | git-workflow | Atomic commits, branch management |
 | style-switcher | Switching between 13 personality styles and 3 density modes |
+| progress-reporting | Weekly 進捗報告 with GREEN/YELLOW/RED status |
+| github-cicd-setup | Detecting stack and generating CI/CD workflows |
+| github-pr-manager | PR creation, review fix, merge management |
+| github-issue-manager | Issue creation, triage, sprint planning |
+| github-release-manager | Version bump, release notes, git tags |
+| github-issue-fix | Browsing GitHub issues and handing off to em-wf:bug-fix |
+| brownfield-context-sync | Checking .em-brownfield/ artifacts are still accurate after code changes |
 
 ### Additional (5 skills)
 
@@ -255,12 +270,12 @@ Use the react skill to build the dashboard component
 
 ## Quick Reference
 
-### All 74 Skills by Category
+### All 89 Skills by Category
 
 | # | Category | Skills | Count |
 |---|----------|--------|-------|
-| 1 | foundation | alignment-session, brainstorming, context-engineering, spec-driven-development, systematic-debugging, writing-plans | 6 |
-| 2 | development | architecture-improvement, architecture-zoom-out, diagram, figma-design, incremental-implementation, issue-generator, prd-generator, security-hardening, source-driven-development, subagent-driven-development, test-driven-development | 11 |
+| 1 | foundation | alignment-session, brainstorming, context-engineering, spec-driven-development, systematic-debugging, writing-plans, domain-modeling, project-dna, basic-design, detailed-design, brownfield-onboarding | 11 |
+| 2 | development | architecture-improvement, architecture-zoom-out, codebase-architecture, diagram, figma-design, incremental-implementation, issue-generator, prd-generator, security-hardening, source-driven-development, subagent-driven-development, test-driven-development | 12 |
 | 3 | expert-react | react, react-hooks, nextjs, redux | 4 |
 | 4 | expert-vue | vue3, pinia, vue-router | 3 |
 | 5 | expert-go | go-patterns | 1 |
@@ -276,10 +291,10 @@ Use the react skill to build the dashboard component
 | 15 | expert-typescript | typescript-patterns | 1 |
 | 16 | drawio | drawio-architecture, drawio-flowchart | 2 |
 | 17 | tauri | tauri | 1 |
-| 18 | quality | api-testing, browser-testing, code-review, code-simplification, e2e-testing, flow-discovery, performance-optimization, plan-tune, security-audit, security-common, test-generation, ux-audit | 12 |
-| 19 | workflow | ci-cd-automation, deprecation-migration, documentation, finishing-branch, git-workflow, style-switcher | 6 |
+| 18 | quality | test-case-design, api-testing, browser-testing, code-review, code-simplification, e2e-testing, flow-discovery, performance-optimization, plan-tune, security-audit, security-common, test-generation, uat-process, ux-audit | 14 |
+| 19 | workflow | ci-cd-automation, deprecation-migration, documentation, finishing-branch, git-workflow, style-switcher, progress-reporting, github-cicd-setup, github-pr-manager, github-issue-manager, github-release-manager, github-issue-fix, brownfield-context-sync | 13 |
 | 20 | additional | jobs-to-be-done, lean-ux-canvas, office-hours, opportunity-solution-tree, pol-probe | 5 |
-| | **Total** | | **74** |
+| | **Total** | | **89** |
 
 ### Common Skill Combinations
 
@@ -306,6 +321,6 @@ The following skills enforce EM-Team's Iron Laws:
 
 ---
 
-**Guide Version:** 3.0.0
-**Last Updated:** 2026-05-07
+**Guide Version:** 5.2.0
+**Last Updated:** 2026-05-26
 **Maintained By:** EM-Team Project

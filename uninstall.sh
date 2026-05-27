@@ -7,6 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO="$SCRIPT_DIR"
 CONFIG="$HOME/.claude/config.json"
 SKILLS_DIR="$HOME/.claude/skills"
+CLAUDE_DIR="$HOME/.claude"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -56,6 +57,22 @@ if [[ -f "$HOME/.local/bin/em-team" ]]; then
   rm -f "$HOME/.local/bin/em-team"
   ok "Removed ~/.local/bin/em-team CLI wrapper"
 fi
+
+# ─── Step 1d: Remove em-team content and slash command directories ───
+info "Removing ~/.claude/em-team/ and slash command directories ..."
+
+if [[ -d "$CLAUDE_DIR/em-team" ]]; then
+  rm -rf "$CLAUDE_DIR/em-team"
+  ok "Removed ~/.claude/em-team/"
+fi
+
+for cmd_dir in "$CLAUDE_DIR/commands/em" "$CLAUDE_DIR/commands/em-agent" \
+               "$CLAUDE_DIR/commands/em-wf" "$CLAUDE_DIR/commands/em-skill"; do
+  if [[ -d "$cmd_dir" ]]; then
+    rm -rf "$cmd_dir"
+    ok "Removed ${cmd_dir/#$HOME/~}/"
+  fi
+done
 
 # ─── Step 2: Clean config.json ───
 info "Cleaning ~/.claude/config.json ..."

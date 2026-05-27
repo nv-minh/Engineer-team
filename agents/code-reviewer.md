@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 type: agent
-version: 2.0.0
+version: 2.1.0
 origin: EM-Skill Core Agents
 trigger: em-agent:code-reviewer
 aliases: [em-agent:senior-code-reviewer]
@@ -87,6 +87,14 @@ Produce a structured review verdict (APPROVE / REQUEST_CHANGES / COMMENT) with p
 2. Identify affected areas and check test coverage.
 3. Determine Standard vs Deep mode.
 
+### Phase 1.5: Diff Classification
+Classify each changed file before evaluating axes:
+- **NEW**: File created in this PR — full review required on all axes
+- **MODIFIED**: Existing file changed — focus on changed sections + regression risk
+- **DELETED**: File removed — check for dead code cleanup vs accidental deletion
+
+For MODIFIED files: note what behavior changed (not just what lines changed).
+
 ### Phase 2: Per-Axis Review
 
 **Standard Mode (5 axes):**
@@ -103,7 +111,7 @@ Produce a structured review verdict (APPROVE / REQUEST_CHANGES / COMMENT) with p
 
 | Axis | Weight | Checks |
 |------|--------|--------|
-| Testing | 10% | Coverage, meaningful tests, edge cases, integration tests |
+| Testing | 10% | Test existence (unit/integration/E2E per risk), branch coverage, mutation immunity (off-by-one caught?), edge cases (null/empty/max/min), regression risk |
 | Maintainability | 5% | Modularity, cyclomatic complexity, explicit dependencies |
 | Scalability | 5% | Data volume growth, traffic growth, no N+1 queries |
 | Documentation | 5% | Public API docs, complex logic explained, no stale comments |
@@ -112,6 +120,15 @@ Produce a structured review verdict (APPROVE / REQUEST_CHANGES / COMMENT) with p
 1. Summarize findings. Prioritize by severity.
 2. Determine verdict: APPROVE (Grade A/B), CONDITIONAL (Grade C), REQUEST_CHANGES (Grade D/F).
 3. Provide actionable next steps.
+
+### Phase 3.5: Cross-File Impact Scan
+For each changed file, identify:
+1. **Direct callers**: Files that import/call the changed code
+2. **Transitive dependents**: Services/modules downstream in the dependency graph
+3. **Shared state**: Database tables, caches, queues affected
+4. **Contract changes**: Any public API / event schema changed → list all consumers
+
+If impact is HIGH (>5 callers or affects shared DB schema): escalate severity of relevant findings and note "Impact: N callers, M services" in output.
 
 **Deep Mode Scorecard:**
 
@@ -149,9 +166,12 @@ Return structured output per `output_schema`. Include:
 ## Completion Marker
 
 - [ ] All changed files reviewed
+- [ ] Diff classified (NEW / MODIFIED / DELETED per file) — Phase 1.5
 - [ ] All applicable axes evaluated (5 for Standard, 9 for Deep)
 - [ ] Issues documented with severity
 - [ ] Suggestions provided with code examples
+- [ ] Cross-file impact identified (callers, dependents, shared state) — Phase 3.5
+- [ ] Testing axis includes branch coverage + mutation immunity assessment
 - [ ] Overall verdict given
 - [ ] Actionable feedback delivered
 - [ ] Quantitative scores provided (Deep mode only)

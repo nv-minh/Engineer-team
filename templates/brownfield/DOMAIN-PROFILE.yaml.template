@@ -1,0 +1,48 @@
+# Machine-readable domain profile. Sidecar of DOMAIN-PROFILE.md.
+# Loaded by: verifier, debugger, brownfield-investigation
+version: "5.4.0"
+confirmed_by_user: true
+confirmed_date: YYYY-MM-DD
+
+domain:
+  primary: ""          # e.g., fintech, e-commerce, healthcare, workforce-management
+  secondary: []        # e.g., [SaaS, multi-tenant, B2B]
+  industry: ""         # e.g., Financial Services
+
+compliance:
+  - requirement: ""    # e.g., PCI-DSS
+    scope: ""          # e.g., payment data handling
+    status: known      # known | suspected | none
+    audit_required: true
+
+critical_business_operations:
+  - id: OP-001
+    name: ""           # e.g., "Payment processing"
+    impact: ""         # what breaks if this fails (in business terms)
+
+p0_criteria:
+  # Conditions that automatically make a flow P0
+  - "Money movement (any flow touching balances)"
+  - "Audit trail writes (compliance requirement)"
+
+p1_criteria:
+  - "User-facing data integrity"
+  - "SLA-bound operations"
+
+domain_invariants:
+  # Rules that must hold across the system. Verifier checks these.
+  - id: INV-001
+    rule: ""           # e.g., "Sum of credits = sum of debits"
+    enforcement: ""    # where in code this is enforced
+
+domain_terminology:
+  - term: ""           # e.g., "Settlement"
+    definition: ""     # business meaning
+    code_name: ""      # variable/class name
+    db_column: ""      # column name if different
+
+domain_risk_areas:
+  - risk: ""           # e.g., "Race condition in balance updates"
+    impact: critical   # critical | high | medium | low
+    likelihood: medium # high | medium | low
+    mitigation_required: true

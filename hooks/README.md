@@ -135,5 +135,22 @@ Mỗi hook có thể được customize cho project của bạn:
 
 ---
 
+# Git Hooks
+
+## brownfield-pr-check
+
+Pre-push hook. When `.em-brownfield/` exists, warns about which brownfield modules
+the push affects. Non-blocking (always exits 0).
+
+Install:
+```bash
+cp hooks/brownfield-pr-check .git/hooks/pre-push
+chmod +x .git/hooks/pre-push
+```
+
+Bypass: `git push --no-verify`
+
+---
+
 **EM-Team Version:** 1.0.0
 **Last Updated:** 2026-04-18

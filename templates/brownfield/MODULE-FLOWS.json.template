@@ -1,0 +1,41 @@
+{
+  "schema_version": "5.4.0",
+  "module": "",
+  "type": "core|supporting|generic",
+  "impact": "P0|P1|P2",
+  "last_verified": "YYYY-MM-DD",
+  "dependencies": [{"module": "", "reason": ""}],
+  "depended_by": [{"module": "", "reason": ""}],
+  "flows": [
+    {
+      "id": "FLOW-{MODULE}-001",
+      "name": "",
+      "business_intent": {
+        "who": "",
+        "what": "",
+        "why": "",
+        "impact": "P0|P1|P2"
+      },
+      "happy_path": [
+        {
+          "step": 1,
+          "description": "",
+          "endpoint": "",
+          "criticality": "high|medium|low",
+          "business_rule": "",
+          "data_flow": ""
+        }
+      ],
+      "error_paths": [
+        {"condition": "", "behavior": "", "user_impact": "", "recovery": ""}
+      ],
+      "business_rules": [],
+      "acceptance_criteria": [
+        {"id": "AC-{MODULE}-001", "text": "", "covered_by_test": ""}
+      ],
+      "known_issues": [
+        {"issue_number": 0, "description": "", "status": "open|in-progress|wontfix"}
+      ]
+    }
+  ]
+}

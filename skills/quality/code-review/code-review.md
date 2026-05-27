@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: Comprehensive 5-axis code review framework. Use when reviewing pull requests, before merging code, or when ensuring code quality.
-version: "3.0.0"
+version: "3.1.0"
 category: "quality"
 origin: "agent-skills"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -104,13 +104,27 @@ Review code changes. Identify issues with severity classification. Provide actio
 - Check related issues/tickets
 - Review the test plan
 
+### Step 1.5: Diff Classification
+
+Before evaluating axes, classify each changed file:
+- **NEW**: File created in this PR — full review required on all axes
+- **MODIFIED**: Existing file changed — focus on changed sections + regression risk
+- **DELETED**: File removed — check for dead code cleanup vs accidental deletion
+
+For MODIFIED files: note what behavior changed (not just what lines changed).
+
 ### Step 2: Evaluate Each Axis
 
 **Axis 1: Correctness** — Does it work?
 - Code implements the requirements
 - Edge cases handled (null, empty, boundary values)
 - Error handling is comprehensive
-- Tests cover the functionality
+- **Testing evaluation:**
+  - Test existence (unit / integration / E2E per risk level)
+  - **Branch coverage**: are all code paths testable? Do new branches have tests?
+  - **Mutation immunity**: would a trivial mutation (off-by-one, wrong operator) be caught?
+  - **Edge cases**: empty list, null, max/min, concurrent access
+  - **Regression risk**: does the change risk breaking existing behavior? Is there a test for that exact behavior?
 
 **Axis 2: Readability** — Is it understandable?
 - Names are descriptive
@@ -155,6 +169,18 @@ Assign severity per Rule 9. Report each finding with axis, severity, location (f
 - **APPROVE** — No CRITICAL/HIGH findings, code is production-ready
 - **REQUEST_CHANGES** — CRITICAL or HIGH findings that must be fixed
 - **COMMENT** — Only MEDIUM/LOW findings, approve at author's discretion
+
+### Step 4.5: Cross-File Impact Scan
+
+For each changed file, identify:
+1. **Direct callers**: Files that import/call the changed code
+2. **Transitive dependents**: Services/modules downstream in the dependency graph
+3. **Shared state**: Database tables, caches, queues affected
+4. **Contract changes**: Any public API / event schema changed → list all consumers
+
+If cross-file impact is HIGH (>5 callers or affects shared DB schema):
+- Escalate severity of relevant findings
+- Add note to review output: "Impact: N callers, M services"
 
 [RESPONSE FORMAT]
 Return output conforming to `output_schema`. Set `status` to:

@@ -1,6 +1,6 @@
 # Workflows Overview
 
-Complete catalog of EM-Team workflows (25 top-level workflows + sub-workflows).
+Complete catalog of EM-Team workflows (27 top-level workflows + sub-workflows).
 
 ## Workflow Selection Guide
 
@@ -11,13 +11,14 @@ Complete catalog of EM-Team workflows (25 top-level workflows + sub-workflows).
 | Existing codebase + market opportunity | market-driven-feature |
 | Technical bootstrapping only | project-setup |
 
-## Primary Workflows (6 workflows)
+## Primary Workflows (7 workflows)
 1. **new-feature** - From idea to production (with optional market validation)
 2. **greenfield-app** - From blank directory to shipped application (NEW v3.1.0)
 3. **bug-fix** - Investigate and fix bugs
 4. **qa-bug-hunter** - QA testing with human-gated GitHub issue creation (NEW v4.1.0)
 5. **refactoring** - Improve code quality
 6. **security-audit** - Security assessment
+7. **brownfield-investigation** - Context-aware bug investigation for brownfield projects (CONTEXT LOAD → REPRODUCE → ROOT CAUSE → EVIDENCE → HUMAN GATE → CONTEXT UPDATE) *(NEW v5.0.0)*
 
 ## Support Workflows (6 workflows)
 7. **project-setup** - Initialize new projects
@@ -48,6 +49,9 @@ Complete catalog of EM-Team workflows (25 top-level workflows + sub-workflows).
 24. **discovery-process** - Complete 6-stage discovery workflow (2-4 weeks)
 25. **market-driven-feature** - Market-driven feature development
 
+## Outsourcing Workflows (1 workflow)
+26. **japanese-outsourcing** - End-to-end Japanese outsourcing workflow with 基本設計, 詳細設計, 受け入れテスト, formal gates
+
 ## Incident Sub-Workflows (`workflows/incident/`)
 - **initial-triage** - First response and impact assessment
 - **cross-service-impact** - Multi-service incident investigation
@@ -63,7 +67,7 @@ Complete catalog of EM-Team workflows (25 top-level workflows + sub-workflows).
 
 ---
 
-**Version:** 4.1.0
-**Last Updated:** 2026-05-24
+**Version:** 5.5.0
+**Last Updated:** 2026-05-27
 
 See [Usage Guide](../guides/usage-guide.md#using-workflows) for details.

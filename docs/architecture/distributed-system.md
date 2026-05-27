@@ -330,5 +330,5 @@ Agent Report → Shared Directory → Consolidation → User
 
 ---
 
-**Last Updated:** 2026-04-19
-**Version:** 1.0.0
+**Last Updated:** 2026-05-25
+**Version:** 5.0.0

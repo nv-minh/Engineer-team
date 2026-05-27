@@ -1,7 +1,7 @@
 ---
 name: architecture-review
 description: Architecture review with Architect and Staff Engineer agents
-version: "2.1.0"
+version: "2.2.0"
 category: "team"
 origin: "agent-skills"
 agents_used:
@@ -27,8 +27,28 @@ max_retries_per_stage: 3
 # Architecture Review Workflow
 
 ```
-ARCHITECTURE ANALYSIS → DEEP TECHNICAL REVIEW → CONSOLIDATED ASSESSMENT
-         1                       2                        3
+ENTRY CRITERIA → ARCHITECTURE ANALYSIS → DEEP TECHNICAL REVIEW → CONSOLIDATED ASSESSMENT
+       0                  1                       2                        3
+```
+
+---
+
+### Stage 0: Entry Criteria (MANDATORY)
+
+Before triggering architecture review, verify:
+- [ ] Clear problem statement exists (what needs to be decided/reviewed?)
+- [ ] Requirements document / spec available for context
+- [ ] Current architecture documented or describable (at least verbally)
+- [ ] Scope bounded: what's in scope vs out?
+
+If ANY unchecked → **BLOCKED**. Clarify with user before Stage 1.
+
+**State Snapshot:**
+```yaml
+workflow_state:
+  current_phase: ENTRY_CRITERIA
+  completed: []
+  next_action: "ARCHITECTURE_ANALYSIS"
 ```
 
 ---
@@ -139,6 +159,9 @@ gate_status: PASS | FAIL
 - [ ] Recommendations actionable
 - [ ] Roadmap defined
 - [ ] Decision made (APPROVED/CONDITIONAL/REJECTED)
+- [ ] ADR produced with decision, alternatives, trade-offs, compliance criteria
+- [ ] Compliance criteria list (3-5 enforceable rules for implementation team)
+- [ ] ADR committed to docs/adr/
 
 **State Snapshot:**
 ```yaml
@@ -188,3 +211,10 @@ After each stage observation:
 - RETAIN: current phase, gate status, blocking issues, artifacts produced
 - DISCARD: intermediate tool outputs, verbose logs
 - SUMMARIZE: completed stages into 1-2 sentences each
+
+## Post-Review: Compliance Monitoring
+
+Architecture recommendations are living decisions. After implementation:
+- Executor includes compliance criteria in implementation plan
+- Verifier checks compliance criteria as part of VERIFY stage
+- `architecture-improvement` skill tracks drift quarterly

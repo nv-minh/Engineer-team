@@ -1,0 +1,53 @@
+{
+  "schema_version": "5.4.0",
+  "investigation_id": "{YYYY-MM-DD}-{module}-{shortid}",
+  "created_at": "{ISO-8601 timestamp}",
+  "bug_summary": "{1-line summary}",
+  "severity": "P0|P1|P2",
+  "symptom_module": "{module-name}",
+  "root_cause_module": "{module-name}",
+  "affected_flow": "{flow-name}",
+  "failed_step": {
+    "step_number": 0,
+    "step_description": "",
+    "ac_violated": "AC-{MODULE}-{NNN}"
+  },
+  "evidence": {
+    "video": {
+      "path": "video.webm",
+      "duration_seconds": 0,
+      "covers_steps": [1, 2, 3]
+    },
+    "screenshots": [
+      {
+        "path": "step-1.png",
+        "step": 1,
+        "annotation": ""
+      }
+    ],
+    "network_logs": {
+      "path": "network.har",
+      "request_count": 0,
+      "failed_requests": []
+    },
+    "console_errors": {
+      "path": "console.log",
+      "error_count": 0
+    },
+    "test_artifacts": {
+      "playwright_trace": "trace.zip",
+      "test_output": "test-output.txt"
+    }
+  },
+  "reproduction": {
+    "auth_state": "credentials|oauth|storageState|none",
+    "test_data": {},
+    "browser": "",
+    "viewport": ""
+  },
+  "context_links": {
+    "flows_md": "../../../.em-brownfield/modules/{module}/FLOWS.md",
+    "code_map": "../../../.em-brownfield/modules/{module}/CODE-MAP.md",
+    "issue_url": ""
+  }
+}

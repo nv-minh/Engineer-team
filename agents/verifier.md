@@ -57,6 +57,15 @@ output_schema:
           issue: { type: string }
           location: { type: string }
           fix: { type: string }
+    brownfield_verification:
+      type: object
+      properties:
+        context_loaded: { type: boolean }
+        affected_modules: { type: array, items: { type: string } }
+        brownfield_acs_checked: { type: integer }
+        brownfield_acs_passing: { type: integer }
+        brownfield_acs_failing: { type: array, items: { type: string } }
+        domain_invariant_risks: { type: array, items: { type: object } }
 collaborates_with:
   - code-reviewer
   - executor
@@ -91,6 +100,32 @@ Produce a verification report with spec coverage percentage, quality gate result
 
 [PROCESS]
 
+### Phase 0: Brownfield Context Load (conditional)
+
+If `.em-brownfield/INDEX.md` exists in repo root, this phase is MANDATORY. Otherwise skip.
+
+1. Read `.em-brownfield/INDEX.md` → identify which module(s) the feature/fix touches.
+   - Inputs: changed files from git diff, spec file path, branch name.
+   - If module ambiguous → ASK USER: "This change touches files in [paths]. Which module(s)? Options: [list from INDEX.md]."
+2. For each affected module, load:
+   - `modules/{module}/FLOWS.md` → extract every AC-{MODULE}-{NNN} as a verification target
+   - `modules/{module}/DOMAIN.md` → load entity invariants for assertion checks
+   - `modules/{module}/INTEGRATIONS.md` → load failure modes for resilience checks
+3. Read `.em-brownfield/DOMAIN-PROFILE.yaml` → load domain rules (P0 criteria, compliance, critical operations).
+4. Build verification target list:
+   - Spec ACs (from feature spec) — must all be covered
+   - Brownfield ACs (AC-{MODULE}-{NNN} from FLOWS.md of affected modules) — must NOT regress
+   - Domain invariants (from DOMAIN-PROFILE.yaml `critical_business_operations`) — must hold
+
+Output Phase 0:
+```yaml
+brownfield_context_loaded: true | false
+affected_modules: [module1, module2]
+spec_acs: [AC-001, AC-002, ...]
+brownfield_acs: [AC-ORDER-003, AC-PAYMENT-001, ...]
+domain_invariants: ["Payment idempotency", "Audit trail completeness"]
+```
+
 ### Phase 1: Spec Coverage
 1. Read the spec document.
 2. List all requirements.
@@ -110,10 +145,21 @@ Run each gate and record pass/fail:
 | Coverage | `npm run test:coverage` (>= 80%) | Yes |
 
 ### Phase 3: Acceptance Criteria
-For each acceptance criterion:
+
+For each acceptance criterion in the verification target list (spec ACs + brownfield ACs):
 1. Verify implementation matches the criterion exactly.
-2. Record evidence (test output, manual verification).
+2. Record evidence (test output, manual verification, AC ID source).
 3. Mark PASS / PARTIAL / FAIL.
+
+For brownfield ACs, additionally check:
+- Does the changed code path still satisfy the AC? (regression check)
+- If yes → PASS
+- If no → FAIL (must fix before ship)
+- If unclear → PARTIAL with reason "needs domain expert review"
+
+Domain Invariants (from DOMAIN-PROFILE.yaml):
+- For each invariant, check whether the change could violate it.
+- If risky → flag as HIGH issue with "domain_invariant_risk" tag.
 
 ### Phase 4: Integration Testing
 Walk through complete user flows end-to-end. Record step-by-step results.
@@ -150,3 +196,6 @@ Return structured output per `output_schema`. Include:
 - [ ] Issues documented
 - [ ] Recommendations provided
 - [ ] Report generated with final verdict
+- [ ] Brownfield context loaded (if .em-brownfield/ exists) OR documented as N/A
+- [ ] All brownfield AC-{MODULE}-{NNN} from affected modules verified (no regressions)
+- [ ] Domain invariants checked against changed code paths

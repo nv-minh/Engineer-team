@@ -1,7 +1,7 @@
 ---
 name: playwright-setup
 type: agent
-version: 2.0.0
+version: 2.1.0
 origin: EM-Skill Test Automation (v3.8.0)
 trigger: em-agent:playwright-setup
 description: Setup Playwright E2E testing infrastructure for brownfield projects — detects stack, installs dependencies, generates config, scaffolds Page Object Model, and verifies the setup works.
@@ -97,25 +97,48 @@ npm init playwright@latest -- --quiet
 npx playwright install --with-deps chromium firefox webkit
 ```
 
-Add package.json scripts:
+Add package.json scripts (include evidence-mode aliases per e2e-testing skill v4.1.0):
 ```json
 {
   "test:e2e": "playwright test",
   "test:e2e:headed": "playwright test --headed",
   "test:e2e:debug": "playwright test --debug",
-  "test:e2e:report": "playwright show-report"
+  "test:e2e:report": "playwright show-report",
+  "test:e2e:evidence": "EVIDENCE_MODE=on playwright test"
 }
 ```
 
-### Step 3: CONFIGURE
+### Step 3: CONFIGURE (dual-mode evidence policy)
 
-Generate `playwright.config.ts` with detected values:
+Generate `playwright.config.ts` with detected values AND the EVIDENCE_MODE dual-mode switch (per e2e-testing skill Step 5):
+
+```typescript
+// playwright.config.ts — dual-mode evidence policy
+const isEvidenceMode = process.env.EVIDENCE_MODE === "on";
+
+export default defineConfig({
+  use: {
+    baseURL: '<detected dev server URL>',
+    screenshot: isEvidenceMode ? "on" : "only-on-failure",
+    video: isEvidenceMode ? "on" : "retain-on-failure",
+    trace: isEvidenceMode ? "on" : "on-first-retry",
+    // ...
+  },
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  webServer: { command: '<detected dev script>', ... },
+});
+```
+
+Detected/fixed values:
 - `baseURL` from detected dev server port
 - `retries: CI ? 2 : 0` (retries only in CI to avoid hiding flaky tests locally)
 - `workers: CI ? 1 : undefined` (sequential in CI to avoid resource contention)
-- `trace: 'retain-on-failure'` (captures trace on every failure, not just retries)
-- `video: 'retain-on-failure'` (records video on every failure for evidence collection)
+- **CI mode (default):** `screenshot: only-on-failure`, `video: retain-on-failure`, `trace: on-first-retry` — fast PR validation, low disk cost
+- **Evidence mode (`EVIDENCE_MODE=on`):** `screenshot: on`, `video: on`, `trace: on` — full artifact per test, used by `test-verifier` agent during VERIFY-stage workflows (new-feature, bug-fix, etc.)
 - `webServer.command` from detected package.json scripts
+
+Without the dual-mode switch, VERIFY-stage workflows cannot capture full evidence for human gate / hand-off — only fail-only artifacts. The switch is MANDATORY in projects that run through new-feature / bug-fix / verify workflows.
 
 ### Step 3.5: AUTH CONFIG
 

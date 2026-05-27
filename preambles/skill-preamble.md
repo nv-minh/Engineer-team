@@ -13,7 +13,8 @@ Before execution:
 2. Run `git log --oneline -10` — check recent activity
 3. Check for existing implementations that conflict or complement
 4. Determine current phase: DEFINE / PLAN / BUILD / VERIFY / REVIEW / SHIP
-5. State what you are about to do. Confirm scope.
+5. If `.em-brownfield/INDEX.md` exists — load it for business context awareness (module map, dependency graph, flow references). Use this to understand which business module your task affects.
+6. State what you are about to do. Confirm scope.
 
 [RULES]
 1. Output `<thought>` before each process step. State reasoning.

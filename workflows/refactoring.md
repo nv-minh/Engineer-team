@@ -209,8 +209,18 @@ workflow_state:
 <thought>
 Observe: Refactoring complete, tests passing during refactoring.
 Analyze: Must confirm functionality preserved end-to-end. Generate test cases, run full suite, execute E2E, collect browser evidence (before/after), double-check with test-verifier. Coverage must not decrease. Complexity metrics must improve.
-Plan: Invoke verifier + test-engineer + test-verifier agents.
+Plan: Run code-review diff scan FIRST to verify refactored code quality, then invoke verifier + test-engineer + test-verifier agents. Review fixes validated by test suite.
 </thought>
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: diff_review
+  inputs: [changed_files_list, refactoring_objectives]
+  outputs: [diff_review_report]
+</action>
 
 <action>
 type: invoke_agent
@@ -228,6 +238,7 @@ gate_status: PASS | FAIL
 </observation>
 
 **Gate 4: Verification Complete**
+- [ ] Code-review diff scan PASS — refactored code has no new issues introduced
 - [ ] Coverage not reduced vs pre-refactor baseline
 - [ ] All existing tests pass (no regressions)
 - [ ] E2E tests pass — no user-facing changes introduced

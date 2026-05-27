@@ -1,0 +1,58 @@
+version: "5.4.0"
+confirmed_by_user: true
+confirmed_date: 2026-05-26
+
+domain:
+  primary: "Workforce / Resource Management"
+  secondary: ["B2B SaaS"]
+  industry: "Technology Services"
+
+compliance:
+  - requirement: "GDPR"
+    scope: "Employee personal data"
+    status: known
+    audit_required: false
+
+critical_business_operations:
+  - id: OP-001
+    name: "Allocation calculation"
+    impact: "Resource allocation accuracy directly affects project staffing decisions"
+  - id: OP-002
+    name: "Employee profile data integrity"
+    impact: "Profile inaccuracies cascade to allocation mistakes"
+
+p0_criteria:
+  - "Allocation data writes (resource conflicts)"
+  - "Audit log writes"
+
+p1_criteria:
+  - "Dashboard read consistency"
+  - "Sync with external HR system"
+
+domain_invariants:
+  - id: INV-001
+    rule: "Sum of employee allocations across projects <= 100% per period"
+    enforcement: "AllocationService.validate"
+  - id: INV-002
+    rule: "Audit log entry for every allocation change"
+    enforcement: "AllocationService.create/update + audit interceptor"
+
+domain_terminology:
+  - term: "Allocation"
+    definition: "Percentage commitment of an employee to a project for a time period"
+    code_name: "Allocation"
+    db_column: "allocations"
+  - term: "Position"
+    definition: "Role required for a project (e.g., Backend Engineer, Designer)"
+    code_name: "Position"
+    db_column: "positions"
+
+domain_risk_areas:
+  - risk: "Overallocation (>100%)"
+    impact: critical
+    likelihood: high
+    mitigation_required: true
+  - risk: "Race condition on concurrent allocation updates"
+    impact: high
+    likelihood: medium
+    mitigation_required: true

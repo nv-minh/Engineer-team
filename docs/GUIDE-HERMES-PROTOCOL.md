@@ -289,8 +289,8 @@ bash scripts/validate-hermes.sh --verbose
 
 # Expected output:
 # Agents:    38/38 with schema, 38/38 with blocks
-# Skills:    85/85 with schema
-# Workflows: 25/25 with ReAct
+# Skills:    88/88 with schema
+# Workflows: 27/27 with ReAct
 # Soft language: 0 violations
 ```
 
@@ -334,10 +334,10 @@ bash scripts/validate-hermes.sh --verbose
 ### Trigger agents
 
 ```
-em:planner           # Create plan
+em-agent:planner           # Create plan
 em:executor          # Execute plan
-em:debugger          # Debug systematically
-em:code-reviewer     # Code review (5-axis or 9-axis)
+em-agent:debugger          # Debug systematically
+em-agent:code-reviewer     # Code review (5-axis or 9-axis)
 em:architect         # Architecture design
 ```
 

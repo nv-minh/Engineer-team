@@ -7,7 +7,9 @@ set -euo pipefail
 REPO="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 CONTENT_DIR="$CLAUDE_DIR/em-team"
-COMMANDS_DIR="$CLAUDE_DIR/commands/em"
+AGENT_CMDS_DIR="$CLAUDE_DIR/commands/em-agent"
+WF_CMDS_DIR="$CLAUDE_DIR/commands/em-wf"
+SKILL_CMDS_DIR="$CLAUDE_DIR/commands/em-skill"
 
 # Colors
 RED='\033[0;31m'
@@ -23,7 +25,7 @@ err()   { echo -e "${RED}[ERROR]${NC} $1" >&2; exit 1; }
 
 echo ""
 echo "  ╔══════════════════════════════════════╗"
-echo "  ║       EM-Team v3.2.0 Installer       ║"
+echo "  ║       EM-Team v5.5.0 Installer       ║"
 echo "  ╚══════════════════════════════════════╝"
 echo ""
 
@@ -45,11 +47,13 @@ if [[ -d "$CONTENT_DIR" ]]; then
   ok "Removed old ~/.claude/em-team/"
 fi
 
-# Remove old command directory
-if [[ -d "$COMMANDS_DIR" ]]; then
-  rm -rf "$COMMANDS_DIR"
-  ok "Removed old ~/.claude/commands/em/"
-fi
+# Remove old command directories (old single em/ and new 3-way split)
+for cmd_dir in "$CLAUDE_DIR/commands/em" "$AGENT_CMDS_DIR" "$WF_CMDS_DIR" "$SKILL_CMDS_DIR"; do
+  if [[ -d "$cmd_dir" ]]; then
+    rm -rf "$cmd_dir"
+    ok "Removed old ${cmd_dir/#$HOME/~}/"
+  fi
+done
 
 # Remove old skill symlinks (em:* and em-* directories with SKILL.md)
 OLD_SKILLS=$(find "$CLAUDE_DIR/skills" -mindepth 1 -maxdepth 1 -type d -name 'em:*' -o -name 'em-*' 2>/dev/null || true)
@@ -108,18 +112,13 @@ mkdir -p "$CONTENT_DIR/scripts"
 cp "$REPO/scripts/session-audit.sh"       "$CONTENT_DIR/scripts/" 2>/dev/null || true
 cp "$REPO/scripts/artifact-register.sh"   "$CONTENT_DIR/scripts/" 2>/dev/null || true
 
-# Copy skills (flatten to skills/<name>/<name>.md structure)
+# Copy skills (preserve category structure)
 mkdir -p "$CONTENT_DIR/skills"
 find "$REPO/skills" -name '*.md' -not -name 'SKILL.md' | while read -r src; do
-  # Get just the filename (e.g., brainstorming.md)
-  filename=$(basename "$src")
-  # Create a flat directory
-  mkdir -p "$CONTENT_DIR/skills"
-  # Preserve category structure
   relpath=${src#$REPO/skills/}
   destdir=$(dirname "$CONTENT_DIR/skills/$relpath")
   mkdir -p "$destdir"
-  cp "$src" "$destdir/$filename"
+  cp "$src" "$destdir/$(basename "$src")"
 done
 
 AGENT_COUNT=$(ls "$CONTENT_DIR/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
@@ -132,10 +131,9 @@ ok "  $WORKFLOW_COUNT workflows"
 ok "  $SKILL_COUNT skills"
 
 # ─── Step 4: Create command wrappers ───
-info "Creating slash commands in ~/.claude/commands/em/ ..."
+info "Creating slash commands in em-agent/, em-wf/, em-skill/ ..."
 
-mkdir -p "$COMMANDS_DIR"
-
+mkdir -p "$AGENT_CMDS_DIR" "$WF_CMDS_DIR" "$SKILL_CMDS_DIR"
 CMD_COUNT=0
 
 # Helper: resolve wrapper's "## Source" to get actual skill file path
@@ -144,38 +142,64 @@ resolve_source_path() {
   grep -A2 '## Source' "$wrapper" | grep -oE '`[^`]+\.md`' | head -1 | tr -d '`'
 }
 
-# --- Agent commands ---
-# Wrapper em-X.md → look for agents/X.md
-for wrapper in "$REPO/.claude/skills/"em-*.md; do
+# --- Agent commands (em-agent-*.md) ---
+for wrapper in "$REPO/.claude/skills/"em-agent-*.md; do
   [[ ! -f "$wrapper" ]] && continue
-  basename=$(basename "$wrapper" .md)    # e.g., em-planner
-  name="${basename#em-}"                  # e.g., planner
+  basename_w=$(basename "$wrapper" .md)    # e.g., em-agent-planner
+  name="${basename_w#em-agent-}"           # e.g., planner
 
-  # Skip skill wrappers (handled separately)
-  [[ "$name" == skill-* ]] && continue
+  # Get description from wrapper frontmatter
+  desc=$(grep '^description:' "$wrapper" | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
+  [[ -z "$desc" ]] && desc="$name"
 
-  # Determine source: agent or workflow?
+  # Determine source: check agents/ directory (canonical names only)
   source_file=""
   if [[ -f "$CONTENT_DIR/agents/$name.md" ]]; then
     source_file="agents/$name.md"
-  elif [[ -f "$CONTENT_DIR/workflows/$name.md" ]]; then
-    source_file="workflows/$name.md"
-  else
-    # Try alias: search agents/ and workflows/ by filename
-    found=$(find "$CONTENT_DIR/agents" "$CONTENT_DIR/workflows" -name "$name.md" 2>/dev/null | head -1)
-    if [[ -n "$found" ]]; then
-      source_file="${found#$CONTENT_DIR/}"
-    fi
   fi
 
   if [[ -n "$source_file" ]]; then
-    # Get description from wrapper frontmatter
-    desc=$(grep '^description:' "$wrapper" | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
-    [[ -z "$desc" ]] && desc="$name"
-
-    cat > "$COMMANDS_DIR/$name.md" <<CMD
+    cat > "$AGENT_CMDS_DIR/$name.md" <<CMD
 ---
-name: em-$name
+description: $desc
+---
+<execution_context>
+@\$HOME/.claude/em-team/$source_file
+</execution_context>
+CMD
+    CMD_COUNT=$((CMD_COUNT + 1))
+  else
+    # Standalone (checkpoint, health, quick, qa): copy wrapper content directly
+    cat > "$AGENT_CMDS_DIR/$name.md" <<CMD
+---
+description: $desc
+---
+CMD
+    sed '1,/^---$/d' "$wrapper" | sed '1,/^---$/d' >> "$AGENT_CMDS_DIR/$name.md"
+    CMD_COUNT=$((CMD_COUNT + 1))
+  fi
+done
+
+# --- Workflow commands (em-wf-*.md) ---
+for wrapper in "$REPO/.claude/skills/"em-wf-*.md; do
+  [[ ! -f "$wrapper" ]] && continue
+  basename_w=$(basename "$wrapper" .md)    # e.g., em-wf-new-feature
+  name="${basename_w#em-wf-}"              # e.g., new-feature
+
+  desc=$(grep '^description:' "$wrapper" | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
+  [[ -z "$desc" ]] && desc="$name"
+
+  # Determine source: check workflows/ directory, with one legacy rename
+  source_file=""
+  if [[ -f "$CONTENT_DIR/workflows/$name.md" ]]; then
+    source_file="workflows/$name.md"
+  elif [[ "$name" == "code-review" ]]; then
+    source_file="workflows/code-review-9axis.md"
+  fi
+
+  if [[ -n "$source_file" ]]; then
+    cat > "$WF_CMDS_DIR/$name.md" <<CMD
+---
 description: $desc
 ---
 <execution_context>
@@ -186,12 +210,11 @@ CMD
   fi
 done
 
-# --- Skill commands ---
-# Wrapper em-skill-X.md → resolve source path
+# --- Skill commands (em-skill-*.md) ---
 for wrapper in "$REPO/.claude/skills/"em-skill-*.md; do
   [[ ! -f "$wrapper" ]] && continue
-  basename=$(basename "$wrapper" .md)    # e.g., em-skill-brainstorming
-  name="${basename#em-skill-}"            # e.g., brainstorming
+  basename_w=$(basename "$wrapper" .md)    # e.g., em-skill-brainstorming
+  name="${basename_w#em-skill-}"           # e.g., brainstorming
 
   # Resolve source path from wrapper (e.g., "skills/foundation/brainstorming/brainstorming.md")
   rel_source=$(resolve_source_path "$wrapper")
@@ -199,92 +222,25 @@ for wrapper in "$REPO/.claude/skills/"em-skill-*.md; do
   if [[ -n "$rel_source" ]] && [[ -f "$CONTENT_DIR/$rel_source" ]]; then
     source_file="$rel_source"
   else
-    # Fallback: try flat name
-    if [[ -f "$CONTENT_DIR/skills/$name.md" ]]; then
-      source_file="skills/$name.md"
+    found=$(find "$CONTENT_DIR/skills" -name "$name.md" | head -1)
+    if [[ -n "$found" ]]; then
+      source_file="${found#$CONTENT_DIR/}"
     else
-      # Try finding by filename anywhere in skills/
-      found=$(find "$CONTENT_DIR/skills" -name "$name.md" | head -1)
-      if [[ -n "$found" ]]; then
-        source_file="${found#$CONTENT_DIR/}"
-      else
-        continue
-      fi
+      continue
     fi
   fi
 
   desc=$(grep '^description:' "$wrapper" | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
   [[ -z "$desc" ]] && desc="$name"
 
-  cat > "$COMMANDS_DIR/$name.md" <<CMD
+  cat > "$SKILL_CMDS_DIR/$name.md" <<CMD
 ---
-name: em-skill-$name
 description: $desc
 ---
 <execution_context>
 @\$HOME/.claude/em-team/$source_file
 </execution_context>
 CMD
-  CMD_COUNT=$((CMD_COUNT + 1))
-done
-
-# --- Alias shortcuts ---
-# Short names that map to longer agent/workflow names
-for pair in \
-  "backend:backend-expert" "frontend:frontend-expert" "debug:debugger" \
-  "security:security-auditor" "ship:ship-workflow" "team:team-lead" \
-  "test:test-engineer" "verify:verifier" "database:database-expert" \
-  "incident:incident-response" "performance:performance-auditor" \
-  "refactor:refactoring" "research:researcher" \
-  "distributed:distributed-investigation" "code-review-deep:code-review-9axis"; do
-  alias="${pair%%:*}"
-  target="${pair##*:}"
-
-  # Skip if alias already exists as a command
-  [[ -f "$COMMANDS_DIR/$alias.md" ]] && continue
-
-  if [[ -f "$CONTENT_DIR/agents/$target.md" ]]; then
-    source_file="agents/$target.md"
-  elif [[ -f "$CONTENT_DIR/workflows/$target.md" ]]; then
-    source_file="workflows/$target.md"
-  else
-    continue
-  fi
-
-  desc=$(grep '^description:' "$REPO/.claude/skills/em-$alias.md" 2>/dev/null | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
-  [[ -z "$desc" ]] && desc="Shortcut for $target"
-
-  cat > "$COMMANDS_DIR/$alias.md" <<CMD
----
-name: em-$alias
-description: $desc
----
-<execution_context>
-@\$HOME/.claude/em-team/$source_file
-</execution_context>
-CMD
-  CMD_COUNT=$((CMD_COUNT + 1))
-done
-
-# --- Standalone command shortcuts (qa, quick, health, checkpoint) ---
-# These are thin commands without a separate source file
-for name in qa quick health checkpoint; do
-  wrapper="$REPO/.claude/skills/em-$name.md"
-  [[ ! -f "$wrapper" ]] && continue
-  [[ -f "$COMMANDS_DIR/$name.md" ]] && continue
-
-  desc=$(grep '^description:' "$wrapper" | head -1 | sed 's/^description: *//' | sed 's/^"//' | sed 's/"$//')
-  [[ -z "$desc" ]] && desc="$name"
-
-  # Copy wrapper content as the full command (it's self-contained)
-  cat > "$COMMANDS_DIR/$name.md" <<CMD
----
-name: em-$name
-description: $desc
----
-CMD
-  # Append the rest of the wrapper (after frontmatter)
-  sed '1,/^---$/d' "$wrapper" | sed '1,/^---$/d' >> "$COMMANDS_DIR/$name.md"
   CMD_COUNT=$((CMD_COUNT + 1))
 done
 
@@ -306,21 +262,48 @@ else
 fi
 
 # Check commands exist
-CMD_TOTAL=$(ls "$COMMANDS_DIR/"*.md 2>/dev/null | wc -l | tr -d ' ')
+AGENT_TOTAL=$(ls "$AGENT_CMDS_DIR/"*.md 2>/dev/null | wc -l | tr -d ' ')
+WF_TOTAL=$(ls "$WF_CMDS_DIR/"*.md 2>/dev/null | wc -l | tr -d ' ')
+SKILL_TOTAL=$(ls "$SKILL_CMDS_DIR/"*.md 2>/dev/null | wc -l | tr -d ' ')
+CMD_TOTAL=$((AGENT_TOTAL + WF_TOTAL + SKILL_TOTAL))
 if [[ "$CMD_TOTAL" -gt 0 ]]; then
-  ok "  $CMD_TOTAL slash commands in $COMMANDS_DIR"
+  ok "  $AGENT_TOTAL agent commands  → /em-agent:{name}"
+  ok "  $WF_TOTAL workflow commands  → /em-wf:{name}"
+  ok "  $SKILL_TOTAL skill commands   → /em-skill:{name}"
 else
   warn "  No slash commands created"
   ERRORS=$((ERRORS + 1))
 fi
 
-# Check a sample command has valid @file reference
-SAMPLE="$COMMANDS_DIR/planner.md"
+# Check a sample agent command has @file reference (invocation key = em-agent:planner via directory)
+SAMPLE="$AGENT_CMDS_DIR/planner.md"
 if [[ -f "$SAMPLE" ]]; then
   if grep -q '@.*/em-team/' "$SAMPLE"; then
-    ok "  @file references valid"
+    ok "  @file reference valid  → /em-agent:planner"
   else
-    warn "  @file reference missing in planner.md"
+    warn "  @file reference missing in em-agent/planner.md"
+    ERRORS=$((ERRORS + 1))
+  fi
+fi
+
+# Check a sample workflow command (invocation key = em-wf:new-feature via directory)
+SAMPLE_WF="$WF_CMDS_DIR/new-feature.md"
+if [[ -f "$SAMPLE_WF" ]]; then
+  if grep -q '@.*/em-team/' "$SAMPLE_WF"; then
+    ok "  @file reference valid  → /em-wf:new-feature"
+  else
+    warn "  @file reference missing in em-wf/new-feature.md"
+    ERRORS=$((ERRORS + 1))
+  fi
+fi
+
+# Check a sample skill command (invocation key = em-skill:brainstorming via directory)
+SAMPLE_SK="$SKILL_CMDS_DIR/brainstorming.md"
+if [[ -f "$SAMPLE_SK" ]]; then
+  if grep -q '@.*/em-team/' "$SAMPLE_SK"; then
+    ok "  @file reference valid  → /em-skill:brainstorming"
+  else
+    warn "  @file reference missing in em-skill/brainstorming.md"
     ERRORS=$((ERRORS + 1))
   fi
 fi
@@ -340,13 +323,21 @@ if [[ $ERRORS -eq 0 ]]; then
   echo ""
   echo "  Installed:"
   echo "    Content:  $CONTENT_DIR/ ($AGENT_COUNT agents, $WORKFLOW_COUNT workflows, $SKILL_COUNT skills)"
-  echo "    Commands: $COMMANDS_DIR/ ($CMD_TOTAL slash commands)"
+  echo "    Commands: $CMD_TOTAL slash commands across 3 namespaces"
+  echo "      ~/.claude/commands/em-agent/  ($AGENT_TOTAL agents)"
+  echo "      ~/.claude/commands/em-wf/     ($WF_TOTAL workflows)"
+  echo "      ~/.claude/commands/em-skill/  ($SKILL_TOTAL skills)"
+  echo ""
+  echo "  Naming convention:"
+  echo "    /em-agent:{name}  — AI specialist agents"
+  echo "    /em-wf:{name}     — Multi-stage workflows"
+  echo "    /em-skill:{name}  — Techniques and patterns"
   echo ""
   echo "  Next steps:"
   echo "    1. Restart Claude Code"
-  echo "    2. Type /em- to see all EM-Team commands"
-  echo "    3. Try: /em-planner Create implementation plan"
-  echo "    4. Try: /em-skill-brainstorming Explore feature ideas"
+  echo "    2. Try: /em-agent:planner    Create implementation plan"
+  echo "    3. Try: /em-skill:brainstorming   Explore feature ideas"
+  echo "    4. Try: /em-wf:new-feature   Implement a feature end-to-end"
   echo ""
   echo "  To uninstall: bash $REPO/uninstall.sh"
 else

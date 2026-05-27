@@ -448,8 +448,18 @@ workflow_state:
 <thought>
 Observe: Implementation complete, tests passing, trace matrix updated.
 Analyze: Must verify spec coverage 100%, cross-check domain model, generate TC registry, run full test suite + E2E + browser tests, double-check with test-verifier, run UX audit and flow discovery. Gate requires spec coverage 100%, test-verifier PASS, UX audit >= 7/10.
-Plan: Invoke verifier + test-engineer + test-verifier agents with test-generation, e2e-testing, browser-testing, ux-audit, flow-discovery skills.
+Plan: Run code-review diff scan FIRST, then invoke verifier + test-engineer + test-verifier agents with test-generation, e2e-testing, browser-testing, ux-audit, flow-discovery skills. Review fixes validated by test suite.
 </thought>
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: diff_review
+  inputs: [changed_files_list, spec_requirements, architecture_decisions]
+  outputs: [diff_review_report]
+</action>
 
 <action>
 type: invoke_agent
@@ -467,6 +477,7 @@ gate_status: PASS | FAIL
 </observation>
 
 **Quality Gate:**
+- [ ] Code-review diff scan PASS (no CRITICAL, no unaddressed HIGH)
 - [ ] Spec coverage 100%
 - [ ] Every domain entity implemented
 - [ ] Test case registry complete (TC-UNIT, TC-INT, TC-E2E)

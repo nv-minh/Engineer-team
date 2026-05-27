@@ -1,10 +1,68 @@
 # EM-Team - Fullstack Engineering Agent System
 
-> 86 skills, 38 agents, 26 workflows. Powered by Hermes Protocol v4.0.0.
+> 86 skills, 36 agents, 27 workflows. Powered by Hermes Protocol v4.0.0 · System v5.5.0.
 
 ## What is EM-Team?
 
 EM-Team is a system of AI agents, skills, and workflows for fullstack engineering — from brainstorming to production deployment. It runs inside [Claude Code](https://claude.ai/code) and supports any tech stack.
+
+## What's New in v5.5.0 — Naming Convention Refactor
+
+Replaced the flat `em:{name}` namespace with explicit type prefixes for all 140 slash commands — eliminating ambiguity between agents, workflows, and skills.
+
+| Namespace | Example | What it is |
+|-----------|---------|------------|
+| `/em-agent:{name}` | `/em-agent:planner` | AI specialist agents |
+| `/em-wf:{name}` | `/em-wf:new-feature` | Multi-stage workflows |
+| `/em-skill:{name}` | `/em-skill:brainstorming` | Techniques and patterns |
+
+**What changed:**
+- All 140 `.claude/skills/` entry points renamed to the typed namespace
+- 14 short-name aliases removed (e.g., `em:debug` → `em-agent:debugger`)
+- `senior-code-reviewer` and `security-auditor` fully deleted (merged into `code-reviewer` Deep mode and `security-reviewer` Audit mode)
+- `install.sh` now creates 3 command directories: `em-agent/`, `em-wf/`, `em-skill/`
+- Migration script: `scripts/migration/migrate-names.sh`
+
+## What's New in v5.4.0 — Brownfield Intelligence Improvements
+
+19 gaps closed across 4 phases. Agents now understand your existing codebase at the business-domain level before investigating bugs, verifying features, or writing tests.
+
+| Improvement | Detail |
+|-------------|--------|
+| **New skill: `brownfield-pr-impact`** | Assess PR/branch impact on brownfield flows before merge — surfaces AC-at-risk and contract breaks |
+| **8 new scripts** | `detect-stack.sh`, `scan-nestjs.sh`, `scan-react.sh`, `scan-monorepo.sh`, `symbol-resolver.sh`, `build-backlinks.sh`, `validate-refs.sh`, `quality-score.sh` |
+| **JSON sidecars** | `FLOWS.json`, `CODE-MAP.json`, `INDEX.json` — programmatic access without markdown parsing |
+| **Stable IDs** | `FLOW-{MODULE}-{NNN}` + `AC-{MODULE}-{NNN}` — stable across refactors, referenced by agents + tests |
+| **Symbol-first CODE-MAP** | `Class.method` refs resolved at runtime via `symbol-resolver.sh` — no more fragile `file:line` |
+| **Quality gate** | `validate-refs.sh` (0 broken refs) + `quality-score.sh` (Grade A/B/C/D) |
+| **Privacy layer** | PII/Sensitive Fields table + Data Subject Rights checklist in DOMAIN.md |
+| **Agent integrations** | `debugger`, `verifier`, `brownfield-test-engineer`, `new-feature`, `bug-fix` all load brownfield context automatically |
+| **End-to-end verified** | Tested on real project: 55 files, 8 modules, Grade A (100/100), 193 refs / 0 broken |
+
+## What's New in v5.3.0 — Architect/Code/Review Quality Upgrade
+
+Code review now runs **before** tests in every VERIFY stage — ensuring review fixes are re-validated by the test suite before ship.
+
+| Component | Change |
+|-----------|--------|
+| `new-feature` v3.3.0 · `bug-fix` v3.2.0 | Code-review diff scan moved to **Step 5.1 (FIRST)** in VERIFY stage — runs before test suite |
+| `six-phase-lifecycle` · `greenfield-app` · `refactoring` · `distributed-development` | Same code-review-first ordering applied consistently |
+| Rollback readiness gate (Stage 6.1) | Added before marking feature/fix shipped |
+| Handoff contracts | Strengthened with `on_failure` + `retry_budget` + `escalation_path` |
+| `spec-driven-development` v3.1.0 | Testability check upgraded: advisory → ⛔ hard gate; conflict detection added (Phase 1.5); Assumption Approval Gate |
+| `architect` v2.1.0 | Phase 0 existing architecture snapshot; Phase 7 ADR generation MANDATORY (Decision/Context/Alternatives/Consequences/Compliance Criteria) |
+| `architecture-review` v2.2.0 | Stage 0 entry criteria gate (4 mandatory checkboxes); Gate 3 requires ADR + compliance criteria |
+| `code-review` v3.1.0 · `code-reviewer` v2.1.0 | Step 1.5 diff classification (NEW/MODIFIED/DELETED); Step 4.5 cross-file impact scan (callers, dependents, shared state) |
+
+## What's New in v5.2.0 — TC-Code Coverage Gate
+
+The entire TC-Registry → test-code enforcement chain is now closed: every TC-ID in TC-REGISTRY.md **must** have a `test("TC-XXX-NNN: ...")` block (or `test.todo()`) in the corresponding test file.
+
+Convention: unautomated TCs use `test.todo("TC-XXX-NNN: [title]")` — never drop a TC-ID silently.
+
+## What's New in v5.1.0 — Expert-QC Testing Skills
+
+New `test-case-design` skill centralizes systematic QA test-design techniques (BVA, EP, Decision Table, State Transition, Pairwise, Risk-Based Testing) plus abuse cases, non-functional cases, oracle specification, and mutation sanity gate. Now **mandatory upstream** of test-generation/api-testing/e2e-testing/browser-testing.
 
 ## What's New in v4.0.0 — Hermes Protocol
 
@@ -24,8 +82,8 @@ The entire codebase has been restructured following the [Hermes philosophy](http
 ### What Changed
 
 - **38 agents**: Restructured with `[ROLE]`, `[OBJECTIVE]`, `[RULES]`, `[AVAILABLE SKILLS]`, `[PROCESS]`, `[RESPONSE FORMAT]`, `[HANDOFF]` blocks + `input_schema`/`output_schema` in frontmatter
-- **86 skills**: Added `input_schema`, `output_schema`, `error_schema` (JSON Schema in YAML frontmatter)
-- **26 workflows**: Converted to ReAct protocol (Thought→Action→Observation) with context pruning and state snapshots
+- **88 skills**: Added `input_schema`, `output_schema`, `error_schema` (JSON Schema in YAML frontmatter)
+- **27 workflows**: Converted to ReAct protocol (Thought→Action→Observation) with context pruning and state snapshots
 - **Preambles**: Rewritten as imperative Hermes-native blocks
 - **LLM client**: `scripts/llm-config.sh` supports 5 providers via env vars
 
@@ -39,7 +97,12 @@ cd agent-team
 bash install.sh
 ```
 
-Verify: `ls ~/.claude/commands/em/*.md | wc -l` (should show 149+ files)
+Verify:
+```bash
+ls ~/.claude/commands/em-agent/*.md | wc -l   # 40 agent commands
+ls ~/.claude/commands/em-wf/*.md | wc -l      # 24 workflow commands
+ls ~/.claude/commands/em-skill/*.md | wc -l   # 76 skill commands
+```
 
 ### Post-Install: Enable Features
 
@@ -72,38 +135,40 @@ Uninstall: `bash uninstall.sh`
 ### Skills (86)
 
 ```bash
-/em:skill:spec-driven-development    # Write spec before coding
-/em:skill:brainstorming              # Explore ideas
-/em:skill:code-review                # 5-axis code review
-/em:skill:codebase-architecture      # Research architecture patterns
-/em:skill:github-pr-manager          # Create PR with AI description
-/em:skill:react                      # React patterns
+/em-skill:spec-driven-development    # Write spec before coding
+/em-skill:brainstorming              # Explore ideas
+/em-skill:code-review                # 5-axis code review
+/em-skill:codebase-architecture      # Research architecture patterns
+/em-skill:github-pr-manager          # Create PR with AI description
+/em-skill:brownfield-onboarding      # Onboard existing codebase
+/em-skill:react                      # React patterns
 ```
 
-### Agents (38)
+### Agents (36)
 
 ```bash
-/em:planner          # Create implementation plans
-/em:executor         # Execute with atomic commits
-/em:code-reviewer    # 5-axis or 9-axis code review
-/em:debugger         # Scientific method debugging
-/em:architect        # Architecture design
-/em:backend-expert   # API, database, performance
-/em:frontend-expert  # React, Next.js, UI/UX
-/em:react-expert     # React/Next.js specialist
+/em-agent:planner              # Create implementation plans
+/em-agent:executor             # Execute with atomic commits
+/em-agent:code-reviewer        # 5-axis or 9-axis code review
+/em-agent:debugger             # Scientific method debugging
+/em-agent:architect            # Architecture design
+/em-agent:backend-expert       # API, database, performance
+/em-agent:frontend-expert      # React, Next.js, UI/UX
+/em-agent:react-expert         # React/Next.js specialist
+/em-agent:security-reviewer    # OWASP audit + STRIDE threat modeling
 ```
 
-### Workflows (26)
+### Workflows (27)
 
 ```bash
-/em:new-feature          # Idea → production (6 stages)
-/em:greenfield-app       # Blank dir → shipped app (12 stages)
-/em:bug-fix              # Systematic bug fixing
-/em:qa-bug-hunter        # QA testing → find bugs → human gate → GitHub issues
-/em:refactor             # Code quality improvement
-/em:security-audit       # OWASP security assessment
-/em:team                 # Full team review coordination
-/em:japanese-outsourcing # 9-stage formal outsourcing workflow
+/em-wf:new-feature            # Idea → production (6 stages)
+/em-wf:greenfield-app         # Blank dir → shipped app (12 stages)
+/em-wf:bug-fix                # Systematic bug fixing
+/em-wf:qa-bug-hunter          # QA testing → find bugs → human gate → GitHub issues
+/em-wf:refactoring            # Code quality improvement
+/em-wf:security-audit         # OWASP security assessment
+/em-wf:code-review            # Deep 9-axis code review workflow
+/em-wf:japanese-outsourcing   # 9-stage formal outsourcing workflow
 ```
 
 ---
@@ -114,17 +179,17 @@ Uninstall: `bash uninstall.sh`
 
 | Category | Count | Examples |
 |----------|-------|---------|
-| **Foundation Skills** | 10 | spec-driven-development, brainstorming, domain-modeling, project-dna |
+| **Foundation Skills** | 11 | spec-driven-development, brainstorming, domain-modeling, brownfield-onboarding |
 | **Development Skills** | 12 | TDD, architecture-improvement, codebase-architecture, diagram |
 | **Expert Skills** | 34 | React, Vue, Go, NestJS, Python, Database, DevOps, Mobile, Rust, TypeScript |
-| **Quality Skills** | 13 | code-review, e2e-testing, security-audit, test-generation, ux-audit |
-| **Workflow Skills** | 12 | git-workflow, ci-cd-automation, github-pr-manager, github-release-manager, github-issue-fix |
+| **Quality Skills** | 14 | test-case-design, code-review, e2e-testing, security-audit, test-generation, ux-audit |
+| **Workflow Skills** | 14 | git-workflow, github-pr-manager, brownfield-context-sync, brownfield-pr-impact |
 | **Additional Skills** | 5 | jobs-to-be-done, lean-ux-canvas, office-hours |
 | **Core Agents** | 8 | planner, executor, code-reviewer, debugger, test-engineer, verifier |
-| **Specialized Agents** | 21 | architect, team-lead, staff-engineer, product-manager, iron-law-enforcer |
+| **Specialized Agents** | 20 | architect, team-lead, staff-engineer, product-manager, iron-law-enforcer |
 | **Expert Agents** | 7 | react-expert, vue-expert, devops-expert, mobile-expert, rust-expert |
 | **Test Agents** | 3 | playwright-setup, brownfield-test-engineer, test-verifier |
-| **Primary Workflows** | 6 | new-feature, greenfield-app, bug-fix, qa-bug-hunter, refactoring, security-audit |
+| **Primary Workflows** | 7 | new-feature, greenfield-app, bug-fix, qa-bug-hunter, brownfield-investigation |
 | **Team Workflows** | 8 | team-review, architecture-review, code-review-9axis, incident-response |
 | **Support Workflows** | 12 | project-setup, deployment, ship-workflow, distributed-development |
 
@@ -236,17 +301,10 @@ Context pruning after each stage produces a state snapshot (~500 tokens) that ca
 ### LLM Provider Configuration
 
 ```bash
-# Default: Anthropic
-LLM_PROVIDER=anthropic
-
-# Local Hermes 3 via Ollama
-LLM_PROVIDER=ollama LLM_MODEL=hermes3
-
-# OpenAI
-LLM_PROVIDER=openai LLM_MODEL=gpt-4o-mini
-
-# Custom endpoint
-LLM_PROVIDER=custom LLM_BASE_URL=http://my-server/v1 LLM_API_KEY=xxx LLM_MODEL=my-model
+LLM_PROVIDER=anthropic                                                # Default: Anthropic
+LLM_PROVIDER=ollama LLM_MODEL=hermes3                                 # Local Hermes 3
+LLM_PROVIDER=openai LLM_MODEL=gpt-4o-mini                            # OpenAI
+LLM_PROVIDER=custom LLM_BASE_URL=http://my-server/v1 LLM_MODEL=mine  # Custom endpoint
 ```
 
 ### Validation
@@ -262,16 +320,16 @@ bash scripts/validate-hermes.sh --verbose  # Detailed output
 
 ```
 em-team/
-├── agents/          # 38 agents (Hermes block structure)
+├── agents/          # 36 agents (Hermes block structure)
 │   └── _shared/     # Shared preambles (expert-preamble for 7 expert agents)
 ├── skills/          # 86 skills (JSON Schema in frontmatter)
-│   ├── foundation/  # 10 core skills
+│   ├── foundation/  # 11 core skills
 │   ├── development/ # 12 methodology skills
-│   ├── quality/     # 13 QA skills
-│   ├── workflow/    # 12 workflow skills
+│   ├── quality/     # 14 QA skills
+│   ├── workflow/    # 14 workflow skills
 │   ├── expert-*/    # 34 expert skills (React, Vue, Go, Python, etc.)
 │   └── additional/  # 5 product skills
-├── workflows/       # 26 workflows (ReAct protocol)
+├── workflows/       # 27 workflows (ReAct protocol)
 │   └── _shared/     # Reusable sub-stages (stage-0-git-bootstrap)
 ├── preambles/       # Hermes preambles (agent, skill, ethos)
 ├── protocols/       # Communication & error standards (8 protocols)
@@ -292,8 +350,8 @@ em-team/
 Run multiple agents in parallel tmux sessions, each with independent 200K token context:
 
 ```bash
-./scripts/distributed-orchestrator.sh start   # Launch tmux sessions
-/em:distributed Investigate auth bug           # Parallel investigation
+./scripts/distributed-orchestrator.sh start            # Launch tmux sessions
+/em-wf:distributed-investigation Investigate auth bug  # Parallel investigation
 ./scripts/consolidate-reports.sh consolidate   # Merge reports
 ./scripts/distributed-orchestrator.sh stop     # Cleanup
 ```
@@ -342,12 +400,33 @@ architecture/greenfield/ # Architecture decisions
 
 **8 protocols** in `protocols/` standardize communication and error handling across the system:
 - **error-handling.md** — Standardized error taxonomy (`CONTEXT_OVERFLOW`, `BUILD_DEADLOCK`, `SPEC_CONFLICT`, etc.) with `max_retries_per_stage: 2` policy
-- **naming-convention.md** — Entry point naming rules for `.claude/skills/` (`em:{name}`, `em:skill:{name}`)
+- **naming-convention.md** — Entry point naming rules: `em-agent:{name}`, `em-wf:{name}`, `em-skill:{name}`
 - Plus: writing-style, delegation, distributed-messaging, change-management, review-gates, report-format
 
 **Shared components** reduce duplication:
 - `agents/_shared/expert-preamble.md` — Shared schemas for 7 expert domain agents
 - `workflows/_shared/stage-0-git-bootstrap.md` — Reusable git/spec bootstrap for new-feature, bug-fix workflows
+
+### Brownfield Intelligence (v5.0.0)
+
+Module-based business context system for existing codebases. Run `brownfield-onboarding` once to build a `.em-brownfield/` knowledge graph, then all agents understand your business flows.
+
+| Component | Type | Purpose |
+|-----------|------|---------|
+| `brownfield-onboarding` | Skill | Scan codebase → per-module FLOWS/DOMAIN/INTEGRATIONS/CODE-MAP |
+| `brownfield-investigation` | Workflow | Context-aware bug investigation with deep chain tracing |
+| `brownfield-context-sync` | Skill | Detect drift, resolve cross-module contract breaks |
+| `flow-discovery` (enhanced) | Skill | Optional business metadata for recorded UI flows |
+
+```
+.em-brownfield/
+├── INDEX.md                    # Module registry + dependency graph
+├── modules/{domain}/FLOWS.md   # Business flows with acceptance criteria
+├── modules/{domain}/DOMAIN.md  # Entities, relationships
+├── modules/{domain}/INTEGRATIONS.md
+├── modules/{domain}/CODE-MAP.md
+└── HEALTH-CHECK.md
+```
 
 ### Quality Benchmark
 
@@ -365,10 +444,15 @@ Grades: A+ (95+), A (90+), B+ (85+), B (80+), C+ (75+), C (70+), D (<70)
 | Doc | Description |
 |-----|-------------|
 | [CLAUDE.md](CLAUDE.md) | Main configuration — skill/agent/workflow catalog |
-| [docs/GUIDE-TEST-AUTOMATION-AND-WORKSPACE.md](docs/GUIDE-TEST-AUTOMATION-AND-WORKSPACE.md) | Test automation + Feature Workspace guide |
 | [docs/guides/getting-started.md](docs/guides/getting-started.md) | Quick start guide |
 | [docs/guides/usage-guide.md](docs/guides/usage-guide.md) | Comprehensive usage (EN) |
-| [docs/vi/huong-dan-su-dung.md](docs/vi/huong-dan-su-dung.md) | Comprehensive usage (VI) |
+| [docs/guides/brownfield.md](docs/guides/brownfield.md) | Brownfield Intelligence guide (EN) |
+| [docs/guides/test-automation.md](docs/guides/test-automation.md) | Test Automation Chain guide (EN) |
+| [docs/guides/new-feature-workflow.md](docs/guides/new-feature-workflow.md) | New Feature Workflow guide (EN) |
+| [docs/guides/code-review.md](docs/guides/code-review.md) | Code Review guide (EN) |
+| [docs/guides/security-review.md](docs/guides/security-review.md) | Security Review guide (EN) |
+| [docs/vi/huong-dan-su-dung.md](docs/vi/huong-dan-su-dung.md) | Hướng dẫn tổng hợp (VI) |
+| [docs/vi/brownfield.md](docs/vi/brownfield.md) | Hướng dẫn Brownfield Intelligence (VI) |
 | [docs/architecture/distributed-system.md](docs/architecture/distributed-system.md) | Distributed orchestration |
 
 ---
@@ -377,7 +461,13 @@ Grades: A+ (95+), A (90+), B+ (85+), B (80+), C+ (75+), C (70+), D (<70)
 
 | Version | Highlights |
 |---------|-----------|
-| **4.1.0** | QA Bug Hunter workflow — human-gated GitHub issue creation from automated QA |
+| **5.5.0** | Naming Convention Refactor — `em-agent:`, `em-wf:`, `em-skill:` type prefixes; 14 aliases removed; deprecated agents deleted; 140 commands across 3 namespaces |
+| **5.4.0** | Brownfield Intelligence v2 — 19 gaps closed; JSON sidecars; stable FLOW/AC IDs; symbol-first CODE-MAP; quality gate; privacy layer; 8 new scripts |
+| **5.3.0** | Architect/Code/Review Quality Upgrade — code-review diff scan as Step 5.1 (FIRST) in all VERIFY stages; mandatory ADR generation; testability hard gate; cross-file impact scan |
+| 5.2.0 | TC-Code Coverage Gate — closes TC-Registry→test-code enforcement chain across all skills, agents, and master workflows |
+| 5.1.0 | Expert-QC Testing — `test-case-design` skill (BVA/EP/DT/ST/Pairwise/RBT + abuse + non-functional + oracle + mutation gate); 12-column TC-REGISTRY; risk-calibrated ratio floors |
+| 5.0.0 | Brownfield Intelligence — module-based business context (.em-brownfield/), brownfield-investigation workflow, brownfield-context-sync skill |
+| 4.1.0 | QA Bug Hunter workflow — human-gated GitHub issue creation from automated QA |
 | 4.0.0 | Hermes Protocol — structured agent blocks, JSON Schema for skills, ReAct workflows, provider-agnostic LLM client |
 | 3.10.0 | Feature Workspace — living docs, cross-iteration continuity |
 | 3.9.0 | Artifact folder structure + Playwright auth config (4 strategies) |

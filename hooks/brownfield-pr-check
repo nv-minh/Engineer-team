@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Pre-push hook: runs brownfield-pr-impact and warns about high-risk changes.
+# Install: cp hooks/brownfield-pr-check .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Bypass: git push --no-verify
+
+set -euo pipefail
+
+# Skip if .em-brownfield/ doesn't exist
+[[ ! -d ".em-brownfield" ]] && exit 0
+
+# Skip if no changes vs main
+if git diff --quiet main..HEAD 2>/dev/null; then
+  exit 0
+fi
+
+echo "🔍 Brownfield PR impact check..."
+
+# Run impact analysis (assumes brownfield-pr-impact skill is invokable via CLI wrapper)
+# For now, run lightweight check: list affected modules
+changed_files=$(git diff --name-only main..HEAD 2>/dev/null || git diff --name-only HEAD)
+
+if [[ -z "$changed_files" ]]; then
+  exit 0
+fi
+
+# Quick scan: which modules' paths are touched?
+modules_touched=""
+if [[ -f ".em-brownfield/INDEX.json" ]]; then
+  for file in $changed_files; do
+    mod=$(jq -r --arg f "$file" '.modules[] | select((.paths.backend[]? + .paths.frontend[]?) | contains($f)) | .name' .em-brownfield/INDEX.json 2>/dev/null || true)
+    [[ -n "$mod" ]] && modules_touched+="$mod "
+  done
+fi
+
+if [[ -n "$modules_touched" ]]; then
+  unique_mods=$(echo "$modules_touched" | tr ' ' '\n' | sort -u | tr '\n' ',' | sed 's/,$//')
+  echo ""
+  echo "⚠️  Brownfield modules affected: $unique_mods"
+  echo ""
+  echo "Consider running: brownfield-pr-impact (via Skill tool) for full impact analysis."
+  echo "Or run brownfield-context-sync to validate no contract breaks."
+  echo ""
+  echo "Push proceeding..."
+fi
+
+exit 0

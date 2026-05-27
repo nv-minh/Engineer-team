@@ -1,7 +1,7 @@
 ---
 name: new-feature
 description: Complete workflow from idea to production for new features (ENHANCED with optional market validation)
-version: "3.1.0"
+version: "3.3.0"
 category: "primary"
 origin: "agent-skills"
 react_protocol: true
@@ -52,6 +52,7 @@ DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──�
 | Workflow Stage | Lifecycle Phase | Gate |
 |---|---|---|
 | SETUP (Stage 0) | DEFINE | spec folder detected, branch naming rules checked, spec doc created, on branch with latest main |
+| BROWNFIELD CONTEXT (Stage 0.5, optional) | DEFINE | brownfield context loaded OR documented as N/A |
 | BRAINSTORM (Stage 1) | DEFINE | Design approved, document written |
 | MARKET VALIDATION (Stage 1.5, optional) | DEFINE | Market opportunity confirmed, go/no-go decided |
 | DOMAIN MODELING (Stage 1.7, optional) | DEFINE | Entities documented, relationships mapped |
@@ -110,6 +111,41 @@ date: {today}
 ```
 
 Note: if project uses CR-based naming, use CR-{NNN}-{slug}.md format instead.
+
+---
+
+## Stage 0.5: BROWNFIELD CONTEXT (conditional)
+
+<thought>
+Observe: Repo may or may not have .em-brownfield/ context. If present, the feature
+likely extends an existing module. Loading module context up-front prevents
+duplicate flows, conflicting business rules, and missing acceptance criteria.
+</thought>
+
+<action>
+type: conditional_context_load
+condition: ".em-brownfield/INDEX.md exists"
+steps:
+  1. Read INDEX.md → list all modules
+  2. Ask user: "Which existing module(s) does this feature extend?
+     Options: [list]. If new module, type NEW: {proposed-name}."
+  3. For each affected module, load:
+     - modules/{module}/FLOWS.md → existing flows + ACs
+     - modules/{module}/DOMAIN.md → entities to extend
+     - modules/{module}/INTEGRATIONS.md → external deps to consider
+  4. Record loaded context paths in feature spec doc for downstream stages.
+</action>
+
+<observation>
+brownfield_present: true | false
+affected_modules: [module1, ...]
+existing_flows_loaded: N
+existing_acs_loaded: N
+</observation>
+
+**Gate 0.5:** brownfield context loaded (if present) OR documented as N/A.
+
+PASS → Stage 1 (or Stage 2 if skipping brainstorm)
 
 ---
 
@@ -456,12 +492,31 @@ workflow_state:
 <thought>
 Observe: Feature implemented. Unit tests pass. Build succeeds. No spec coverage verification, no E2E evidence, no test-verifier report.
 Analyze: Verify spec coverage. Generate test cases from SPEC.md. Run E2E tests with Playwright. Record video evidence for all test runs. Collect browser evidence (screenshots + video + traces). Double-check with test-verifier. Gate requires: spec coverage 100% + all acceptance criteria met + test-verifier PASS + evidence artifacts present.
-Plan: Execute 5 mandatory steps in sequence. Each step MUST produce its output before the next step begins. No step may be skipped.
+Plan: Execute 6 mandatory steps in sequence. Code-review runs FIRST (Step 5.1) so any fixes are validated by the test suite, not bypassed by it. Each step MUST produce its output before the next step begins. No step may be skipped.
 </thought>
 
 ### MANDATORY EXECUTION STEPS
 
-**Step 5.1 — Verify Spec Coverage (verifier agent)**
+**Step 5.1 — Code-Review Diff Scan (MANDATORY)**
+
+Review all changed files BEFORE running the test suite. Any findings fixed here will be validated by steps 5.2–5.6.
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: diff_review
+  inputs: [changed_files_list, spec_requirements, architecture_decisions]
+  outputs: [diff_review_report]
+</action>
+
+Gate: No CRITICAL or unaddressed HIGH findings before proceeding to Step 5.2.
+If FAIL → return to Stage 4 (BUILD) with specific findings. Review fixes will then be validated by the full test suite.
+
+---
+
+**Step 5.2 — Verify Spec Coverage (verifier agent)**
 
 Invoke the `verifier` agent. Compare every requirement in SPEC.md against the implementation. Produce a coverage map: requirement → file:line.
 
@@ -481,7 +536,7 @@ Required output: `verification_report` with spec coverage percentage. If coverag
 
 ---
 
-**Step 5.2 — Generate Test Case Registry (test-generation skill)**
+**Step 5.3 — Generate Test Case Registry (test-generation skill)**
 
 Invoke the `test-generation` skill. Read SPEC.md and source code. Generate a structured TC Registry with TC-IDs for every acceptance criterion.
 
@@ -500,7 +555,7 @@ Required output: `TC-REGISTRY.md` with entries in format `TC-UNIT-NNN`, `TC-INT-
 
 ---
 
-**Step 5.3 — Ensure Playwright Setup**
+**Step 5.4 — Ensure Playwright Setup**
 
 Before running E2E tests, verify Playwright is configured:
 
@@ -522,7 +577,7 @@ use: {
 
 ---
 
-**Step 5.4 — Run E2E Tests & Collect Evidence (e2e-testing + browser-testing skills)**
+**Step 5.5 — Run E2E Tests & Collect Evidence (e2e-testing + browser-testing skills)**
 
 Invoke `e2e-testing` skill to write Playwright E2E tests for all new user flows using Page Object Model. Then invoke `browser-testing` skill to execute tests and collect evidence.
 
@@ -544,26 +599,30 @@ params:
   regression_check: existing_ui
 </action>
 
-Execute tests:
+Execute tests **with evidence mode enabled** (VERIFY-stage convention per e2e-testing skill Step 5.5):
 ```bash
-npx playwright test --reporter=html,list
+EVIDENCE_MODE=on npx playwright test --reporter=html,list
+# OR if project defines the npm alias:
+# pnpm test:e2e:evidence -- --reporter=html,list
 ```
 
-Required output — evidence directory with:
+Required output — evidence directory with FULL artifact set for EVERY test (pass or fail), because EVIDENCE_MODE=on:
 ```
 test-results/
-├── videos/          # .webm video for every failing test
-├── screenshots/     # .png screenshot for every failing test
-├── traces/          # .zip Playwright trace for every failing test
+├── videos/          # .webm video for EVERY test (pass and fail)
+├── screenshots/     # .png screenshot for EVERY test
+├── traces/          # .zip Playwright trace for EVERY test
 └── reports/
     └── playwright-report/index.html
 ```
 
-If ANY test fails, collect evidence (video + screenshot + trace), then proceed to Step 5.5 for retry.
+If the project's `playwright.config.ts` does not yet implement the EVIDENCE_MODE dual-mode switch, run `playwright-setup` agent first to regenerate the config per e2e-testing skill Step 5 template.
+
+If ANY test fails, collect evidence (video + screenshot + trace), then proceed to Step 5.6 for retry.
 
 ---
 
-**Step 5.5 — Double-Check with Test Verifier (test-verifier agent)**
+**Step 5.6 — Double-Check with Test Verifier (test-verifier agent)**
 
 Invoke `test-verifier` agent to re-run failed tests, apply targeted fixes, and produce a final verdict.
 
@@ -581,7 +640,7 @@ Test verifier behavior:
 1. Re-run ONLY failed tests (not the full suite)
 2. Spot-check 3-5 passed tests for correctness
 3. If tests fail, apply targeted fix and retry (max 3 retries total)
-4. On each retry, Playwright records video + trace automatically (`retain-on-failure`)
+4. On each retry, Playwright records video + trace + screenshot for every TC (test-verifier sets `EVIDENCE_MODE=on` per its Rule 2 — see test-verifier agent v2.1.0)
 5. Output: PASS with confidence score OR FAIL with per-TC details + evidence paths
 
 Required output: `test-verifier-report.md` with:
@@ -593,7 +652,7 @@ Required output: `test-verifier-report.md` with:
 ---
 
 <observation>
-result: Spec coverage verified, TC registry generated, E2E tests executed with Playwright evidence recorded, test-verifier report issued
+result: Diff reviewed (no CRITICAL/HIGH findings), spec coverage verified, TC registry generated, E2E tests executed with Playwright evidence recorded, test-verifier report issued
 state_change: Full verification complete with evidence artifacts
 gate_status: PASS | FAIL
 </observation>
@@ -603,12 +662,17 @@ gate_status: PASS | FAIL
 - [ ] Test case registry generated (`TC-REGISTRY.md` with TC-IDs)
 - [ ] All acceptance criteria met
 - [ ] Integration tests pass
-- [ ] Playwright configured with `video: 'retain-on-failure'`
+- [ ] Playwright configured with dual-mode evidence switch (`EVIDENCE_MODE=on` overrides to `video/trace/screenshot: 'on'`; CI default `retain-on-failure`)
 - [ ] E2E tests cover all new user flows (Page Object Model)
-- [ ] E2E tests executed with `npx playwright test`
+- [ ] E2E tests executed in VERIFY-stage with `EVIDENCE_MODE=on npx playwright test` (or `pnpm test:e2e:evidence`)
 - [ ] Browser test evidence collected (`test-results/videos/`, `test-results/screenshots/`, `test-results/traces/`)
 - [ ] **test-verifier PASS** (or FAIL report reviewed and signed off by user before proceeding)
+- [ ] TC-code coverage = 100% per layer: every TC-ID in TC-REGISTRY has a `test()` block (unautomated → `test.todo()`)
+- [ ] Code-review diff scan PASS (no CRITICAL, no unaddressed HIGH) — Step 5.1
 - [ ] User acceptance testing passed
+- [ ] (if brownfield) All AC-{MODULE}-{NNN} from affected modules verified — no regressions
+- [ ] (if brownfield) Domain invariants from DOMAIN-PROFILE.yaml hold for changed code paths (artifact created in T1.6)
+- [ ] (if brownfield) FLOWS.md updated if feature added new flow or modified existing flow
 
 ⛔ **DO NOT proceed to Stage 6 if ANY of the above items is unchecked.**
 
@@ -630,6 +694,30 @@ workflow_state:
 ```
 
 <!-- GATE:VERIFY:REQUIRED artifacts=[tc-registry,e2e-evidence,test-verifier-report] -->
+
+---
+
+**Step 5.7 — Brownfield Context Update (conditional)**
+
+If `.em-brownfield/` exists and this feature added or modified flows:
+
+<action>
+type: invoke_skill
+target: brownfield-context-sync
+params:
+  scope: changed
+  auto_fix: false
+</action>
+
+For each new flow:
+1. Propose update to `modules/{module}/FLOWS.md`:
+   - New `## Flow: {name}` section with happy path + ACs
+   - Use next sequential FLOW-{MODULE}-{NNN} ID (Phase 3 work)
+2. Update `modules/{module}/CODE-MAP.md` with new file:function refs
+3. Update `INDEX.md` flows_count + Last Verified date
+4. Present diff to user → APPROVE / MODIFY / SKIP
+
+This ensures the knowledge graph grows with the codebase rather than becoming stale.
 
 ---
 
@@ -680,6 +768,14 @@ workflow_state:
   next_action: null
   status: COMPLETE
 ```
+
+### Stage 6.1: Rollback Readiness
+
+Before marking feature shipped:
+- [ ] Rollback procedure documented (feature flag / db migration reversal / deployment rollback command)
+- [ ] Monitoring alerts configured for new code paths
+- [ ] Rollback tested in staging (or documented manual steps)
+- [ ] On-call team notified of new deployment
 
 ---
 
@@ -791,6 +887,32 @@ handoff:
     - implementation_plan
     - task_breakdown
     - market_considerations (if applicable)
+  on_failure:
+    trigger: "Planner cannot create tasks for a spec requirement"
+    action: "Return to Spec stage with specific gap identified"
+    retry_budget: 2
+    escalation: "Notify user if spec requirement is unimplementable"
+```
+
+### Build → Verify
+
+```yaml
+handoff:
+  from: executor
+  to: verifier
+  provides:
+    - implementation_commits
+    - unit_tests
+    - integration_tests
+  expects:
+    - verification_report
+    - tc_registry
+    - e2e_evidence
+  on_failure:
+    trigger: "test-verifier FAIL or code-review diff scan FAIL"
+    action: "Return to BUILD stage with specific failure report"
+    retry_budget: 2
+    escalation: "Notify user if 2 retries still FAIL"
 ```
 
 ---

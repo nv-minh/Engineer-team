@@ -1,4 +1,4 @@
-# Hướng Dẫn Sử Dụng EM-Team v3.7.0
+# Hướng Dẫn Sử Dụng EM-Team v5.5.0
 
 Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 
@@ -7,7 +7,7 @@ Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 ## Mục Lục
 
 1. [Tổng quan](#tổng-quan)
-2. [Tính năng mới v3.6.0](#tính-năng-mới)
+2. [Tính năng mới](#tính-năng-mới)
 3. [Communication Styles](#communication-styles)
 4. [Cấu trúc Command](#cấu-trúc-command)
 5. [Sử dụng Skills](#sử-dụng-skills)
@@ -22,17 +22,164 @@ Hướng dẫn hoàn chỉnh cho hệ thống kỹ thuật fullstack EM-Team.
 
 ## Tổng quan
 
-EM-Team v3.7.0 cung cấp 149+ commands được tổ chức thành 3 danh mục chính:
+EM-Team v5.5.0 cung cấp 140+ commands được tổ chức thành 3 danh mục chính:
 
 | Phương pháp | Số lượng | Mô tả | Tốt nhất cho |
 |-------------|----------|-------|--------------|
-| **Skills** | 85 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
-| **Agents** | 35 | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
-| **Workflows** | 26 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
+| **Skills** | 86 | Patterns và practices có thể tái sử dụng | Tasks phát triển cụ thể |
+| **Agents** | 36 | AI assistants chuyên biệt | Công việc chuyên môn phức tạp |
+| **Workflows** | 27 | Quy trình end-to-end | Vòng đời dự án hoàn chỉnh |
 
 ---
 
 ## Tính năng mới
+
+### v5.4.0 — Brownfield Intelligence Improvements (19 gaps closed)
+
+**Agents giờ hiểu codebase ở cấp độ business domain** trước khi điều tra bug, verify feature, hoặc viết tests.
+
+**1 skill mới:**
+- `brownfield-pr-impact` (Workflow) — Đánh giá impact của PR/branch lên brownfield business flows, surface AC-at-risk và contract breaks trước khi merge
+
+**8 scripts mới** (`scripts/brownfield/`):
+- `detect-stack.sh` — Auto-detect tech stack
+- `symbol-resolver.sh` — Resolve `Class.method` → `file:line` tại runtime (stable, không fragile)
+- `validate-refs.sh` — Kiểm tra tất cả cross-module refs; exit 0 = clean
+- `quality-score.sh` — Chấm điểm Grade A/B/C/D cho từng module
+- + 4 scan scripts (nestjs, react, monorepo)
+
+**JSON sidecars** — `FLOWS.json`, `CODE-MAP.json`, `INDEX.json` cho programmatic access
+
+**Stable IDs** — `FLOW-{MODULE}-{NNN}` + `AC-{MODULE}-{NNN}` stable across refactors
+
+**Integration upgrades:**
+- `debugger` — Phase 0: load brownfield context trước khi điều tra
+- `verifier` — Phase 0: load context; Phase 3: check AC regression
+- `new-feature` — Stage 0.5 (load) + Stage 5.7 (update context sau build)
+- `bug-fix` — Stage 0.5: auto-route sang brownfield-investigation nếu `.em-brownfield/` tồn tại
+
+```bash
+# Đánh giá impact của PR lên brownfield flows
+Use the brownfield-pr-impact skill to check this PR
+
+# Validate context artifacts
+bash scripts/brownfield/validate-refs.sh .em-brownfield/
+bash scripts/brownfield/quality-score.sh .em-brownfield/
+```
+
+### v5.3.0 — Architect/Code/Review Quality Upgrade
+
+**Code review chạy TRƯỚC test suite** trong mọi VERIFY stage — đảm bảo bug phát hiện qua review được fix và kiểm tra lại bởi tests trước khi ship.
+
+**Thứ tự đúng:** `BUILD → code-review diff scan → tests → SHIP`
+
+| Component | Thay đổi |
+|-----------|---------|
+| `new-feature` v3.3.0 · `bug-fix` v3.2.0 | Code-review diff scan → **Step 5.1 (ĐẦU TIÊN)** trong VERIFY |
+| 4 workflows khác | `six-phase-lifecycle`, `greenfield-app`, `refactoring`, `distributed-development` — áp dụng cùng thứ tự |
+| Rollback readiness gate | Thêm Stage 6.1 trước khi đánh dấu feature/fix đã ship |
+| `spec-driven-development` v3.1.0 | Testability check → ⛔ hard gate; Phase 1.5 Conflict Detection; Assumption Approval Gate |
+| `architect` v2.1.0 | Phase 0 (snapshot kiến trúc hiện tại); Phase 7 (ADR bắt buộc với Decision/Context/Alternatives/Compliance Criteria) |
+| `code-review` v3.1.0 · `code-reviewer` v2.1.0 | Step 1.5 diff classification; Step 4.5 cross-file impact scan |
+
+```bash
+# VERIFY stage giờ chạy theo thứ tự:
+# 1. code-review diff scan (TRƯỚC TIÊN)
+# 2. verify spec coverage
+# 3. generate TC registry
+# 4. run E2E tests + collect evidence
+# 5. test-verifier double-check
+```
+
+### v4.1.0 — QA Bug Hunter + Error Handling Protocol
+
+**QA Bug Hunter workflow** với human-gated GitHub issue creation:
+- 7 stages: SETUP → DISCOVER → EVIDENCE → PREPARE → **HUMAN GATE** → LOG → SUMMARY
+- Per-bug loop: bạn review từng bug trước khi tạo issue (APPROVE/REJECT/MODIFY)
+- Skills: em-skill:flow-discovery, em-skill:browser-testing, em-skill:github-issue-manager
+
+**github-issue-fix skill** — Browse GitHub issues, chọn 1 issue, chuyển sang em-wf:bug-fix workflow
+
+**Protocols mới:**
+- `protocols/error-handling.md` — Error taxonomy chuẩn hóa (`CONTEXT_OVERFLOW`, `BUILD_DEADLOCK`, `SPEC_CONFLICT`, etc.)
+- `protocols/naming-convention.md` — Quy tắc đặt tên entry points cho `.claude/skills/`
+
+**Shared components:**
+- `agents/_shared/expert-preamble.md` — Shared schemas cho 7 expert agents
+- `workflows/_shared/stage-0-git-bootstrap.md` — Reusable Stage 0 git bootstrap
+
+**Quality benchmark:** `bash scripts/benchmark-quality.sh` — scoring B1-B5, grades A+ to D
+
+```bash
+/em-wf:qa-bug-hunter QA test http://localhost:5173 and log bugs
+/em-skill:github-issue-fix                     # Fix bug từ GitHub issue
+bash scripts/benchmark-quality.sh        # Quality scoring
+```
+
+### v5.2.0 — TC-Code Coverage Gate
+
+**TC-Registry → Test-Code enforcement chain** đã được đóng hoàn toàn: mỗi TC-ID trong TC-REGISTRY.md **bắt buộc** phải có `test("TC-XXX-NNN: ...")` block (hoặc `test.todo()`) trong test file tương ứng.
+
+- **test-generation v4.1.0** — Step 4.6 mới: bash gate đếm TC-IDs vs test() blocks
+- **test-verifier v2.2.0** — Step 2.5 pre-retry TC coverage check; trả về BLOCKED nếu thiếu test() blocks
+- **six-phase-lifecycle Gate 4** — Checklist item mới: TC-code coverage = 100% per layer
+- **TC-REGISTRY.template.md** — Quality gate checkbox mới cho TC→test() mapping
+
+### v5.1.0 — Expert-QC Testing Skills
+
+**test-case-design** skill mới (Quality #57) — kỹ thuật thiết kế test case chuyên nghiệp:
+- BVA (Boundary Value Analysis), EP (Equivalence Partitioning), Decision Tables, State Transition, Pairwise, Risk-Based Testing
+- Abuse cases (OWASP-mapped), Non-functional cases, Oracle specification, Mutation sanity gate
+- **MANDATORY upstream** của test-generation/api-testing/e2e-testing/browser-testing
+- 12-column TC-REGISTRY format với risk-calibrated ratio floors (P0: ≥35% neg + ≥15% abuse + ≥10% non-func)
+
+### v5.0.0 — Brownfield Intelligence
+
+**Brownfield Intelligence** — onboard, sync, and investigate existing codebases:
+
+**2 skills mới:**
+- `brownfield-onboarding` (Foundation) — Rapid codebase onboarding: detect stack, map architecture, identify conventions, generate context artifacts
+- `brownfield-context-sync` (Workflow) — Sync codebase context after changes: detect drift, update architecture maps, refresh conventions
+
+**1 workflow mới:**
+- `brownfield-investigation` — Deep investigation of existing codebase issues: architecture analysis, dependency mapping, tech debt assessment, improvement roadmap
+
+**Enhanced skill:**
+- `flow-discovery` — Enhanced with brownfield-aware flow detection for legacy codebases
+
+```bash
+# Onboard an existing codebase
+/em-skill:brownfield-onboarding Analyze this legacy Node.js monolith
+
+# Sync context after major changes
+/em-skill:brownfield-context-sync Refresh architecture map after migration
+
+# Investigate brownfield codebase issues
+/em-wf:brownfield-investigation Assess tech debt and improvement plan for payment service
+```
+
+### v4.0.0 — Hermes Protocol Refactor
+
+Toàn bộ codebase restructured theo Hermes philosophy:
+- **38 agents** → Structured blocks: `[ROLE]`, `[OBJECTIVE]`, `[RULES]`, `[PROCESS]`, `[HANDOFF]`
+- **90 skills** → JSON Schema: `input_schema`, `output_schema`, `error_schema`
+- **27 workflows** → ReAct protocol: Thought→Action→Observation loops
+- **LLM provider-agnostic** → Anthropic, OpenAI, Ollama, vLLM, custom endpoints
+
+### v3.8.0–v3.10.0 — Test Automation + Feature Workspace
+
+**3 agents mới (Test Automation Chain):**
+- `playwright-setup` — Auto-detect stack, install browsers, generate config
+- `brownfield-test-engineer` — Spec-to-test, clarifying questions, TC registry
+- `test-verifier` — Retry loop (max 3), targeted fix suggestions
+
+**Feature Workspace** — tracking artifacts across multiple prompts:
+```
+.em-artifacts/new-feature/user-dashboard/
+├── SPEC.md, TC-REGISTRY.md     # Living docs (updated in place)
+├── test-executions/             # Timestamped logs
+└── ITERATION-LOG.md             # Auto-tracked changes
+```
 
 ### v3.7.0 — GitHub Management Suite
 
@@ -54,19 +201,19 @@ Bộ công cụ tự động hóa hoàn toàn vòng đời GitHub — từ CI/CD
 
 ```bash
 # Setup CI/CD cho project mới
-/em:skill:github-cicd-setup
+/em-skill:github-cicd-setup
 
 # Tạo PR với description được AI điền tự động
-/em:skill:github-pr-manager  # (phần PR Creation)
+/em-skill:github-pr-manager  # (phần PR Creation)
 
 # Fix tất cả review comments cùng lúc
-/em:skill:github-pr-manager  # (phần Review Fix)
+/em-skill:github-pr-manager  # (phần Review Fix)
 
 # Lên kế hoạch sprint từ open issues
-/em:skill:github-issue-manager  # (phần Sprint Planning)
+/em-skill:github-issue-manager  # (phần Sprint Planning)
 
 # Phát hành phiên bản mới
-/em:skill:github-release-manager
+/em-skill:github-release-manager
 ```
 
 ---
@@ -94,10 +241,10 @@ Skill `codebase-architecture` giải quyết bài toán: **chọn kiến trúc n
 
 ```bash
 # Dùng trực tiếp
-/em:skill:codebase-architecture
+/em-skill:codebase-architecture
 
 # Tự động trong Greenfield workflow (Stage 6)
-/em:greenfield-app Xây dựng nền tảng thanh toán fintech
+/em-wf:greenfield-app Xây dựng nền tảng thanh toán fintech
 ```
 
 ### v3.5.0 — Hỗ trợ Outsource Nhật Bản
@@ -112,10 +259,10 @@ Bộ tài liệu chính thức đầy đủ cho dự án outsource Nhật Bản:
 | `progress-reporting` | 進捗報告 | Weekly status GREEN/YELLOW/RED + metrics |
 
 ```bash
-/em:japanese-outsourcing        # Workflow tổng thể 9 giai đoạn
-/em:skill:basic-design          # Tạo 基本設計
-/em:skill:uat-process           # Chạy UAT với sign-off
-/em:skill:progress-reporting    # Báo cáo tiến độ tuần
+/em-wf:japanese-outsourcing        # Workflow tổng thể 9 giai đoạn
+/em-skill:basic-design          # Tạo 基本設計
+/em-skill:uat-process           # Chạy UAT với sign-off
+/em-skill:progress-reporting    # Báo cáo tiến độ tuần
 ```
 
 ### 🎯 Quick Start
@@ -127,17 +274,17 @@ em-show           # Hoặc em-commands
 # Xem help
 em-help
 
-# Skills - Prefix em:skill:
-/em:skill:brainstorming User authentication với JWT
-/em:skill:spec-driven-development Tạo spec cho payment system
+# Skills - Prefix em-skill:
+/em-skill:brainstorming User authentication với JWT
+/em-skill:spec-driven-development Tạo spec cho payment system
 
 # Agents - Gõ với em: prefix
-/em:planner Tạo kế hoạch cho JWT auth
-/em:code-reviewer Review PR #123
+/em-agent:planner Tạo kế hoạch cho JWT auth
+/em-agent:code-reviewer Review PR #123
 
 # Workflows - Gõ với em: prefix
-/em:new-feature Triển khai user authentication
-/em:bug-fix Fix login timeout bug
+/em-wf:new-feature Triển khai user authentication
+/em-wf:bug-fix Fix login timeout bug
 ```
 
 ---
@@ -146,7 +293,7 @@ em-help
 
 EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với 2 trục độc lập:
 
-- **Personality** (giọng điệu) — 13 styles chọn bằng `/em:skill:style-switcher`
+- **Personality** (giọng điệu) — 13 styles chọn bằng `/em-skill:style-switcher`
 - **Density** (độ chi tiết) — 3 modes chọn bằng `/compact`, `/terse`, `/standard`
 
 ### 13 Personality Styles
@@ -188,14 +335,14 @@ EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với
 
 ```bash
 # Hiển thị menu personality (13 styles + 3 density modes)
-/em:skill:style-switcher
+/em-skill:style-switcher
 
 # Chọn personality trực tiếp
-/em:skill:style-switcher tactical        # Debug trực tiếp, không giải thích
-/em:skill:style-switcher teacher         # Giải thích kiểu Feynman
-/em:skill:style-switcher reality-check   # Đánh giá thẳng thắn idea của bạn
-/em:skill:style-switcher raw             # Code nhanh, fragments
-/em:skill:style-switcher bluf            # Kết luận trước, chi tiết sau
+/em-skill:style-switcher tactical        # Debug trực tiếp, không giải thích
+/em-skill:style-switcher teacher         # Giải thích kiểu Feynman
+/em-skill:style-switcher reality-check   # Đánh giá thẳng thắn idea của bạn
+/em-skill:style-switcher raw             # Code nhanh, fragments
+/em-skill:style-switcher bluf            # Kết luận trước, chi tiết sau
 
 # Chuyển density độc lập (không ảnh hưởng personality)
 /compact               # Bullet points
@@ -203,12 +350,12 @@ EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với
 /standard              # Đầy đủ
 
 # Kết hợp personality + density (mỗi cái set độc lập)
-/em:skill:style-switcher raw             # Personality → Raw
+/em-skill:style-switcher raw             # Personality → Raw
 /compact               # Density → COMPACT
 # → Raw tone + bullet-point format
 
 # Terminal CLI modifier (bỏ markdown, tiết kiệm thêm 20-30% token)
-/em:skill:style-switcher tactical + terminal CLI
+/em-skill:style-switcher tactical + terminal CLI
 ```
 
 ### Khi nào dùng style nào
@@ -235,147 +382,161 @@ EM-Team v3.0.0 có hệ thống điều khiển giao tiếp thống nhất với
 
 ## Cấu trúc Command
 
-EM-Team v3.7.0 sử dụng cấu trúc command thống nhất:
+EM-Team v5.5.0 sử dụng 3 prefixes rõ ràng theo type:
 
 ```bash
-# Skills (85 commands) - Prefix em:skill:
-/em:skill:skill-name [task description]
+# Skills (86 commands) - Prefix em-skill:
+/em-skill:skill-name [task description]
 
-# Agents (35 commands) - Prefix em:
-/em:agent-name [task description]
+# Agents (36 commands) - Prefix em-agent:
+/em-agent:agent-name [task description]
 
-# Workflows (25 commands) - Prefix em:
-/em:workflow-name [task description]
+# Workflows (27 commands) - Prefix em-wf:
+/em-wf:workflow-name [task description]
 
 # Communication Styles
-/em:skill:style-switcher [style-name]   # 13 personality styles
+/em-skill:style-switcher [style-name]   # 13 personality styles
 /compact | /terse | /standard  # 3 density modes
 ```
 
 ### Tất cả Commands Available
 
-#### 📚 Skills (85 commands) - Prefix em:skill:
+#### 📚 Skills (86 commands) - Prefix em-skill:
 
 ```
-/em:skill:brainstorming          - Explore ideas into designs
-/em:skill:spec-driven-development        - Create specifications
-/em:skill:systematic-debugging   - Debug with scientific method
-/em:skill:context-engineering    - Optimize agent context
-/em:skill:writing-plans          - Write implementation plans
-/em:skill:alignment-session      - Pre-coding human-AI alignment (MỚI)
-/em:skill:test-driven-development        - TDD RED-GREEN-REFACTOR
-/em:skill:frontend-patterns      - React/Next.js/Vue patterns
-/em:skill:backend-patterns       - API/Database/NestJS patterns
-/em:skill:typescript-patterns     - TypeScript types, async, React TS (MỚI)
-/em:skill:python-patterns        - Python 3.10+, FastAPI, SQLAlchemy (MỚI)
-/em:skill:go-patterns            - Go errors, concurrency, testing (MỚI)
-/em:skill:rust-patterns          - Rust ownership, traits, tokio (MỚI)
-/em:skill:architecture-zoom-out    - Higher-level code perspective (MỚI)
-/em:skill:architecture-improvement - Systematic module deepening (MỚI)
-/em:skill:issue-generator          - Plans to structured vertical-slice issues (MỚI)
-/em:skill:prd-generator            - Ideas to structured PRD documents (MỚI)
-/em:skill:security-hardening     - OWASP Top 10 security
-/em:skill:incremental-implementation       - Vertical slice development
-/em:skill:subagent-driven-development           - Fresh context per task
-/em:skill:source-driven-development      - Code from official docs
-/em:skill:api-interface-design   - Contract-first APIs
-/em:skill:code-review            - 5-axis code review
-/em:skill:code-simplification    - Reduce complexity
-/em:skill:browser-testing        - DevTools MCP
-/em:skill:performance-optimization - Measure-first optimization
-/em:skill:e2e-testing            - Playwright testing
-/em:skill:security-audit         - Vulnerability assessment
-/em:skill:security-common        - OWASP reference & checklist (MỚI)
-/em:skill:ux-audit                 - Behavioral UX audit (MỚI)
-/em:skill:plan-tune                - Learn output preferences (MỚI)
-/em:skill:api-testing            - Integration testing
-/em:skill:git-workflow           - Atomic commits
-/em:skill:ci-cd-automation       - Feature flags
-/em:skill:documentation          - ADRs & docs
-/em:skill:finishing-branch       - Merge/PR decisions
-/em:skill:deprecation-migration  - Code-as-liability
-/em:skill:style-switcher         - 13 personality + 3 density modes
+/em-skill:brainstorming          - Explore ideas into designs
+/em-skill:spec-driven-development        - Create specifications
+/em-skill:systematic-debugging   - Debug with scientific method
+/em-skill:context-engineering    - Optimize agent context
+/em-skill:writing-plans          - Write implementation plans
+/em-skill:alignment-session      - Pre-coding human-AI alignment (MỚI)
+/em-skill:brownfield-onboarding  - Rapid codebase onboarding cho existing projects (MỚI v5.0.0)
+/em-skill:test-driven-development        - TDD RED-GREEN-REFACTOR
+/em-skill:frontend-patterns      - React/Next.js/Vue patterns
+/em-skill:backend-patterns       - API/Database/NestJS patterns
+/em-skill:typescript-patterns     - TypeScript types, async, React TS (MỚI)
+/em-skill:python-patterns        - Python 3.10+, FastAPI, SQLAlchemy (MỚI)
+/em-skill:go-patterns            - Go errors, concurrency, testing (MỚI)
+/em-skill:rust-patterns          - Rust ownership, traits, tokio (MỚI)
+/em-skill:architecture-zoom-out    - Higher-level code perspective (MỚI)
+/em-skill:architecture-improvement - Systematic module deepening (MỚI)
+/em-skill:issue-generator          - Plans to structured vertical-slice issues (MỚI)
+/em-skill:prd-generator            - Ideas to structured PRD documents (MỚI)
+/em-skill:security-hardening     - OWASP Top 10 security
+/em-skill:incremental-implementation       - Vertical slice development
+/em-skill:subagent-driven-development           - Fresh context per task
+/em-skill:source-driven-development      - Code from official docs
+/em-skill:api-interface-design   - Contract-first APIs
+/em-skill:code-review            - 5-axis code review
+/em-skill:code-simplification    - Reduce complexity
+/em-skill:browser-testing        - DevTools MCP
+/em-skill:performance-optimization - Measure-first optimization
+/em-skill:e2e-testing            - Playwright testing
+/em-skill:security-audit         - Vulnerability assessment
+/em-skill:security-common        - OWASP reference & checklist (MỚI)
+/em-skill:ux-audit                 - Behavioral UX audit (MỚI)
+/em-skill:plan-tune                - Learn output preferences (MỚI)
+/em-skill:api-testing            - Integration testing
+/em-skill:git-workflow           - Atomic commits
+/em-skill:ci-cd-automation       - Feature flags
+/em-skill:documentation          - ADRs & docs
+/em-skill:finishing-branch       - Merge/PR decisions
+/em-skill:deprecation-migration  - Code-as-liability
+/em-skill:style-switcher         - 13 personality + 3 density modes
 
 # MỚI v3.7.0 — GitHub Management Suite
-/em:skill:github-cicd-setup      - Phát hiện stack → tạo .github/workflows/ci.yml
-/em:skill:github-pr-manager      - Tạo PR / fix review comments / merge an toàn
-/em:skill:github-issue-manager   - Tạo issue / triage backlog / sprint planning
-/em:skill:github-release-manager - Bump version → release notes → tag → GitHub Release
+/em-skill:github-cicd-setup      - Phát hiện stack → tạo .github/workflows/ci.yml
+/em-skill:github-pr-manager      - Tạo PR / fix review comments / merge an toàn
+/em-skill:github-issue-manager   - Tạo issue / triage backlog / sprint planning
+/em-skill:github-release-manager - Bump version → release notes → tag → GitHub Release
 
 # MỚI v3.6.0
-/em:skill:codebase-architecture  - Nghiên cứu 6 kiến trúc → đề xuất 2-3 → sinh rule files
+/em-skill:codebase-architecture  - Nghiên cứu 6 kiến trúc → đề xuất 2-3 → sinh rule files
 
 # MỚI v3.5.0 — Outsource Nhật Bản
-/em:skill:basic-design           - Tạo 基本設計 (8 phần + sign-off gate)
-/em:skill:detailed-design        - Tạo 詳細設計 per-module (class diagrams + sign-off)
-/em:skill:uat-process            - Chạy 受け入れテスト với client sign-off
-/em:skill:progress-reporting     - Báo cáo 進捗報告 tuần GREEN/YELLOW/RED
+/em-skill:basic-design           - Tạo 基本設計 (8 phần + sign-off gate)
+/em-skill:detailed-design        - Tạo 詳細設計 per-module (class diagrams + sign-off)
+/em-skill:uat-process            - Chạy 受け入れテスト với client sign-off
+/em-skill:progress-reporting     - Báo cáo 進捗報告 tuần GREEN/YELLOW/RED
+
+# MỚI v4.1.0
+/em-skill:github-issue-fix       - Browse GitHub issues → chọn → em-wf:bug-fix
+
+# MỚI v5.0.0 — Brownfield Intelligence
+/em-skill:brownfield-context-sync - Sync codebase context sau changes
 ```
 
-#### 🤖 Agents (35 commands) - Prefix em:
+#### 🤖 Agents (36 commands) - Prefix em-agent:
 
 ```
-/em:planner               - Create implementation plans
-/em:executor              - Execute plans with atomic commits
-/em:code-reviewer         - 5-axis code review
-/em:debugger              - Systematic debugging
-/em:test-engineer         - Test strategy & generation
-/em:security-auditor      - OWASP security audit
-/em:ui-auditor            - Visual QA and design review
-/em:verifier              - Post-execution verification
-/em:architect             - Architecture & technical design
-/em:backend-expert        - Database, API, performance ⭐
-/em:frontend-expert       - React/Next.js, UI/UX ⭐
-/em:database-expert       - Schema, queries, fintech ⭐
-/em:product-manager       - Requirements, GAP analysis
-/em:senior-code-reviewer  - 9-axis deep code review
-/em:security-reviewer     - OWASP + STRIDE security
-/em:staff-engineer        - Root cause analysis
-/em:team-lead             - Team coordination
-/em:techlead-orchestrator - Distributed investigation ⭐
-/em:researcher            - Technical research
-/em:codebase-mapper       - Architecture analysis
-/em:integration-checker   - Cross-phase validation
-/em:performance-auditor   - Benchmarking & optimization ⭐
-/em:market-intelligence   - Market analysis, competitive intel
-/em:learn                 - Knowledge management
-/em:autoplan              - Multi-phase review orchestrator
-/em:design-reviewer       - Visual design, 6-pillar UI audit (MỚI) 🎨
-/em:devex-reviewer        - Dev experience audit, TTHW (MỚI) 🎨
-/em:iron-law-enforcer     - Iron Law compliance gate (MỚI) 🔒
-/em:react-expert          - React/Next.js, hooks, state management (MỚI) ⚛️
-/em:vue-expert            - Vue 3, Composition API, Pinia (MỚI) 💚
-/em:nestjs-expert         - NestJS, TypeScript, GraphQL (MỚI) 🟢
-/em:devops-expert         - Docker, K8s, Terraform, CI/CD (MỚI) ☁️
-/em:mobile-expert         - Flutter, React Native, Android, iOS (MỚI) 📱
-/em:spring-expert         - Spring Boot, JPA, security (MỚI) 🍃
-/em:rust-expert           - Rust systems, ownership, async tokio (MỚI) 🦀
+/em-agent:planner               - Create implementation plans
+/em-agent:executor              - Execute plans with atomic commits
+/em-agent:code-reviewer         - 5-axis (standard) hoặc 9-axis (deep) code review
+/em-agent:debugger              - Systematic debugging
+/em-agent:test-engineer         - Test strategy & generation
+/em-agent:security-reviewer     - OWASP + STRIDE security review (Audit mode + Review mode)
+/em-agent:ui-auditor            - Visual QA and design review
+/em-agent:verifier              - Post-execution verification
+/em-agent:architect             - Architecture & technical design
+/em-agent:backend-expert        - Database, API, performance ⭐
+/em-agent:frontend-expert       - React/Next.js, UI/UX ⭐
+/em-agent:database-expert       - Schema, queries, fintech ⭐
+/em-agent:product-manager       - Requirements, GAP analysis
+/em-agent:staff-engineer        - Root cause analysis
+/em-agent:team-lead             - Team coordination
+/em-agent:techlead-orchestrator - Distributed investigation ⭐
+/em-agent:researcher            - Technical research
+/em-agent:codebase-mapper       - Architecture analysis
+/em-agent:integration-checker   - Cross-phase validation
+/em-agent:performance-auditor   - Benchmarking & optimization ⭐
+/em-agent:market-intelligence   - Market analysis, competitive intel
+/em-agent:learn                 - Knowledge management
+/em-agent:autoplan              - Multi-phase review orchestrator
+/em-agent:design-reviewer       - Visual design, 6-pillar UI audit 🎨
+/em-agent:devex-reviewer        - Dev experience audit, TTHW 🎨
+/em-agent:iron-law-enforcer     - Iron Law compliance gate 🔒
+/em-agent:react-expert          - React/Next.js, hooks, state management ⚛️
+/em-agent:vue-expert            - Vue 3, Composition API, Pinia 💚
+/em-agent:nestjs-expert         - NestJS, TypeScript, GraphQL 🟢
+/em-agent:devops-expert         - Docker, K8s, Terraform, CI/CD ☁️
+/em-agent:mobile-expert         - Flutter, React Native, Android, iOS 📱
+/em-agent:spring-expert         - Spring Boot, JPA, security 🍃
+/em-agent:rust-expert           - Rust systems, ownership, async tokio 🦀
+/em-agent:playwright-setup      - Auto-detect stack, install Playwright, scaffold POM 🧪
+/em-agent:brownfield-test-engineer - Spec-to-test cho existing codebases 🧪
+/em-agent:test-verifier         - Double-check test results, retry max 3 🧪
 ```
 
-#### 🔄 Workflows (23 commands) - Prefix em:
+#### 🔄 Workflows (27 commands) - Prefix em-wf:
 
 ```
-/em:new-feature           - Idea → Production
-/em:bug-fix               - Investigate and fix bugs
-/em:refactoring           - Improve code quality
-/em:security-audit        - Security assessment
-/em:project-setup         - Initialize projects
-/em:documentation         - Generate docs
-/em:deployment            - Deploy and monitor
-/em:retro                 - Learn and improve
-/em:ship-workflow         - Version bump, changelog, PR (MỚI)
-/em:canary-monitoring     - Post-deploy health check (MỚI)
-/em:six-phase-lifecycle   - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP (MỚI)
-/em:team-review           - Full team review
-/em:architecture-review   - Architecture review
-/em:design-review         - UI/UX review
-/em:code-review-9axis     - Deep 9-axis review
-/em:database-review       - Database review
-/em:product-review        - Product review
-/em:security-review-advanced - Advanced security
-/em:incident-response     - Production incidents
-/em:distributed-investigation - Parallel investigation ⭐
-/em:distributed-development    - Parallel development ⭐
+/em-wf:new-feature              - Idea → Production
+/em-wf:greenfield-app           - Blank dir → shipped app (12 stages)
+/em-wf:bug-fix                  - Investigate and fix bugs
+/em-wf:qa-bug-hunter            - QA test → find bugs → human gate → GitHub issues
+/em-wf:refactoring              - Improve code quality
+/em-wf:security-audit           - Security assessment
+/em-wf:project-setup            - Initialize projects
+/em-wf:documentation            - Generate docs
+/em-wf:deployment               - Deploy and monitor
+/em-wf:retro                    - Learn and improve
+/em-wf:ship-workflow            - Version bump, changelog, PR
+/em-wf:canary-monitoring        - Post-deploy health check
+/em-wf:six-phase-lifecycle      - DEFINE → PLAN → BUILD → VERIFY → REVIEW → SHIP
+/em-wf:team-review              - Full team review
+/em-wf:architecture-review      - Architecture review
+/em-wf:design-review            - UI/UX review
+/em-wf:code-review              - Deep 9-axis review workflow
+/em-wf:database-review          - Database review
+/em-wf:product-review           - Product review
+/em-wf:security-review-advanced - Advanced security (OWASP + STRIDE)
+/em-wf:incident-response        - Production incidents
+/em-wf:distributed-investigation - Parallel investigation ⭐
+/em-wf:distributed-development  - Parallel development ⭐
+/em-wf:discovery-process        - Product discovery and validation
+/em-wf:market-driven-feature    - Market-driven feature development
+/em-wf:japanese-outsourcing     - 9-stage formal outsourcing workflow
+/em-wf:brownfield-investigation - Deep investigation cho existing codebases
 ```
 
 ---
@@ -392,16 +553,16 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 
 ```bash
 # Pattern cơ bản
-/em:skill:skill-name [mô tả task]
+/em-skill:skill-name [mô tả task]
 
 # Ví dụ thực tế
-/em:skill:brainstorming Explore authentication options với JWT, OAuth2, và Session-based
-/em:skill:spec-driven-development Create spec cho payment gateway integration
-/em:skill:systematic-debugging Investigate memory leak trong API service
-/em:skill:test-driven-development Implement user registration với TDD
-/em:skill:frontend-patterns Tạo reusable button component trong React
-/em:skill:backend-patterns Design REST API cho user management
-/em:skill:security-hardening Review code cho OWASP vulnerabilities
+/em-skill:brainstorming Explore authentication options với JWT, OAuth2, và Session-based
+/em-skill:spec-driven-development Create spec cho payment gateway integration
+/em-skill:systematic-debugging Investigate memory leak trong API service
+/em-skill:test-driven-development Implement user registration với TDD
+/em-skill:frontend-patterns Tạo reusable button component trong React
+/em-skill:backend-patterns Design REST API cho user management
+/em-skill:security-hardening Review code cho OWASP vulnerabilities
 ```
 
 ### Use Case Chi tiết: Authentication Feature
@@ -409,7 +570,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 1: Brainstorming
 
 ```bash
-/em:skill:brainstorming Explore user authentication options
+/em-skill:brainstorming Explore user authentication options
 
 # Agent sẽ phân tích:
 # - JWT vs Session-based vs OAuth2
@@ -427,7 +588,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 2: Spec-driven Development
 
 ```bash
-/em:skill:spec-driven-development Create specification cho JWT authentication
+/em-skill:spec-driven-development Create specification cho JWT authentication
 
 # Agent sẽ tạo:
 # - Functional requirements
@@ -446,7 +607,7 @@ Kích hoạt skills trực tiếp trong conversation của bạn:
 #### Bước 3: Test-Driven Development
 
 ```bash
-/em:skill:test-driven-development Implement authentication với TDD
+/em-skill:test-driven-development Implement authentication với TDD
 
 # Agent sẽ theo cycle:
 # 1. RED - Viết failing test
@@ -476,17 +637,17 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 
 ```bash
 # Pattern cơ bản
-/em:agent-name [mô tả task]
+/em-agent:{name} [mô tả task]
 
 # Ví dụ thực tế
-/em:planner Create implementation plan cho JWT auth
-/em:executor Implement authentication system
-/em:code-reviewer Review PR #123 authentication
-/em:debugger Investigate login timeout bug
-/em:backend-expert Optimize database queries
-/em:frontend-expert Review React components
-/em:database-expert Design user schema
-/em:security-auditor Audit authentication system
+/em-agent:planner Create implementation plan cho JWT auth
+/em-agent:executor Implement authentication system
+/em-agent:code-reviewer Review PR #123 authentication
+/em-agent:debugger Investigate login timeout bug
+/em-agent:backend-expert Optimize database queries
+/em-agent:frontend-expert Review React components
+/em-agent:database-expert Design user schema
+/em-agent:security-reviewer Audit authentication system
 ```
 
 ### Use Case Chi tiết: Code Review
@@ -495,7 +656,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 
 ```bash
 # Bước 1: Code review cơ bản
-/em:code-reviewer Review PR #123
+/em-agent:code-reviewer Review PR #123
 
 # Agent sẽ kiểm tra:
 # - Correctness: Code có đúng không?
@@ -505,7 +666,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Maintainability: Code có dễ maintain không?
 
 # Bước 2: Deep review 9-axis (cho critical code)
-/em:senior-code-reviewer Deep review PR #123
+/em-agent:code-reviewer Deep review PR #123
 
 # Agent sẽ kiểm tra 9 dimensions:
 # - Correctness
@@ -519,7 +680,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Architecture Alignment
 
 # Bước 3: Security review (cho sensitive code)
-/em:security-reviewer OWASP + STRIDE security review
+/em-agent:security-reviewer OWASP + STRIDE security review
 
 # Agent sẽ phân tích:
 # - OWASP Top 10 vulnerabilities
@@ -533,7 +694,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 
 ```bash
 # Bước 1: Benchmark current state
-/em:performance-auditor Benchmark API endpoints
+/em-agent:performance-auditor Benchmark API endpoints
 
 # Agent sẽ:
 # - Measure response times
@@ -542,7 +703,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Find bottlenecks
 
 # Bước 2: Analyze backend
-/em:backend-expert Analyze database queries và API performance
+/em-agent:backend-expert Analyze database queries và API performance
 
 # Agent sẽ:
 # - Review query patterns
@@ -551,7 +712,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Analyze caching strategy
 
 # Bước 3: Analyze frontend
-/em:frontend-expert Review React rendering performance
+/em-agent:frontend-expert Review React rendering performance
 
 # Agent sẽ:
 # - Check unnecessary re-renders
@@ -560,7 +721,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Check memoization
 
 # Bước 4: Implement optimizations
-/em:executor Implement performance optimizations
+/em-agent:executor Implement performance optimizations
 
 # Agent sẽ:
 # - Add database indexes
@@ -569,7 +730,7 @@ Agents là các AI assistants chuyên biệt với expertise trong các domains 
 # - Add pagination
 
 # Bước 5: Verify improvements
-/em:performance-auditor Re-benchmark sau optimization
+/em-agent:performance-auditor Re-benchmark sau optimization
 
 # Agent sẽ:
 # - Compare before/after metrics
@@ -588,7 +749,7 @@ Khách hàng Nhật Bản yêu cầu tài liệu chính thức và sign-off tạ
 ### Workflow chính: Japanese Outsourcing (9 giai đoạn)
 
 ```bash
-/em:japanese-outsourcing
+/em-wf:japanese-outsourcing
 ```
 
 | Giai đoạn | Tên | Gate | Sản phẩm |
@@ -607,22 +768,22 @@ Khách hàng Nhật Bản yêu cầu tài liệu chính thức và sign-off tạ
 
 ```bash
 # Tạo 基本設計
-/em:skill:basic-design
+/em-skill:basic-design
 # Sinh ra: BASIC-DESIGN.md với 8 phần
 # (System Overview, Architecture, Data Design, Interface Design,
 #  NFRs, Error Handling, Issues/Risks, Sign-Off Table)
 
 # Tạo 詳細設計 per module
-/em:skill:detailed-design
+/em-skill:detailed-design
 # Sinh ra: DETAILED-DESIGN.md với class diagrams, pre/post-conditions
 
 # Chạy 受け入れテスト
-/em:skill:uat-process
+/em-skill:uat-process
 # Sinh ra: UAT-PLAN.md, UAT-TEST-CASES.md, UAT-EXECUTION-LOG.md,
 #           UAT-DEFECT-LOG.md, UAT-SIGNOFF.md
 
 # Báo cáo tiến độ tuần
-/em:skill:progress-reporting
+/em-skill:progress-reporting
 # Sinh ra: Weekly status với GREEN/YELLOW/RED, metrics, escalation
 ```
 
@@ -651,15 +812,15 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 ```bash
 # Pattern cơ bản
-/em:workflow-name [mô tả task]
+/em-wf:{name} [mô tả task]
 
 # Ví dụ thực tế
-/em:new-feature Implement user authentication from idea to production
-/em:bug-fix Fix login timeout bug systematically
-/em:qa-bug-hunter QA test http://localhost:5173 and log bugs to GitHub
-/em:refactoring Refactor authentication code for better maintainability
-/em:security-audit Audit payment system for vulnerabilities
-/em:distributed-investigation Investigate authentication failure across full stack
+/em-wf:new-feature Implement user authentication from idea to production
+/em-wf:bug-fix Fix login timeout bug systematically
+/em-wf:qa-bug-hunter QA test http://localhost:5173 and log bugs to GitHub
+/em-wf:refactoring Refactor authentication code for better maintainability
+/em-wf:security-audit Audit payment system for vulnerabilities
+/em-wf:distributed-investigation Investigate authentication failure across full stack
 ```
 
 ### Use Case Chi tiết: New Feature Workflow
@@ -667,13 +828,13 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #### Workflow: New Feature
 
 ```bash
-/em:new-feature Implement user authentication
+/em-wf:new-feature Implement user authentication
 
 # Workflow sẽ đi qua 7 phases:
 
 # PHASE 1: DEFINE
 # ==============================
-# Agent: em:product-manager
+# Agent: em-agent:product-manager
 # Output: Feature specification với:
 #   - Business requirements
 #   - User stories
@@ -682,7 +843,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 2: PLAN
 # ==============================
-# Agent: em:planner
+# Agent: em-agent:planner
 # Output: Implementation plan với:
 #   - Technical approach
 #   - Database schema
@@ -693,7 +854,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 3: BUILD
 # ==============================
-# Agent: em:executor
+# Agent: em-agent:executor
 # Output: Working implementation với:
 #   - Database migrations
 #   - Backend API
@@ -703,7 +864,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 4: VERIFY
 # ==============================
-# Agent: em:test-engineer
+# Agent: em-agent:test-engineer
 # Output: Test results với:
 #   - Unit tests (80%+ coverage)
 #   - Integration tests
@@ -712,7 +873,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 5: REVIEW
 # ==============================
-# Agents: em-code-reviewer, em-security-auditor
+# Agents: em-code-reviewer, em-security-reviewer
 # Output: Review reports với:
 #   - Code quality assessment
 #   - Security audit results
@@ -721,7 +882,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 6: SIMPLIFY
 # ==============================
-# Agent: em:code-reviewer
+# Agent: em-agent:code-reviewer
 # Output: Refactored code với:
 #   - Reduced complexity
 #   - Better abstractions
@@ -730,7 +891,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 7: SHIP
 # ==============================
-# Agent: em:verifier
+# Agent: em-agent:verifier
 # Output: Deployment package với:
 #   - Final verification
 #   - Deployment checklist
@@ -743,13 +904,13 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #### Workflow: Bug Fix
 
 ```bash
-/em:bug-fix Fix login timeout bug
+/em-wf:bug-fix Fix login timeout bug
 
 # Workflow sẽ đi qua 5 phases:
 
 # PHASE 1: INVESTIGATE
 # ==============================
-# Agent: em:debugger
+# Agent: em-agent:debugger
 # Process:
 #   1. Gather information
 #   2. Reproduce bug
@@ -762,7 +923,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 2: ANALYZE
 # ==============================
-# Agent: em:staff-engineer
+# Agent: em-agent:staff-engineer
 # Process:
 #   1. Root cause analysis
 #   2. Cross-service impact
@@ -774,7 +935,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 3: HYPOTHESIZE
 # ==============================
-# Agent: em:debugger
+# Agent: em-agent:debugger
 # Process:
 #   1. Form hypothesis
 #   2. Design experiment
@@ -786,7 +947,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 4: IMPLEMENT
 # ==============================
-# Agent: em:executor
+# Agent: em-agent:executor
 # Process:
 #   1. Write failing test (TDD)
 #   2. Implement fix
@@ -799,7 +960,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # PHASE 5: VERIFY
 # ==============================
-# Agent: em:verifier
+# Agent: em-agent:verifier
 # Process:
 #   1. Run all tests
 #   2. Verify fix
@@ -816,7 +977,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 #### Workflow: QA Bug Hunter
 
 ```bash
-/em:qa-bug-hunter QA test http://localhost:5173/projects with targeted mode
+/em-wf:qa-bug-hunter QA test http://localhost:5173/projects with targeted mode
 
 # Workflow sẽ đi qua 7 stages:
 
@@ -830,7 +991,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # STAGE 1: DISCOVER
 # ==============================
-# Skills: em:qa, em:flow-discovery
+# Skills: em-skill:flow-discovery
 # Process:
 #   1. Chạy QA testing (critical paths, console errors,
 #      network failures, performance, responsive, accessibility)
@@ -840,7 +1001,7 @@ Workflows là quy trình end-to-end kết hợp multiple agents và skills để
 
 # STAGE 2: EVIDENCE (per bug)
 # ==============================
-# Skill: em:browser-testing
+# Skill: em-skill:browser-testing
 # Process:
 #   1. Reproduce bug trong browser
 #   2. Chụp screenshot tại điểm lỗi
@@ -925,7 +1086,7 @@ Chế độ phân tán chạy nhiều specialist agents song song trong tmux ses
 tmux attach -t claude-work:orchestrator
 
 # Bước 3: Kích hoạt investigation
-/em:techlead-orchestrator Investigate authentication failure affecting 10% users
+/em-agent:techlead-orchestrator Investigate authentication failure affecting 10% users
 
 # Tech Lead sẽ:
 # 1. Analyze problem
@@ -989,7 +1150,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: REQUIREMENTS
-/em:product-manager Define payment feature requirements
+/em-agent:product-manager Define payment feature requirements
 
 # Output:
 # - User stories
@@ -998,7 +1159,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Success metrics
 
 # PHASE 2: PLANNING
-/em:planner Create implementation plan cho Stripe integration
+/em-agent:planner Create implementation plan cho Stripe integration
 
 # Output:
 # - Architecture decision
@@ -1008,7 +1169,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Error handling strategy
 
 # PHASE 3: SECURITY REVIEW
-/em:security-auditor Review payment security requirements
+/em-agent:security-reviewer Review payment security requirements
 
 # Output:
 # - Security assessment
@@ -1017,7 +1178,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - PCI DSS checklist
 
 # PHASE 4: IMPLEMENTATION
-/em:executor Implement Stripe payment integration
+/em-agent:executor Implement Stripe payment integration
 
 # Process:
 # 1. Database migrations (TDD)
@@ -1032,7 +1193,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - API documentation
 
 # PHASE 5: TESTING
-/em:test-engineer Create test strategy cho payment system
+/em-agent:test-engineer Create test strategy cho payment system
 
 # Output:
 # - Unit tests (90%+ coverage)
@@ -1041,8 +1202,8 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Security tests (OWASP ZAP)
 
 # PHASE 6: REVIEW
-/em:code-reviewer Review payment code
-/em:security-reviewer Security review payment system
+/em-agent:code-reviewer Review payment code
+/em-agent:security-reviewer Security review payment system
 
 # Output:
 # - Code quality assessment
@@ -1050,7 +1211,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Recommendations
 
 # PHASE 7: DEPLOYMENT
-/em:deployment Deploy payment feature to staging
+/em-wf:deployment Deploy payment feature to staging
 
 # Output:
 # - Staging deployment
@@ -1065,7 +1226,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: ANALYSIS
-/em:codebase-mapper Analyze user service architecture
+/em-agent:codebase-mapper Analyze user service architecture
 
 # Output:
 # - Current architecture analysis
@@ -1074,7 +1235,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Refactoring opportunities
 
 # PHASE 2: QUALITY ASSESSMENT
-/em:senior-code-reviewer Deep review user service code
+/em-agent:code-reviewer Deep review user service code
 
 # Output:
 # - 9-axis code review
@@ -1083,7 +1244,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Technical debt
 
 # PHASE 3: PLANNING
-/em:planner Create refactoring plan
+/em-agent:planner Create refactoring plan
 
 # Output:
 # - Refactoring strategy
@@ -1092,9 +1253,9 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Testing approach
 
 # PHASE 4: REFACTORING (incremental)
-/em:refactoring Refactor user authentication module
-/em:refactoring Refactor user profile module
-/em:refactoring Refactor user permissions module
+/em-wf:refactoring Refactor user authentication module
+/em-wf:refactoring Refactor user profile module
+/em-wf:refactoring Refactor user permissions module
 
 # Each refactoring:
 # 1. Write tests (TDD)
@@ -1104,7 +1265,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # 5. Document changes
 
 # PHASE 5: VERIFICATION
-/em:test-engineer Verify refactoring with regression tests
+/em-agent:test-engineer Verify refactoring with regression tests
 
 # Output:
 # - Regression test suite
@@ -1112,7 +1273,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Performance comparison
 
 # PHASE 6: DEPLOYMENT
-/em:deployment Deploy refactored service
+/em-wf:deployment Deploy refactored service
 
 # Output:
 # - Gradual rollout
@@ -1126,8 +1287,8 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # PHASE 1: ARCHITECTURE ASSESSMENT
-/em:architect Review current architecture
-/em:codebase-mapper Map dependencies and boundaries
+/em-agent:architect Review current architecture
+/em-agent:codebase-mapper Map dependencies and boundaries
 
 # Output:
 # - Current architecture analysis
@@ -1135,9 +1296,9 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Migration roadmap
 
 # PHASE 2: DESIGN
-/em:architect Design microservices architecture
-/em:database-expert Design data distribution strategy
-/em:backend-expert Design inter-service communication
+/em-agent:architect Design microservices architecture
+/em-agent:database-expert Design data distribution strategy
+/em-agent:backend-expert Design inter-service communication
 
 # Output:
 # - Architecture decision record (ADR)
@@ -1146,7 +1307,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - API contracts
 
 # PHASE 3: PROOF OF CONCEPT
-/em:new-feature Implement first microservice (user service)
+/em-wf:new-feature Implement first microservice (user service)
 
 # Output:
 # - Working microservice
@@ -1154,7 +1315,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Patterns established
 
 # PHASE 4: MIGRATION (incremental)
-/em:distributed-development Migrate features to microservices in parallel
+/em-wf:distributed-development Migrate features to microservices in parallel
 
 # Parallel teams:
 # - Team 1: User service
@@ -1163,10 +1324,10 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Team 4: Order service
 
 # Each team uses:
-/em:new-feature Implement [service] features
+/em-wf:new-feature Implement [service] features
 
 # PHASE 5: INTEGRATION
-/em:integration-checker Verify cross-service integration
+/em-agent:integration-checker Verify cross-service integration
 
 # Output:
 # - Integration test results
@@ -1174,7 +1335,7 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 # - Data flow verification
 
 # PHASE 6: DEPLOYMENT
-/em:deployment Deploy microservices to production
+/em-wf:deployment Deploy microservices to production
 
 # Output:
 # - Deployment strategy
@@ -1190,35 +1351,35 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 
 ```bash
 # Task đơn giản, single concern → Skill
-/em:skill:brainstorming Explore feature ideas
-/em:skill:test-driven-development Implement simple function
+/em-skill:brainstorming Explore feature ideas
+/em-skill:test-driven-development Implement simple function
 
 # Task chuyên môn, single domain → Agent
-/em:backend-expert Optimize database queries
-/em:frontend-expert Review React components
-/em:security-auditor Audit authentication
+/em-agent:backend-expert Optimize database queries
+/em-agent:frontend-expert Review React components
+/em-agent:security-reviewer Audit authentication
 
 # Quy trình phức tạp, multi-phase → Workflow
-/em:new-feature Take feature from idea to production
-/em:bug-fix Fix bug systematically
-/em:refactoring Improve code quality
+/em-wf:new-feature Take feature from idea to production
+/em-wf:bug-fix Fix bug systematically
+/em-wf:refactoring Improve code quality
 
 # Task multi-domain, cần parallel → Distributed Mode
 ./scripts/distributed-orchestrator.sh start
-/em:techlead-orchestrator Investigate across full stack
+/em-agent:techlead-orchestrator Investigate across full stack
 ```
 
 ### 2. Viết Prompts Hiệu quả
 
 ```bash
 # ❌ Quá mơ hồ
-/em:planner Lập kế hoạch
+/em-agent:planner Lập kế hoạch
 
 # ❌ Quá cụ thể, micromanaging
-/em:planner Tạo kế hoạch với 5 tasks, task 1 làm A, task 2 làm B, ...
+/em-agent:planner Tạo kế hoạch với 5 tasks, task 1 làm A, task 2 làm B, ...
 
 # ✅ Cân bằng - Clear goal với sufficient context
-/em:planner Tạo kế hoạch triển khai cho user authentication với JWT.
+/em-agent:planner Tạo kế hoạch triển khai cho user authentication với JWT.
 Nên bao gồm: database schema, API endpoints, frontend components,
 testing strategy, và security considerations.
 ```
@@ -1227,10 +1388,10 @@ testing strategy, và security considerations.
 
 ```bash
 # ❌ Không có context
-/em:debugger Fix bug
+/em-agent:debugger Fix bug
 
 # ✅ Với context
-/em:debugger Investigate login timeout bug.
+/em-agent:debugger Investigate login timeout bug.
 Started 2 hours ago after deployment.
 Error: "Connection timeout after 30s".
 Affects 10% of login attempts.
@@ -1238,7 +1399,7 @@ Backend logs show database query timeouts.
 Database: PostgreSQL 13, connection pool: 20 max.
 
 # ✅✅ Với context + artifacts
-/em:debugger Investigate login timeout.
+/em-agent:debugger Investigate login timeout.
 Bug report: JIRA-123
 Logs: /var/log/auth-service.log
 Metrics: https://grafana.example.com/d/auth
@@ -1249,7 +1410,7 @@ Reproduction steps: [steps]
 
 ```bash
 # TDD Iron Law
-/em:skill:test-driven-development Implement feature
+/em-skill:test-driven-development Implement feature
 # Agent sẽ:
 # 1. RED - Viết failing test
 # 2. GREEN - Implement để pass
@@ -1257,7 +1418,7 @@ Reproduction steps: [steps]
 # NEVER write production code WITHOUT failing test
 
 # Debugging Iron Law
-/em:debugger Investigate bug
+/em-agent:debugger Investigate bug
 # Agent sẽ:
 # 1. Gather information
 # 2. Form hypotheses
@@ -1266,7 +1427,7 @@ Reproduction steps: [steps]
 # NEVER fix WITHOUT root cause
 
 # Spec Iron Law
-/em:skill:spec-driven-development Create spec
+/em-skill:spec-driven-development Create spec
 # Agent sẽ:
 # 1. Write specification FIRST
 # 2. Get approval
@@ -1278,25 +1439,25 @@ Reproduction steps: [steps]
 
 ```bash
 # ❌ Big bang approach
-/em:new-feature Implement entire e-commerce system
+/em-wf:new-feature Implement entire e-commerce system
 
 # ✅ Iterative approach
-/em:new-feature Implement user registration
+/em-wf:new-feature Implement user registration
 # Review, test, deploy
 
-/em:new-feature Implement user profile
+/em-wf:new-feature Implement user profile
 # Review, test, deploy
 
-/em:new-feature Implement user authentication
+/em-wf:new-feature Implement user authentication
 # Review, test, deploy
 
 # ✅✅ Incremental with feedback
-/em:new-feature Implement MVP authentication
-/em:code-reviewer Review authentication
+/em-wf:new-feature Implement MVP authentication
+/em-agent:code-reviewer Review authentication
 # Incorporate feedback
 
-/em:new-feature Add OAuth2 support
-/em:security-auditor Audit OAuth2 implementation
+/em-wf:new-feature Add OAuth2 support
+/em-agent:security-reviewer Audit OAuth2 implementation
 # Incorporate feedback
 ```
 
@@ -1433,7 +1594,7 @@ cd tests
 # Tests sẽ tự retry với exponential backoff
 
 # 5. Review test logs
-cat /tmp/em:team-test-logs/latest.log
+cat /tmp/em-team-test-logs/latest.log
 ```
 
 ---
@@ -1493,8 +1654,8 @@ cat /tmp/em:team-test-logs/latest.log
 
 ---
 
-**Phiên bản:** 3.0.0
-**Cập nhật lần cuối:** 2026-05-07
+**Phiên bản:** 5.5.0
+**Cập nhật lần cuối:** 2026-05-27
 **Tình trạng:** ✅ Production Ready
 
 **Cần trợ giúp?**

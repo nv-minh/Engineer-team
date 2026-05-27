@@ -174,3 +174,40 @@ interface Resource {
 
 ## Changelog
 - [Date]: [Initial spec creation]
+
+## Negative Scenarios (REQUIRED)
+
+> Each acceptance criterion must have at least one negative scenario.
+
+| ID | Trigger | Expected Behavior |
+|---|---|---|
+| N1 | [e.g., User submits with empty email] | [e.g., Inline error "Email is required"; no API call made] |
+| N2 | [e.g., Backend returns 500] | [e.g., Generic error UI with retry CTA; form data preserved] |
+
+## Abuse Scenarios (REQUIRED for any feature touching auth, payment, multi-tenant, file upload, or user input)
+
+> Map to OWASP Top 10 + business abuse. See `skills/quality/test-case-design/test-case-design.md` Step 4.
+
+| ID | Threat Category | Trigger | Expected Defense |
+|---|---|---|---|
+| AB1 | BOLA | User A requests resource owned by User B via id | 403 / 404 (no enumeration) |
+| AB2 | SQL injection | Input contains `' OR 1=1--` | Parameterized; rejected at parse OR returns benign result |
+| AB3 | Idempotency replay | Same Idempotency-Key with different body | 409 |
+| AB4 | Rate limit burst | N+1 requests within 1s | 429 + Retry-After |
+
+## Non-Functional Acceptance Criteria (REQUIRED)
+
+> Cover applicable categories per risk tier. See `skills/quality/test-case-design/test-case-design.md` Step 4.
+
+| Category | Criterion |
+|---|---|
+| Performance | [e.g., p95 latency < 300ms under 50 RPS] |
+| Concurrency | [e.g., Two simultaneous PATCH on same resource -> optimistic-lock 409] |
+| Reliability | [e.g., If downstream X is 5xx, feature degrades gracefully — main flow continues] |
+| Accessibility | [e.g., Full keyboard-only path; screen reader announces async errors] |
+| Internationalization | [e.g., RTL languages mirror layout; long-text languages don't truncate CTAs] |
+| Compatibility | [e.g., Supported browsers: Chrome 110+, Firefox 110+, Safari 16+; mobile viewports 375-768px] |
+
+## Risk Tier (REQUIRED)
+
+Declare: `<P0 | P1 | P2 | P3>` — drives test-case-design ratio floors.

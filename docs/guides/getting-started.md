@@ -19,15 +19,25 @@ Get up and running with EM-Team in 5 minutes.
 git clone https://github.com/nv-minh/agent-team.git
 cd agent-team
 
-# Verify installation
-ls -la scripts/
-ls -la agents/
-ls -la workflows/
-
-# Run tests to verify
-cd tests
-./run-e2e-tests.sh
+# Install
+bash install.sh
 ```
+
+### Post-Install: Enable Features
+
+Add to `.claude/settings.local.json` in your **target project**:
+
+```json
+{
+  "env": {
+    "EM_TEAM_ARTIFACT_EXPORT": "true",
+    "EM_TEAM_SESSION_AUDIT": "true",
+    "EM_TEAM_ATOMIC_COMMITS": "true"
+  }
+}
+```
+
+Verify: `ls ~/.claude/commands/em-agent/*.md ~/.claude/commands/em-wf/*.md ~/.claude/commands/em-skill/*.md | wc -l` (should show 140+ files)
 
 ---
 
@@ -54,11 +64,11 @@ Control how Claude communicates with you:
 
 ```bash
 # Show style menu (13 personality styles + 3 density modes)
-/em:skill:style-switcher
+/em-skill:style-switcher
 
 # Quick personality switching
-/em:skill:style-switcher tactical        # Direct debugging
-/em:skill:style-switcher teacher         # Feynman technique for explanations
+/em-skill:style-switcher tactical        # Direct debugging
+/em-skill:style-switcher teacher         # Feynman technique for explanations
 
 # Quick density switching
 /compact               # Bullet-point output
@@ -71,13 +81,13 @@ Dispatch agents for specialized tasks:
 
 ```bash
 # Create implementation plan
-"Agent: em:planner - Create plan for user authentication feature"
+"Agent: em-agent:planner - Create plan for user authentication feature"
 
 # Review code
-"Agent: em:code-reviewer - Review the authentication PR"
+"Agent: em-agent:code-reviewer - Review the authentication PR"
 
 # Debug issues
-"Agent: em:debugger - Investigate the authentication failure"
+"Agent: em-agent:debugger - Investigate the authentication failure"
 ```
 
 ### 3. Using Workflows
@@ -86,13 +96,13 @@ Run end-to-end processes:
 
 ```bash
 # New feature workflow
-"Workflow: em-new-feature - Implement user authentication"
+/em-wf:new-feature Implement user authentication
 
 # Bug fix workflow
-"Workflow: em-bug-fix - Fix the login timeout bug"
+/em-wf:bug-fix Fix the login timeout bug
 
 # Security audit
-"Workflow: em-security-audit - Audit authentication system"
+/em-wf:security-audit Audit authentication system
 ```
 
 ---
@@ -103,7 +113,7 @@ Run end-to-end processes:
 
 ```bash
 # Full greenfield workflow (blank directory → shipped app)
-"Workflow: em-greenfield-app - Build a task management app with teams and projects"
+/em-wf:greenfield-app Build a task management app with teams and projects
 # Runs: Ideation → Domain Modeling → Spec → Architecture → Bootstrap → Build → Verify → Review → Launch
 ```
 
@@ -113,46 +123,26 @@ Run end-to-end processes:
 # Step 1: Explore the idea
 "Use the brainstorming skill to explore a user profile feature"
 
-# Step 2: Create specification
-"Use the spec-driven-development skill to create a spec"
-
-# Step 3: Plan implementation
-"Agent: em:planner - Create implementation plan for user profile"
-
-# Step 4: Implement
-"Use the subagent-driven-development skill to implement the plan"
-
-# Step 5: Review
-"Agent: em:code-reviewer - Review the user profile implementation"
-
-# Step 6: Deploy
-"Workflow: em-deployment - Deploy user profile feature"
-```
-
-### Task 2: Building a New Feature
-
-```bash
-# Step 1: Explore the idea
-"Use the brainstorming skill to explore a user profile feature"
-
-# Step 1.7: Domain modeling (optional, for cross-context features)
+# Step 1.5: Domain modeling (optional, for cross-context features)
 "Use the domain-modeling skill to map entities and bounded contexts"
 
 # Step 2: Create specification
 "Use the spec-driven-development skill to create a spec"
 
 # Step 3: Plan implementation
-"Agent: em:planner - Create implementation plan for user profile"
+"Agent: em-agent:planner - Create implementation plan for user profile"
 
 # Step 4: Implement
 "Use the subagent-driven-development skill to implement the plan"
 
 # Step 5: Review
-"Agent: em:code-reviewer - Review the user profile implementation"
+"Agent: em-agent:code-reviewer - Review the user profile implementation"
 
 # Step 6: Deploy
 "Workflow: em-deployment - Deploy user profile feature"
 ```
+
+### Task 2b: Fixing a Bug
 
 ```bash
 # Step 1: Debug systematically
@@ -166,23 +156,45 @@ Run end-to-end processes:
 "Use the api-testing skill to verify the fix"
 
 # Step 4: Review
-"Agent: em:code-reviewer - Review the bug fix"
+"Agent: em-agent:code-reviewer - Review the bug fix"
+```
+
+### Task 2c: QA Bug Hunting *(v4.1.0)*
+
+```bash
+# Find bugs, review each one, create GitHub issues only after approval
+/em-wf:qa-bug-hunter QA test http://localhost:5173 and log bugs
+
+# Human Gate: for each bug found, you decide APPROVE/REJECT/MODIFY
+```
+
+### Task 2d: Brownfield Investigation *(v5.0.0)*
+
+```bash
+# Step 1: Onboard the existing codebase
+"Use the brownfield-onboarding skill to analyze this legacy codebase"
+
+# Step 2: Investigate architecture, tech debt, and improvement opportunities
+/em-wf:brownfield-investigation Assess tech debt and create improvement roadmap
+
+# Step 3: Sync context after making changes
+"Use the brownfield-context-sync skill to refresh architecture map"
 ```
 
 ### Task 3: Code Review
 
 ```bash
 # Standard 5-axis review
-"Agent: em:code-reviewer - Review the changes in this PR"
+"Agent: em-agent:code-reviewer - Review the changes in this PR"
 
 # Deep 9-axis review (for production-critical code)
-"Agent: em:code-reviewer - Deep review of authentication changes"
+"Agent: em-agent:code-reviewer - Deep review of authentication changes"
 
 # Deep 9-axis workflow with security
-"Workflow: em-code-review-9axis - Deep review of authentication changes"
+/em-wf:code-review Deep review of authentication changes
 
 # Team review
-"Workflow: em-team-review - Full team review of critical feature"
+/em-wf:team-review Full team review of critical feature
 ```
 
 ---
@@ -199,7 +211,7 @@ For complex tasks requiring multiple specialist agents:
 tmux attach -t claude-work:orchestrator
 
 # Trigger distributed investigation
-"Agent: em:techlead-orchestrator - Investigate authentication across the stack"
+"Agent: em-agent:techlead-orchestrator - Investigate authentication across the stack"
 
 # View consolidated report
 cat /tmp/claude-work-reports/techlead/consolidated-report.md
@@ -315,5 +327,5 @@ cd tests
 
 ---
 
-**Last Updated:** 2026-05-08
-**Version:** 3.1.0
+**Last Updated:** 2026-05-27
+**Version:** 5.5.0

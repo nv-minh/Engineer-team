@@ -1,7 +1,7 @@
 ---
 name: bug-fix
 description: Systematic bug fixing workflow from investigation to resolution
-version: "3.1.0"
+version: "3.2.0"
 category: "primary"
 origin: "agent-skills"
 react_protocol: true
@@ -46,6 +46,7 @@ DEFINE ──→ PLAN ──→ BUILD ──→ VERIFY ──→ REVIEW ──�
 | Workflow Stage | Lifecycle Phase | Gate |
 |---|---|---|
 | SETUP (Stage 0) | DEFINE | spec folder detected, branch naming rules checked, BUG doc created, on branch with latest main |
+| ROUTING (Stage 0.5, optional) | DEFINE | routing decision recorded (brownfield-investigation OR standalone OR setup-first) |
 | INVESTIGATE (Stage 1) | DEFINE | Bug reproducible, symptoms documented, evidence collected |
 | ANALYZE (Stage 2) | DEFINE | Failure point identified, hypotheses formed |
 | HYPOTHESIZE (Stage 3) | PLAN | Root cause confirmed, fix approach decided |
@@ -95,6 +96,41 @@ date: {today}
 
 ---
 
+## Stage 0.5: ROUTING (conditional)
+
+<thought>
+If .em-brownfield/ exists, this bug investigation should use the brownfield-investigation
+workflow instead, because brownfield-investigation provides module context, chain tracing,
+and structured evidence with business narrative. The standalone bug-fix flow is for
+greenfield or projects without brownfield setup.
+</thought>
+
+<action>
+type: routing_decision
+condition: ".em-brownfield/INDEX.md exists"
+steps:
+  IF brownfield context present:
+    Suggest user: "I detected .em-brownfield/ context. Recommend running
+    'brownfield-investigation' workflow instead — it provides module context,
+    deep chain tracing, and structured evidence. Proceed with brownfield-investigation?"
+    Options:
+      A) YES — switch to brownfield-investigation (delegate Stages 1-5)
+      B) NO — continue with standalone bug-fix
+      C) SETUP — run brownfield-onboarding first, then brownfield-investigation
+  ELSE:
+    Proceed with Stage 1 (Investigate) as normal.
+</action>
+
+<observation>
+routing_decision: brownfield-investigation | standalone | setup-first
+</observation>
+
+If user chose A: DELEGATE remaining stages to `workflows/brownfield-investigation.md`.
+If user chose C: invoke `brownfield-onboarding` skill, then return to A.
+Otherwise: continue Stage 1.
+
+---
+
 ## Stage 1: Investigate
 
 <thought>
@@ -102,6 +138,10 @@ Observe: Bug report received. No reproduction steps, no evidence, no failure loc
 Analyze: Must reproduce the bug, document symptoms, collect evidence (logs, screenshots, stack traces). Gate requires: bug reproducible + symptoms documented + evidence collected.
 Plan: Invoke debugger agent in INVESTIGATE mode. Gather symptoms, attempt reproduction, check recent changes.
 </thought>
+
+**Brownfield hint (optional):** If `.em-brownfield/` exists but user opted for standalone
+bug-fix, the debugger agent will still load module context via its Phase 0 (see
+agents/debugger.md). No additional config needed here.
 
 <action>
 type: invoke_agent
@@ -300,9 +340,35 @@ workflow_state:
 
 <thought>
 Observe: Fix implemented. Unit tests pass. No verification of side effects, no E2E evidence, no test-verifier report.
-Analyze: Verify fix resolves original issue. Generate regression test cases. Run E2E tests. Collect browser evidence. Double-check with test-verifier. Gate requires: bug resolved + no regressions + E2E evidence + test-verifier PASS.
-Plan: Invoke verifier + test-engineer + test-verifier in sequence. Use test-generation, e2e-testing, browser-testing skills.
+Analyze: Run code-review diff scan FIRST to catch issues before the expensive test suite runs. Then verify fix resolves original issue, generate regression tests, run E2E. Gate requires: diff review PASS + bug resolved + no regressions + E2E evidence + test-verifier PASS.
+Plan: Step 5.1 code-review → Step 5.2 verifier → Step 5.3 test-generation → Step 5.4 E2E → Step 5.5 test-verifier. Review fixes are validated by the test suite, not bypassed.
 </thought>
+
+**Step 5.1 — Code-Review Diff Scan (MANDATORY)**
+
+Review all changed files BEFORE running the test suite. Any findings fixed here will be validated by steps 5.2–5.5.
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: bug_fix_review
+  inputs: [changed_files_list, root_cause_analysis, fix_strategy]
+  outputs: [diff_review_report]
+</action>
+
+Focus areas for bug fix review:
+- Fix does not introduce new bugs
+- Root cause fixed (not just symptom workaround)
+- Regression test quality
+
+Gate: No CRITICAL or unaddressed HIGH findings before proceeding to Step 5.2.
+If FAIL → return to Stage 4 (FIX) with specific findings. Review fixes will then be validated by the test suite.
+
+---
+
+**Step 5.2 — Verify Fix & Check Side Effects (verifier agent)**
 
 <action>
 type: invoke_agent
@@ -315,6 +381,10 @@ params:
     - check_side_effects
 </action>
 
+---
+
+**Step 5.3 — Generate Regression Test Cases (test-generation skill)**
+
 <action>
 type: invoke_skill
 target: test-generation
@@ -322,6 +392,10 @@ params:
   scope: fixed_area_and_edge_cases
   input: root_cause_analysis
 </action>
+
+---
+
+**Step 5.4 — Run E2E Tests & Collect Evidence (e2e-testing + browser-testing skills)**
 
 <action>
 type: invoke_skill
@@ -339,6 +413,10 @@ params:
   evidence: before_after_screenshots
 </action>
 
+---
+
+**Step 5.5 — Double-Check with Test Verifier (test-verifier agent)**
+
 <action>
 type: invoke_agent
 target: test-verifier
@@ -348,8 +426,10 @@ params:
   input: all_test_results
 </action>
 
+---
+
 <observation>
-result: Fix verified, regression tests generated, E2E evidence collected, test-verifier report issued
+result: Diff reviewed (no CRITICAL/HIGH findings), fix verified, regression tests generated, E2E evidence collected, test-verifier report issued
 state_change: Full verification complete
 gate_status: PASS | FAIL
 </observation>
@@ -362,6 +442,7 @@ gate_status: PASS | FAIL
 - [ ] E2E tests confirm fix visible in browser
 - [ ] Browser evidence collected (before/after screenshots)
 - [ ] **test-verifier PASS** (or failure report reviewed by user before proceeding)
+- [ ] Code-review diff scan PASS — verify fix is correct approach (not workaround) — Step 5.1
 
 PASS → Stage 6 | FAIL → return to Stage 4
 
@@ -422,6 +503,14 @@ workflow_state:
   status: COMPLETE
 ```
 
+### Stage 6.1: Rollback Readiness
+
+Before marking fix shipped:
+- [ ] Rollback procedure documented (db migration reversal / deployment rollback command)
+- [ ] Monitoring alerts verified on fixed code paths
+- [ ] Rollback tested in staging (or documented manual steps)
+- [ ] On-call team notified if fix affects critical paths
+
 ---
 
 ## Feature Workspace
@@ -462,6 +551,11 @@ handoff:
   expects:
     - failure_location
     - code_flow_analysis
+  on_failure:
+    trigger: "Bug cannot be reproduced after 3 retries"
+    action: "Report NEEDS_CONTEXT to user with non-reproducible-bug triage"
+    retry_budget: 3
+    escalation: "Do not proceed to Stage 2 without confirmed reproduction"
 ```
 
 ### Analyze → Hypothesize
@@ -476,6 +570,11 @@ handoff:
   expects:
     - root_cause
     - confirmed_hypothesis
+  on_failure:
+    trigger: "No hypothesis can be confirmed from evidence"
+    action: "Return to Stage 1 (Investigate) to collect more evidence"
+    retry_budget: 2
+    escalation: "Notify user if failure location remains unknown after retry"
 ```
 
 ### Hypothesize → Fix
@@ -490,6 +589,11 @@ handoff:
   expects:
     - bug_fix
     - regression_test
+  on_failure:
+    trigger: "Fix strategy cannot be implemented without breaking other tests"
+    action: "Return to Hypothesize stage with specific conflict described"
+    retry_budget: 2
+    escalation: "Notify user if root cause fix is architecturally constrained"
 ```
 
 ### Fix → Verify
@@ -504,6 +608,11 @@ handoff:
   expects:
     - verification_report
     - side_effects_check
+  on_failure:
+    trigger: "test-verifier FAIL or code-review diff scan FAIL"
+    action: "Return to Stage 4 (Fix) with specific failure report"
+    retry_budget: 2
+    escalation: "Notify user if 2 retries still FAIL"
 ```
 
 ---

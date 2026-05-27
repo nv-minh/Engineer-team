@@ -21,12 +21,28 @@ Welcome to the EM-Team documentation hub. This directory contains comprehensive 
 - [Report Format](protocols/report-format.md) - Agent report structure
 
 ### 🔄 Workflows
-- [Workflow Reference](workflows/overview.md) - Complete workflow catalog
+- [Workflow Reference](workflows/reference.md) - All 27 workflows with stages, gates, and examples
+- [Workflow Overview](workflows/overview.md) - Quick catalog
 
 ### 📖 Skill, Agent & Workflow Guides
-- [Skills Overview](skills/overview.md) - All 81 skills organized by category
-- [Agent Reference](agents/overview.md) - All 35 agents with descriptions
+- [Agent Reference](agents/reference.md) - All 36 agents with capabilities, examples, and usage
+- [Skills Overview](skills/overview.md) - All 86 skills organized by category
+- [Agent Overview](agents/overview.md) - Quick catalog
 - [Skill Systems Guide](skill-systems-guide.md) - How the skill system is organized
+
+### 📚 Feature Guides (English)
+- [Brownfield Intelligence](guides/brownfield.md) - Onboard and investigate existing codebases
+- [Test Automation Chain](guides/test-automation.md) - playwright-setup → brownfield-test-engineer → test-verifier
+- [New Feature Workflow](guides/new-feature-workflow.md) - Idea to PR in 6 stages
+- [Code Review](guides/code-review.md) - Standard 5-axis and Deep 9-axis review
+- [Security Review](guides/security-review.md) - OWASP audit and STRIDE threat modeling
+
+### 📚 Hướng Dẫn Tính Năng (Tiếng Việt)
+- [Brownfield Intelligence](vi/brownfield.md) - Onboard và điều tra codebases hiện có
+- [Test Automation Chain](vi/test-automation.md) - Chuỗi 3 agent kiểm thử tự động
+- [New Feature Workflow](vi/new-feature-workflow.md) - Từ ý tưởng đến PR trong 6 giai đoạn
+- [Code Review](vi/code-review.md) - Review 5-axis và 9-axis chuyên sâu
+- [Security Review](vi/security-review.md) - OWASP audit và STRIDE threat modeling
 
 ### 📝 Feature Documentation
 - [TDD Auto-Retry](TDD-AUTO-RETRY.md) - Automated test failure capture and retry
@@ -41,6 +57,13 @@ Welcome to the EM-Team documentation hub. This directory contains comprehensive 
 - `protocols/change-management.md` — Change management protocol
 - `protocols/review-gates.md` — Phase gate sign-off protocol
 - `workflows/japanese-outsourcing.md` — Master outsourcing workflow
+
+### 🔍 Architect/Code/Review Quality Upgrade (v5.3.0)
+- Code-review diff scan runs **first** in all VERIFY stages (before test suite) — review fixes validated by tests
+- `workflows/new-feature.md` · `workflows/bug-fix.md` · `workflows/six-phase-lifecycle.md` · `workflows/greenfield-app.md` · `workflows/refactoring.md` · `workflows/distributed-development.md`
+- `architect` agent v2.1.0 — mandatory ADR generation (Phase 7), existing architecture snapshot (Phase 0)
+- `spec-driven-development` v3.1.0 — testability hard gate (⛔), conflict detection (Phase 1.5), Assumption Approval Gate
+- `code-review` v3.1.0 — diff classification (Step 1.5), cross-file impact scan (Step 4.5)
 
 ### 🐙 GitHub Management Suite (v3.7.0)
 - `skills/workflow/github-cicd-setup/` — Auto-generate CI/CD workflows
@@ -95,5 +118,5 @@ Need help?
 
 ---
 
-**Last Updated:** 2026-05-22
-**Documentation Version:** 3.7.0
+**Last Updated:** 2026-05-27
+**Documentation Version:** 5.5.0

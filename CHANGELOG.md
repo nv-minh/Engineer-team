@@ -5,6 +5,148 @@ All notable changes to EM-Team system will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.0] - 2026-05-27
+
+### Added (Brownfield Intelligence v5.4.0 Improvements — 19 gaps closed)
+
+**New Skill**
+- **brownfield-pr-impact** (workflow) — Assess PR/branch/uncommitted diff impact on brownfield business flows. Input: `diff_source` (pr/branch/uncommitted). Output: `impact_report` with `flows_affected`, `acs_at_risk`, `contract_break_risks`. Surfaces CONTRACT_BREAK risks before merge.
+
+**New Scripts (`scripts/brownfield/`)**
+- `detect-stack.sh` — Auto-detect tech stack (NestJS, React, monorepo, plain Node, unknown)
+- `scan-nestjs.sh` — Extract NestJS controllers, services, modules, route paths
+- `scan-react.sh` — Extract React pages, hooks, components, routes
+- `scan-monorepo.sh` — Handle monorepo workspace layouts (npm/yarn/pnpm workspaces)
+- `symbol-resolver.sh` — Resolve `Class.method` stable symbol → `file:line` at runtime (macOS bash 3.2 compatible)
+- `build-backlinks.sh` — Build `BACKLINKS.json` reverse-dependency index from all module cross-refs
+- `validate-refs.sh` — Verify all cross-module refs resolve; exit 0 = clean, exit 1 = broken refs listed
+- `quality-score.sh` — Grade each module A/B/C/D; output `QUALITY-SCORE.json` + summary table
+
+**New Templates (`templates/brownfield/`)**
+- `DOMAIN-PROFILE.yaml.template` — Structured domain profile (tech stack, DB, auth, compliance, PII fields)
+- `EVIDENCE-MANIFEST.json.template` — Structured evidence manifest for brownfield investigation
+- `INDEX.json.template` — Machine-readable module index (schema_version: "5.4.0")
+- `MODULE-FLOWS.json.template` — JSON sidecar for FLOWS.md (flows[], acs[], known_issues[])
+- `MODULE-CODE-MAP.json.template` — JSON sidecar for CODE-MAP.md (symbol-based entries)
+- `INVESTIGATION-REPORT.md` — Standardized investigation report template (root cause, blast radius, evidence)
+
+**New Hook**
+- `hooks/brownfield-pr-check` — Pre-push non-blocking hook: warns about brownfield modules affected by staged changes
+
+### Changed
+
+**Brownfield Onboarding (brownfield-onboarding)**
+- Phase 1a replaced: uses `detect-stack.sh` + `scan-{stack}.sh` for systematic extraction instead of manual grep
+- Phase 2-extra added: monorepo layout detection via `scan-monorepo.sh`
+- Phase 3-pre added: privacy scan — identifies PII/sensitive fields before writing DOMAIN.md
+- Phase 3-extra added: test discovery — maps existing test coverage per module
+- Phase 4 updated: generates JSON sidecars (FLOWS.json, CODE-MAP.json) alongside markdown
+- Phase 5-extra added: builds BACKLINKS.json via `build-backlinks.sh`
+- Phase 6 replaced: quality gate — `validate-refs.sh` (0 broken) + `quality-score.sh` (Grade A required)
+- Domain detection table expanded to 12 domains + Unknown/Custom protocol
+
+**Brownfield Investigation (brownfield-investigation)**
+- Stage 3 replaced: concrete evidence package routine (5 steps + ASCII tree + EVIDENCE.json manifest)
+- Stage 5 activated: actively writes context updates (6 steps, observation block, Gate 5)
+
+**Flow Discovery (flow-discovery)**
+- Step 3b replaced: bidirectional ENRICH+SYNC — auto-detect module, 3-tier matching, propose FLOWS.md updates with stable FLOW-IDs
+
+**Brownfield Context Sync (brownfield-context-sync)**
+- Step 1a replaced: symbol-based resolver approach — validates `Class.method` symbols via `symbol-resolver.sh` instead of fragile `file:line` matching
+
+**Templates**
+- `MODULE-CODE-MAP.md` — Symbol-first format (8-col table with `symbol`, `file`, `line` columns); Cross-Module Import Map uses `Class.method` stable references
+- `MODULE-FLOWS.md` — Flow ID Convention section added; `FLOW-{MODULE}-{NNN}` IDs in all flow headings
+- `MODULE-DOMAIN.md` — PII/Sensitive Fields table + Data Subject Rights checklist added
+
+**Agent Integrations**
+- `debugger` — Phase 0: load `.em-brownfield/INDEX.md` + affected module context before investigation
+- `verifier` — Phase 0: conditional brownfield context load; Phase 3: check AC-{MODULE}-{NNN} regression; output_schema extended with `brownfield_verification`
+- `brownfield-test-engineer` — Step 0 replaced with explicit 0a-0e sub-steps: FLOWS.json→AC→TC mapping; DOMAIN.json→fixtures; INTEGRATIONS.md→negative TCs; DOMAIN-PROFILE.yaml→auto risk_tier
+
+**Workflow Integrations**
+- `new-feature` — Stage 0.5 (brownfield context load) + Stage 5.7 (context update) + 3 brownfield checklist items in Gate 4+5
+- `bug-fix` — Stage 0.5 routing decision: auto-route to brownfield-investigation when `.em-brownfield/` exists
+
+**Stable IDs**
+- All flows assigned permanent `FLOW-{MODULE}-{NNN}` IDs
+- All acceptance criteria assigned `AC-{MODULE}-{NNN}` IDs
+- IDs stable across refactors — agents and tests reference by ID, not by line numbers
+
+- Total: 90 skills, 38 agents, 27 workflows
+
+---
+
+## [5.3.0] - 2026-05-26
+
+### Changed (Architect/Code/Review Quality Upgrade)
+
+- **new-feature** (v3.3.0) · **bug-fix** (v3.2.0) — Code-review diff scan moved to **Step 5.1 (FIRST)** in VERIFY stage. Correct order: `BUILD → code-review → tests → SHIP`. Rollback readiness gate added (Stage 6.1) before marking feature/fix shipped. Handoff contracts strengthened with `on_failure` + `retry_budget` + `escalation_path`.
+- **six-phase-lifecycle** · **greenfield-app** · **refactoring** · **distributed-development** — Same code-review-first ordering propagated to all VERIFY stages. Code-review `<action>` block inserted before verifier action in each workflow. Gate checkbox "Code-review diff scan PASS" added as first item in each Gate.
+- **spec-driven-development** (v3.1.0) — Testability check upgraded from advisory → ⛔ hard gate (`TESTABILITY GATE — spec BLOCKED until all criteria pass`). Conflict detection added (Phase 1.5): performance contradictions, auth conflicts, data model conflicts, scope contradictions must be resolved before PLAN. Assumption Approval Gate requires explicit user sign-off.
+- **architect** (v2.1.0) — Phase 0 (existing architecture snapshot before analysis — prevents pattern churn without evidence). Phase 7 (ADR Generation MANDATORY — Decision/Context/Alternatives/Consequences/Compliance Criteria 3-5 rules). `output_schema` extended with `adr` + `compliance_criteria[]`. Handoff contract gains `on_failure`.
+- **architecture-review** (v2.2.0) — Stage 0 entry criteria gate (4 mandatory checkboxes — blocks review if problem/spec/scope undefined). Gate 3 now requires ADR + compliance criteria + `docs/adr/` commit. Post-Review: Compliance Monitoring section added.
+- **code-review** (v3.1.0) · **code-reviewer** (v2.1.0) — Step/Phase 1.5 diff classification (NEW/MODIFIED/DELETED per file). Step/Phase 4.5 cross-file impact scan (callers, dependents, shared state, contract changes — escalate if >5 callers). Testing axis upgraded with branch coverage, mutation immunity, edge cases, regression risk.
+- Total: 89 skills, 38 agents, 27 workflows
+
+---
+
+## [5.2.0] - 2026-05-26
+
+### Added
+- **TC-Code Coverage Gate** — closes enforcement gap where TC-REGISTRY (design doc) was never guaranteed to have corresponding `test()` code. Convention: unautomated TCs use `test.todo("TC-XXX-NNN: [title]")` — never drop a TC-ID silently.
+- **test-verifier v2.2.0** — New Step 2.5 pre-retry TC coverage check: counts TC-IDs in all registry files vs test() blocks; returns `BLOCKED` if mismatch. Formal completion marker added (was entirely missing).
+- **TC-REGISTRY.template.md** — New quality-gate checkbox: "TC-code coverage ready: every TC-ID has a corresponding `test()` block (or `test.todo()`) in the test implementation file"
+
+### Changed
+- **test-generation** (v4.1.0) — New Step 4.6 bash count gate between Step 4.5 and Step 5; added to [VERIFICATION] checklist
+- **api-testing** (v4.1.0) · **e2e-testing** (v4.2.0) · **browser-testing** (v4.2.0) — TC-code coverage gate was already present since v5.1.0; now consistent across all 5 consumer skills
+- **test-engineer** (v3.2.0) · **brownfield-test-engineer** (v3.2.0) — Completion marker: "TC-code coverage = 100% per layer"
+- **six-phase-lifecycle** Gate 4 — New checklist item: TC-code coverage = 100% per layer
+- **new-feature** Gate 4+5 — Same TC-code coverage item added after "test-verifier PASS"
+- Total: 89 skills, 38 agents, 27 workflows
+
+---
+
+## [5.1.0] - 2026-05-26
+
+### Added
+- **test-case-design** skill (quality) — Systematic QA test-design techniques: BVA (Boundary Value Analysis), EP (Equivalence Partitioning), Decision Tables, State Transition, Pairwise (Allpairs), Risk-Based Testing. Plus abuse cases (OWASP-mapped), non-functional cases, oracle specification (state/interaction/property/snapshot/metamorphic/contract-schema/differential), and mutation sanity gate. MANDATORY upstream of test-generation/api-testing/e2e-testing/browser-testing for non-trivial features.
+- **12-column TC-REGISTRY format** — TC-ID, Title, Type, Technique, Oracle, Risk, Priority, Preconditions, Input, Steps, Expected Output (incl. mutation caught), Tags
+- **Risk-calibrated ratio floors** — P0: ≥35% negative + ≥15% abuse + ≥10% non-functional; P1: ≥30%+10%+10%; P2: ≥25%+5%+5%; P3: ≥25% negative
+- **Joint Coverage gate** — TC ratio floors evaluated across ALL layer-files combined, not per-file
+- **Mutation Sanity Check** — gate, not advice; every TC must name a mutation it catches
+- **New canonical** `templates/TC-REGISTRY.template.md` — 12 cols with risk-calibrated table, joint coverage table, quality gate checklist
+
+### Changed
+- **api-testing** — OWASP API Top 10 (BOLA/BFLA/mass assignment/SSRF/...) + idempotency + pagination/filter/sort boundaries + content negotiation + rate-limit modalities + error envelope + TC-code coverage gate (Step 7)
+- **e2e-testing** — Full user-journey edge-case matrix (interruption: refresh/back-button/tab-switch/network-drop/session-expiry; concurrency: double-submit/2-tabs; permission downgrade; a11y; i18n; resilience) + TC-code coverage gate (Step 4.6)
+- **browser-testing** — UI State Matrix (loading/empty/partial/4xx/5xx/success/permission-denied/stale/mutation-pending/optimistic-rollback) + A11y/I18n checklist + TC-code coverage gate (Step 3.7)
+- **test-engineer** (v3.1.0) · **brownfield-test-engineer** (v3.1.0) — Require test-case-design, technique attribution per TC, risk-calibrated ratios
+- **testing-standards.template.md** — Added TC-REGISTRY reference, risk-calibrated floors, required techniques, mandatory oracle spec, mutation sanity gate
+- **spec-template.md** — Added REQUIRED sections: Negative Scenarios, Abuse Scenarios (OWASP-mapped), Non-Functional Acceptance Criteria, Risk Tier declaration
+- Total: 89 skills (was 88; test-case-design added), 38 agents, 27 workflows
+
+---
+
+## [5.0.0] - 2026-05-25
+
+### Added
+- **Brownfield Intelligence** — Module-based business context system for existing codebases
+- **brownfield-onboarding** skill (foundation) — Scan codebase → discover business domains → generate per-module FLOWS.md, DOMAIN.md, INTEGRATIONS.md, CODE-MAP.md with cross-references. Semi-auto: agent scans, user confirms. 6-phase process with Clarifying Question Protocol.
+- **brownfield-investigation** workflow (primary) — Context-aware bug investigation with 6 stages: CONTEXT LOAD → REPRODUCE & MAP → ROOT CAUSE ANALYSIS → EVIDENCE PACKAGE → HUMAN GATE → CONTEXT UPDATE. Deep chain tracing through module dependencies. Evidence includes business narrative + blast radius assessment.
+- **brownfield-context-sync** skill (workflow) — Detect drift between `.em-brownfield/` context and codebase. Module-aware validation with CONTRACT_BREAK priority for cross-module interface changes. Chain impact analysis.
+- 6 new templates in `templates/brownfield/`: MODULE-FLOWS, MODULE-DOMAIN, MODULE-INTEGRATIONS, MODULE-CODE-MAP, INDEX, HEALTH-CHECK
+
+### Changed
+- **flow-discovery** skill enhanced with optional business metadata layer (`brownfield_context` input → Step 3b ENRICH with business_intent, criticality, acceptance_criterion, failure_impact, data_flow per step). Backward compatible.
+- **skill-preamble.md** — Added `.em-brownfield/INDEX.md` loading in initialization sequence
+- **brownfield-test-engineer** agent — Added Step 0: LOAD BROWNFIELD CONTEXT (loads module flows, domain, code map before test generation)
+- Total: 88 skills, 38 agents, 27 workflows
+
+---
+
 ## [4.1.0] - 2026-05-24
 
 ### Added

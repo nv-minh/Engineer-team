@@ -1,0 +1,41 @@
+{
+  "schema_version": "5.4.0",
+  "project": {
+    "name": "",
+    "tech_stack": [],
+    "monorepo": false,
+    "apps": [],
+    "packages": []
+  },
+  "domain_profile_ref": "DOMAIN-PROFILE.yaml",
+  "modules": [
+    {
+      "name": "",
+      "type": "core|supporting|generic",
+      "impact": "P0|P1|P2",
+      "paths": {
+        "backend": [],
+        "frontend": [],
+        "shared": []
+      },
+      "flows_count": 0,
+      "entities_count": 0,
+      "integrations_count": 0,
+      "last_verified": "YYYY-MM-DD",
+      "status": "OK|STALE|CONTRACT_BREAK|MISSING"
+    }
+  ],
+  "dependencies": [
+    {"from": "module-a", "to": "module-b", "reason": "..."}
+  ],
+  "external_integrations": [
+    {"service": "", "modules_using": [], "critical": true, "fallback": false}
+  ],
+  "circular_dependencies": [],
+  "stats": {
+    "total_flows": 0,
+    "total_entities": 0,
+    "total_integrations": 0,
+    "untested_flows": 0
+  }
+}

@@ -84,6 +84,9 @@ Find root cause of reported issue. Implement fix with regression test. Verify fi
 6. Always Be Coaching: explain WHY the bug occurred, not just WHAT you changed. Teach the underlying principle.
 7. Flag risks proactively. If the fix could affect other code paths, say so before implementing.
 8. Status protocol is defined in the agent preamble. Report status using `output_schema` format.
+9. **Use brownfield context when present.** Loading FLOWS.md + CODE-MAP.md from `.em-brownfield/`
+   gives precise file:function references and expected behavior. Saves time + reduces hallucination.
+   When module crosses dependencies, suggest the `brownfield-investigation` workflow.
 
 [AVAILABLE SKILLS]
 - `systematic-debugging` — 4-phase debugging methodology
@@ -91,6 +94,24 @@ Find root cause of reported issue. Implement fix with regression test. Verify fi
 - `code-review` — Review fix quality
 
 [PROCESS]
+
+### Phase 0: Brownfield Context (conditional)
+
+If `.em-brownfield/INDEX.md` exists:
+1. From symptoms or error location, identify affected module via INDEX.md routes/files mapping.
+   - If module ambiguous → ask user (offer module list from INDEX.md).
+2. Load:
+   - `modules/{module}/FLOWS.md` → know expected business behavior
+   - `modules/{module}/CODE-MAP.md` → know exact file:function refs for the flow
+   - `modules/{module}/INTEGRATIONS.md` → know external service failure modes
+3. Use FLOWS.md happy path to compare against observed (failing) behavior.
+   - Bug = "symptom doesn't match expected behavior at flow step N".
+4. Check FLOWS.md `Known Issues` section first — if symptom matches, link to existing issue.
+5. For deep chain bugs (root cause in different module than symptom):
+   - Use INDEX.md dependency graph to identify candidate root-cause modules.
+   - Recommend running `brownfield-investigation` workflow instead of standalone debugging.
+
+If `.em-brownfield/` does not exist, proceed to Phase 1 (Investigate) as before.
 
 ### Phase 1: Investigate
 - Collect exact error messages, stack traces, console output
@@ -169,3 +190,5 @@ Report using `output_schema` defined in frontmatter. Include:
 - [ ] Regression test added and passing
 - [ ] Fix verified — no side effects
 - [ ] Documentation updated
+- [ ] Brownfield context loaded (if .em-brownfield/ exists) OR documented as N/A
+- [ ] If multi-module chain detected, brownfield-investigation workflow recommended

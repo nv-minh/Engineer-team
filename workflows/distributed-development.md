@@ -235,8 +235,18 @@ workflow_state:
 <thought>
 Observe: All layers implemented — database, backend, frontend.
 Analyze: Must verify API contract matches schema, frontend uses correct API calls, error handling works across layers. Run integration tests and E2E tests.
-Plan: Invoke all agents for sync point, then run tests.
+Plan: Run code-review diff scan FIRST across all changed files from parallel agents, then invoke integration tests. Review fixes from any single layer are validated by cross-layer integration tests.
 </thought>
+
+<action>
+type: invoke_agent
+target: code-reviewer
+params:
+  mode: standard
+  focus: diff_review
+  inputs: [all_changed_files, api_contract, design_spec]
+  outputs: [diff_review_report]
+</action>
 
 <action>
 type: invoke_agent
@@ -254,6 +264,7 @@ gate_status: PASS | FAIL
 </observation>
 
 **Quality Gate:**
+- [ ] Code-review diff scan PASS across all changed files (backend, frontend, database)
 - [ ] Integration tests passing
 - [ ] E2E tests passing
 - [ ] API contract verified

@@ -34,7 +34,7 @@ EM-Team provides three main ways to accomplish tasks:
 
 EM-Team v3.0.0 includes a unified communication control system with two independent axes:
 
-- **Personality** (tone/voice) — 13 styles via `/em:skill:style-switcher`
+- **Personality** (tone/voice) — 13 styles via `/em-skill:style-switcher`
 - **Density** (verbosity/format) — 3 modes via `/compact`, `/terse`, `/standard`
 
 ### Personality Styles
@@ -47,12 +47,12 @@ EM-Team v3.0.0 includes a unified communication control system with two independ
 
 ```bash
 # Show personality menu (13 styles + 3 density modes)
-/em:skill:style-switcher
+/em-skill:style-switcher
 
 # Set personality
-/em:skill:style-switcher tactical        # Direct, no preamble
-/em:skill:style-switcher teacher         # Feynman technique explanations
-/em:skill:style-switcher reality-check   # Honest evaluation
+/em-skill:style-switcher tactical        # Direct, no preamble
+/em-skill:style-switcher teacher         # Feynman technique explanations
+/em-skill:style-switcher reality-check   # Honest evaluation
 
 # Set density independently
 /compact               # Bullet-point output
@@ -60,11 +60,11 @@ EM-Team v3.0.0 includes a unified communication control system with two independ
 /standard              # Full detailed reports
 
 # Combine (each set independently)
-/em:skill:style-switcher raw             # Personality → Raw
+/em-skill:style-switcher raw             # Personality → Raw
 /compact               # Density → COMPACT
 
 # Terminal CLI modifier (strip markdown)
-/em:skill:style-switcher tactical + terminal CLI
+/em-skill:style-switcher tactical + terminal CLI
 ```
 
 ### When to Use
@@ -79,7 +79,7 @@ EM-Team v3.0.0 includes a unified communication control system with two independ
 
 **Rules:** CRITICAL findings always get full context. File paths never omitted. Personality and density are independent.
 
-See `/em:skill:style-switcher` for complete documentation.
+See `/em-skill:style-switcher` for complete documentation.
 
 ---
 
@@ -91,7 +91,7 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 
 ### Available Skills
 
-#### Foundation Skills (10 skills)
+#### Foundation Skills (11 skills)
 1. **alignment-session** - Pre-coding human-AI alignment session
 2. **spec-driven-development** - Write specifications before coding
 3. **brainstorming** - Explore ideas into detailed designs
@@ -102,6 +102,7 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 8. **project-dna** - Crystallize decisions into CLAUDE.md + 8 rule files
 9. **basic-design** - Formal 基本設計 document with 8 sections + sign-off gate *(v3.5.0)*
 10. **detailed-design** - Formal 詳細設計 per-module with class diagrams + sign-off gate *(v3.5.0)*
+11. **brownfield-onboarding** - Rapid codebase onboarding: detect stack, map architecture, identify conventions *(v5.0.0)*
 
 #### Development Skills (12 skills)
 11. **test-driven-development** - TDD: RED-GREEN-REFACTOR
@@ -117,7 +118,7 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 21. **figma-design** - Figma-to-code conversion with MCP server
 22. **codebase-architecture** - Research 6 patterns → recommend 2-3 options → generate rules *(v3.6.0)*
 
-#### Expert Skills (31 skills across 15 groups)
+#### Expert Skills (34 skills across 15 groups)
 - **Expert React:** react, react-hooks, nextjs, redux
 - **Expert Vue:** vue3, pinia, vue-router
 - **Expert Go:** go-patterns
@@ -134,22 +135,23 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 - **Drawio:** drawio-architecture, drawio-flowchart
 - **Tauri:** tauri
 
-#### Quality Skills (13 skills)
-23. **code-review** - 5-axis review framework
-24. **code-simplification** - Reduce complexity
-25. **browser-testing** - DevTools MCP integration
-26. **performance-optimization** - Measure-first optimization
-27. **e2e-testing** - Playwright patterns
-28. **security-audit** - Vulnerability assessment
-29. **api-testing** - Integration testing
-30. **security-common** - OWASP reference and security checklist
-31. **ux-audit** - Behavioral UX audit with scored dimensions
-32. **plan-tune** - Learn and tune output preferences
-33. **flow-discovery** - Flow discovery and mapping
-34. **test-generation** - Automated test generation
-35. **uat-process** - 受け入れテスト: UAT plan + test cases + execution log + client sign-off *(v3.5.0)*
+#### Quality Skills (14 skills)
+23. **test-case-design** - Systematic QA test-design (BVA/EP/DT/ST/Pairwise/RBT + abuse + non-functional + oracle + mutation gate) — MANDATORY upstream of test-generation/api-testing/e2e-testing/browser-testing *(v5.1.0)*
+24. **code-review** - 5-axis review framework
+25. **code-simplification** - Reduce complexity
+26. **browser-testing** - UI State Matrix + DevTools MCP integration + TC-code coverage gate *(v4.2.0)*
+27. **performance-optimization** - Measure-first optimization
+28. **e2e-testing** - Playwright + user-journey edge-case matrix + TC-code coverage gate *(v4.2.0)*
+29. **security-audit** - Vulnerability assessment
+30. **api-testing** - OWASP API Top 10 + idempotency/pagination/content-neg/rate-limit + TC-code coverage gate *(v4.1.0)*
+31. **security-common** - OWASP reference and security checklist
+32. **ux-audit** - Behavioral UX audit with scored dimensions
+33. **plan-tune** - Learn and tune output preferences
+34. **flow-discovery** - Flow discovery and mapping
+35. **test-generation** - Automated test generation with TC-code coverage gate *(v4.1.0)*
+36. **uat-process** - 受け入れテスト: UAT plan + test cases + execution log + client sign-off *(v3.5.0)*
 
-#### Workflow Skills (11 skills)
+#### Workflow Skills (13 skills)
 36. **git-workflow** - Atomic commits
 37. **ci-cd-automation** - Feature flags, quality gates
 38. **documentation** - ADRs, API docs
@@ -161,6 +163,9 @@ Skills are reusable patterns and best practices synthesized from top AI agent re
 44. **github-pr-manager** - PR creation with template auto-fill + review comment AI-fix *(v3.7.0)*
 45. **github-issue-manager** - Issue creation, triage, sprint planning with milestones *(v3.7.0)*
 46. **github-release-manager** - Version bump, release notes, git tag, GitHub Release *(v3.7.0)*
+47. **github-issue-fix** - Browse GitHub issues, select one, hand off to em-wf:bug-fix *(v4.1.0)*
+48. **brownfield-context-sync** - Sync codebase context after changes: detect drift, refresh conventions *(v5.0.0)*
+49. **brownfield-pr-impact** - Assess PR/branch impact on brownfield flows, surface AC-at-risk and contract breaks before merge *(v5.4.0)*
 
 #### Additional Skills (5 skills)
 47. **jobs-to-be-done** - JTBD framework for understanding user needs
@@ -212,33 +217,33 @@ Agents are specialized AI assistants that handle specific types of tasks. Each a
 
 #### 1. Planner Agent
 **Purpose:** Create detailed implementation plans
-**Usage:** `Agent: em:planner - Create implementation plan for feature X`
+**Usage:** `Agent: em-agent:planner - Create implementation plan for feature X`
 **Best for:** Breaking down complex features
 
 #### 2. Executor Agent
 **Purpose:** Execute plans with atomic commits
-**Usage:** `Agent: em:executor - Implement the authentication plan`
+**Usage:** `Agent: em-agent:executor - Implement the authentication plan`
 **Best for:** Implementation with version control
 
 #### 3. Code-Reviewer Agent
 **Purpose:** Code review with Standard (5-axis) and Deep (9-axis) modes
-**Usage:** `Agent: em:code-reviewer - Review the changes in this PR`
+**Usage:** `Agent: em-agent:code-reviewer - Review the changes in this PR`
 **Best for:** Quality assurance
-**Deep mode:** `Agent: em:code-reviewer - Deep review of production-critical changes`
+**Deep mode:** `Agent: em-agent:code-reviewer - Deep review of production-critical changes`
 
 #### 4. Debugger Agent
 **Purpose:** Systematic debugging
-**Usage:** `Agent: em:debugger - Investigate this bug systematically`
+**Usage:** `Agent: em-agent:debugger - Investigate this bug systematically`
 **Best for:** Root cause analysis
 
 #### 5. Test-Engineer Agent
 **Purpose:** Test strategy and generation
-**Usage:** `Agent: em:test-engineer - Create test strategy for authentication`
+**Usage:** `Agent: em-agent:test-engineer - Create test strategy for authentication`
 **Best for:** Test planning
 
 #### 6. Security-Reviewer Agent
 **Purpose:** Security review with Audit (OWASP scan) and Review (OWASP+STRIDE) modes
-**Usage:** `Agent: em:security-reviewer - Audit the authentication system`
+**Usage:** `Agent: em-agent:security-reviewer - Audit the authentication system`
 **Best for:** Security reviews (audit mode) and threat modeling (review mode)
 
 #### 7. UI-Auditor Agent
@@ -282,7 +287,7 @@ Coordinates distributed investigations
 - **DevEx-Reviewer** - Developer experience audit and TTHW measurement
 - **Iron-Law-Enforcer** - Gate enforcement for Iron Law compliance
 
-#### Expert Agents (v3.0)
+#### Expert Agents (v3.0.0)
 - **react-expert** - React/Next.js, hooks, state management
 - **vue-expert** - Vue 3, Composition API, Pinia
 - **nestjs-expert** - NestJS, TypeScript, GraphQL
@@ -291,18 +296,23 @@ Coordinates distributed investigations
 - **spring-expert** - Spring Boot, JPA, security
 - **rust-expert** - Rust systems, ownership, async tokio
 
+#### Test Automation Agents (v3.8.0)
+- **playwright-setup** - Auto-detect stack, install Playwright, generate config, scaffold POM
+- **brownfield-test-engineer** - Spec-to-test for existing codebases with clarifying questions
+- **test-verifier** - Double-check test results with retry loop (max 3 retries)
+
 ### How to Use Agents
 
 Dispatch agents for specialized tasks:
 
 ```bash
 # Basic pattern
-"Agent: em:[agent-name] - [task description]"
+"Agent: em-agent:{name} - [task description]"
 
 # Examples
-"Agent: em:planner - Create implementation plan for user authentication"
-"Agent: em:code-reviewer - Review the authentication PR"
-"Agent: em:debugger - Investigate the login failure"
+"Agent: em-agent:planner - Create implementation plan for user authentication"
+"Agent: em-agent:code-reviewer - Review the authentication PR"
+"Agent: em-agent:debugger - Investigate the login failure"
 ```
 
 ### Agent Interaction Patterns
@@ -310,18 +320,18 @@ Dispatch agents for specialized tasks:
 #### Sequential Agent Usage
 ```bash
 # Use multiple agents in sequence
-"Agent: em:planner - Plan the feature"
+"Agent: em-agent:planner - Plan the feature"
 ↓
-"Agent: em:executor - Implement the plan"
+"Agent: em-agent:executor - Implement the plan"
 ↓
-"Agent: em:code-reviewer - Review the implementation"
+"Agent: em-agent:code-reviewer - Review the implementation"
 ```
 
 #### Parallel Agent Usage (Distributed Mode)
 ```bash
 # Use multiple agents simultaneously
 ./scripts/distributed-orchestrator.sh start
-"Agent: em:techlead-orchestrator - Investigate authentication"
+"Agent: em-agent:techlead-orchestrator - Investigate authentication"
 # Backend, frontend, database agents work in parallel
 ```
 
@@ -337,37 +347,44 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 
 #### 1. Greenfield App Workflow *(v3.1.0, updated v3.6.0)*
 **Purpose:** Blank directory → shipped product
-**Usage:** `/em:greenfield-app [app description]`
+**Usage:** `/em-wf:greenfield-app [app description]`
 **Stages (12):** Ideation → Problem Reframing → Domain Modeling → Spec → UI/UX Design → **Architecture** (codebase-architecture skill) → Crystallize DNA → Bootstrap → Implement → Validate → Review → Launch
 **What's new in v3.6.0:** Stage 6 uses `codebase-architecture` skill — researches 6 patterns, presents 2-3 options, generates 3 rule files after your decision.
 
 #### 2. New Feature Workflow
 **Purpose:** Take features from idea to production
-**Usage:** `/em:new-feature [feature description]`
+**Usage:** `/em-wf:new-feature [feature description]`
 **Stages:** Define → Plan → Build → Verify → Review → Simplify → Ship
 
 #### 3. Bug Fix Workflow
 **Purpose:** Investigate and fix bugs systematically
-**Usage:** `/em:bug-fix [bug description]`
+**Usage:** `/em-wf:bug-fix [bug description]`
 **Stages:** Investigate → Analyze → Hypothesize → Implement → Verify
 
 #### 4. QA Bug Hunter Workflow *(v4.1.0)*
 **Purpose:** QA test a feature, find bugs, and create GitHub issues — only after human approval
-**Usage:** `/em:qa-bug-hunter [url or feature]`
+**Usage:** `/em-wf:qa-bug-hunter [url or feature]`
 **Stages (7):** Setup → Discover → Evidence → Prepare → **Human Gate** → Log → Summary
 **Key feature:** The **Human Gate** pauses for each bug found. You review the draft issue (title, steps to reproduce, evidence) and decide: APPROVE (create issue), REJECT (skip), or MODIFY (edit before creating). No false positives reach your GitHub issue tracker.
-**Skills used:** em:qa, em:flow-discovery, em:browser-testing, github-issue-manager
+**Skills used:** `em-skill:flow-discovery`, `em-skill:browser-testing`, `em-skill:github-issue-manager`
 **Modes:** `full` (all QA checks), `critical` (critical paths only), `smoke` (basic), `targeted` (specific feature with flow discovery)
 
 #### 5. Refactoring Workflow
 **Purpose:** Improve code quality safely
-**Usage:** `/em:refactor [refactoring goal]`
+**Usage:** `/em-wf:refactoring [refactoring goal]`
 **Stages:** Analyze → Plan → Refactor → Test → Verify
 
 #### 6. Security Audit Workflow
 **Purpose:** Comprehensive security assessment
-**Usage:** `/em:security-audit [system to audit]`
+**Usage:** `/em-wf:security-audit [system to audit]`
 **Stages:** Reconnaissance → Vulnerability Scan → Analysis → Reporting
+
+#### 7. Brownfield Investigation Workflow *(v5.0.0)*
+**Purpose:** Deep investigation of existing codebase issues — architecture analysis, dependency mapping, tech debt assessment, improvement roadmap
+**Usage:** `/em-wf:brownfield-investigation [investigation goal]`
+**Stages:** Onboard → Analyze → Map Dependencies → Assess → Report
+**Skills used:** `em-skill:brownfield-onboarding`, `em-skill:brownfield-context-sync`, `em-skill:flow-discovery`, `em-skill:architecture-zoom-out`
+**Key feature:** Combines rapid codebase onboarding with deep investigation to produce actionable improvement plans for legacy and brownfield codebases.
 
 ### Support Workflows (6 workflows)
 
@@ -382,7 +399,7 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 
 #### 12. Japanese Outsourcing Workflow
 **Purpose:** End-to-end workflow for Japanese clients with formal sign-off gates
-**Usage:** `/em:japanese-outsourcing`
+**Usage:** `/em-wf:japanese-outsourcing`
 **Stages (9):**
 1. Kickoff — project charter, communication protocol
 2. Requirements — REQUIREMENTS.md + **Gate 1: Requirements Sign-Off**
@@ -397,7 +414,7 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 ### Distributed Workflows (2 workflows)
 
 #### 13. Distributed Investigation — Parallel bug investigation across codebase
-**Usage:** `/em:distributed [investigation topic]`
+**Usage:** `/em-wf:distributed-investigation [investigation topic]`
 
 #### 14. Distributed Development — Parallel feature implementation
 
@@ -416,13 +433,14 @@ Workflows are end-to-end processes that combine multiple skills and agents to co
 
 ```bash
 # Basic pattern
-"Workflow: em-[workflow-name] - [task description]"
+"/em-wf:{workflow-name} [task description]"
 
 # Examples
-"Workflow: em-new-feature - Implement user authentication"
-"Workflow: em-bug-fix - Fix the login timeout bug"
-"Workflow: em-qa-bug-hunter - QA test http://localhost:5173 and log bugs"
-"Workflow: em-security-audit - Audit the payment system"
+/em-wf:new-feature Implement user authentication
+/em-wf:bug-fix Fix the login timeout bug
+/em-wf:qa-bug-hunter QA test http://localhost:5173 and log bugs
+/em-wf:brownfield-investigation Investigate tech debt in legacy service
+/em-wf:security-audit Audit the payment system
 ```
 
 ---
@@ -462,7 +480,7 @@ Distributed mode runs multiple specialist agents in parallel in isolated tmux se
 tmux attach -t claude-work:orchestrator
 
 # Trigger investigation
-"Agent: em:techlead-orchestrator - Investigate authentication bug"
+"Agent: em-agent:techlead-orchestrator - Investigate authentication bug"
 
 # The orchestrator will:
 # 1. Analyze the task
@@ -519,10 +537,10 @@ ls /tmp/claude-work-reports/database/
 "Use the brainstorming skill to explore feature ideas"
 
 # Specialized task → Use agent
-"Agent: em:code-reviewer - Review this PR"
+"Agent: em-agent:code-reviewer - Review this PR"
 
 # Complex process → Use workflow
-"Workflow: em-new-feature - Build and ship the feature"
+/em-wf:new-feature Build and ship the feature
 
 # Multi-domain task → Use distributed mode
 ./scripts/distributed-orchestrator.sh start
@@ -532,20 +550,20 @@ ls /tmp/claude-work-reports/database/
 
 ```bash
 # ❌ Too vague
-"Agent: em:planner - Plan something"
+"Agent: em-agent:planner - Plan something"
 
 # ✅ Specific and clear
-"Agent: em:planner - Create implementation plan for JWT-based user authentication with refresh tokens, including database schema, API endpoints, and frontend components"
+"Agent: em-agent:planner - Create implementation plan for JWT-based user authentication with refresh tokens, including database schema, API endpoints, and frontend components"
 ```
 
 ### 3. Provide Context
 
 ```bash
 # ❌ No context
-"Agent: em:debugger - Fix this bug"
+"Agent: em-agent:debugger - Fix this bug"
 
 # ✅ With context
-"Agent: em:debugger - Investigate login timeout bug. Started occurring after deployment 2 hours ago. Error: 'Connection timeout after 30s'. Affects 10% of login attempts. Backend logs show database query timeouts."
+"Agent: em-agent:debugger - Investigate login timeout bug. Started occurring after deployment 2 hours ago. Error: 'Connection timeout after 30s'. Affects 10% of login attempts. Backend logs show database query timeouts."
 ```
 
 ### 4. Follow Iron Laws
@@ -561,11 +579,24 @@ ls /tmp/claude-work-reports/database/
 # NO CODE WITHOUT SPEC (for features)
 ```
 
-### 5. Review and Iterate
+### 5. Brownfield Investigation
+
+```bash
+# Onboard an existing codebase (foundation skill)
+"Use the brownfield-onboarding skill to analyze this legacy Node.js monolith"
+
+# Run full brownfield investigation workflow
+/em-wf:brownfield-investigation Assess tech debt and create improvement roadmap for payment service
+
+# Sync context after making changes
+"Use the brownfield-context-sync skill to refresh architecture map after refactoring"
+```
+
+### 6. Review and Iterate
 
 ```bash
 # Always review agent outputs
-"Agent: em:code-reviewer - Review the implementation"
+"Agent: em-agent:code-reviewer - Review the implementation"
 
 # Iterate based on feedback
 # Make improvements
@@ -586,20 +617,20 @@ ls /tmp/claude-work-reports/database/
 "Use the spec-driven-development skill to create a spec for JWT authentication"
 
 # Step 3: Plan implementation
-"Agent: em:planner - Create implementation plan for JWT auth"
+"Agent: em-agent:planner - Create implementation plan for JWT auth"
 
 # Step 4: Implement
-"Agent: em:executor - Implement the authentication plan"
+"Agent: em-agent:executor - Implement the authentication plan"
 
 # Step 5: Test
-"Agent: em:test-engineer - Create test strategy for authentication"
+"Agent: em-agent:test-engineer - Create test strategy for authentication"
 
 # Step 6: Review
-"Agent: em:code-reviewer - Review authentication implementation"
-"Agent: em:security-reviewer - Audit authentication security"
+"Agent: em-agent:code-reviewer - Review authentication implementation"
+"Agent: em-agent:security-reviewer - Audit authentication security"
 
 # Step 7: Deploy
-"Workflow: em-deployment - Deploy authentication feature"
+/em-wf:deployment Deploy authentication feature
 ```
 
 ### Example 2: Debugging Production Issue
@@ -611,7 +642,7 @@ ls /tmp/claude-work-reports/database/
 # Step 2: Deep dive with distributed mode
 ./scripts/distributed-orchestrator.sh start
 tmux attach -t claude-work:orchestrator
-"Agent: em:techlead-orchestrator - Investigate login timeout across entire stack"
+"Agent: em-agent:techlead-orchestrator - Investigate login timeout across entire stack"
 
 # Step 3: Review findings
 cat /tmp/claude-work-reports/techlead/consolidated-report.md
@@ -620,29 +651,29 @@ cat /tmp/claude-work-reports/techlead/consolidated-report.md
 "Use the test-driven-development skill to fix the database connection pool issue"
 
 # Step 5: Verify fix
-"Agent: em:test-engineer - Verify the login timeout fix"
+"Agent: em-agent:test-engineer - Verify the login timeout fix"
 
 # Step 6: Postmortem
-"Workflow: em-incident-response - Create postmortem for login timeout incident"
+/em-wf:incident-response Create postmortem for login timeout incident
 ```
 
 ### Example 3: Performance Optimization
 
 ```bash
 # Step 1: Analyze performance
-"Agent: em:performance-auditor - Benchmark the API endpoints"
+"Agent: em-agent:performance-auditor - Benchmark the API endpoints"
 
 # Step 2: Identify bottlenecks
 "Use the performance-optimization skill to analyze the benchmark results"
 
 # Step 3: Plan optimizations
-"Agent: em:planner - Create optimization plan based on bottlenecks"
+"Agent: em-agent:planner - Create optimization plan based on bottlenecks"
 
 # Step 4: Implement optimizations
-"Agent: em:executor - Implement the performance optimizations"
+"Agent: em-agent:executor - Implement the performance optimizations"
 
 # Step 5: Verify improvements
-"Agent: em:performance-auditor - Re-benchmark after optimizations"
+"Agent: em-agent:performance-auditor - Re-benchmark after optimizations"
 
 # Step 6: Document
 "Use the documentation skill to document the performance improvements"
@@ -718,7 +749,7 @@ cd tests
 ./test-distributed-orchestrator.sh
 
 # Check test environment
-ls /tmp/em:team-test-*
+ls /tmp/em-team-test-*
 ```
 
 ---
@@ -760,7 +791,7 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 - name: Security Audit
   run: |
-    "Agent: em:security-reviewer - Audit before deployment"
+    "Agent: em-agent:security-reviewer - Audit before deployment"
 ```
 
 ---
@@ -780,5 +811,5 @@ cp workflows/new-feature.md workflows/my-custom-workflow.md
 
 ---
 
-**Last Updated:** 2026-05-08
-**Version:** 3.1.0
+**Last Updated:** 2026-05-27
+**Version:** 5.5.0

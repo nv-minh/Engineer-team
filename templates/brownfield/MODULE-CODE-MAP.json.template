@@ -1,0 +1,39 @@
+{
+  "schema_version": "5.4.0",
+  "module": "",
+  "last_verified": "YYYY-MM-DD",
+  "source_directories": [
+    {"purpose": "", "path": "", "file_count": 0}
+  ],
+  "flow_mappings": [
+    {
+      "flow_id": "FLOW-{MODULE}-001",
+      "steps": [
+        {
+          "step": 1,
+          "symbol": "ClassName.methodName",
+          "file": "src/path/to/file.ts",
+          "line_hint": 145,
+          "input_type": "",
+          "output_type": "",
+          "side_effects": [],
+          "test_coverage": []
+        }
+      ]
+    }
+  ],
+  "key_functions": [
+    {"symbol": "", "file": "", "purpose": "", "called_by": [], "calls": []}
+  ],
+  "cross_module_exports": [
+    {"symbol": "", "file": "", "imported_by_module": "", "imported_at": ""}
+  ],
+  "cross_module_imports": [
+    {"symbol": "", "from_module": "", "from_file": "", "used_in": ""}
+  ],
+  "test_coverage": {
+    "unit": {"files": [], "flows_covered": [], "gaps": []},
+    "integration": {"files": [], "flows_covered": [], "gaps": []},
+    "e2e": {"files": [], "flows_covered": [], "gaps": []}
+  }
+}

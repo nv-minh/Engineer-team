@@ -8,25 +8,44 @@
 
 | Entity Type | Filename Pattern | `name:` Format | Routes To | Example |
 |---|---|---|---|---|
-| Agent shorthand | `em-{agent-name}.md` | `em:{agent-name}` | `agents/{agent-name}.md` | `em-backend-expert.md` → `em:backend-expert` |
-| Agent alias | `em-{short}.md` | `em:{short}` | Same agent as shorthand | `em-backend.md` → `em:backend` (routes to backend-expert) |
-| Skill wrapper | `em-skill-{skill-name}.md` | `em:skill:{skill-name}` | `skills/{category}/{skill-name}/{skill-name}.md` | `em-skill-react.md` → `em:skill:react` |
-| Workflow | `em-{workflow-name}.md` | `em:{workflow-name}` | `workflows/{workflow-name}.md` | `em-bug-fix.md` → `em:bug-fix` |
-| Command | `em-{command-name}.md` | `em:{command-name}` | `.claude/commands/{command-name}.md` | `em-checkpoint.md` → `em:checkpoint` |
+| Agent (canonical) | `em-agent-{name}.md` | `em-agent:{name}` | `agents/{name}.md` | `em-agent-planner.md` → `em-agent:planner` |
+| Agent alias | `em-agent-{short}.md` | `em-agent:{short}` | Same agent, longer name | `em-agent-backend.md` → `em-agent:backend` (routes to backend-expert) |
+| Workflow (canonical) | `em-wf-{name}.md` | `em-wf:{name}` | `workflows/{name}.md` | `em-wf-new-feature.md` → `em-wf:new-feature` |
+| Workflow alias | `em-wf-{short}.md` | `em-wf:{short}` | Same workflow, longer name | `em-wf-refactor.md` → `em-wf:refactor` (routes to refactoring) |
+| Skill wrapper | `em-skill-{name}.md` | `em-skill:{name}` | `skills/{category}/{name}/{name}.md` | `em-skill-react.md` → `em-skill:react` |
+| Standalone command | `em-agent-{name}.md` | `em-agent:{name}` | Self-contained (no external file) | `em-agent-checkpoint.md` → `em-agent:checkpoint` |
 
 ---
 
 ## Rules
 
-1. **One canonical file per entity.** No `-skill` suffix duplicates. If `em-backend-expert.md` exists, do not create `em-backend-expert-skill.md`.
+1. **Type prefix is mandatory.** Every entry point must use `em-agent:`, `em-wf:`, or `em-skill:` — never bare `em:`.
 
-2. **Friendly aliases are allowed, max 1 per agent.** Example: `em-backend.md` (alias) → `em-backend-expert.md` (canonical). The alias must state which agent it routes to in its description.
+2. **Filename uses hyphens.** `em-agent-backend-expert.md`, not `em_agent_backend_expert.md`.
 
-3. **Deprecated files must have `DEPRECATED` in the description field.** Example: `description: "DEPRECATED — Use em:code-reviewer with Deep mode instead"`. This makes deprecation visible in skill listings.
+3. **`name:` field format.** `name: em-agent:backend-expert` — hyphen between `em` and type, colon between type and name.
 
-4. **The `name:` field uses colons as separators.** Agent/workflow names use `em:{name}`. Skill wrappers use `em:skill:{name}`. Never use hyphens in the `name:` field prefix — `em:backend-expert` is correct, `em-backend-expert` is wrong.
+4. **One canonical + max one alias per entity.** No more than 2 entry points for the same underlying file.
 
-5. **Filename uses hyphens as separators.** All filenames are lowercase with hyphens: `em-backend-expert.md`, not `em_backend_expert.md`.
+5. **Deprecated files must state it.** `description: "DEPRECATED — Use em-agent:code-reviewer instead"`. This makes deprecation visible in skill listings.
+
+---
+
+## Invocation Examples
+
+```bash
+# Agent
+Use the em-agent:planner skill to create a plan
+/em-agent:planner Create implementation plan for JWT authentication
+
+# Workflow
+Use the em-wf:new-feature workflow to implement user auth
+/em-wf:new-feature Implement shopping cart feature
+
+# Skill
+Use the em-skill:brainstorming skill to explore ideas
+/em-skill:brainstorming Feature ideas for notification system
+```
 
 ---
 
@@ -47,5 +66,5 @@ When adding a new agent, skill, or workflow:
 
 1. Create the source file in the appropriate directory (`agents/`, `skills/`, `workflows/`)
 2. Create ONE canonical entry point in `.claude/skills/` following the naming pattern above
-3. Optionally create ONE friendly alias if the canonical name is long (e.g., `em:db` → `em:database-expert`)
+3. Optionally create ONE friendly alias if the canonical name is long (e.g., `em-agent:db` → `em-agent:database-expert`)
 4. Never create more than 2 entry points per entity (1 canonical + 1 optional alias)

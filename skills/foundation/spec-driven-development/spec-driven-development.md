@@ -1,7 +1,7 @@
 ---
 name: spec-driven-development
 description: "Creates structured specifications before writing code. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea."
-version: "3.0.0"
+version: "3.1.0"
 category: "foundation"
 origin: "agent-skills"
 tools: [Read, Write, Bash, Grep, Glob]
@@ -142,6 +142,10 @@ Every acceptance criterion MUST pass all four:
 
 If ANY question is NO → rewrite the criterion before proceeding.
 
+⛔ **TESTABILITY GATE (MANDATORY)**
+If ANY criterion fails the 4-question check, the spec is BLOCKED.
+Do NOT hand off to planner until ALL criteria pass.
+
 ### Acceptance Criteria Anti-Patterns
 
 | Anti-Pattern | Example | Fix |
@@ -164,6 +168,8 @@ ASSUMPTIONS I'M MAKING:
 2. [Assumption about architecture]
 3. [Assumption about constraints]
 Correct me now or I'll proceed with these.
+
+**Assumption Approval Gate:** User must explicitly approve or revise listed assumptions before SPECIFY phase completes. Unapproved assumptions = spec is BLOCKED.
 ```
 
 Write a spec covering six core areas:
@@ -230,6 +236,17 @@ REFRAMED SUCCESS CRITERIA:
 - No layout shift during load (CLS < 0.1)
 Are these the right targets?
 ```
+
+### Phase 1.5: Conflict Detection (MANDATORY)
+
+Before handing spec to planner, scan for:
+1. **Performance contradictions**: "must be fast (<200ms)" + "must persist to slow storage"
+2. **Authorization conflicts**: "user can access X" + "only admins access X"
+3. **Data model conflicts**: two requirements needing incompatible schema
+4. **Scope contradictions**: one requirement limiting what another requires
+
+For each conflict found: surface to user, get explicit resolution before proceeding.
+Gate PASSES only when zero unresolved conflicts remain.
 
 ### Phase 2: PLAN
 

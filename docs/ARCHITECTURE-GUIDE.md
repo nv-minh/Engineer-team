@@ -6,13 +6,13 @@ Tài liệu giải thích chi tiết cách EM-Team hoạt động bên trong —
 
 ## 1. Big Picture — EM-Team là gì?
 
-EM-Team là một **thư viện skills/agents/workflows** chạy trên **Claude Code** (CLI tool của Anthropic). Khi bạn install EM-Team, bạn đang thêm 130+ commands chuyên biệt vào Claude Code — biến Claude thành một engineering team ảo.
+EM-Team là một **thư viện skills/agents/workflows** chạy trên **Claude Code** (CLI tool của Anthropic). Khi bạn install EM-Team, bạn đang thêm 150+ commands chuyên biệt vào Claude Code — biến Claude thành một engineering team ảo.
 
 ```
 Claude Code (CLI)
     ├── Đọc CLAUDE.md → biết project này dùng EM-Team
     ├── Đọc config.json → biết tìm skills/agents/workflows ở đâu
-    └── Khi user gõ /em:skill:brainstorming → load skill content → execute
+    └── Khi user gõ /em-skill:brainstorming → load skill content → execute
 ```
 
 ---
@@ -31,7 +31,7 @@ EM-Team/
 │
 ├── .claude/
 │   ├── settings.local.json ← Cấu hình permissions (cho phép chạy lệnh gì)
-│   └── skills/             ← WRAPPER FILES (35 agent wrappers + 75 skill wrappers)
+│   └── skills/             ← WRAPPER FILES (38 agent wrappers + 86 skill wrappers)
 │       ├── em-architect.md       Wrapper cho agent architect
 │       ├── em-new-feature.md     Wrapper cho workflow new-feature
 │       ├── em-greenfield-app.md  Wrapper cho workflow greenfield-app
@@ -39,20 +39,20 @@ EM-Team/
 │       └── ... (130+ files)
 │
 ├── skills/                 ← SKILL SOURCE FILES (nội dung đầy đủ 200-771 dòng)
-│   ├── foundation/         7 skills nền tảng
+│   ├── foundation/         10 skills nền tảng
 │   │   └── alignment-session/alignment-session.md
-│   ├── development/        11 skills phát triển
+│   ├── development/        12 skills phát triển
 │   │   ├── backend-patterns/backend-patterns.md
 │   │   └── ...
-│   ├── quality/            12 skills chất lượng
+│   ├── quality/            13 skills chất lượng
 │   │   ├── code-review/code-review.md
 │   │   └── ...
-│   ├── workflow/           6 skills quy trình
+│   ├── workflow/           12 skills quy trình
 │   │   └── style-switcher/style-switcher.md
 │   └── additional/         5 product & discovery skills
 │       └── ...
 │
-├── agents/                 ← AGENT FILES (33 active + 2 deprecated agents)
+├── agents/                 ← AGENT FILES (36 active + 2 deprecated agents)
 │   ├── planner.md          Agent tạo implementation plan
 │   ├── architect.md        Agent review architecture
 │   ├── debugger.md         Agent debug systematic
@@ -60,13 +60,13 @@ EM-Team/
 │   ├── security-reviewer.md Agent security review (Audit + Review modes)
 │   ├── senior-code-reviewer.md DEPRECATED — dùng code-reviewer Deep mode
 │   ├── security-auditor.md DEPRECATED — dùng security-reviewer Audit mode
-│   └── ... (35 files)
+│   └── ... (38 files)
 │
-├── workflows/              ← WORKFLOW FILES (24 workflows, end-to-end processes)
+├── workflows/              ← WORKFLOW FILES (27 workflows, end-to-end processes)
 │   ├── new-feature.md      Workflow từ idea → production
 │   ├── greenfield-app.md   Workflow từ blank directory → shipped app (MỚI v3.1.0)
 │   ├── bug-fix.md          Workflow fix bug
-│   └── ... (24 files)
+│   └── ... (26 files)
 │
 ├── preambles/              ← KHỞI TẠO CHUNG — được load khi agent/skill bắt đầu
 │   ├── ethos.md            5 nguyên tắc cốt lõi (Boil the Lake, Search Before Building...)
@@ -109,7 +109,7 @@ EM-Team/
 Khi bạn mở Claude Code trong bất kỳ folder nào, Claude đọc file `CLAUDE.md` (nếu có). Đây là **hướng dẫn sử dụng** cho Claude.
 
 EM-Team's `CLAUDE.md` nói cho Claude biết:
-- Có 75 skills, 33 active agents, 24 workflows sẵn sàng
+- Có 90 skills, 38 active agents, 27 workflows sẵn sàng
 - Mỗi cái tên gì, làm gì
 - Iron Laws (luật bất di bất dịch)
 - Khi nào dùng skill, khi nào dùng agent, khi nào dùng workflow
@@ -146,11 +146,11 @@ Ví dụ:
 ~/.claude/skills/
 ├── em:architect/
 │   └── SKILL.md  → symlink → /EM-Team/.claude/skills/em-architect.md (wrapper, 34 dòng)
-├── em:new-feature/
+├── em-wf:new-feature/
 │   └── SKILL.md  → symlink → /EM-Team/.claude/skills/em-new-feature.md (wrapper, 50 dòng)
-├── em:skill:brainstorming/
+├── em-skill:brainstorming/
 │   └── SKILL.md  → symlink → /EM-Team/skills/foundation/brainstorming/brainstorming.md (229 dòng)
-├── em:skill:backend-patterns/
+├── em-skill:backend-patterns/
 │   └── SKILL.md  → symlink → /EM-Team/skills/development/backend-patterns/backend-patterns.md (771 dòng)
 └── ... (130+ directories)
 ```
@@ -159,7 +159,7 @@ Ví dụ:
 - **Agent/Workflow wrappers** (em-architect, em-new-feature) → symlink tới wrapper file (~34 dòng, tự chứa nội dung)
 - **Skill wrappers** (em-skill-*) → install.sh parse `## Source` path, symlink **trực tiếp tới source file** (229-771 dòng)
 
-Khi user gõ `/em:skill:brainstorming`, Claude đọc file 229 dòng → có đầy đủ context để execute.
+Khi user gõ `/em-skill:brainstorming`, Claude đọc file 229 dòng → có đầy đủ context để execute.
 
 ---
 
@@ -196,7 +196,7 @@ Body sections:
 - **Coaching Notes** — Dạy người dùng hiểu WHY
 - **Verification** — Checklist xác nhận
 
-### Agent — AI Specialist (33 active + 2 deprecated)
+### Agent — AI Specialist (36 active + 2 deprecated)
 
 **Là gì:** Một AI specialist với expertise trong một domain. Agent có identity, capabilities, và handoff protocols.
 
@@ -288,18 +288,18 @@ install.sh đọc wrapper file          em-skill-brainstorming.md
     ↓ resolve: /EM-Team/skills/foundation/brainstorming/brainstorming.md
     ↓ verify file exists
     ↓ create symlink
-~/.claude/skills/em:skill:brainstorming/SKILL.md → source (229 dòng)
+~/.claude/skills/em-skill:brainstorming/SKILL.md → source (229 dòng)
 ```
 
 ---
 
 ## 6. Luồng hoạt động — Khi user gọi một lệnh
 
-### Ví dụ: User gõ `/em:skill:brainstorming Explore auth options`
+### Ví dụ: User gõ `/em-skill:brainstorming Explore auth options`
 
 ```
-1. Claude Code thấy /em:skill:brainstorming
-2. Tìm ~/.claude/skills/em:skill:brainstorming/SKILL.md
+1. Claude Code thấy /em-skill:brainstorming
+2. Tìm ~/.claude/skills/em-skill:brainstorming/SKILL.md
 3. Đọc symlink target → skills/foundation/brainstorming/brainstorming.md
 4. Parse YAML frontmatter → hiểu intent, triggers, scenarios
 5. Load full content (229 dòng) → process steps, coaching notes, verification
@@ -307,11 +307,11 @@ install.sh đọc wrapper file          em-skill-brainstorming.md
 7. Kết quả: comparison table, recommendations, architecture patterns
 ```
 
-### Ví dụ: User gõ `/em:new-feature Implement user auth`
+### Ví dụ: User gõ `/em-wf:new-feature Implement user auth`
 
 ```
-1. Claude Code thấy /em:new-feature
-2. Tìm ~/.claude/skills/em:new-feature/SKILL.md → wrapper
+1. Claude Code thấy /em-wf:new-feature
+2. Tìm ~/.claude/skills/em-wf:new-feature/SKILL.md → wrapper
 3. Đọc wrapper → biết đây là workflow
 4. config.json trỏ workflows.paths → /EM-Team/workflows/
 5. Load workflows/new-feature.md (full workflow)
@@ -383,10 +383,10 @@ EM-Team có hệ thống giao tiếp linh hoạt:
 
 **Trục 1 — Personality (13 styles):**
 ```
-/em:skill:style-switcher tactical     → Trực tiếp, không dài dòng
-/em:skill:style-switcher teacher      → Giải thích kiểu Feynman
-/em:skill:style-switcher raw          → Code nhanh, fragments
-/em:skill:style-switcher reality-check → Đánh giá thẳng thắn
+/em-skill:style-switcher tactical     → Trực tiếp, không dài dòng
+/em-skill:style-switcher teacher      → Giải thích kiểu Feynman
+/em-skill:style-switcher raw          → Code nhanh, fragments
+/em-skill:style-switcher reality-check → Đánh giá thẳng thắn
 ... (9 styles khác)
 ```
 

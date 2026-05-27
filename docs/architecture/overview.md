@@ -1,6 +1,6 @@
 # EM-Team Architecture Overview
 
-Tổng quan kiến trúc hệ thống EM-Team v3.1.0.
+Tổng quan kiến trúc hệ thống EM-Team v5.4.0.
 
 ---
 
@@ -26,7 +26,7 @@ Tổng quan kiến trúc hệ thống EM-Team v3.1.0.
 │                                                              │
 │  ┌────────────┐  ┌────────────┐  ┌────────────┐           │
 │  │  Skills    │  │  Agents    │  │ Workflows  │           │
-│  │  (75)      │  │  (33+2dep) │  │  (24)      │           │
+│  │  (89)      │  │  (36+2dep) │  │  (27)      │           │
 │  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘           │
 │        │                │                │                  │
 │        └────────────────┴────────────────┘                  │
@@ -102,7 +102,7 @@ skills/
 ├── expert-typescript/ # 1 TypeScript skill
 ├── drawio/            # 2 Drawio skills
 ├── tauri/             # 1 Tauri skill
-├── quality/           # 12 quality assurance skills
+├── quality/           # 14 quality assurance skills
 ├── workflow/          # 6 workflow and automation skills
 └── additional/        # 5 product & discovery skills
 ```
@@ -331,7 +331,7 @@ tier_2_agents:
   use_for: "Specialized, domain-specific tasks"
   examples:
     - "/em:backend-expert Optimize API"
-    - "/em:security-auditor Audit system"
+    - "/em:security-reviewer Audit system"
 
 tier_3_workflows:
   use_for: "Complex, multi-phase processes"
@@ -627,6 +627,6 @@ system_metrics:
 
 ---
 
-**Version:** 3.1.0
-**Last Updated:** 2026-05-08
+**Version:** 5.2.0
+**Last Updated:** 2026-05-26
 **Architecture Style:** Agent-Skill-Workflow (ASW)
